@@ -1,237 +1,251 @@
-num,abrangencia,classificacao,modalidade,etapa,fase,licenca,documento,doc_id,descricao,atualizacoes,aplicabilidade
-1,Estadual,Normativa,LAS - Cadastro,ÚNICA,-,LAS,Cadastro Ambiental Simplificado,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental – SLA, disponível no Portal
+num,abrangencia,classificacao,modalidade,etapa,fase,licenca,documento,doc_id,descricao,atualizacoes,aplicabilidade,esfera,norma_referencia,vigente,data_ultima_verificacao
+1.0,Estadual,Normativa,LAS - Cadastro,ÚNICA,-,LAS,Cadastro Ambiental Simplificado,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental – SLA, disponível no Portal
  Ecosistemas",,"Empreendimentos de Classe 1 e 2 com  Critérios Locacionais 0
-Empreendimentos de Classe 1 com  Critérios Locacionais 1"
-2,Estadual,Normativa,LAS - Cadastro,ÚNICA,-,LAS,FCE Simplificado,,,,
-3,Estadual,Normativa,LAS - Cadastro,ÚNICA,-,LAS,Planta de Situação,,,,"Empreendimentos de Classe 3 com  Critérios Locacionais 0
+Empreendimentos de Classe 1 com  Critérios Locacionais 1",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+2.0,Estadual,Normativa,LAS - Cadastro,ÚNICA,-,LAS,FCE Simplificado,,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+3.0,Estadual,Normativa,LAS - Cadastro,ÚNICA,-,LAS,Planta de Situação,,,,"Empreendimentos de Classe 3 com  Critérios Locacionais 0
 Empreendimentos de Classe 2 com  Critérios Locacionais 1
-Empreendimentos de Classe 1 com  Critérios Locacionais 2"
-1,Estadual,Normativa,LAS - Cadastro,ÚNICA,-,LAS,Declaração de inexistência de supressão,,,,"Empreendimentos de Classe 3 com  Critérios Locacionais 0
+Empreendimentos de Classe 1 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+1.0,Estadual,Normativa,LAS - Cadastro,ÚNICA,-,LAS,Declaração de inexistência de supressão,,,,"Empreendimentos de Classe 3 com  Critérios Locacionais 0
 Empreendimentos de Classe 2 com  Critérios Locacionais 1
-Empreendimentos de Classe 1 com  Critérios Locacionais 2"
-1,Estadual,Normativa,LAS - Cadastro,ÚNICA,-,LAS,Declaração de inexistência de captação,,,,
-1,Estadual,Normativa,LAS - Cadastro,ÚNICA,-,LAS,Medidas Básicas de Controle Ambiental,,,,
-2,Estadual,Normativa,LAS - RAS,ÚNICA,-,LAS-RAS,RAS,,"Documento técnico que visa identificar, de forma sucinta, os possíveis impactos ambientais e medidas de controle, relacionados à localização, instalação, operação e ampliação de atividade.",,"Empreendimentos de Classe 3 com  Critérios Locacionais 0
+Empreendimentos de Classe 1 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+1.0,Estadual,Normativa,LAS - Cadastro,ÚNICA,-,LAS,Declaração de inexistência de captação,,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+1.0,Estadual,Normativa,LAS - Cadastro,ÚNICA,-,LAS,Medidas Básicas de Controle Ambiental,,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+2.0,Estadual,Normativa,LAS - RAS,ÚNICA,-,LAS-RAS,RAS,,"Documento técnico que visa identificar, de forma sucinta, os possíveis impactos ambientais e medidas de controle, relacionados à localização, instalação, operação e ampliação de atividade.",,"Empreendimentos de Classe 3 com  Critérios Locacionais 0
 Empreendimentos de Classe 2 com  Critérios Locacionais 1
-Empreendimentos de Classe 1 com  Critérios Locacionais 2"
-,Estadual,Normativa,LAS - RAS,ÚNICA,-,LAS-RAS,Planta de Implantação,,,,
-,Estadual,Normativa,LAS - RAS,ÚNICA,-,LAS-RAS,Controle de Sedimentos,,,,
-,Estadual,Normativa,LAS - RAS,ÚNICA,-,LAS-RAS,Inventário biológico simplificado,,,,
-3,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Requerimento de LP,-,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental – SLA, disponível no Portal
+Empreendimentos de Classe 1 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAS - RAS,ÚNICA,-,LAS-RAS,Planta de Implantação,,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAS - RAS,ÚNICA,-,LAS-RAS,Controle de Sedimentos,,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAS - RAS,ÚNICA,-,LAS-RAS,Inventário biológico simplificado,,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+3.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Requerimento de LP,-,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental – SLA, disponível no Portal
  Ecosistemas",,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-4,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da publicação do pedido a LP,-,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+4.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da publicação do pedido a LP,-,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-5,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Declaração da prefeitura,-,"Declaração que atesta que o empreendimento está em conformidade com as normas municipais (zoneamento, uso do solo, legislação urbanística, etc.) antes da análise pelo órgão ambiental estadual ou federal.",,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+5.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Declaração da prefeitura,-,"Declaração que atesta que o empreendimento está em conformidade com as normas municipais (zoneamento, uso do solo, legislação urbanística, etc.) antes da análise pelo órgão ambiental estadual ou federal.",,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Estudo de Impacto Ambiental,EIA,Documento técnico detalhado e obrigatório para o licenciamento de atividades com potencial de significativa degradação ambienta,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Relatório de Impacto Ambienta,RIMA,"O Relatório de Impacto Ambiental (RIMA) é um documento técnico, público e didático que reflete as conclusões do Estudo de Impacto Ambiental (EIA), exigido no licenciamento de projetos significativos",,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Formulário de Caracterização do Empreendimento,FCE,"Detalha a natureza, atividades, localização, processos produtivos, insumos, recursos hídricos e resíduos de uma empresa. Ele serve para o órgão ambiental avaliar os impactos, enquadrar o risco e definir medidas mitigadoras.",,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Memorial Descritivo,-,"Documento técnico essencial que detalha as características, atividades, localização, infraestrutura e impactos potenciais de um empreendimento.",,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Planta topográfica,-,-,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Mapas de Acesso,-,-,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Taxas Ambientais,-,-,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Plano de Controle Ambiental,PCA,"Documento técnico  que identifica, avalia e propõe medidas mitigadoras, monitoramento e controles para impactos ambientais gerados por empreendimentos poluidores",,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Inventário fauna aquática,-,"Estudo técnico para identificar, quantificar e mapear espécies animais (peixes, plâncton, bentos) em um local e tempo específicos",,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Monitoramento fauna aquática,,"Coleta periódica, identificação e análise de peixes (ictiofauna), macroinvertebrados e plâncton para avaliar a saúde do ecossistema, impactos ambientais e qualidade da água",,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Resgate/ salvamento/ peixamento – Fauna aquática,,"Procedimentos técnicos e ambientais fundamentais para mitigar impactos humanos sobre ecossistemas hídricos, comuns em obras de engenharia (barragens, pontes), desastres ambientais ou manejo sustentável.",,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Inventário fauna terrestre,-,"Levantamento sistemático para identificar, catalogar e avaliar a diversidade, abundância e estado de conservação das espécies animais em uma área e tempo específicos",,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Monitoramento  – Fauna  terrestre,-,"Estudo sistemático para avaliar os impactos de empreendimentos sobre animais silvestres antes, durante e após obras, rastreando distribuição, diversidade e estrutura populacional",,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Resgate e Destinação  – Fauna  terrestre,-,"Ações técnicas de captura, manejo, salvamento e realocação de animais silvestres ameaçados por obras ou empreendimentos, visando mitigar impactos, garantir sua sobrevivência e integridade física",,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Outorga,-,"Autorização legal dada pelo Estado/União para que um usuário (empresa, produtor rural) use a água de rios, poços ou barragens",,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Anuências,-,,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Atualização do FCE,-,,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Publicação da LP,-,,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,ART de projeto,-,,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Projeto executivo de implantação,-,Detalhamento completo da obra.,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Projeto de drenagem,-,Manejo de águas de chuva.,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Projeto de controle de sedimentos,,– Minimiza erosão e assoreamento.,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Projeto de Intervenção Ambietal,PIA,Detalha cortes e remoção de vegetação.,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Projeto de estradas internas,,,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Projeto Básico Ambiental,PBA,"elaborado a partir das recomendações propostas no Estudo de Impacto Ambiental (EIA), tem como objetivo propor medidas mitigadoras, compensatórias, de monitoramento e controle ambiental frente aos impactos inerentes à execução do Projeto",,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Plano de gestão de resídus,PGR,,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Plano de Segurança de Barragem,PSB,,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Plano Diretor Ambiental,PDA,"Documento estratégico/diretivo, encaixando-se no planejamento (LP) e na estruturação de medidas de controle.",,
-6,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,EIA/RIMA,,Conjunto de documentos técnicos exigidos para licenciar grandes empreendimentos com potencial significativo de danos ambientais.,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Estudo de Impacto Ambiental,EIA,Documento técnico detalhado e obrigatório para o licenciamento de atividades com potencial de significativa degradação ambienta,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Relatório de Impacto Ambienta,RIMA,"O Relatório de Impacto Ambiental (RIMA) é um documento técnico, público e didático que reflete as conclusões do Estudo de Impacto Ambiental (EIA), exigido no licenciamento de projetos significativos",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Formulário de Caracterização do Empreendimento,FCE,"Detalha a natureza, atividades, localização, processos produtivos, insumos, recursos hídricos e resíduos de uma empresa. Ele serve para o órgão ambiental avaliar os impactos, enquadrar o risco e definir medidas mitigadoras.",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Memorial Descritivo,-,"Documento técnico essencial que detalha as características, atividades, localização, infraestrutura e impactos potenciais de um empreendimento.",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Planta topográfica,-,-,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Mapas de Acesso,-,-,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Taxas Ambientais,-,-,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Plano de Controle Ambiental,PCA,"Documento técnico  que identifica, avalia e propõe medidas mitigadoras, monitoramento e controles para impactos ambientais gerados por empreendimentos poluidores",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Inventário fauna aquática,-,"Estudo técnico para identificar, quantificar e mapear espécies animais (peixes, plâncton, bentos) em um local e tempo específicos",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Monitoramento fauna aquática,,"Coleta periódica, identificação e análise de peixes (ictiofauna), macroinvertebrados e plâncton para avaliar a saúde do ecossistema, impactos ambientais e qualidade da água",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Resgate/ salvamento/ peixamento – Fauna aquática,,"Procedimentos técnicos e ambientais fundamentais para mitigar impactos humanos sobre ecossistemas hídricos, comuns em obras de engenharia (barragens, pontes), desastres ambientais ou manejo sustentável.",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Inventário fauna terrestre,-,"Levantamento sistemático para identificar, catalogar e avaliar a diversidade, abundância e estado de conservação das espécies animais em uma área e tempo específicos",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Monitoramento  – Fauna  terrestre,-,"Estudo sistemático para avaliar os impactos de empreendimentos sobre animais silvestres antes, durante e após obras, rastreando distribuição, diversidade e estrutura populacional",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Resgate e Destinação  – Fauna  terrestre,-,"Ações técnicas de captura, manejo, salvamento e realocação de animais silvestres ameaçados por obras ou empreendimentos, visando mitigar impactos, garantir sua sobrevivência e integridade física",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Outorga,-,"Autorização legal dada pelo Estado/União para que um usuário (empresa, produtor rural) use a água de rios, poços ou barragens",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP,Anuências,-,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Atualização do FCE,-,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Publicação da LP,-,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,ART de projeto,-,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Projeto executivo de implantação,-,Detalhamento completo da obra.,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Projeto de drenagem,-,Manejo de águas de chuva.,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Projeto de controle de sedimentos,,– Minimiza erosão e assoreamento.,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Projeto de Intervenção Ambietal,PIA,Detalha cortes e remoção de vegetação.,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Projeto de estradas internas,,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Projeto Básico Ambiental,PBA,"elaborado a partir das recomendações propostas no Estudo de Impacto Ambiental (EIA), tem como objetivo propor medidas mitigadoras, compensatórias, de monitoramento e controle ambiental frente aos impactos inerentes à execução do Projeto",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Plano de gestão de resídus,PGR,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Plano de Segurança de Barragem,PSB,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LI,Plano Diretor Ambiental,PDA,"Documento estratégico/diretivo, encaixando-se no planejamento (LP) e na estruturação de medidas de controle.",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+6.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,EIA/RIMA,,Conjunto de documentos técnicos exigidos para licenciar grandes empreendimentos com potencial significativo de danos ambientais.,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-7,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Requerimento de LI,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental –  SLA, disponível no Portal
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+7.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Requerimento de LI,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental –  SLA, disponível no Portal
  Ecosistemas",,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-8,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da publicação do pedido a LI,,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+8.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da publicação do pedido a LI,,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-9,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da publicação do pedido a LP,,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+9.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da publicação do pedido a LP,,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-10,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Plano de Aproveitamento Economico -,,"Documento técnico e econômico essencial no setor de mineração, descrevendo como uma jazida mineral será explorada, beneficiada e comercializada.",,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+10.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Plano de Aproveitamento Economico -,,"Documento técnico e econômico essencial no setor de mineração, descrevendo como uma jazida mineral será explorada, beneficiada e comercializada.",,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-11,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da comunicação a ANM aprovando o plano de Aproveitamento Economico,,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+11.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da comunicação a ANM aprovando o plano de Aproveitamento Economico,,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-12,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Plano de Controle Ambiental - PCA,,"Documento que detalha as ações, medidas e práticas que um empreendedor deve adotar para controlar, minimizar e monitorar os impactos ambientais causados por sua atividade ou empreendimento.",,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+12.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Plano de Controle Ambiental - PCA,,"Documento que detalha as ações, medidas e práticas que um empreendedor deve adotar para controlar, minimizar e monitorar os impactos ambientais causados por sua atividade ou empreendimento.",,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-13,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,"Autorização para supressão de vegetação, quando necessário",,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+13.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,"Autorização para supressão de vegetação, quando necessário",,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-14,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,"Outorga para uso de recursos hídricos, quando necessária",,"Instrumento legal que formaliza o direito de uso da água, seja superficial ou subterrânea, por parte de um usuário",,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+14.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,"Outorga para uso de recursos hídricos, quando necessária",,"Instrumento legal que formaliza o direito de uso da água, seja superficial ou subterrânea, por parte de um usuário",,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-15,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Requerimento de LO,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental –  SLA, disponível no Portal
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+15.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Requerimento de LO,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental –  SLA, disponível no Portal
  Ecosistemas",,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-16,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da publicação do pedido a LO,,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+16.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da publicação do pedido a LO,,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-17,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da publicação da concessão de LO,,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+17.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da publicação da concessão de LO,,-,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-18,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da Portaria de Lavra,,Título mineral que permite a exploração de uma jazida mineral após a aprovação do Relatório Final de Pesquisa e a execução do Requerimento de Lavra.,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+18.0,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Cópia da Portaria de Lavra,,Título mineral que permite a exploração de uma jazida mineral após a aprovação do Relatório Final de Pesquisa e a execução do Requerimento de Lavra.,,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Relatório de Avaliação de Desempenho Ambiental - RADA,,"instrumento técnico utilizado para avaliar o desempenho ambiental de empreendimentos em operação, especialmente para a renovação da Licença de Operação.",,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Levantamento Biológico,,,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Relatório Geotécnico Preliminar,,,,
-,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Declarações de Ruído e Vibração,,,,
-20,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Requerimento de LP,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental – SLA, disponível no Portal
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Relatório de Avaliação de Desempenho Ambiental - RADA,,"instrumento técnico utilizado para avaliar o desempenho ambiental de empreendimentos em operação, especialmente para a renovação da Licença de Operação.",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Levantamento Biológico,,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Relatório Geotécnico Preliminar,,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,ÚNICA,LP+ LI+ LO,LP+ LI+ LO,Declarações de Ruído e Vibração,,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+20.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Requerimento de LP,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental – SLA, disponível no Portal
  Ecosistemas",,"Empreendimentos de Classe 4 com  Critérios Locacionais 0
 Empreendimentos de Classe 3 com  Critérios Locacionais 1
-Empreendimentos de Classe 2 com  Critérios Locacionais 2"
-21,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Cópia da publicação do pedido a LP,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classe 2 com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+21.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Cópia da publicação do pedido a LP,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-22,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Declaração da prefeitura,,"Declaração que atesta que o empreendimento está em conformidade com as normas municipais (zoneamento, uso do solo, legislação urbanística, etc.) antes da análise pelo órgão ambiental estadual ou federal.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+22.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Declaração da prefeitura,,"Declaração que atesta que o empreendimento está em conformidade com as normas municipais (zoneamento, uso do solo, legislação urbanística, etc.) antes da análise pelo órgão ambiental estadual ou federal.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-23,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,EIA/RIMA,,Conjunto de documentos técnicos exigidos para licenciar grandes empreendimentos com potencial significativo de danos ambientais.,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+23.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,EIA/RIMA,,Conjunto de documentos técnicos exigidos para licenciar grandes empreendimentos com potencial significativo de danos ambientais.,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-24,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Requerimento de LI,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental –  SLA, disponível no Portal
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+24.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Requerimento de LI,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental –  SLA, disponível no Portal
  Ecosistemas",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-25,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Cópia da publicação do pedido a LI,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+25.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Cópia da publicação do pedido a LI,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-26,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Cópia da publicação do pedido a LP,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+26.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Cópia da publicação do pedido a LP,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-27,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Plano de Aproveitamento Economico,,"Documento técnico e econômico essencial no setor de mineração, descrevendo como uma jazida mineral será explorada, beneficiada e comercializada.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+27.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Plano de Aproveitamento Economico,,"Documento técnico e econômico essencial no setor de mineração, descrevendo como uma jazida mineral será explorada, beneficiada e comercializada.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-28,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Cópia da comunicação a ANM aprovando o plano de Aproveitamento Economico,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+28.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Cópia da comunicação a ANM aprovando o plano de Aproveitamento Economico,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-29,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Plano de Controle Ambiental - PCA,,"Documento que detalha as ações, medidas e práticas que um empreendedor deve adotar para controlar, minimizar e monitorar os impactos ambientais causados por sua atividade ou empreendimento.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+29.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,Plano de Controle Ambiental - PCA,,"Documento que detalha as ações, medidas e práticas que um empreendedor deve adotar para controlar, minimizar e monitorar os impactos ambientais causados por sua atividade ou empreendimento.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-30,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,"Autorização para supressão de vegetação, quando necessário",,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+30.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,"Autorização para supressão de vegetação, quando necessário",,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-31,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,"Outorga para uso de recursos hídricos, quando necessária",,"Instrumento legal que formaliza o direito de uso da água, seja superficial ou subterrânea, por parte de um usuário",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+31.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LP+ LI,"Outorga para uso de recursos hídricos, quando necessária",,"Instrumento legal que formaliza o direito de uso da água, seja superficial ou subterrânea, por parte de um usuário",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-32,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LO,Requerimento de LO,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental –  SLA, disponível no Portal
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+32.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LO,Requerimento de LO,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental –  SLA, disponível no Portal
  Ecosistemas",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-33,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LO,Cópia da publicação do pedido a LO,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+33.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LO,Cópia da publicação do pedido a LO,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-34,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LO,Cópia da publicação da concessão de LO,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+34.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LO,Cópia da publicação da concessão de LO,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-35,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LO,Cópia da Portaria de Lavra,,Título mineral que permite a exploração de uma jazida mineral após a aprovação do Relatório Final de Pesquisa e a execução do Requerimento de Lavra.,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+35.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LO,Cópia da Portaria de Lavra,,Título mineral que permite a exploração de uma jazida mineral após a aprovação do Relatório Final de Pesquisa e a execução do Requerimento de Lavra.,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-36,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LO,Relatório de Avaliação de Desempenho Ambiental - RADA,,"instrumento técnico utilizado para avaliar o desempenho ambiental de empreendimentos em operação, especialmente para a renovação da Licença de Operação.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+36.0,Estadual,Normativa,LAC2,DUAS,LP + LI / LO,LO,Relatório de Avaliação de Desempenho Ambiental - RADA,,"instrumento técnico utilizado para avaliar o desempenho ambiental de empreendimentos em operação, especialmente para a renovação da Licença de Operação.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-37,Estadual,Normativa,LAC1,DUAS,LP+ LI+ LO,LP,Requerimento de LP,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental – SLA, disponível no Portal
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+37.0,Estadual,Normativa,LAC1,DUAS,LP+ LI+ LO,LP,Requerimento de LP,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental – SLA, disponível no Portal
  Ecosistemas",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-38,Estadual,Normativa,LAC1,DUAS,LP+ LI+ LO,LP,Cópia da publicação do pedido a LP,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+38.0,Estadual,Normativa,LAC1,DUAS,LP+ LI+ LO,LP,Cópia da publicação do pedido a LP,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-39,Estadual,Normativa,LAC1,DUAS,LP+ LI+ LO,LP,Declaração da prefeitura,,"Declaração que atesta que o empreendimento está em conformidade com as normas municipais (zoneamento, uso do solo, legislação urbanística, etc.) antes da análise pelo órgão ambiental estadual ou federal.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+39.0,Estadual,Normativa,LAC1,DUAS,LP+ LI+ LO,LP,Declaração da prefeitura,,"Declaração que atesta que o empreendimento está em conformidade com as normas municipais (zoneamento, uso do solo, legislação urbanística, etc.) antes da análise pelo órgão ambiental estadual ou federal.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-40,Estadual,Normativa,LAC1,DUAS,LP+ LI+ LO,LP,EIA/RIMA,,Conjunto de documentos técnicos exigidos para licenciar grandes empreendimentos com potencial significativo de danos ambientais.,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+40.0,Estadual,Normativa,LAC1,DUAS,LP+ LI+ LO,LP,EIA/RIMA,,Conjunto de documentos técnicos exigidos para licenciar grandes empreendimentos com potencial significativo de danos ambientais.,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-41,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Requerimento de LI,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental –  SLA, disponível no Portal
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+41.0,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Requerimento de LI,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental –  SLA, disponível no Portal
  Ecosistemas",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-42,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Cópia da publicação do pedido a LI,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+42.0,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Cópia da publicação do pedido a LI,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-43,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Cópia da publicação do pedido a LP,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+43.0,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Cópia da publicação do pedido a LP,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-44,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Plano de Aproveitamento Economico,,"Documento técnico e econômico essencial no setor de mineração, descrevendo como uma jazida mineral será explorada, beneficiada e comercializada.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+44.0,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Plano de Aproveitamento Economico,,"Documento técnico e econômico essencial no setor de mineração, descrevendo como uma jazida mineral será explorada, beneficiada e comercializada.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-45,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Cópia da comunicação a ANM aprovando o plano de Aproveitamento Economico,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+45.0,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Cópia da comunicação a ANM aprovando o plano de Aproveitamento Economico,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-46,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Plano de Controle Ambiental - PCA,,"Documento que detalha as ações, medidas e práticas que um empreendedor deve adotar para controlar, minimizar e monitorar os impactos ambientais causados por sua atividade ou empreendimento.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+46.0,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Plano de Controle Ambiental - PCA,,"Documento que detalha as ações, medidas e práticas que um empreendedor deve adotar para controlar, minimizar e monitorar os impactos ambientais causados por sua atividade ou empreendimento.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,RCA - Relatório de Controle Ambiental,,,,
-47,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,"Autorização para supressão de vegetação, quando necessário",,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,RCA - Relatório de Controle Ambiental,,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+47.0,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,"Autorização para supressão de vegetação, quando necessário",,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-48,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,"Outorga para uso de recursos hídricos, quando necessária",,"Instrumento legal que formaliza o direito de uso da água, seja superficial ou subterrânea, por parte de um usuário",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+48.0,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,"Outorga para uso de recursos hídricos, quando necessária",,"Instrumento legal que formaliza o direito de uso da água, seja superficial ou subterrânea, por parte de um usuário",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-49,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Requerimento de LO,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental –  SLA, disponível no Portal
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+49.0,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Requerimento de LO,,"Documento formal apresentado por meio do Sistema de Licenciamento Ambiental –  SLA, disponível no Portal
  Ecosistemas",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-50,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Cópia da publicação do pedido a LO,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+50.0,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Cópia da publicação do pedido a LO,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-51,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Cópia da publicação da concessão de LO,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+51.0,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Cópia da publicação da concessão de LO,,-,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-52,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Cópia da Portaria de Lavra,,Título mineral que permite a exploração de uma jazida mineral após a aprovação do Relatório Final de Pesquisa e a execução do Requerimento de Lavra.,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+52.0,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Cópia da Portaria de Lavra,,Título mineral que permite a exploração de uma jazida mineral após a aprovação do Relatório Final de Pesquisa e a execução do Requerimento de Lavra.,,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-53,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Relatório de Avaliação de Desempenho Ambiental - RADA,,"instrumento técnico utilizado para avaliar o desempenho ambiental de empreendimentos em operação, especialmente para a renovação da Licença de Operação.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+53.0,Estadual,Normativa,LAC2,DUAS,LP / LI + LO,LI + LO,Relatório de Avaliação de Desempenho Ambiental - RADA,,"instrumento técnico utilizado para avaliar o desempenho ambiental de empreendimentos em operação, especialmente para a renovação da Licença de Operação.",,"Empreendimentos de Classe 5 e 6,  com Critérios Locacionais 0
 Empreendimentos de Classe 4 e 5 com  Critérios Locacionais 1
-Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2"
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Requerimento para intervenção ambiental,,"Documento formal dirigido ao órgão ambiental para solicitar autorização legal para alterar a vegetação nativa ou áreas protegidas (APP, Reserva Legal).",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Cópia de documento de identificação do responsável pela intervenção ambiental,,-,,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Cópia de documento de identificação do proprietário ou possuidor do imóvel,,-,,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Procuração,,-,,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Documento de identificação do imóvel,,-,,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Cópia do recibo do Cadastro Ambiental Rural,,"Registro público eletrônico nacional, obrigatório para todos os imóveis rurais, com a finalidade de integrar as informações ambientais das propriedades e posses rurais, compondo base de dados para controle, monitoramento, planejamento ambiental e econômico e combate ao desmatamento",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,"Cópia de contrato de compra e venda, locação, arrendamento, comodato ou outro",,"Documento emitido pelo município ou órgão competente atestando que o empreendimento está em conformidade com o uso e ocupação do solo (Plano Diretor), normas ambientais locais e legislações vigentes.",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Carta de anuência,,,,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Planta topográfica,,Formato PDF e arquivos digitais com ART,,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Projeto de Intervenção Ambiental Simplificado (para supressão < 10 há,PIA,"Documento técnico e planejamento de ações para minimizar, mitigar ou compensar impactos ecológicos de empreendimentos, abrangendo supressão vegetal, uso de APP, manejo e recuperação",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Projeto de Intervenção Ambiental (para supressão >= 10 ha),PIA,"Documento técnico e planejamento de ações para minimizar, mitigar ou compensar impactos ecológicos de empreendimentos, abrangendo supressão vegetal, uso de APP, manejo e recuperação",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Proposta de medidas compensatórias,-,"Mecanismo legal e financeiro exigido para contrabalançar danos, supressão de vegetação ou impactos de empreendimentos, obrigando o poluidor a recuperar áreas, plantar mudas ou investir em unidades de conservação",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Projeto de preservação ou recuperação da vegetação nativa (para supressão no Bioma Cerrado),-,"Mecanismo legal e financeiro exigido para contrabalançar danos, supressão de vegetação ou impactos de empreendimentos, obrigando o poluidor a recuperar áreas, plantar mudas ou investir em unidades de conservação",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Documento de Arrecadação Estadual,DAE,-,,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,DAE para recolhimento da Taxa Florestal,-,-,,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Plano de Controle de Ambiental,PCA,"Documento técnico  que identifica, avalia e propõe medidas mitigadoras, monitoramento e controles para impactos ambientais gerados por empreendimentos poluidores",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Projeto executivo do sistema de tratamento de efluente,-,"Detalhamento técnico final, onde são produzidas todas as informações, desenhos, cálculos e especificações necessárias para a construção, montagem e operação real da estação.",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Programa de controle de erosão,-,-,,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Plano de segurança da barragem,-,-,,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Plano de Aproveitamento Economico,PAE,"Documento técnico-econômico fundamental e obrigatório para o Requerimento de Lavra (concessão) junto à Agência Nacional de Mineração (ANM), exigido pelo Código de Mineração",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Plano de Gestão de Resíduos,PGR,"Documento técnico-legal obrigatório, exigido pela Política Nacional de Resíduos Sólidos (Lei 12.305/2010), que define estratégias para a segregação, coleta, transporte, tratamento e destinação final de resíduos, visando reduzir impactos ambientais e garantir a conformidade legal.",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Plano de Ação de Emergência,PAE - B,"Documento técnico-administrativo que define procedimentos organizados para responder a situações críticas (incêndios, vazamentos, rupturas), visando proteger vidas, meio ambiente e patrimônio",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Estudo de Dispersão Atmosférica,-,"Modelagem matemática que simula a trajetória, o transporte e a concentração de poluentes lançados no ar, essencial para licenciamentos ambientais (CONAMA 506) e gestão de qualidade do ar.",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Propostas de Compensação por Intervenções Ambientais,-,"Mecanismo legal que exige de empreendedores a reparação ou contrapartida por danos, supressão de vegetação ou impactos causados ao meio ambiente.",,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,"Outorga para uso de recursos hídricos, quando necessária",-,,,
-,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Pareceres instituições,-,,,
+Empreendimentos de Classes 3 e 4, com  Critérios Locacionais 2",estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Requerimento para intervenção ambiental,,"Documento formal dirigido ao órgão ambiental para solicitar autorização legal para alterar a vegetação nativa ou áreas protegidas (APP, Reserva Legal).",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Cópia de documento de identificação do responsável pela intervenção ambiental,,-,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Cópia de documento de identificação do proprietário ou possuidor do imóvel,,-,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Procuração,,-,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Documento de identificação do imóvel,,-,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Cópia do recibo do Cadastro Ambiental Rural,,"Registro público eletrônico nacional, obrigatório para todos os imóveis rurais, com a finalidade de integrar as informações ambientais das propriedades e posses rurais, compondo base de dados para controle, monitoramento, planejamento ambiental e econômico e combate ao desmatamento",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,"Cópia de contrato de compra e venda, locação, arrendamento, comodato ou outro",,"Documento emitido pelo município ou órgão competente atestando que o empreendimento está em conformidade com o uso e ocupação do solo (Plano Diretor), normas ambientais locais e legislações vigentes.",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Carta de anuência,,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Planta topográfica,,Formato PDF e arquivos digitais com ART,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Projeto de Intervenção Ambiental Simplificado (para supressão < 10 há,PIA,"Documento técnico e planejamento de ações para minimizar, mitigar ou compensar impactos ecológicos de empreendimentos, abrangendo supressão vegetal, uso de APP, manejo e recuperação",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Projeto de Intervenção Ambiental (para supressão >= 10 ha),PIA,"Documento técnico e planejamento de ações para minimizar, mitigar ou compensar impactos ecológicos de empreendimentos, abrangendo supressão vegetal, uso de APP, manejo e recuperação",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Proposta de medidas compensatórias,-,"Mecanismo legal e financeiro exigido para contrabalançar danos, supressão de vegetação ou impactos de empreendimentos, obrigando o poluidor a recuperar áreas, plantar mudas ou investir em unidades de conservação",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Projeto de preservação ou recuperação da vegetação nativa (para supressão no Bioma Cerrado),-,"Mecanismo legal e financeiro exigido para contrabalançar danos, supressão de vegetação ou impactos de empreendimentos, obrigando o poluidor a recuperar áreas, plantar mudas ou investir em unidades de conservação",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,Documento de Arrecadação Estadual,DAE,-,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LP,DAE para recolhimento da Taxa Florestal,-,-,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Plano de Controle de Ambiental,PCA,"Documento técnico  que identifica, avalia e propõe medidas mitigadoras, monitoramento e controles para impactos ambientais gerados por empreendimentos poluidores",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Projeto executivo do sistema de tratamento de efluente,-,"Detalhamento técnico final, onde são produzidas todas as informações, desenhos, cálculos e especificações necessárias para a construção, montagem e operação real da estação.",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Programa de controle de erosão,-,-,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Plano de segurança da barragem,-,-,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Plano de Aproveitamento Economico,PAE,"Documento técnico-econômico fundamental e obrigatório para o Requerimento de Lavra (concessão) junto à Agência Nacional de Mineração (ANM), exigido pelo Código de Mineração",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Plano de Gestão de Resíduos,PGR,"Documento técnico-legal obrigatório, exigido pela Política Nacional de Resíduos Sólidos (Lei 12.305/2010), que define estratégias para a segregação, coleta, transporte, tratamento e destinação final de resíduos, visando reduzir impactos ambientais e garantir a conformidade legal.",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Plano de Ação de Emergência,PAE - B,"Documento técnico-administrativo que define procedimentos organizados para responder a situações críticas (incêndios, vazamentos, rupturas), visando proteger vidas, meio ambiente e patrimônio",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Estudo de Dispersão Atmosférica,-,"Modelagem matemática que simula a trajetória, o transporte e a concentração de poluentes lançados no ar, essencial para licenciamentos ambientais (CONAMA 506) e gestão de qualidade do ar.",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Propostas de Compensação por Intervenções Ambientais,-,"Mecanismo legal que exige de empreendedores a reparação ou contrapartida por danos, supressão de vegetação ou impactos causados ao meio ambiente.",,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,"Outorga para uso de recursos hídricos, quando necessária",-,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+,Estadual,Normativa,LAC1,Intervenção Ambiental,LP+ LI+ LO,LI,Pareceres instituições,-,,,,estadual_mg,DN COPAM 217/2017,sim,2026-04-12
+54.0,Federal,Normativa,LAU,UNICA,-,LAU,Relatório de Controle Ambiental (RCA),RCA_LAU,"Relatório com caracterização da atividade, identificação de impactos e medidas de mitigação. Lei 15.190/2025, Art. 5, par.1, IV.",,Empreendimentos de baixo a médio impacto licenciáveis em fase única,federal,Lei 15.190/2025,sim,2026-04-12
+55.0,Federal,Normativa,LAU,UNICA,-,LAU,Plano de Controle Ambiental (PCA),PCA_LAU,"Plano com programas de mitigação, controle, monitoramento e compensação. Lei 15.190/2025, Art. 5, par.1, IV.",,Obrigatório para LAU,federal,Lei 15.190/2025,sim,2026-04-12
+56.0,Federal,Normativa,LAU,UNICA,-,LAU,Elementos Técnicos de Projeto,PROJ_LAU,"Elementos técnicos de projeto de engenharia conforme TR. Lei 15.190/2025, Art. 5, par.1, IV.",,Obrigatório para LAU,federal,Lei 15.190/2025,sim,2026-04-12
+57.0,Federal,Normativa,LAC Federal,UNICA,-,LAC_FED,Relatório de Caracterização do Empreendimento (RCE),RCE_LAC,"Relatório com informações técnicas sobre instalação e operação. Lei 15.190/2025, Art. 5, par.1, V.",,Atividades de baixo potencial poluidor e pequeno/médio porte. Mineração de grande porte NAO se enquadra.,federal,Lei 15.190/2025,sim,2026-04-12
+58.0,Federal,Normativa,LAC Federal,UNICA,-,LAC_FED,Termo de Adesão e Compromisso,TAC_LAC,Documento eletrônico de adesão às condicionantes pré-estabelecidas pelo órgão ambiental. Lei 15.190/2025.,,Obrigatório para LAC,federal,Lei 15.190/2025,sim,2026-04-12
+59.0,Federal,Normativa,LAE,UNICA,-,LAE,Estudo de Impacto Ambiental (EIA),EIA_LAE,"Estudo completo conforme Art. 29 da Lei 15.190/2025. Análise de alternativas, diagnóstico ambiental, avaliação de impactos, medidas mitigadoras, programas de monitoramento.",,Atividades estratégicas com alto potencial de impacto,federal,Lei 15.190/2025,sim,2026-04-12
+60.0,Federal,Normativa,LAE,UNICA,-,LAE,Relatório de Impacto Ambiental (RIMA),RIMA_LAE,"Síntese do EIA em linguagem acessível. Art. 30, Lei 15.190/2025.",,Obrigatório quando há EIA,federal,Lei 15.190/2025,sim,2026-04-12
+61.0,Federal,Normativa,LAE,UNICA,-,LAE,Plano Básico Ambiental (PBA),PBA_LAE,Detalhamento dos programas de prevenção e mitigação para as fases de instalação e operação. Lei 15.190/2025.,,Obrigatório para LAE,federal,Lei 15.190/2025,sim,2026-04-12
+62.0,Federal,Normativa,LOC,UNICA,-,LOC,Relatório de Controle Ambiental (RCA),RCA_LOC,Relatório para regularização de atividade em operação sem licença prévia. Lei 15.190/2025.,,Atividades já em operação que necessitam regularização ambiental,federal,Lei 15.190/2025,sim,2026-04-12
+63.0,Federal,Normativa,LOC,UNICA,-,LOC,Plano de Controle Ambiental (PCA),PCA_LOC,Plano de mitigação e controle para operação corretiva. Lei 15.190/2025.,,Obrigatório para LOC,federal,Lei 15.190/2025,sim,2026-04-12
+64.0,Federal,Normativa,Federal Geral,-,-,FEDERAL,Estudos Ambientais conforme CONAMA 237/97,EST_CONAMA237,"Estudos ambientais necessários ao processo de licenciamento conforme Resolução CONAMA 237/1997, Art. 3 e 11.",,Todos os empreendimentos sujeitos a licenciamento ambiental federal,federal,CONAMA 237/1997,sim,2026-04-12
+65.0,Federal,Normativa,Federal Geral,-,-,FEDERAL,Documentação de Projeto (CONAMA 237/97),PROJ_CONAMA237,"Documentos do projeto e estudos ambientais submetidos com o requerimento. CONAMA 237/97, Art. 10, II.",,Obrigatório em qualquer requerimento de licença,federal,CONAMA 237/1997,sim,2026-04-12
+66.0,Federal,Normativa,Mineração Federal,-,-,MINERACAO_FED,EIA/RIMA para Mineração (CONAMA 9/90),EIA_CONAMA9,"EIA/RIMA obrigatório para atividades de lavra e/ou beneficiamento mineral das classes I, III a IX. Resolução CONAMA 9/1990.",,"Jazidas metalíferas, fertilizantes, combustíveis fósseis, rochas betuminosas, gemas, pedras ornamentais, águas minerais/subterrâneas",federal,CONAMA 9/1990 e 10/1990,sim,2026-04-12
+67.0,Federal,Normativa,Mineração Federal,-,-,MINERACAO_FED,Licenciamento Mineração Classe II (CONAMA 10/90),LIC_CONAMA10,Licenciamento ambiental para extração mineral da classe II conforme Resolução CONAMA 10/1990.,,Extração mineral classe II,federal,CONAMA 9/1990 e 10/1990,sim,2026-04-12

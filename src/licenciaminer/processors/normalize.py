@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import tempfile
 import unicodedata
@@ -93,9 +94,12 @@ def atomic_parquet_write(df: pd.DataFrame, path: Path) -> None:
     tmp_fd, tmp_path_str = tempfile.mkstemp(
         suffix=".parquet", dir=str(path.parent)
     )
+    os.close(tmp_fd)  # Close fd immediately — Windows locks open fds
     tmp_path = Path(tmp_path_str)
     try:
         df.to_parquet(tmp_path, engine="pyarrow", index=False)
+        if path.exists():
+            path.unlink()
         tmp_path.rename(path)
     except Exception:
         tmp_path.unlink(missing_ok=True)

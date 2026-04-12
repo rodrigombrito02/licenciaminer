@@ -65,6 +65,8 @@ import {
   fetchOverviewStats,
   fetchOverviewTrend,
   fetchOverviewInsights,
+  fetchDecisionSummary,
+  fetchDecisionInsights,
   fmtNumber,
   fmtPct,
   type OverviewStats,
@@ -78,12 +80,16 @@ import {
   type CfemVsApproval,
   type RecidivismBand,
   type ShelvingAnalysis,
+  type DecisionFilters,
+  type DecisionSummary,
+  type ContextualInsight,
   type EmpresaProfile,
   type Decision,
   type TopEmpresa,
   type CopamResponse,
 } from "@/lib/api";
 import { fmtCNPJ, fmtDate, fmtReais } from "@/lib/format";
+import { FilterSidebar } from "@/components/filter-sidebar";
 
 const CHART_TOOLTIP_STYLE = {
   background: "var(--card)",
@@ -108,6 +114,15 @@ export default function DecisoesPage() {
   const [overviewTrend, setOverviewTrend] = useState<TrendPoint[] | null>(null);
   const [overviewInsights, setOverviewInsights] = useState<Insight[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState<DecisionFilters>({});
+  const [filteredSummary, setFilteredSummary] = useState<DecisionSummary | null>(null);
+  const [contextInsights, setContextInsights] = useState<ContextualInsight[] | null>(null);
+
+  // Reload summary & insights when filters change
+  useEffect(() => {
+    fetchDecisionSummary(filters).then(setFilteredSummary).catch(() => {});
+    fetchDecisionInsights(filters).then(setContextInsights).catch(() => {});
+  }, [filters]);
 
   // Lazy-load: fetch only when the relevant tab is selected (or for KPI row).
   // Each dataset fetches once and caches in state.
@@ -216,7 +231,11 @@ export default function DecisoesPage() {
       : null;
 
   return (
-    <div className="space-y-8">
+    <div className="flex gap-6">
+      {/* Main content */}
+      <div className="flex-1 min-w-0 space-y-8">
+
+      {/* Header */}
       <div>
         <h1 className="font-heading text-2xl font-bold tracking-tight lg:text-3xl">
           Análise de Decisões
@@ -228,6 +247,47 @@ export default function DecisoesPage() {
           Deferido = aprovado · Indeferido = negado · Arquivamento = processo encerrado sem decisão de mérito · Classes 1-6 por impacto ambiental
         </p>
       </div>
+
+      {/* Filtered KPI summary */}
+      {filteredSummary && (
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Total Decisões</p>
+            <p className="text-2xl font-bold tabular-nums">{fmtNumber(filteredSummary.total)}</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Taxa Aprovação</p>
+            <p className="text-2xl font-bold tabular-nums text-brand-teal">{fmtPct(filteredSummary.taxa_aprovacao)}</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Deferidos</p>
+            <p className="text-2xl font-bold tabular-nums text-success">{fmtNumber(filteredSummary.deferidos)}</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Indeferidos</p>
+            <p className="text-2xl font-bold tabular-nums text-danger">{fmtNumber(filteredSummary.indeferidos)}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Contextual insights */}
+      {contextInsights && contextInsights.length > 0 && (
+        <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+          {contextInsights.map((insight, i) => (
+            <div
+              key={i}
+              className={`rounded-lg border-l-2 px-3 py-2.5 ${
+                insight.tipo === "risco" ? "border-l-danger bg-danger/5" :
+                insight.tipo === "tendencia" ? "border-l-brand-teal bg-brand-teal/5" :
+                "border-l-brand-gold bg-brand-gold/5"
+              }`}
+            >
+              <p className="text-xs font-semibold">{insight.titulo}</p>
+              <p className="text-[11px] text-muted-foreground">{insight.descricao}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {error && (
         <Card className="border-destructive/30">
@@ -851,6 +911,63 @@ export default function DecisoesPage() {
           </CardContent>
         </Card>
       )}
+
+      {/* CTAs estratégicos */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pt-4">
+        <Link href="/due-diligence">
+          <Card className="group border-brand-teal/20 hover:border-brand-teal/50 transition-all hover:shadow-md h-full">
+            <CardContent className="p-5">
+              <p className="text-sm font-semibold group-hover:text-brand-teal">Análise de Conformidade</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Avalie a aderência do seu processo antes de protocolar no órgão ambiental.
+              </p>
+              <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-brand-teal">
+                Due Diligence <ArrowRight className="h-3 w-3" />
+              </span>
+            </CardContent>
+          </Card>
+        </Link>
+        <Card className="border-brand-gold/20 opacity-70">
+          <CardContent className="p-5">
+            <p className="text-sm font-semibold">Análise de Viabilidade</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Score de viabilidade com base em localização, atividade e histórico regional.
+            </p>
+            <Badge variant="outline" className="mt-3 text-[10px]">Em breve</Badge>
+          </CardContent>
+        </Card>
+        <a href="https://summoquartile.com" target="_blank" rel="noopener noreferrer">
+          <Card className="group border-brand-orange/20 hover:border-brand-orange/50 transition-all hover:shadow-md h-full">
+            <CardContent className="p-5">
+              <p className="text-sm font-semibold group-hover:text-brand-orange">Consultoria Especializada</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Precisa de apoio para estruturar seu processo? Fale com nosso time.
+              </p>
+              <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-brand-orange">
+                Fale conosco <ExternalLink className="h-3 w-3" />
+              </span>
+            </CardContent>
+          </Card>
+        </a>
+      </div>
+
+      {/* Link para BI da FEAM */}
+      <p className="text-center text-xs text-muted-foreground/50">
+        Dados oficiais:{" "}
+        <a
+          href="https://app.powerbi.com/view?r=eyJrIjoiYjBiMTY4ZDctNjgyOC00MmU5LWJhMjgtNmVlOGRmYTQ3ZjI2IiwidCI6IjkyNGY5ODQ3LTI0MmUtNGE5YS04OTEzLTllNDM2NDliOWVhYSJ9"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-brand-teal hover:underline"
+        >
+          BI da FEAM — Licenciamento Ambiental MG
+        </a>
+      </p>
+
+      </div>
+
+      {/* Filter sidebar */}
+      <FilterSidebar filters={filters} onChange={setFilters} />
     </div>
   );
 }

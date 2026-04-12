@@ -37,12 +37,16 @@ import {
   fetchDDDocuments,
   fetchDDRequirements,
   submitDDScore,
+  submitDDCriticality,
+  uploadDDDocument,
   downloadReportPDF,
   fmtPct,
   type LicenseType,
   type DDDocument,
   type DDRequirement,
   type DDScoreResult,
+  type CriticalityResult,
+  type DDUploadResult,
 } from "@/lib/api";
 
 type Evaluation = "Atende" | "Atende Parcialmente" | "Não Atende" | "Não Aplica";
@@ -78,7 +82,8 @@ const STEPS = [
   { num: 1, label: "Configuração" },
   { num: 2, label: "Documentos" },
   { num: 3, label: "Avaliação" },
-  { num: 4, label: "Resultado" },
+  { num: 4, label: "Criticidade" },
+  { num: 5, label: "Resultado" },
 ];
 
 const SESSION_KEY = "dd-wizard-state";
@@ -130,10 +135,18 @@ export default function DueDiligencePage() {
   const [evaluations, setEvaluations] = useState<Record<string, string>>(saved.evaluations ?? {});
   const [loadingReqs, setLoadingReqs] = useState(false);
 
-  // Step 4
+  // Step 4 (Criticidade)
+  const [criticality, setCriticality] = useState<CriticalityResult | null>(null);
+  const [loadingCriticality, setLoadingCriticality] = useState(false);
+
+  // Step 5 (Resultado)
   const [result, setResult] = useState<DDScoreResult | null>(null);
   const [scoring, setScoring] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
+
+  // Upload
+  const [uploadedFiles, setUploadedFiles] = useState<DDUploadResult[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   // Auto-save wizard state to sessionStorage
   useEffect(() => {
@@ -185,20 +198,40 @@ export default function DueDiligencePage() {
     setLoadingReqs(false);
   };
 
-  // Submit score
-  const handleScore = async () => {
+  // Submit score + criticality → go to step 4
+  const handleAnalyze = async () => {
     setScoring(true);
+    setLoadingCriticality(true);
     try {
-      const res = await submitDDScore({
-        avaliacoes: evaluations,
-        doc_status: docStatus,
-      });
-      setResult(res);
+      const [scoreRes, critRes] = await Promise.all([
+        submitDDScore({ avaliacoes: evaluations, doc_status: docStatus }),
+        submitDDCriticality(evaluations),
+      ]);
+      setResult(scoreRes);
+      setCriticality(critRes);
       setStep(4);
     } catch {
       // handle error
     } finally {
       setScoring(false);
+      setLoadingCriticality(false);
+    }
+  };
+
+  // Handle PDF upload
+  const handleUpload = async (file: File) => {
+    setUploading(true);
+    try {
+      const res = await uploadDDDocument(file);
+      if (res.error) {
+        console.error("Upload error:", res.error);
+      } else {
+        setUploadedFiles((prev) => [...prev, res]);
+      }
+    } catch (e) {
+      console.error("Upload failed:", e);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -436,6 +469,58 @@ export default function DueDiligencePage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* Upload area */}
+            <div
+              className="rounded-lg border-2 border-dashed border-brand-teal/30 bg-brand-teal/5 p-6 text-center cursor-pointer hover:border-brand-teal/50 transition-colors"
+              onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              onDrop={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const files = Array.from(e.dataTransfer.files);
+                files.forEach((f) => { if (f.name.endsWith(".pdf")) handleUpload(f); });
+              }}
+              onClick={() => {
+                const input = document.createElement("input");
+                input.type = "file";
+                input.accept = ".pdf";
+                input.multiple = true;
+                input.onchange = () => {
+                  if (input.files) Array.from(input.files).forEach(handleUpload);
+                };
+                input.click();
+              }}
+            >
+              {uploading ? (
+                <Loader2 className="mx-auto h-6 w-6 animate-spin text-brand-teal" />
+              ) : (
+                <>
+                  <Download className="mx-auto h-6 w-6 text-brand-teal/60 rotate-180" />
+                  <p className="mt-2 text-sm font-medium text-brand-teal">
+                    Arraste PDFs aqui ou clique para selecionar
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    O sistema extrai o texto e identifica os documentos automaticamente
+                  </p>
+                </>
+              )}
+            </div>
+
+            {/* Uploaded files */}
+            {uploadedFiles.length > 0 && (
+              <div className="space-y-1">
+                {uploadedFiles.map((f, i) => (
+                  <div key={i} className="flex items-center gap-3 rounded border p-2 text-xs">
+                    <FileText className="h-4 w-4 text-brand-teal shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium truncate">{f.filename}</p>
+                      <p className="text-muted-foreground">{f.pages} páginas · {Math.round(f.size_bytes / 1024)} KB · {f.text_length} caracteres extraídos</p>
+                    </div>
+                    <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* Summary + progress bar */}
             {documents && (
               <div className="space-y-2">
@@ -645,18 +730,126 @@ export default function DueDiligencePage() {
             </Button>
             <Button
               disabled={Object.keys(evaluations).length === 0 || scoring}
-              onClick={handleScore}
+              onClick={handleAnalyze}
             >
               {scoring && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Calcular Resultado
+              Analisar Criticidade
               <ChevronRight className="ml-1 h-4 w-4" />
             </Button>
           </div>
         </div>
       )}
 
-      {/* Step 4: Results */}
-      {step === 4 && result && (
+      {/* Step 4: Criticidade */}
+      {step === 4 && criticality && result && (
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 font-heading">
+                <AlertTriangle className="h-4 w-4 text-brand-orange" />
+                Avaliação de Criticidade
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Quadrantes */}
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {[
+                  { label: "Ação Imediata (complexa)", count: criticality.quadrantes.acao_imediata_complexa, color: "border-l-danger bg-danger/5" },
+                  { label: "Ação Imediata (simples)", count: criticality.quadrantes.acao_imediata_simples, color: "border-l-brand-orange bg-brand-orange/5" },
+                  { label: "Ações Secundárias", count: criticality.quadrantes.acoes_secundarias, color: "border-l-warning bg-warning/5" },
+                  { label: "Baixa Prioridade", count: criticality.quadrantes.baixa_prioridade, color: "border-l-success bg-success/5" },
+                ].map((q) => (
+                  <div key={q.label} className={`rounded-r-lg border-l-4 px-4 py-3 ${q.color}`}>
+                    <p className="text-2xl font-bold tabular-nums">{q.count}</p>
+                    <p className="text-xs text-muted-foreground">{q.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Aderência por tema */}
+              {criticality.por_tema.length > 0 && (
+                <div>
+                  <p className="text-sm font-semibold mb-3">Aderência por Tema</p>
+                  <div className="space-y-2">
+                    {criticality.por_tema.map((tema) => (
+                      <div key={tema.topico} className="flex items-center gap-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs truncate">{tema.topico}</p>
+                        </div>
+                        <div className="w-32">
+                          <Progress value={tema.taxa_aderencia} className="h-2" />
+                        </div>
+                        <span className={`text-xs font-bold tabular-nums w-12 text-right ${
+                          tema.taxa_aderencia >= 80 ? "text-success" : tema.taxa_aderencia >= 50 ? "text-warning" : "text-danger"
+                        }`}>
+                          {tema.taxa_aderencia}%
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Gargalos */}
+              {criticality.gargalos.length > 0 && (
+                <div className="rounded-lg border border-danger/20 bg-danger/5 p-4">
+                  <p className="text-sm font-semibold text-danger mb-2">Gargalos Identificados</p>
+                  <ul className="space-y-1">
+                    {criticality.gargalos.map((g, i) => (
+                      <li key={i} className="text-xs text-muted-foreground flex items-center gap-2">
+                        <XCircle className="h-3 w-3 text-danger shrink-0" />
+                        {g}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Itens não-conformes */}
+              {criticality.non_conformes.length > 0 && (
+                <div>
+                  <p className="text-sm font-semibold mb-2">
+                    {criticality.total_non_conformes} itens não-conformes
+                  </p>
+                  <div className="max-h-64 overflow-y-auto space-y-1">
+                    {criticality.non_conformes.slice(0, 20).map((item) => (
+                      <div key={item.requisito_id} className="flex items-start gap-2 rounded border p-2 text-xs">
+                        <Badge
+                          variant={item.avaliacao === "Não Atende" ? "destructive" : "secondary"}
+                          className="text-[9px] shrink-0"
+                        >
+                          {item.avaliacao === "Não Atende" ? "Não Atende" : "Parcial"}
+                        </Badge>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium truncate">{item.teste}</p>
+                          <p className="text-muted-foreground">{item.documento} · {item.topico}</p>
+                        </div>
+                        <Badge variant="outline" className="text-[9px] shrink-0">
+                          {item.quadrante.split("(")[0].trim()}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <div className="flex justify-between">
+            <Button variant="outline" onClick={() => setStep(3)}>
+              <ChevronLeft className="mr-1 h-4 w-4" />
+              Voltar
+            </Button>
+            <Button onClick={() => setStep(5)}>
+              Ver Resultado Final
+              <ChevronRight className="ml-1 h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Step 5: Results */}
+      {step === 5 && result && (
         <div className="space-y-6">
           {/* Config summary */}
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
@@ -722,7 +915,7 @@ export default function DueDiligencePage() {
             <TabsList>
               <TabsTrigger value="overview">Visão Geral</TabsTrigger>
               <TabsTrigger value="by-doc">Por Documento</TabsTrigger>
-              <TabsTrigger value="recs">Recomendações</TabsTrigger>
+              <TabsTrigger value="recs">Plano de Ação</TabsTrigger>
               <TabsTrigger value="scale">Escala</TabsTrigger>
             </TabsList>
 

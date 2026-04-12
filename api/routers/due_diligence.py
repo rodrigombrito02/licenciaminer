@@ -1,7 +1,15 @@
 """Endpoints de Due Diligence ambiental."""
 
-from fastapi import APIRouter, Query
+from __future__ import annotations
+
+import io
+import logging
+
+import fitz  # pymupdf
+from fastapi import APIRouter, File, Query, UploadFile
 from pydantic import BaseModel
+
+logger = logging.getLogger(__name__)
 
 from app.components.dd_inventory import (
     LICENCA_DESC,
@@ -103,3 +111,140 @@ def calculate_score(request: ScoreRequest):
     response["recomendacoes"] = gerar_recomendacoes(request.avaliacoes, all_reqs)
 
     return response
+
+
+# ── Upload e extração de documentos ──────────────────────────────────────
+
+
+@router.post("/due-diligence/upload")
+async def upload_document(file: UploadFile = File(...)):
+    """Faz upload de PDF e extrai texto para análise.
+
+    Retorna metadados do arquivo e texto extraído (sem persistir no disco).
+    """
+    if not file.filename or not file.filename.lower().endswith(".pdf"):
+        return {"error": "Apenas arquivos PDF são aceitos."}
+
+    content = await file.read()
+    size_bytes = len(content)
+
+    try:
+        doc = fitz.open(stream=content, filetype="pdf")
+        pages = len(doc)
+        text_parts = []
+        for page in doc:
+            text_parts.append(page.get_text())
+        doc.close()
+        full_text = "\n".join(text_parts)
+    except Exception as e:
+        logger.warning("Erro ao extrair texto do PDF: %s", e)
+        return {"error": f"Erro ao processar PDF: {e}"}
+
+    return {
+        "filename": file.filename,
+        "pages": pages,
+        "size_bytes": size_bytes,
+        "text_length": len(full_text),
+        "text_preview": full_text[:2000] if full_text else "",
+        "extracted_text": full_text,
+    }
+
+
+# ── Criticidade ──────────────────────────────────────────────────────────
+
+
+class CriticalityRequest(BaseModel):
+    """Payload para análise de criticidade."""
+    avaliacoes: dict[str, str]
+
+
+@router.post("/due-diligence/criticality")
+def analyze_criticality(request: CriticalityRequest):
+    """Calcula matrix de criticidade e aderência por tema.
+
+    Retorna: itens não-conformes com impacto/complexidade + aderência por tópico.
+    """
+    all_reqs = load_requisitos()
+
+    # Mapear requisito_id → detalhes
+    req_map = {r["requisito_id"]: r for r in all_reqs}
+
+    # Itens não-conformes (para a matrix de criticidade)
+    non_conformes = []
+    for req_id, avaliacao in request.avaliacoes.items():
+        if avaliacao in ("Não Atende", "Atende Parcialmente"):
+            req = req_map.get(req_id, {})
+            impacto_raw = req.get("impacto", "")
+            peso_raw = req.get("peso", "")
+            # Converter impacto/peso em score numérico (1-5)
+            try:
+                impacto = float(impacto_raw) if impacto_raw else 3.0
+            except (ValueError, TypeError):
+                impacto = 3.0
+            try:
+                complexidade = float(peso_raw) if peso_raw else 2.0
+            except (ValueError, TypeError):
+                complexidade = 2.0
+            # Quadrante
+            if impacto >= 3 and complexidade >= 3:
+                quadrante = "Ação Imediata (alta complexidade)"
+            elif impacto >= 3:
+                quadrante = "Ação Imediata (simples)"
+            elif complexidade >= 3:
+                quadrante = "Ações Secundárias"
+            else:
+                quadrante = "Baixa Prioridade"
+
+            non_conformes.append({
+                "requisito_id": req_id,
+                "documento": req.get("documento", ""),
+                "topico": req.get("topico", ""),
+                "teste": req.get("teste_aderencia", ""),
+                "avaliacao": avaliacao,
+                "impacto": impacto,
+                "complexidade": complexidade,
+                "quadrante": quadrante,
+            })
+
+    # Aderência por tópico
+    topicos: dict[str, dict] = {}
+    for req_id, avaliacao in request.avaliacoes.items():
+        if avaliacao == "Não Aplica":
+            continue
+        req = req_map.get(req_id, {})
+        topico = req.get("topico", "Sem tópico")
+        if topico not in topicos:
+            topicos[topico] = {"topico": topico, "total": 0, "atende": 0, "parcial": 0, "nao_atende": 0}
+        topicos[topico]["total"] += 1
+        if avaliacao == "Atende":
+            topicos[topico]["atende"] += 1
+        elif avaliacao == "Atende Parcialmente":
+            topicos[topico]["parcial"] += 1
+        elif avaliacao == "Não Atende":
+            topicos[topico]["nao_atende"] += 1
+
+    por_tema = []
+    for t in topicos.values():
+        if t["total"] > 0:
+            t["taxa_aderencia"] = round(100.0 * (t["atende"] + 0.5 * t["parcial"]) / t["total"], 1)
+        else:
+            t["taxa_aderencia"] = 0
+        por_tema.append(t)
+
+    por_tema.sort(key=lambda x: x["taxa_aderencia"])
+
+    # Gargalos (3 temas com menor aderência)
+    gargalos = [t["topico"] for t in por_tema[:3] if t["taxa_aderencia"] < 80]
+
+    return {
+        "non_conformes": non_conformes,
+        "total_non_conformes": len(non_conformes),
+        "por_tema": por_tema,
+        "gargalos": gargalos,
+        "quadrantes": {
+            "acao_imediata_complexa": sum(1 for n in non_conformes if "alta complexidade" in n["quadrante"]),
+            "acao_imediata_simples": sum(1 for n in non_conformes if "simples" in n["quadrante"]),
+            "acoes_secundarias": sum(1 for n in non_conformes if "Secundárias" in n["quadrante"]),
+            "baixa_prioridade": sum(1 for n in non_conformes if "Baixa" in n["quadrante"]),
+        },
+    }

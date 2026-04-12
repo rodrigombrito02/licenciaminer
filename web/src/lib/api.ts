@@ -50,6 +50,7 @@ export interface OverviewStats {
   indeferidos: number;
   taxa_aprovacao: number;
   total_infracoes: number;
+  total_licencas_ibama: number;
   total_processos_anm: number;
   taxa_aprovacao_mineracao: number;
   total_decisoes_mineracao: number;
@@ -70,6 +71,7 @@ export async function fetchOverviewStats(): Promise<OverviewStats> {
     indeferidos: raw.mg_summary.indeferidos,
     taxa_aprovacao: raw.mining_summary.taxa_aprovacao_mineracao,
     total_infracoes: raw.ibama_summary.total_licencas,
+    total_licencas_ibama: raw.ibama_summary.total_licencas,
     total_processos_anm: raw.anm_summary.total_processos,
     taxa_aprovacao_mineracao: raw.mining_summary.taxa_aprovacao_mineracao,
     total_decisoes_mineracao: raw.mining_summary.total_decisoes,
@@ -395,6 +397,70 @@ export function submitDDScore(payload: {
   });
 }
 
+/* ── DD Upload & Criticality ── */
+
+export interface DDUploadResult {
+  filename: string;
+  pages: number;
+  size_bytes: number;
+  text_length: number;
+  text_preview: string;
+  extracted_text: string;
+  error?: string;
+}
+
+export async function uploadDDDocument(file: File): Promise<DDUploadResult> {
+  const formData = new FormData();
+  formData.append("file", file);
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  const res = await fetch(`${API}/due-diligence/upload`, {
+    method: "POST",
+    body: formData,
+  });
+  if (!res.ok) throw new Error(`Upload failed: ${res.status}`);
+  return res.json();
+}
+
+export interface CriticalityItem {
+  requisito_id: string;
+  documento: string;
+  topico: string;
+  teste: string;
+  avaliacao: string;
+  impacto: number;
+  complexidade: number;
+  quadrante: string;
+}
+
+export interface TopicAdherence {
+  topico: string;
+  total: number;
+  atende: number;
+  parcial: number;
+  nao_atende: number;
+  taxa_aderencia: number;
+}
+
+export interface CriticalityResult {
+  non_conformes: CriticalityItem[];
+  total_non_conformes: number;
+  por_tema: TopicAdherence[];
+  gargalos: string[];
+  quadrantes: {
+    acao_imediata_complexa: number;
+    acao_imediata_simples: number;
+    acoes_secundarias: number;
+    baixa_prioridade: number;
+  };
+}
+
+export function submitDDCriticality(avaliacoes: Record<string, string>) {
+  return apiFetch<CriticalityResult>("/due-diligence/criticality", {
+    method: "POST",
+    body: JSON.stringify({ avaliacoes }),
+  });
+}
+
 /* ── Explorer ── */
 
 export interface ExplorerResponse {
@@ -593,6 +659,7 @@ export interface ConcessoesFilters {
   municipio?: string[];
   cfem_status?: "ativo" | "inativo";
   estrategico?: boolean;
+  uf?: string;
   limit?: number;
   offset?: number;
 }
@@ -609,6 +676,8 @@ export interface ConcessoesFilterOptions {
   categorias: string[];
   substancias: string[];
   municipios: string[];
+  ufs: string[];
+  pipeline: Record<string, number>;
   regime_labels: Record<string, string>;
   view: string;
 }
@@ -631,6 +700,7 @@ function miningFilterQS(params?: {
   municipio?: string[];
   cfem_status?: string;
   estrategico?: boolean;
+  uf?: string;
   limit?: number;
   offset?: number;
 }): string {
@@ -643,6 +713,7 @@ function miningFilterQS(params?: {
   params.municipio?.forEach((v) => qs.append("municipio", v));
   if (params.cfem_status) qs.set("cfem_status", params.cfem_status);
   if (params.estrategico != null) qs.set("estrategico", String(params.estrategico));
+  if (params.uf) qs.set("uf", params.uf);
   if (params.limit) qs.set("limit", String(params.limit));
   if (params.offset) qs.set("offset", String(params.offset));
   const q = qs.toString();
@@ -1154,6 +1225,98 @@ export interface TopEmpresa {
 
 export function fetchTopEmpresas() {
   return apiFetch<TopEmpresa[]>("/decisions/top-empresas");
+}
+
+/* ── Decisions: filtered endpoints ── */
+
+export interface DecisionFilters {
+  regional?: string;
+  modalidade?: string;
+  classe?: number;
+  atividade?: string;
+  decisao?: string;
+  ano_min?: number;
+  ano_max?: number;
+  mining_only?: boolean;
+}
+
+function filtersToParams(f: DecisionFilters): string {
+  const p = new URLSearchParams();
+  if (f.regional) p.set("regional", f.regional);
+  if (f.modalidade) p.set("modalidade", f.modalidade);
+  if (f.classe != null) p.set("classe", String(f.classe));
+  if (f.atividade) p.set("atividade", f.atividade);
+  if (f.decisao) p.set("decisao", f.decisao);
+  if (f.ano_min != null) p.set("ano_min", String(f.ano_min));
+  if (f.ano_max != null) p.set("ano_max", String(f.ano_max));
+  if (f.mining_only) p.set("mining_only", "true");
+  const s = p.toString();
+  return s ? `?${s}` : "";
+}
+
+export interface FilterOptions {
+  regional: string[];
+  modalidade: string[];
+  classe: number[];
+  atividade_tipologia: { letra: string; label: string; n: number }[];
+  decisao: string[];
+  anos: string[];
+}
+
+export function fetchDecisionFilterOptions() {
+  return apiFetch<FilterOptions>("/decisions/filter-options");
+}
+
+export interface DecisionSummary {
+  total: number;
+  deferidos: number;
+  indeferidos: number;
+  arquivamentos: number;
+  taxa_aprovacao: number;
+}
+
+export function fetchDecisionSummary(filters: DecisionFilters = {}) {
+  return apiFetch<DecisionSummary>(`/decisions/summary${filtersToParams(filters)}`);
+}
+
+export interface LicensingProfile {
+  atividade: string;
+  classe: number | null;
+  regional: string | null;
+  n_decisoes: number;
+  probabilidade_aprovacao: number | null;
+  media_geral: number;
+  rigor_regional_delta: number | null;
+  tendencia_3anos: number | null;
+}
+
+export function fetchLicensingProfile(atividade: string, classe?: number, regional?: string) {
+  const p = new URLSearchParams({ atividade });
+  if (classe != null) p.set("classe", String(classe));
+  if (regional) p.set("regional", regional);
+  return apiFetch<LicensingProfile>(`/decisions/profile?${p}`);
+}
+
+export interface ContextualInsight {
+  tipo: string;
+  titulo: string;
+  descricao: string;
+}
+
+export function fetchDecisionInsights(filters: DecisionFilters = {}) {
+  return apiFetch<ContextualInsight[]>(`/decisions/insights${filtersToParams(filters)}`);
+}
+
+export function fetchDecisionSummaryByRegional(filters: DecisionFilters = {}) {
+  return apiFetch<Record<string, unknown>[]>(`/decisions/by-regional${filtersToParams(filters)}`);
+}
+
+export function fetchDecisionSummaryByClasse(filters: DecisionFilters = {}) {
+  return apiFetch<Record<string, unknown>[]>(`/decisions/by-classe${filtersToParams(filters)}`);
+}
+
+export function fetchDecisionTrend(filters: DecisionFilters = {}) {
+  return apiFetch<Record<string, unknown>[]>(`/decisions/trend${filtersToParams(filters)}`);
 }
 
 /* ── Formatting re-exports (canonical source: lib/format.ts) ── */
