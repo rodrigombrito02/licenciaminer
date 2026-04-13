@@ -60,14 +60,14 @@ export const NAV_SECTIONS: NavSection[] = [
     color: "text-brand-gold",
     items: [
       { href: "/inteligencia-comercial", label: "Inteligência Comercial", icon: Globe },
-      { href: "/monitoramento", label: "Monitoramento", icon: Search, disabled: true },
+      { href: "/monitoramento", label: "Monitoramento", icon: Search },
     ],
   },
   {
     label: "SQ Solutions",
     color: "text-brand-orange",
     items: [
-      { href: "/seguranca", label: "Segurança", icon: Shield, disabled: true },
+      { href: "/seguranca", label: "Segurança", icon: Shield },
       { href: "/mineradora-modelo", label: "Mineradora Modelo", icon: Factory },
     ],
   },

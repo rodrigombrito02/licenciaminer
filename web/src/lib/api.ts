@@ -1321,4 +1321,60 @@ export function fetchDecisionTrend(filters: DecisionFilters = {}) {
 
 /* ── Formatting re-exports (canonical source: lib/format.ts) ── */
 
+/* ── Monitoramento ── */
+
+export interface MonitoringEmpresa {
+  cnpj: string;
+  empresa: string;
+  total_processos: number;
+  pesquisas: number;
+  lavras: number;
+  substancia_exemplo: string;
+  cfem_total: number;
+}
+
+export function fetchMonitoringTopEmpresas(limit = 20) {
+  return apiFetch<MonitoringEmpresa[]>(`/intelligence/monitoring/top-empresas?limit=${limit}`);
+}
+
+export interface PipelineItem {
+  fase_atual: string;
+  n: number;
+}
+
+export function fetchMonitoringPipeline() {
+  return apiFetch<PipelineItem[]>("/intelligence/monitoring/pipeline");
+}
+
+export interface ProjetoDestaque {
+  id: string;
+  empresa: string;
+  cnpj: string | null;
+  projeto: string;
+  substancia: string;
+  categoria: string;
+  localizacao: { municipio: string | null; uf: string };
+  investimento_valor: number | null;
+  investimento_moeda: string;
+  status: string;
+  detalhe_status: string;
+  previsao: string;
+  capacidade: string | null;
+  licenciamento: string;
+  fontes: { titulo: string; url: string; data: string }[];
+  atualizado_em: string;
+}
+
+export interface ProjetosResponse {
+  total: number;
+  atualizado_em: string;
+  projetos: ProjetoDestaque[];
+}
+
+export function fetchMonitoringProjetos() {
+  return apiFetch<ProjetosResponse>("/intelligence/monitoring/projetos");
+}
+
+/* ── Formatting re-exports (canonical source: lib/format.ts) ── */
+
 export { fmtReais, fmtPct, fmtBR as fmtNumber } from "./format";

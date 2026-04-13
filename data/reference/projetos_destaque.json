@@ -1,0 +1,635 @@
+{
+  "_metadata": {
+    "descricao": "Principais projetos de mineração em desenvolvimento no Brasil. Base curada com fontes rastreáveis.",
+    "atualizado_em": "2026-04-13",
+    "total_projetos": 31,
+    "responsavel": "Summo Quartile — Inteligência Mineral",
+    "nota": "Dados coletados de fontes públicas (reportagens, relatórios RI, press releases). Atualizar periodicamente."
+  },
+  "projetos": [
+    {
+      "id": "vale-s11d-serra-sul-20",
+      "empresa": "Vale S.A.",
+      "cnpj": "33592510000154",
+      "projeto": "Serra Sul +20 Mtpa (S11D)",
+      "substancia": "Minério de Ferro",
+      "categoria": "ferro",
+      "localizacao": {"municipio": "Canaã dos Carajás", "uf": "PA"},
+      "investimento_valor": 2800000000,
+      "investimento_moeda": "USD",
+      "status": "Em execução",
+      "detalhe_status": "77% de avanço financeiro. LO IBAMA concedida. Comissionamento previsto 2º semestre 2026.",
+      "previsao": "2026",
+      "capacidade": "+20 Mtpa (total 120 Mtpa)",
+      "licenciamento": "LO IBAMA concedida",
+      "fontes": [
+        {"titulo": "Vale recebe LO para Serra Sul +20 Mtpa", "url": "https://vale.com/w/vale-receives-operating-license-for-the-serra-sul-20-mtpy-project", "data": "2025-10-15"},
+        {"titulo": "Vale aprova expansão S11D — CNN Brasil", "url": "https://www.cnnbrasil.com.br/economia/macroeconomia/vale-aprova-expansao-de-unidade-de-minerio-no-para-e-investira-us1-5-bi/", "data": "2024-12-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "vale-capanema",
+      "empresa": "Vale S.A.",
+      "cnpj": "33592510000154",
+      "projeto": "Maximização Capanema",
+      "substancia": "Minério de Ferro",
+      "categoria": "ferro",
+      "localizacao": {"municipio": "Ouro Preto", "uf": "MG"},
+      "investimento_valor": null,
+      "investimento_moeda": "USD",
+      "status": "Em execução",
+      "detalhe_status": "Parte do programa de investimentos de US$ 5,3 bi da Vale para 2025.",
+      "previsao": "2025-2026",
+      "capacidade": "Aumento de capacidade",
+      "licenciamento": "Em andamento",
+      "fontes": [
+        {"titulo": "Investimentos Vale 2025", "url": "https://aetosparts.com/mineracao-investimentos-bilionarios-para-2025/", "data": "2025-01-15"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "vale-briquetes-tubarao",
+      "empresa": "Vale S.A.",
+      "cnpj": "33592510000154",
+      "projeto": "Fábrica de Briquetes Tubarão",
+      "substancia": "Minério de Ferro",
+      "categoria": "ferro",
+      "localizacao": {"municipio": "Serra", "uf": "ES"},
+      "investimento_valor": null,
+      "investimento_moeda": "USD",
+      "status": "Em execução",
+      "detalhe_status": "Produção de briquetes de minério de ferro como alternativa à pelotização.",
+      "previsao": "2025-2026",
+      "capacidade": "Nova linha de briquetes",
+      "licenciamento": "Em andamento",
+      "fontes": [
+        {"titulo": "Vale investimentos 2025", "url": "https://aetosparts.com/mineracao-investimentos-bilionarios-para-2025/", "data": "2025-01-15"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "anglo-filtragem-minas-rio",
+      "empresa": "Anglo American",
+      "cnpj": "02359572000430",
+      "projeto": "Filtragem de Rejeitos Minas-Rio",
+      "substancia": "Minério de Ferro",
+      "categoria": "ferro",
+      "localizacao": {"municipio": "Conceição do Mato Dentro", "uf": "MG"},
+      "investimento_valor": 5000000000,
+      "investimento_moeda": "BRL",
+      "status": "Em execução",
+      "detalhe_status": "70%+ de avanço físico. Evita 85% dos rejeitos para barragem. Investimentos de US$ 603M em 2025 (+44% vs 2024).",
+      "previsao": "2026",
+      "capacidade": "Filtragem de 85% dos rejeitos (5,2 Mt/ano filtrados)",
+      "licenciamento": "Licenciado",
+      "fontes": [
+        {"titulo": "Anglo investe R$ 4 bi para filtrar rejeitos", "url": "https://diariodocomercio.com.br/economia/anglo-american-investe-para-filtrar-rejeitos-em-minas-gerais/", "data": "2025-06-01"},
+        {"titulo": "Investimentos Anglo 2025 crescem 44%", "url": "https://diariodocomercio.com.br/economia/investimentos-anglo-american-minas-rio/", "data": "2026-02-20"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "csn-casa-de-pedra",
+      "empresa": "CSN Mineração",
+      "cnpj": "08902291000115",
+      "projeto": "Expansão Casa de Pedra",
+      "substancia": "Minério de Ferro",
+      "categoria": "ferro",
+      "localizacao": {"municipio": "Congonhas", "uf": "MG"},
+      "investimento_valor": null,
+      "investimento_moeda": "BRL",
+      "status": "Operacional",
+      "detalhe_status": "R$ 1,4 bi em CFEM acumulado. 1.917 processos ANM ativos.",
+      "previsao": "Contínuo",
+      "capacidade": "Principal operação CSN",
+      "licenciamento": "Licenciado",
+      "fontes": [
+        {"titulo": "CSN Mineração — dados ANM/CFEM compilados", "url": "https://app.anm.gov.br/dadosabertos/SCM/", "data": "2026-04-12"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "usiminas-compactos",
+      "empresa": "Mineração Usiminas (Musa)",
+      "cnpj": "12056613000120",
+      "projeto": "Projeto Compactos",
+      "substancia": "Minério de Ferro",
+      "categoria": "ferro",
+      "localizacao": {"municipio": "Itatiaiuçu", "uf": "MG"},
+      "investimento_valor": 700000000,
+      "investimento_moeda": "BRL",
+      "status": "Em estudo",
+      "detalhe_status": "Expansão de 12 para 29 Mtpa. Previsto para implementação a partir de 2030. R$ 278M investidos em 2025.",
+      "previsao": "2030",
+      "capacidade": "De 12 Mtpa para 29 Mtpa",
+      "licenciamento": "Pendente",
+      "fontes": [
+        {"titulo": "Mineração Usiminas planeja retomar Projeto Compactos", "url": "https://diariodocomercio.com.br/economia/mineracao-usiminas-planeja-retomar-o-projeto-compactos/", "data": "2023-07-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "samarco-retomada",
+      "empresa": "Samarco Mineração",
+      "cnpj": "16628281000161",
+      "projeto": "Retomada Operacional",
+      "substancia": "Minério de Ferro",
+      "categoria": "ferro",
+      "localizacao": {"municipio": "Mariana", "uf": "MG"},
+      "investimento_valor": 1600000000,
+      "investimento_moeda": "BRL",
+      "status": "Em execução",
+      "detalhe_status": "4º maior produtor de ferro do Brasil em 2024 (9,74 Mt). Investimentos estratégicos em modernização.",
+      "previsao": "Contínuo",
+      "capacidade": "9,74 Mtpa (2024)",
+      "licenciamento": "Licenciado",
+      "fontes": [
+        {"titulo": "Samarco se consolida como 4º maior produtor", "url": "https://cranebrasil.com.br/principais-projetos-minerais-em-desenvolvimento-no-pais/", "data": "2025-06-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "arcelormittal-serra-azul",
+      "empresa": "ArcelorMittal",
+      "cnpj": "17469701000177",
+      "projeto": "Serra Azul — Pellet Feed",
+      "substancia": "Minério de Ferro",
+      "categoria": "ferro",
+      "localizacao": {"municipio": "Serra Azul", "uf": "MG"},
+      "investimento_valor": 2500000000,
+      "investimento_moeda": "BRL",
+      "status": "Em execução",
+      "detalhe_status": "Startup previsto set/2025. Extensão de vida útil da mina até 2058. De 1,6 para 4,5 Mtpa.",
+      "previsao": "2025",
+      "capacidade": "De 1,6 para 4,5 Mtpa",
+      "licenciamento": "Licenciado",
+      "fontes": [
+        {"titulo": "ArcelorMittal Serra Azul — Opex 2025", "url": "https://revistaoe.com.br/investimentos-inovacoes-mineracao-2025/", "data": "2025-03-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "gerdau-miguel-burnier",
+      "empresa": "Gerdau",
+      "cnpj": "17227422000105",
+      "projeto": "Mina Miguel Burnier",
+      "substancia": "Minério de Ferro",
+      "categoria": "ferro",
+      "localizacao": {"municipio": "Ouro Preto", "uf": "MG"},
+      "investimento_valor": 7500000000,
+      "investimento_moeda": "BRL",
+      "status": "Em execução",
+      "detalhe_status": "72% completo. Plataforma de mineração sustentável.",
+      "previsao": "2026",
+      "capacidade": "Nova mina integrada",
+      "licenciamento": "Licenciado",
+      "fontes": [
+        {"titulo": "Principais projetos minerais — Crane Brasil", "url": "https://cranebrasil.com.br/principais-projetos-minerais-em-desenvolvimento-no-pais/", "data": "2025-06-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "itaminas-sarzedo",
+      "empresa": "Itaminas",
+      "cnpj": null,
+      "projeto": "Expansão Sarzedo",
+      "substancia": "Minério de Ferro",
+      "categoria": "ferro",
+      "localizacao": {"municipio": "Sarzedo", "uf": "MG"},
+      "investimento_valor": 1500000000,
+      "investimento_moeda": "BRL",
+      "status": "Em execução",
+      "detalhe_status": "De 6,5 para 15 Mtpa (+145%). Teor de ferro de 62,5% para 67%.",
+      "previsao": "2032",
+      "capacidade": "De 6,5 para 15 Mtpa",
+      "licenciamento": "Em andamento",
+      "fontes": [
+        {"titulo": "Itaminas expansão — Opex 2025", "url": "https://revistaoe.com.br/investimentos-inovacoes-mineracao-2025/", "data": "2025-03-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "morro-ipe-tico-tico",
+      "empresa": "Mineração Morro do Ipê",
+      "cnpj": null,
+      "projeto": "Mina Tico-Tico",
+      "substancia": "Minério de Ferro",
+      "categoria": "ferro",
+      "localizacao": {"municipio": "Brumadinho", "uf": "MG"},
+      "investimento_valor": 1300000000,
+      "investimento_moeda": "BRL",
+      "status": "Ramp-up",
+      "detalhe_status": "~4 Mt projetadas para 2025. Meta de 6 Mt em 2026. Pellet feed.",
+      "previsao": "2026",
+      "capacidade": "6 Mtpa",
+      "licenciamento": "Licenciado",
+      "fontes": [
+        {"titulo": "Morro do Ipê Tico-Tico — Opex 2025", "url": "https://revistaoe.com.br/investimentos-inovacoes-mineracao-2025/", "data": "2025-03-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "kinross-paracatu",
+      "empresa": "Kinross Gold",
+      "cnpj": null,
+      "projeto": "Mina Morro do Ouro — Paracatu",
+      "substancia": "Ouro",
+      "categoria": "ouro",
+      "localizacao": {"municipio": "Paracatu", "uf": "MG"},
+      "investimento_valor": 195000000,
+      "investimento_moeda": "USD",
+      "status": "Operacional",
+      "detalhe_status": "Produção de 600k+ onças em 2025 (+13,8%). US$ 235M investidos em Paracatu. Projeção de 2M oz globais.",
+      "previsao": "Contínuo",
+      "capacidade": "600k oz/ano",
+      "licenciamento": "Licenciado",
+      "fontes": [
+        {"titulo": "Kinross US$ 195M no Brasil em 2025", "url": "https://www.brasilmineral.com.br/noticias/kinross-devera-investir-us-195-milhoes-no-brasil-em-2025", "data": "2025-02-01"},
+        {"titulo": "Produção Kinross Paracatu cresce 13,8%", "url": "https://diariodocomercio.com.br/economia/producao-ouro-kinross-paracatu/", "data": "2026-01-15"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "aura-matupa",
+      "empresa": "Aura Minerals",
+      "cnpj": null,
+      "projeto": "Projeto Matupá",
+      "substancia": "Ouro",
+      "categoria": "ouro",
+      "localizacao": {"municipio": "Matupá", "uf": "MT"},
+      "investimento_valor": null,
+      "investimento_moeda": "USD",
+      "status": "Em desenvolvimento",
+      "detalhe_status": "Projeto de ouro em fase de desenvolvimento no norte do Mato Grosso.",
+      "previsao": "2026-2027",
+      "capacidade": null,
+      "licenciamento": "Em andamento",
+      "fontes": [
+        {"titulo": "Projetos minerais — Crane Brasil", "url": "https://cranebrasil.com.br/principais-projetos-minerais-em-desenvolvimento-no-pais/", "data": "2025-06-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "aura-borborema",
+      "empresa": "Aura Minerals",
+      "cnpj": null,
+      "projeto": "Projeto Borborema",
+      "substancia": "Ouro",
+      "categoria": "ouro",
+      "localizacao": {"municipio": "Currais Novos", "uf": "RN"},
+      "investimento_valor": null,
+      "investimento_moeda": "USD",
+      "status": "Planejado",
+      "detalhe_status": "Fase 1 com vida útil de 10 anos. 104.500 metros de sondagem completados. Corpo de minério 30-35m de espessura.",
+      "previsao": "2027",
+      "capacidade": "Vida útil 10 anos",
+      "licenciamento": "Em andamento",
+      "fontes": [
+        {"titulo": "Aura Borborema — Opex 2025", "url": "https://revistaoe.com.br/investimentos-inovacoes-mineracao-2025/", "data": "2025-03-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "brazauro-tocantinzinho",
+      "empresa": "Brazauro / Gemini Ventures",
+      "cnpj": null,
+      "projeto": "Mina Tocantinzinho",
+      "substancia": "Ouro",
+      "categoria": "ouro",
+      "localizacao": {"municipio": "Itaituba", "uf": "PA"},
+      "investimento_valor": null,
+      "investimento_moeda": "USD",
+      "status": "Operacional",
+      "detalhe_status": "Produção atual de 180k oz/ano. Meta de 200k oz/ano com otimização.",
+      "previsao": "Contínuo",
+      "capacidade": "180-200k oz/ano",
+      "licenciamento": "Licenciado",
+      "fontes": [
+        {"titulo": "Tocantinzinho — Opex 2025", "url": "https://revistaoe.com.br/investimentos-inovacoes-mineracao-2025/", "data": "2025-03-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "belo-sun-volta-grande",
+      "empresa": "Belo Sun Mineração",
+      "cnpj": null,
+      "projeto": "Volta Grande do Xingu",
+      "substancia": "Ouro",
+      "categoria": "ouro",
+      "localizacao": {"municipio": "Senador José Porfírio", "uf": "PA"},
+      "investimento_valor": null,
+      "investimento_moeda": "USD",
+      "status": "Em licenciamento",
+      "detalhe_status": "Projeto classe mundial. Produção estimada de 205k oz/ano (~6,4 t). Em estágio de licenciamento para instalação.",
+      "previsao": "Indefinido",
+      "capacidade": "205k oz/ano",
+      "licenciamento": "Em licenciamento (contencioso judicial)",
+      "fontes": [
+        {"titulo": "Belo Sun — Projeto Volta Grande", "url": "https://belosun.com.br/apresentacao/", "data": "2026-01-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "sigma-grota-cirilo",
+      "empresa": "Sigma Lithium",
+      "cnpj": null,
+      "projeto": "Grota do Cirilo",
+      "substancia": "Lítio",
+      "categoria": "litio",
+      "localizacao": {"municipio": "Araçuaí", "uf": "MG"},
+      "investimento_valor": 492400000,
+      "investimento_moeda": "BRL",
+      "status": "Operacional / Expansão",
+      "detalhe_status": "300k t/ano de concentrado de lítio em 2025. 3ª planta planejada para 2026 (400k t/ano). BNDES R$ 487M aprovado.",
+      "previsao": "2026 (3ª planta)",
+      "capacidade": "520k t/ano (plantas 1+2+3)",
+      "licenciamento": "Licenciado. Novas licenças obtidas para mina adicional no Vale do Jequitinhonha.",
+      "fontes": [
+        {"titulo": "Sigma prevê 300k t/ano em 2025", "url": "https://diariodocomercio.com.br/economia/com-nova-planta-sigma-preve-produzir-300-mil-t-a-de-litio-em-2025/", "data": "2025-02-01"},
+        {"titulo": "BNDES aprova R$ 487M para Sigma", "url": "https://agenciadenoticias.bndes.gov.br/industria/BNDES-aprova-R$-4867-milhoes-para-Sigma-Lithium-beneficiar-litio-de-forma-sustentavel/", "data": "2024-08-30"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "lithium-ionic-baixa-grande",
+      "empresa": "Lithium Ionic / MG Lit",
+      "cnpj": null,
+      "projeto": "Baixa Grande",
+      "substancia": "Lítio",
+      "categoria": "litio",
+      "localizacao": {"municipio": "Salinas", "uf": "MG"},
+      "investimento_valor": 1450000000,
+      "investimento_moeda": "BRL",
+      "status": "Viabilidade",
+      "detalhe_status": "Testes de Ore Sorter com 93% de recuperação de lítio. DMS e flotação viáveis.",
+      "previsao": "2028",
+      "capacidade": null,
+      "licenciamento": "Em estudo",
+      "fontes": [
+        {"titulo": "Lithium Ionic — Opex 2025", "url": "https://revistaoe.com.br/investimentos-inovacoes-mineracao-2025/", "data": "2025-03-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "atlas-lithium-jequitinhonha",
+      "empresa": "Atlas Lithium",
+      "cnpj": null,
+      "projeto": "Projetos Vale do Jequitinhonha",
+      "substancia": "Lítio",
+      "categoria": "litio",
+      "localizacao": {"municipio": "Araçuaí", "uf": "MG"},
+      "investimento_valor": null,
+      "investimento_moeda": "USD",
+      "status": "Em desenvolvimento",
+      "detalhe_status": "Portfólio de projetos de lítio no Vale do Jequitinhonha, MG.",
+      "previsao": "2027-2028",
+      "capacidade": null,
+      "licenciamento": "Em andamento",
+      "fontes": [
+        {"titulo": "Projetos minerais — Crane Brasil", "url": "https://cranebrasil.com.br/principais-projetos-minerais-em-desenvolvimento-no-pais/", "data": "2025-06-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "meteoric-serra-tapa",
+      "empresa": "Meteoric Resources",
+      "cnpj": null,
+      "projeto": "Serra do Tapa (Terras Raras)",
+      "substancia": "Terras Raras",
+      "categoria": "terras_raras",
+      "localizacao": {"municipio": null, "uf": "MG"},
+      "investimento_valor": 1660000000,
+      "investimento_moeda": "BRL",
+      "status": "Anunciado",
+      "detalhe_status": "R$ 1,66 bilhão anunciado em outubro de 2025.",
+      "previsao": "2028-2030",
+      "capacidade": null,
+      "licenciamento": "Fase inicial",
+      "fontes": [
+        {"titulo": "IBRAM investimentos minerais críticos", "url": "https://agenciainfra.com/blog/minerais-criticos-vao-receber-us-213-bilhoes-ate-2030-diz-ibram/", "data": "2025-10-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "viridis-terras-raras-mg",
+      "empresa": "Viridis Mining",
+      "cnpj": null,
+      "projeto": "Projeto Terras Raras MG",
+      "substancia": "Terras Raras",
+      "categoria": "terras_raras",
+      "localizacao": {"municipio": null, "uf": "MG"},
+      "investimento_valor": 1350000000,
+      "investimento_moeda": "BRL",
+      "status": "Anunciado",
+      "detalhe_status": "R$ 1,35 bilhão anunciado em outubro de 2025.",
+      "previsao": "2028-2030",
+      "capacidade": null,
+      "licenciamento": "Fase inicial",
+      "fontes": [
+        {"titulo": "IBRAM investimentos minerais críticos", "url": "https://agenciainfra.com/blog/minerais-criticos-vao-receber-us-213-bilhoes-ate-2030-diz-ibram/", "data": "2025-10-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "aclara-carina",
+      "empresa": "Aclara Resources",
+      "cnpj": null,
+      "projeto": "Projeto Carina",
+      "substancia": "Terras Raras",
+      "categoria": "terras_raras",
+      "localizacao": {"municipio": "Aparecida de Goiânia", "uf": "GO"},
+      "investimento_valor": 600000000,
+      "investimento_moeda": "USD",
+      "status": "Planta piloto",
+      "detalhe_status": "Planta piloto operando. Produção industrial prevista para 2028. Tecnologia mais limpa para extração de argilas iônicas.",
+      "previsao": "2028",
+      "capacidade": null,
+      "licenciamento": "Em andamento",
+      "fontes": [
+        {"titulo": "Aclara Carina — Opex 2025", "url": "https://revistaoe.com.br/investimentos-inovacoes-mineracao-2025/", "data": "2025-03-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "cbmm-expansao-araxa",
+      "empresa": "CBMM",
+      "cnpj": null,
+      "projeto": "Expansão Araxá + Terras Raras",
+      "substancia": "Nióbio / Terras Raras",
+      "categoria": "niobio",
+      "localizacao": {"municipio": "Araxá", "uf": "MG"},
+      "investimento_valor": 1100000000,
+      "investimento_moeda": "BRL",
+      "status": "Em execução",
+      "detalhe_status": "R$ 1,1 bi/ano em crescimento e inovação. Nova descoberta de terras raras de alto teor. 80% da oferta global de nióbio.",
+      "previsao": "2027",
+      "capacidade": "Líder mundial em nióbio",
+      "licenciamento": "Licenciado",
+      "fontes": [
+        {"titulo": "CBMM investe R$ 1,1 bi em 2025", "url": "https://www.brasilmineral.com.br/noticias/cbmm-investe-r-11-bilhao-em-crescimento-e-inovacao-em-2025", "data": "2025-05-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "nexa-expansao-zinco",
+      "empresa": "Nexa Resources",
+      "cnpj": "42416651000107",
+      "projeto": "Expansão Zinco/Cobre",
+      "substancia": "Zinco / Cobre",
+      "categoria": "cobre_zinco",
+      "localizacao": {"municipio": "Vazante", "uf": "MG"},
+      "investimento_valor": null,
+      "investimento_moeda": "BRL",
+      "status": "Em andamento",
+      "detalhe_status": "1.755 processos ANM. Ampliação, descaracterização de barragens, otimização de beneficiamento.",
+      "previsao": "Contínuo",
+      "capacidade": null,
+      "licenciamento": "Licenciado",
+      "fontes": [
+        {"titulo": "Projetos minerais — Crane Brasil", "url": "https://cranebrasil.com.br/principais-projetos-minerais-em-desenvolvimento-no-pais/", "data": "2025-06-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "horizonte-araguaia-niquel",
+      "empresa": "Horizonte Minerals",
+      "cnpj": null,
+      "projeto": "Araguaia Níquel",
+      "substancia": "Níquel",
+      "categoria": "niquel",
+      "localizacao": {"municipio": "Conceição do Araguaia", "uf": "PA"},
+      "investimento_valor": null,
+      "investimento_moeda": "USD",
+      "status": "Em desenvolvimento",
+      "detalhe_status": "Projeto de níquel no sul do Pará.",
+      "previsao": "2027",
+      "capacidade": null,
+      "licenciamento": "Em andamento",
+      "fontes": [
+        {"titulo": "Projetos minerais — Crane Brasil", "url": "https://cranebrasil.com.br/principais-projetos-minerais-em-desenvolvimento-no-pais/", "data": "2025-06-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "meridian-cabacal",
+      "empresa": "Meridian Mining",
+      "cnpj": null,
+      "projeto": "Cabaçal",
+      "substancia": "Ouro / Cobre / Prata",
+      "categoria": "ouro",
+      "localizacao": {"municipio": "Rio Branco", "uf": "MT"},
+      "investimento_valor": null,
+      "investimento_moeda": "USD",
+      "status": "Em desenvolvimento",
+      "detalhe_status": "Projeto multi-commodity (ouro, cobre, prata) no Mato Grosso.",
+      "previsao": "2027-2028",
+      "capacidade": null,
+      "licenciamento": "Em andamento",
+      "fontes": [
+        {"titulo": "Projetos minerais — Crane Brasil", "url": "https://cranebrasil.com.br/principais-projetos-minerais-em-desenvolvimento-no-pais/", "data": "2025-06-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "mmg-niquel-go",
+      "empresa": "MMG Limited (China Minmetals)",
+      "cnpj": null,
+      "projeto": "Projeto Níquel Goiás",
+      "substancia": "Níquel",
+      "categoria": "niquel",
+      "localizacao": {"municipio": null, "uf": "GO"},
+      "investimento_valor": null,
+      "investimento_moeda": "USD",
+      "status": "Em desenvolvimento",
+      "detalhe_status": "Controlada pela China Minmetals. Projeto de níquel em Goiás.",
+      "previsao": "2028",
+      "capacidade": null,
+      "licenciamento": "Em andamento",
+      "fontes": [
+        {"titulo": "Projetos minerais — Crane Brasil", "url": "https://cranebrasil.com.br/principais-projetos-minerais-em-desenvolvimento-no-pais/", "data": "2025-06-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "hydro-paragominas",
+      "empresa": "Hydro",
+      "cnpj": null,
+      "projeto": "Paragominas (Bauxita)",
+      "substancia": "Bauxita",
+      "categoria": "bauxita",
+      "localizacao": {"municipio": "Paragominas", "uf": "PA"},
+      "investimento_valor": null,
+      "investimento_moeda": "USD",
+      "status": "Operacional",
+      "detalhe_status": "11 Mtpa de bauxita. Operação consolidada.",
+      "previsao": "Contínuo",
+      "capacidade": "11 Mtpa",
+      "licenciamento": "Licenciado",
+      "fontes": [
+        {"titulo": "Hydro Paragominas — Opex 2025", "url": "https://revistaoe.com.br/investimentos-inovacoes-mineracao-2025/", "data": "2025-03-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "hydro-alunorte-residuos",
+      "empresa": "Hydro",
+      "cnpj": null,
+      "projeto": "Alunorte — Resíduos de Bauxita",
+      "substancia": "Ferro-gusa (de resíduos)",
+      "categoria": "bauxita",
+      "localizacao": {"municipio": "Barcarena", "uf": "PA"},
+      "investimento_valor": null,
+      "investimento_moeda": "USD",
+      "status": "Planta piloto",
+      "detalhe_status": "Conversão de 4,5 Mt/ano de resíduos de bauxita em ferro-gusa e cimento. Piloto processando 50k t/ano.",
+      "previsao": "2027",
+      "capacidade": "50k t/ano (piloto)",
+      "licenciamento": "Em andamento",
+      "fontes": [
+        {"titulo": "Hydro resíduos bauxita — Opex 2025", "url": "https://revistaoe.com.br/investimentos-inovacoes-mineracao-2025/", "data": "2025-03-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "brazil-iron-ferro-verde",
+      "empresa": "Brazil Iron",
+      "cnpj": null,
+      "projeto": "Ferro Verde (HBI)",
+      "substancia": "Ferro (HBI)",
+      "categoria": "ferro",
+      "localizacao": {"municipio": "Chapada Diamantina", "uf": "BA"},
+      "investimento_valor": 5700000000,
+      "investimento_moeda": "USD",
+      "status": "Em desenvolvimento",
+      "detalhe_status": "Produção de Hot Briquetted Iron (HBI). US$ 5,7 bi de investimento total.",
+      "previsao": "2028-2030",
+      "capacidade": null,
+      "licenciamento": "Em andamento",
+      "fontes": [
+        {"titulo": "Projetos minerais — Crane Brasil", "url": "https://cranebrasil.com.br/principais-projetos-minerais-em-desenvolvimento-no-pais/", "data": "2025-06-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    },
+    {
+      "id": "galvani-irece",
+      "empresa": "Galvani",
+      "cnpj": null,
+      "projeto": "Irecê (Fosfato)",
+      "substancia": "Fosfato",
+      "categoria": "fertilizantes",
+      "localizacao": {"municipio": "Irecê", "uf": "BA"},
+      "investimento_valor": 600000000,
+      "investimento_moeda": "BRL",
+      "status": "Implantação avançada",
+      "detalhe_status": "R$ 600M de investimento. Fosfato primário na Bahia.",
+      "previsao": "2026",
+      "capacidade": null,
+      "licenciamento": "Licenciado",
+      "fontes": [
+        {"titulo": "Projetos minerais — Crane Brasil", "url": "https://cranebrasil.com.br/principais-projetos-minerais-em-desenvolvimento-no-pais/", "data": "2025-06-01"}
+      ],
+      "atualizado_em": "2026-04-13"
+    }
+  ]
+}
