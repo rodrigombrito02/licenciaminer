@@ -155,37 +155,66 @@ def calcular_conformidade(
 def gerar_recomendacoes(
     avaliacoes: dict[str, str],
     requisitos: list[dict[str, str]],
+    doc_status: dict[str, str] | None = None,
 ) -> list[dict[str, str]]:
     """Gera recomendações a partir de requisitos não atendidos.
 
     Args:
         avaliacoes: Dict {requisito_id: avaliação}.
         requisitos: Lista de requisitos de referência.
+        doc_status: Dict {documento: "Apresentado"|"Parcial"|"Não Apresentado"} (opcional).
 
     Returns:
         Lista de recomendações com tipo, descrição e prioridade.
     """
     req_map = {r["requisito_id"]: r for r in requisitos}
+    # Track which documents are absent
+    absent_docs: set[str] = set()
+    if doc_status:
+        absent_docs = {doc for doc, st in doc_status.items() if st == "Não Apresentado" or not st}
+
     recomendacoes = []
+    # Add document-level recommendations for absent docs (one per absent doc)
+    seen_absent = set()
 
     for req_id, avaliacao in avaliacoes.items():
         if avaliacao in ("Não Atende", "Atende Parcialmente"):
             req = req_map.get(req_id, {})
-            tipo = "Procedimento inconforme" if avaliacao == "Não Atende" else "Ponto de atenção"
-            prioridade = "Alta" if avaliacao == "Não Atende" else "Média"
+            doc_name = req.get("documento", "")
+            is_absent = doc_name in absent_docs
 
-            recomendacoes.append({
-                "requisito_id": req_id,
-                "tipo": tipo,
-                "prioridade": prioridade,
-                "documento": req.get("documento", ""),
-                "topico": req.get("topico", ""),
-                "teste": req.get("teste_aderencia", ""),
-                "evidencia": req.get("evidencia_esperada", ""),
-            })
+            if is_absent:
+                tipo = "Documento ausente"
+                prioridade = "Alta"
+                # Add one summary recommendation per absent document
+                if doc_name not in seen_absent:
+                    seen_absent.add(doc_name)
+                    recomendacoes.append({
+                        "requisito_id": f"DOC-{doc_name}",
+                        "tipo": "Documento ausente",
+                        "prioridade": "Alta",
+                        "documento": doc_name,
+                        "topico": "Elaboração do documento",
+                        "teste": f"O documento '{doc_name}' não foi apresentado.",
+                        "evidencia": f"Elaborar e submeter o documento '{doc_name}' com todos os requisitos aplicáveis.",
+                    })
+            else:
+                tipo = "Procedimento inconforme" if avaliacao == "Não Atende" else "Ponto de atenção"
+                prioridade = "Alta" if avaliacao == "Não Atende" else "Média"
 
-    # Ordenar: Alta primeiro, depois Média
-    recomendacoes.sort(key=lambda r: (0 if r["prioridade"] == "Alta" else 1, r["requisito_id"]))
+                recomendacoes.append({
+                    "requisito_id": req_id,
+                    "tipo": tipo,
+                    "prioridade": prioridade,
+                    "documento": doc_name,
+                    "topico": req.get("topico", ""),
+                    "teste": req.get("teste_aderencia", ""),
+                    "evidencia": req.get("evidencia_esperada", ""),
+                })
+
+    # Ordenar: Documento ausente primeiro, depois Alta, depois Média
+    priority_order = {"Documento ausente": 0, "Alta": 1, "Média": 2}
+    recomendacoes.sort(key=lambda r: (priority_order.get(r["prioridade"], 9), r["requisito_id"]))
     return recomendacoes
 
 

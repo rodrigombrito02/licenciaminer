@@ -380,6 +380,12 @@ export function fetchDDDocuments(licencaTipo: string) {
   );
 }
 
+export function fetchAllDDRequirements(licencaTipo: string) {
+  return apiFetch<{ licenca_tipo: string; total_documents: number; total_requirements: number; requirements: DDRequirement[] }>(
+    `/due-diligence/all-requirements?licenca_tipo=${encodeURIComponent(licencaTipo)}`
+  );
+}
+
 export function fetchDDRequirements(documento: string) {
   return apiFetch<{ documento: string; total: number; requirements: DDRequirement[] }>(
     `/due-diligence/requirements?documento=${encodeURIComponent(documento)}`

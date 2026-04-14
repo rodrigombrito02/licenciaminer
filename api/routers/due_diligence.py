@@ -70,6 +70,56 @@ def get_requirements(
     }
 
 
+@router.get("/due-diligence/all-requirements")
+def get_all_requirements(
+    licenca_tipo: str = Query(..., description="Tipo de licença (LAS, LAS-RAS, LAC1, etc.)"),
+):
+    """Retorna TODOS os requisitos aplicáveis a um tipo de licença.
+
+    Mapeamento explícito: licença → chaves de documento nos requisitos.
+    """
+    docs = filtrar_documentos(licenca_tipo)
+    all_reqs_data = load_requisitos()
+
+    # Explicit mapping: which req-documento keys apply to each license type
+    # These match the 'documento' column in dd_requisitos_testes.csv
+    LICENCA_REQ_KEYS: dict[str, list[str]] = {
+        "LAS": ["Cadastro via SEI"],
+        "LAS-RAS": ["Cadastro via SEI", "LAS_RAS"],
+        "LAC1": ["Cadastro via SEI", "LAS_RAS", "EIA", "RIMA_LAE", "PCA", "PRAD", "PEA", "PGA", "PIA", "PAFEM", "IDAL", "RADA"],
+        "LAC2": ["Cadastro via SEI", "LAS_RAS", "EIA", "PCA", "PRAD", "PEA", "PGA", "PIA", "PAFEM", "IDAL", "RADA"],
+        "LP": ["EIA", "PRAD", "PEA", "PGA", "PIA", "PAFEM", "IDAL", "RADA"],
+        "LI": ["PCA", "PRAD", "PEA", "PGA", "PIA", "PAFEM", "IDAL"],
+        "LO": ["PCA", "PRAD"],
+        "LAU": ["RCA_LAU", "PCA_LAU", "PROJ_LAU"],
+        "LAC_FED": ["RCE_LAC", "TAC_LAC"],
+        "LAE": ["EIA_LAE", "RIMA_LAE", "PBA_LAE"],
+        "LOC": ["RCA_LOC", "PCA_LOC"],
+    }
+
+    # Collect applicable req-doc keys
+    req_doc_keys = set(LICENCA_REQ_KEYS.get(licenca_tipo, []))
+
+    # Also add any doc_ids from inventory that aren't "-" or empty
+    for d in docs:
+        did = d.get("doc_id", "").strip()
+        if did and did != "-":
+            req_doc_keys.add(did)
+
+    # Filter requirements
+    reqs = [
+        r for r in all_reqs_data
+        if r.get("documento", "").strip() in req_doc_keys
+    ]
+
+    return {
+        "licenca_tipo": licenca_tipo,
+        "total_documents": len(docs),
+        "total_requirements": len(reqs),
+        "requirements": reqs,
+    }
+
+
 class ScoreRequest(BaseModel):
     """Payload para cálculo de conformidade."""
     avaliacoes: dict[str, str]
@@ -106,9 +156,11 @@ def calculate_score(request: ScoreRequest):
     if request.doc_status:
         response["checklist"] = calcular_checklist_completude(request.doc_status)
 
-    # Recomendações
+    # Recomendações (passa doc_status para identificar documentos ausentes)
     all_reqs = load_requisitos()
-    response["recomendacoes"] = gerar_recomendacoes(request.avaliacoes, all_reqs)
+    response["recomendacoes"] = gerar_recomendacoes(
+        request.avaliacoes, all_reqs, doc_status=request.doc_status
+    )
 
     return response
 

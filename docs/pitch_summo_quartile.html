@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Summo Quartile — Sistema Integrado de Inteligência Mineral</title>
+<style>
+:root {
+  --navy: #0A2540;
+  --navy2: #1A2C42;
+  --teal: #156082;
+  --gold: #FFC000;
+  --orange: #FF5F00;
+  --success: #27AE60;
+  --danger: #E74C3C;
+  --warning: #F39C12;
+  --light: #F8F9FB;
+  --gray: #6B7280;
+  --gray-light: #9CA3AF;
+  --white: #FFFFFF;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--navy); line-height: 1.6; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+h1 { font-size: 2.8rem; font-weight: 800; line-height: 1.1; }
+h2 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+h3 { font-size: 1.3rem; font-weight: 700; }
+.subtitle { color: var(--teal); font-size: 1.1rem; margin-bottom: 2rem; }
+.text-muted { color: var(--gray); }
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
+.accent-bar { display: flex; gap: 4px; margin-bottom: 1.5rem; }
+.accent-bar span:nth-child(1) { width: 60px; height: 4px; background: var(--gold); border-radius: 2px; }
+.accent-bar span:nth-child(2) { width: 20px; height: 4px; background: var(--teal); border-radius: 2px; }
+.accent-bar span:nth-child(3) { width: 10px; height: 4px; background: var(--orange); border-radius: 2px; }
+
+/* Hero */
+.hero { background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%); color: white; padding: 6rem 0 5rem; position: relative; overflow: hidden; }
+.hero::after { content: ''; position: absolute; top: 0; right: 0; width: 40%; height: 100%; background: radial-gradient(circle at 70% 50%, rgba(21,96,130,0.15) 0%, transparent 70%); }
+.hero h1 { color: white; margin-bottom: 1rem; }
+.hero .gold { color: var(--gold); }
+.hero p { color: rgba(255,255,255,0.7); font-size: 1.15rem; max-width: 600px; margin-bottom: 2rem; }
+.hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+.hero-stat { text-align: center; }
+.hero-stat .num { font-size: 2.2rem; font-weight: 800; color: var(--gold); }
+.hero-stat .label { font-size: 0.75rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+
+/* Sections */
+section { padding: 5rem 0; }
+section.dark { background: var(--navy); color: white; }
+section.dark h2, section.dark h3 { color: white; }
+section.dark .subtitle { color: var(--gold); }
+section.dark .text-muted { color: rgba(255,255,255,0.5); }
+section.alt { background: var(--light); }
+
+/* KPI Grid */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+.kpi-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-left: 4px solid var(--teal); transition: transform 0.2s, box-shadow 0.2s; }
+.kpi-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+.kpi-card .num { font-size: 2rem; font-weight: 800; color: var(--navy); }
+.kpi-card .label { font-size: 0.8rem; color: var(--gray); margin-top: 0.25rem; }
+.kpi-card:nth-child(2) { border-left-color: var(--orange); }
+.kpi-card:nth-child(3) { border-left-color: var(--gold); }
+.kpi-card:nth-child(4) { border-left-color: var(--success); }
+.kpi-card:nth-child(5) { border-left-color: var(--teal); }
+.kpi-card:nth-child(6) { border-left-color: var(--orange); }
+
+/* Flowchart */
+.flow-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin: 2rem 0; }
+.flow-card { background: white; border-radius: 12px; padding: 1.25rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); position: relative; transition: transform 0.2s; }
+.flow-card:hover { transform: translateY(-3px); }
+.flow-card .icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; font-size: 1.4rem; }
+.flow-card h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.25rem; }
+.flow-card p { font-size: 0.7rem; color: var(--gray); }
+.flow-card .status { display: inline-block; font-size: 0.6rem; padding: 2px 8px; border-radius: 10px; margin-top: 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.status-done { background: rgba(39,174,96,0.1); color: var(--success); }
+.status-progress { background: rgba(255,192,0,0.15); color: #B8860B; }
+.status-planned { background: rgba(107,114,128,0.1); color: var(--gray); }
+
+/* Module cards */
+.modules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0; }
+.module-card { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-top: 4px solid var(--teal); transition: transform 0.2s, box-shadow 0.2s; }
+.module-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.module-card:nth-child(2) { border-top-color: var(--orange); }
+.module-card:nth-child(3) { border-top-color: var(--gold); }
+.module-card:nth-child(4) { border-top-color: var(--success); }
+.module-card:nth-child(5) { border-top-color: var(--danger); }
+.module-card:nth-child(6) { border-top-color: var(--navy); }
+.module-card h3 { margin-bottom: 0.5rem; }
+.module-card .tag { display: inline-block; font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; background: var(--light); color: var(--gray); margin-bottom: 0.75rem; font-weight: 600; }
+.module-card ul { list-style: none; margin: 0.75rem 0; }
+.module-card li { font-size: 0.85rem; padding: 0.2rem 0; padding-left: 1.2rem; position: relative; }
+.module-card li::before { content: ''; position: absolute; left: 0; top: 0.55rem; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+.module-card .next { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #eee; }
+.module-card .next-title { font-size: 0.75rem; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.3rem; }
+
+/* Empresas table */
+.table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th { text-align: left; padding: 0.75rem 1rem; background: var(--navy); color: white; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
+th:first-child { border-radius: 8px 0 0 0; }
+th:last-child { border-radius: 0 8px 0 0; }
+td { padding: 0.65rem 1rem; border-bottom: 1px solid #f0f0f0; }
+tr:hover td { background: rgba(21,96,130,0.03); }
+.num-col { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+
+/* Projetos */
+.projetos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 2rem 0; }
+.projeto-card { background: white; border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06); display: flex; gap: 1rem; align-items: flex-start; }
+.projeto-card .info { flex: 1; }
+.projeto-card h4 { font-size: 0.9rem; margin-bottom: 0.15rem; }
+.projeto-card .empresa { font-size: 0.75rem; color: var(--gray); }
+.projeto-card .meta { display: flex; gap: 1rem; font-size: 0.75rem; color: var(--gray); margin-top: 0.4rem; flex-wrap: wrap; }
+.projeto-card .meta strong { color: var(--navy); }
+.projeto-card .badge { font-size: 0.6rem; padding: 2px 8px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+.badge-exec { background: rgba(21,96,130,0.1); color: var(--teal); }
+.badge-oper { background: rgba(39,174,96,0.1); color: var(--success); }
+.badge-estudo { background: rgba(255,192,0,0.15); color: #B8860B; }
+.badge-lic { background: rgba(255,95,0,0.1); color: var(--orange); }
+
+/* Compare */
+.compare-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2rem 0; }
+.compare-card { border-radius: 16px; padding: 2rem; text-align: center; }
+.compare-card.muted { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+.compare-card.highlight { background: rgba(21,96,130,0.2); border: 2px solid var(--teal); }
+.compare-card h4 { font-size: 1.1rem; margin-bottom: 1rem; }
+.compare-card ul { list-style: none; text-align: left; }
+.compare-card li { font-size: 0.85rem; padding: 0.3rem 0; opacity: 0.7; }
+.compare-card.highlight li { opacity: 1; }
+
+/* Revenue */
+.revenue-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin: 2rem 0; }
+.revenue-card { background: white; border-radius: 16px; padding: 1.5rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.revenue-card .pill { display: inline-block; padding: 4px 16px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem; color: white; }
+.revenue-card p { font-size: 0.85rem; color: var(--gray); }
+
+/* Timeline */
+.timeline { display: flex; gap: 0; margin: 2rem 0; border-radius: 12px; overflow: hidden; }
+.timeline-item { flex: 1; padding: 1.25rem 1.5rem; }
+.timeline-item h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; font-weight: 700; }
+.timeline-item ul { list-style: none; }
+.timeline-item li { font-size: 0.8rem; padding: 0.15rem 0; }
+.tl-done { background: var(--success); color: white; }
+.tl-next { background: var(--gold); color: var(--navy); }
+.tl-future { background: #D1D5DB; color: var(--gray); }
+
+/* CTA */
+.cta-section { text-align: center; padding: 5rem 0; }
+.cta-section h2 { color: white; margin-bottom: 0.5rem; }
+.cta-section p { color: rgba(255,255,255,0.6); margin-bottom: 2rem; }
+.cta-list { list-style: none; text-align: left; max-width: 500px; margin: 0 auto 2rem; }
+.cta-list li { padding: 0.4rem 0; color: rgba(255,255,255,0.8); font-size: 0.95rem; padding-left: 1.5rem; position: relative; }
+.cta-list li::before { content: ''; position: absolute; left: 0; top: 0.65rem; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+
+/* Footer */
+footer { padding: 2rem 0; text-align: center; background: var(--navy); color: rgba(255,255,255,0.3); font-size: 0.75rem; }
+
+/* Print */
+@media print { section { padding: 2rem 0; } .hero { padding: 3rem 0; } }
+@media (max-width: 768px) {
+  h1 { font-size: 2rem; }
+  .flow-grid { grid-template-columns: repeat(3, 1fr); }
+  .modules-grid, .projetos-grid, .compare-grid { grid-template-columns: 1fr; }
+  .revenue-grid { grid-template-columns: repeat(2, 1fr); }
+  .timeline { flex-direction: column; }
+  .hero-stats { gap: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="accent-bar"><span></span><span></span><span></span></div>
+    <h1>Sistema Integrado<br><span class="gold">Summo Quartile</span></h1>
+    <p>Plataforma de inteligência estratégica para mineração. Cruzamos 16+ fontes públicas que ninguém mais consolida para entregar dados, análise e consultoria num único lugar.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">303.250</div><div class="label">Processos Minerários</div></div>
+      <div class="hero-stat"><div class="num">42.758</div><div class="label">Decisões Ambientais</div></div>
+      <div class="hero-stat"><div class="num">31</div><div class="label">Projetos Curados</div></div>
+      <div class="hero-stat"><div class="num">27</div><div class="label">Estados</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- O PROBLEMA -->
+<section class="alt">
+  <div class="container">
+    <h2>O Mercado</h2>
+    <p class="subtitle">US$ 68,4 bilhões em investimentos previstos na mineração brasileira até 2029 (IBRAM)</p>
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="num">16+</div><div class="label">Fontes públicas fragmentadas (IBAMA, ANM, SEMAD, CFEM, BCB, Comex, ICMBio, FUNAI...)</div></div>
+      <div class="kpi-card"><div class="num">0</div><div class="label">Plataformas que cruzam licenciamento ambiental + direito minerário + mercado</div></div>
+      <div class="kpi-card"><div class="num">78,3%</div><div class="label">Taxa de aprovação geral em MG — mas varia de 39% a 90% por classe/atividade</div></div>
+      <div class="kpi-card"><div class="num">R$ 5,8 bi</div><div class="label">CFEM pago só pela Vale — dados que nunca foram cruzados com licenciamento</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FLUXOGRAMA DO SISTEMA -->
+<section>
+  <div class="container">
+    <h2>Arquitetura do Sistema</h2>
+    <p class="subtitle">5 unidades de negócio integradas numa única plataforma</p>
+    <div class="flow-grid">
+      <div class="flow-card">
+        <div class="icon" style="background:rgba(21,96,130,0.1); color:var(--teal);">&#x1F3DB;</div>
+        <h4>Summo Ambiental</h4>
+        <p>Licenciamento ambiental, due diligence, viabilidade</p>
+        <span class="status status-done">Operacional</span>
+      </div>
+      <div class="flow-card">
+        <div class="icon" style="background:rgba(21,96,130,0.1); color:var(--teal);">&#x1F5FA;</div>
+        <h4>Direitos e Concessões</h4>
+        <p>Cadastro Mineiro Nacional, mapa, prospecção</p>
+        <span class="status status-done">Operacional</span>
+      </div>
+      <div class="flow-card">
+        <div class="icon" style="background:rgba(255,192,0,0.1); color:#B8860B;">&#x1F4C8;</div>
+        <h4>Mineral Intelligence</h4>
+        <p>Inteligência comercial, monitoramento, indicadores</p>
+        <span class="status status-done">Operacional</span>
+      </div>
+      <div class="flow-card">
+        <div class="icon" style="background:rgba(255,95,0,0.1); color:var(--orange);">&#x1F6E1;</div>
+        <h4>SQ Solutions</h4>
+        <p>Segurança, SST, wearables, IA na mineração</p>
+        <span class="status status-done">Operacional</span>
+      </div>
+      <div class="flow-card">
+        <div class="icon" style="background:rgba(107,114,128,0.1); color:var(--gray);">&#x2699;</div>
+        <h4>Gestão Interna</h4>
+        <p>CRM, financeiro, projetos (área restrita)</p>
+        <span class="status status-planned">Planejado</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MÓDULOS DETALHADOS -->
+<section class="alt">
+  <div class="container">
+    <h2>O que já Funciona</h2>
+    <p class="subtitle">Cada módulo operacional com dados reais e endpoints de API</p>
+    <div class="modules-grid">
+
+      <div class="module-card">
+        <span class="tag">Summo Ambiental</span>
+        <h3>Análise de Decisões</h3>
+        <p class="text-sm text-muted">Inteligência sobre licenciamento ambiental que o BI da FEAM não oferece</p>
+        <ul>
+          <li>Filtros interativos: regional, modalidade, classe, atividade</li>
+          <li>KPIs filtrados em tempo real (42.758 decisões)</li>
+          <li>Insights automáticos: "Classe 5 tem 39% de aprovação em mineração"</li>
+          <li>Perfil de Licenciamento: probabilidade + rigor + tendência</li>
+          <li>9 endpoints de API filtráveis</li>
+        </ul>
+        <div class="next">
+          <div class="next-title">Diferencial</div>
+          <p class="text-xs text-muted">Cruzamento SEMAD + IBAMA + ANM + CFEM por CNPJ</p>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <span class="tag">Summo Ambiental</span>
+        <h3>Due Diligence — 5 Fases</h3>
+        <p class="text-sm text-muted">Produto premium de avaliação de conformidade documental</p>
+        <ul>
+          <li>11 tipos de licença (incl. LGLA: LAU, LAC, LAE, LOC)</li>
+          <li>133 documentos + 1.967 requisitos mapeados</li>
+          <li>Upload de PDF com extração de texto</li>
+          <li>Avaliação com análise de criticidade integrada</li>
+          <li>Legislação: DN COPAM 217 + Lei 15.190/2025 + CONAMA</li>
+        </ul>
+        <div class="next">
+          <div class="next-title">Pronto para IA</div>
+          <p class="text-xs text-muted">Infraestrutura preparada para Claude API — liga com uma chave</p>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <span class="tag">Direitos e Concessões</span>
+        <h3>Cadastro Mineiro Nacional</h3>
+        <p class="text-sm text-muted">303.250 processos em 27 estados — pipeline minerário completo</p>
+        <ul>
+          <li>13 CSVs da ANM (atualização diária)</li>
+          <li>Pipeline: pesquisa &rarr; alvará &rarr; relatório &rarr; lavra &rarr; concessão</li>
+          <li>Filtro por UF, regime, substância, município</li>
+          <li>Expansão de 6.904 para 303.250 registros (44x)</li>
+          <li>Top: MG (59k), BA (34k), PA (24k), SP (21k), GO (19k)</li>
+        </ul>
+        <div class="next">
+          <div class="next-title">Benchmark</div>
+          <p class="text-xs text-muted">Jazida.com: 30k usuários. Nosso diferencial: inteligência analítica</p>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <span class="tag">Mineral Intelligence</span>
+        <h3>Monitoramento — O Anzol</h3>
+        <p class="text-sm text-muted">Observatório da mineração brasileira com projetos curados</p>
+        <ul>
+          <li>31 projetos curados com fontes rastreáveis (URL + data)</li>
+          <li>Ranking top 20 empresas por processos + CFEM</li>
+          <li>Vale: R$ 5,8 bi CFEM | Anglo: R$ 1,6 bi | CSN: R$ 1,4 bi</li>
+          <li>Pipeline nacional: 127k pesquisas &rarr; 42k concessões</li>
+          <li>Cada projeto linkado ao dossier da empresa</li>
+        </ul>
+        <div class="next">
+          <div class="next-title">Estratégia</div>
+          <p class="text-xs text-muted">Informação gratuita que atrai tráfego &rarr; converte em serviços premium</p>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <span class="tag">SQ Solutions</span>
+        <h3>Soluções de Segurança</h3>
+        <p class="text-sm text-muted">Braço tecnológico — presente em editais Petrobras offshore</p>
+        <ul>
+          <li>SIM: checklists automáticos, auditorias, compliance digital</li>
+          <li>Dersalis Hub: fadiga, estresse térmico, risco cardiovascular</li>
+          <li>Hardware: Crachá Inteligente, Tag H&times;M, Braçadeira Biomédica</li>
+          <li>Parceiros: Kofre, Rombit, Dersalis</li>
+        </ul>
+        <div class="next">
+          <div class="next-title">Próximos passos</div>
+          <p class="text-xs text-muted">Integrar com dados operacionais da Mineradora Modelo</p>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <span class="tag">SQ Solutions</span>
+        <h3>Mineradora Modelo (IA)</h3>
+        <p class="text-sm text-muted">Showcase de IA aplicada &mdash; vende consultoria através de IA</p>
+        <ul>
+          <li>7 setores: Planejamento, Operação, Processamento, Rejeitos, Manutenção, Logística, SSMA</li>
+          <li>KPIs simulados com séries de 24 meses</li>
+          <li>Maturity assessment (5 níveis)</li>
+          <li>Implementation roadmap por fase</li>
+        </ul>
+        <div class="next">
+          <div class="next-title">Próximos passos</div>
+          <p class="text-xs text-muted">Modularizar para venda individual + diagnóstico do cliente vs. modelo</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EMPRESAS MAPEADAS -->
+<section>
+  <div class="container">
+    <h2>Empresas Mapeadas</h2>
+    <p class="subtitle">Top empresas por volume de processos minerários + CFEM cruzado automaticamente</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Empresa</th><th class="num-col">Processos ANM</th><th class="num-col">Pesquisas</th><th class="num-col">Lavras</th><th class="num-col">CFEM (R$)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td><strong>Vale S.A.</strong></td><td class="num-col">5.774</td><td class="num-col">1.841</td><td class="num-col">1.097</td><td class="num-col"><strong>5.829.264.457</strong></td></tr>
+          <tr><td>2</td><td><strong>CSN Mineração</strong></td><td class="num-col">1.917</td><td class="num-col">457</td><td class="num-col">110</td><td class="num-col">1.437.958.066</td></tr>
+          <tr><td>3</td><td><strong>Nexa Resources</strong></td><td class="num-col">1.755</td><td class="num-col">1.360</td><td class="num-col">—</td><td class="num-col">67.970.079</td></tr>
+          <tr><td>4</td><td><strong>Anglo American</strong></td><td class="num-col">1.054</td><td class="num-col">619</td><td class="num-col">—</td><td class="num-col">1.662.785.434</td></tr>
+          <tr><td>5</td><td><strong>Votorantim</strong></td><td class="num-col">1.522</td><td class="num-col">—</td><td class="num-col">—</td><td class="num-col">15.308.652</td></tr>
+          <tr><td>6</td><td><strong>Usiminas</strong></td><td class="num-col">211</td><td class="num-col">—</td><td class="num-col">30</td><td class="num-col">350.689.329</td></tr>
+          <tr><td>7</td><td><strong>Gerdau</strong></td><td class="num-col">97</td><td class="num-col">—</td><td class="num-col">15</td><td class="num-col">—</td></tr>
+          <tr><td>8</td><td><strong>ArcelorMittal</strong></td><td class="num-col">50</td><td class="num-col">—</td><td class="num-col">6</td><td class="num-col">223.263.424</td></tr>
+          <tr><td>9</td><td><strong>Samarco</strong></td><td class="num-col">20</td><td class="num-col">8</td><td class="num-col">4</td><td class="num-col">371.597.946</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-xs text-muted" style="text-align:center;">Dados: ANM Cadastro Mineiro (303k processos) + CFEM (royalties). Cruzamento automático por CNPJ.</p>
+  </div>
+</section>
+
+<!-- PROJETOS EM DESTAQUE -->
+<section class="alt">
+  <div class="container">
+    <h2>Projetos em Destaque</h2>
+    <p class="subtitle">31 projetos curados com fontes rastreáveis — cada informação tem URL + data da fonte</p>
+    <div class="projetos-grid">
+      <div class="projeto-card"><div class="info"><h4>Serra Sul +20 Mtpa (S11D)</h4><div class="empresa">Vale S.A. — Canaã dos Carajás, PA</div><div class="meta"><span>Ferro</span><span><strong>US$ 2,8 bi</strong></span><span>77% avanço</span><span>LO IBAMA concedida</span></div></div><span class="badge badge-exec">Em execução</span></div>
+      <div class="projeto-card"><div class="info"><h4>Filtragem de Rejeitos Minas-Rio</h4><div class="empresa">Anglo American — Conceição do Mato Dentro, MG</div><div class="meta"><span>Ferro</span><span><strong>R$ 5 bi</strong></span><span>70%+ avanço</span><span>Evita 85% dos rejeitos</span></div></div><span class="badge badge-exec">Em execução</span></div>
+      <div class="projeto-card"><div class="info"><h4>Serra Azul — Pellet Feed</h4><div class="empresa">ArcelorMittal — Serra Azul, MG</div><div class="meta"><span>Ferro</span><span><strong>R$ 2,5 bi</strong></span><span>Startup set/2025</span><span>Vida útil até 2058</span></div></div><span class="badge badge-exec">Em execução</span></div>
+      <div class="projeto-card"><div class="info"><h4>Grota do Cirilo</h4><div class="empresa">Sigma Lithium — Araçuaí, MG</div><div class="meta"><span>Lítio</span><span><strong>R$ 492M + BNDES R$ 487M</strong></span><span>300k t/ano</span></div></div><span class="badge badge-oper">Operacional</span></div>
+      <div class="projeto-card"><div class="info"><h4>Projeto Compactos</h4><div class="empresa">Mineração Usiminas — Itatiaiuçu, MG</div><div class="meta"><span>Ferro</span><span><strong>~R$ 700M</strong></span><span>12 &rarr; 29 Mtpa</span><span>Previsto 2030</span></div></div><span class="badge badge-estudo">Em estudo</span></div>
+      <div class="projeto-card"><div class="info"><h4>Mina Morro do Ouro</h4><div class="empresa">Kinross Gold — Paracatu, MG</div><div class="meta"><span>Ouro</span><span><strong>US$ 195M/ano</strong></span><span>600k+ oz em 2025</span></div></div><span class="badge badge-oper">Operacional</span></div>
+      <div class="projeto-card"><div class="info"><h4>Expansão + Terras Raras Araxá</h4><div class="empresa">CBMM — Araxá, MG</div><div class="meta"><span>Nióbio/TR</span><span><strong>R$ 1,1 bi/ano</strong></span><span>80% oferta global Nb</span></div></div><span class="badge badge-exec">Em execução</span></div>
+      <div class="projeto-card"><div class="info"><h4>Ferro Verde (HBI)</h4><div class="empresa">Brazil Iron — Chapada Diamantina, BA</div><div class="meta"><span>Ferro (HBI)</span><span><strong>US$ 5,7 bi</strong></span></div></div><span class="badge badge-estudo">Desenvolvimento</span></div>
+    </div>
+    <p class="text-xs text-muted" style="text-align:center;">+ 23 outros projetos na base (Belo Sun, Galvani, Hydro, Meridian, Atlas Lithium, Aclara...)</p>
+  </div>
+</section>
+
+<!-- DIFERENCIAÇÃO -->
+<section class="dark">
+  <div class="container">
+    <h2>Por que a Summo é Diferente</h2>
+    <p class="subtitle">Ninguém mais cruza licenciamento ambiental + direito minerário + CFEM + mercado</p>
+    <div class="compare-grid">
+      <div class="compare-card muted">
+        <h4>BI da FEAM</h4>
+        <ul>
+          <li>Dados de MG apenas</li>
+          <li>Sem cruzamento de fontes</li>
+          <li>Sem inteligência analítica</li>
+          <li>Dashboard público</li>
+          <li>Sem prospecção ou DD</li>
+        </ul>
+      </div>
+      <div class="compare-card muted">
+        <h4>Jazida.com</h4>
+        <ul>
+          <li>Gestão operacional (30k users)</li>
+          <li>Processos ANM apenas</li>
+          <li>Sem licenciamento ambiental</li>
+          <li>Sem inteligência de mercado</li>
+          <li>Sem curadoria de projetos</li>
+        </ul>
+      </div>
+      <div class="compare-card highlight">
+        <h4 style="color:var(--gold);">Summo Quartile</h4>
+        <ul>
+          <li><strong>16+ fontes cruzadas</strong></li>
+          <li><strong>Ambiental + Minerário + Mercado</strong></li>
+          <li><strong>IA + Due Diligence (LGLA)</strong></li>
+          <li><strong>31 projetos curados com fontes</strong></li>
+          <li><strong>Cobertura nacional (27 UFs)</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODELO DE RECEITA -->
+<section>
+  <div class="container">
+    <h2>Como o Sistema Gera Receita</h2>
+    <p class="subtitle">4 pilares de monetização — do gratuito ao SaaS</p>
+    <div class="revenue-grid">
+      <div class="revenue-card">
+        <div class="pill" style="background:var(--teal);">Anzol</div>
+        <h3>Gratuito</h3>
+        <p>Dados compilados + monitoramento &rarr; atrai tráfego qualificado</p>
+      </div>
+      <div class="revenue-card">
+        <div class="pill" style="background:var(--orange);">Produto</div>
+        <h3>Pago</h3>
+        <p>Due Diligence + Viabilidade &rarr; venda de relatórios</p>
+      </div>
+      <div class="revenue-card">
+        <div class="pill" style="background:var(--gold);">Consultoria</div>
+        <h3>Por hora</h3>
+        <p>Diagnóstico com Mineradora Modelo &rarr; venda de hora</p>
+      </div>
+      <div class="revenue-card">
+        <div class="pill" style="background:var(--navy);">Módulos</div>
+        <h3>Licença</h3>
+        <p>IA por setor para mineradoras &rarr; venda de módulo SaaS</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="alt">
+  <div class="container">
+    <h2>Roadmap</h2>
+    <p class="subtitle">O que está pronto, o que vem a seguir, e para onde vamos</p>
+    <div class="timeline">
+      <div class="timeline-item tl-done">
+        <h4>Feito</h4>
+        <ul>
+          <li>Landing page + sidebar</li>
+          <li>Decisões filtráveis + KPIs</li>
+          <li>Cadastro Mineiro 303k</li>
+          <li>DD 5 fases + LGLA</li>
+          <li>SQ Solutions vitrine</li>
+          <li>Monitoramento 31 projetos</li>
+        </ul>
+      </div>
+      <div class="timeline-item tl-next">
+        <h4>Próximo Sprint</h4>
+        <ul>
+          <li>SIGBM (barragens)</li>
+          <li>PNLA (licenciamento nacional)</li>
+          <li>ANA (outorgas)</li>
+          <li>IA na Due Diligence</li>
+          <li>DIPEM, TAH, Dívida Ativa</li>
+        </ul>
+      </div>
+      <div class="timeline-item tl-future">
+        <h4>Futuro</h4>
+        <ul>
+          <li>Autenticação de clientes</li>
+          <li>Multi-tenancy</li>
+          <li>SaaS (módulos por empresa)</li>
+          <li>app.summoquartile.com</li>
+          <li>Commodities em tempo real</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="dark cta-section">
+  <div class="container">
+    <div class="accent-bar" style="justify-content:center;"><span></span><span></span><span></span></div>
+    <h2>Próxima Conversa</h2>
+    <p>Vamos alinhar as prioridades e construir o futuro da Summo juntos.</p>
+    <ul class="cta-list">
+      <li>Validar prioridades do roadmap com o time</li>
+      <li>Definir quais projetos/empresas priorizar no monitoramento</li>
+      <li>Agendar feedback com colaboradora para DD (requisitos + LGLA)</li>
+      <li>Configurar subdomínio (app.summoquartile.com)</li>
+      <li>Definir modelo de precificação dos produtos</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    Summo Quartile &middot; summoquartile.com &middot; Abril 2026
+  </div>
+</footer>
+
+</body>
+</html>

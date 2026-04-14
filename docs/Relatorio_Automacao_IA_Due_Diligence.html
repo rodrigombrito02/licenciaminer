@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório: Automação com IA — Due Diligence e Sistema Summo Quartile</title>
+<style>
+:root {
+  --navy: #0A2540;
+  --teal: #156082;
+  --gold: #FFC000;
+  --orange: #FF5F00;
+  --success: #27AE60;
+  --danger: #E74C3C;
+  --light: #F8F9FB;
+  --gray: #6B7280;
+  --white: #FFFFFF;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; color: var(--navy); line-height: 1.7; background: var(--white); }
+.container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+
+/* Header */
+.header { background: var(--navy); color: white; padding: 3rem 0; margin-bottom: 3rem; }
+.header .container { padding-top: 0; padding-bottom: 0; }
+.header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+.header .subtitle { color: var(--gold); font-size: 1.1rem; }
+.header .meta { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 1rem; }
+.accent-bar { display: flex; gap: 4px; margin-bottom: 1rem; }
+.accent-bar span:nth-child(1) { width: 50px; height: 3px; background: var(--gold); }
+.accent-bar span:nth-child(2) { width: 15px; height: 3px; background: var(--teal); }
+.accent-bar span:nth-child(3) { width: 8px; height: 3px; background: var(--orange); }
+
+/* Content */
+h2 { font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--light); }
+h3 { font-size: 1.15rem; font-weight: 700; margin: 1.5rem 0 0.5rem; color: var(--teal); }
+p { margin-bottom: 1rem; font-size: 0.95rem; }
+ul, ol { margin: 0.5rem 0 1rem 1.5rem; font-size: 0.95rem; }
+li { margin-bottom: 0.4rem; }
+
+/* Cards */
+.card { background: var(--light); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border-left: 4px solid var(--teal); }
+.card.orange { border-left-color: var(--orange); }
+.card.gold { border-left-color: var(--gold); }
+.card.green { border-left-color: var(--success); }
+.card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+.card .tag { display: inline-block; font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+.tag-fase { background: rgba(21,96,130,0.1); color: var(--teal); }
+.tag-impacto { background: rgba(255,95,0,0.1); color: var(--orange); }
+.tag-custo { background: rgba(255,192,0,0.15); color: #B8860B; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+th { background: var(--navy); color: white; padding: 0.6rem 0.8rem; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
+td { padding: 0.6rem 0.8rem; border-bottom: 1px solid #eee; }
+tr:hover td { background: rgba(21,96,130,0.02); }
+
+/* Highlight */
+.highlight { background: rgba(21,96,130,0.05); border: 1px solid rgba(21,96,130,0.15); border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0; }
+.highlight strong { color: var(--teal); }
+
+/* Footer */
+.footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #eee; text-align: center; color: var(--gray); font-size: 0.75rem; }
+
+@media print { .header { padding: 1.5rem 0; } h2 { page-break-before: always; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <div class="accent-bar"><span></span><span></span><span></span></div>
+    <h1>Relatório: Automação com IA</h1>
+    <p class="subtitle">Possibilidades de integração de Inteligência Artificial no Sistema Summo Quartile</p>
+    <p class="meta">Summo Quartile · Abril 2026 · Documento interno para discussão com sócios</p>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- SUMÁRIO EXECUTIVO -->
+<h2>1. Sumário Executivo</h2>
+
+<p>Este relatório descreve as <strong>possibilidades de automação com Inteligência Artificial (IA)</strong> no Sistema Integrado Summo Quartile, com foco na Due Diligence Ambiental e nos demais módulos da plataforma.</p>
+
+<p>A IA pode ser integrada de forma incremental, começando por funcionalidades de alto valor e baixo custo, evoluindo para automações mais sofisticadas conforme a demanda. <strong>Toda a infraestrutura técnica já está preparada</strong> — a ativação depende apenas de uma chave de API da Anthropic (Claude).</p>
+
+<div class="highlight">
+  <strong>Investimento estimado:</strong> ~US$ 15/mês para uso moderado (3-5 análises/dia). Escala conforme uso. Sem compromisso mínimo — paga só o que usar.
+</div>
+
+<!-- DUE DILIGENCE -->
+<h2>2. Due Diligence Ambiental — 5 Oportunidades de IA</h2>
+
+<p>O módulo de Due Diligence é o produto premium da Summo. Hoje funciona com 5 fases e avaliação manual de 1.967 requisitos. A IA pode automatizar significativamente cada fase.</p>
+
+<h3>2.1. Identificação Automática de Documentos (Fase 2)</h3>
+
+<div class="card">
+  <span class="tag tag-fase">Fase 2 — Documentos</span>
+  <h4>O que faz</h4>
+  <p>Quando o usuário faz upload de um PDF, a IA lê o conteúdo e <strong>identifica automaticamente qual documento do inventário</strong> ele corresponde (EIA, RIMA, PCA, PRAD, etc.).</p>
+  <h4>Como funciona</h4>
+  <ol>
+    <li>Usuário arrasta PDF para a área de upload</li>
+    <li>Sistema extrai o texto (pymupdf — já implementado)</li>
+    <li>IA analisa as primeiras páginas e classifica: "Este é um EIA (Estudo de Impacto Ambiental)"</li>
+    <li>Sistema marca automaticamente o documento como "Apresentado" no checklist</li>
+  </ol>
+  <h4>Valor</h4>
+  <p>Elimina o trabalho manual de classificar documentos. O consultor faz upload de todo o book de uma vez e o sistema organiza automaticamente.</p>
+  <h4>Custo por uso</h4>
+  <p>~US$ 0,01 por documento (apenas lê as primeiras páginas).</p>
+</div>
+
+<h3>2.2. Avaliação Automática de Requisitos (Fase 3)</h3>
+
+<div class="card orange">
+  <span class="tag tag-impacto">Maior impacto</span>
+  <h4>O que faz</h4>
+  <p>Para cada requisito de conformidade, a IA <strong>lê o documento correspondente e avalia se o requisito é atendido</strong>, parcialmente atendido ou não atendido. Apresenta justificativa e trecho relevante do documento.</p>
+  <h4>Como funciona</h4>
+  <ol>
+    <li>Sistema seleciona o requisito: "O EIA contém análise de alternativas tecnológicas e locacionais?"</li>
+    <li>IA busca no texto do EIA por trechos que respondam a essa pergunta</li>
+    <li>Retorna: <em>"Atende Parcialmente — O documento apresenta alternativas locacionais no capítulo 3.2, mas não discute alternativas tecnológicas."</em></li>
+    <li>Radio button é pré-preenchido com badge <strong>"Sugerido por IA"</strong></li>
+    <li>Consultor aceita ou sobrescreve com um clique</li>
+  </ol>
+  <h4>Valor</h4>
+  <p><strong>Reduz o tempo de avaliação de horas para minutos.</strong> Um EIA com 843 requisitos que levaria dias para avaliar manualmente pode ser pré-analisado em minutos. O consultor revisa e valida, em vez de preencher do zero.</p>
+  <h4>Custo por uso</h4>
+  <p>~US$ 0,05-0,50 por documento (depende do tamanho do texto e número de requisitos). Uma DD completa com 10 documentos: ~US$ 1-5.</p>
+</div>
+
+<h3>2.3. Geração de Plano de Ação (Fase 5)</h3>
+
+<div class="card">
+  <span class="tag tag-fase">Fase 5 — Resultado</span>
+  <h4>O que faz</h4>
+  <p>Para cada item "Não Atende", a IA <strong>gera recomendações detalhadas e contextualizadas</strong> de como corrigir a não-conformidade, incluindo referência à legislação aplicável e exemplos práticos.</p>
+  <h4>Como funciona</h4>
+  <ol>
+    <li>Sistema identifica os itens "Não Atende" e "Atende Parcialmente"</li>
+    <li>IA recebe o contexto: requisito + legislação + trecho do documento (se houver)</li>
+    <li>Gera recomendação: <em>"Incluir no EIA seção dedicada a alternativas tecnológicas, conforme Art. 29, I da Lei 15.190/2025. Recomenda-se apresentar pelo menos 3 alternativas com análise comparativa de viabilidade técnica e ambiental."</em></li>
+  </ol>
+  <h4>Valor</h4>
+  <p>Transforma o relatório de DD em um documento acionável. O cliente recebe não apenas o diagnóstico, mas o <strong>caminho para resolver cada problema</strong>. Aumenta significativamente o valor percebido do serviço.</p>
+  <h4>Custo por uso</h4>
+  <p>~US$ 0,02-0,10 por recomendação.</p>
+</div>
+
+<h3>2.4. Mapeamento Automático de Legislação (Fase 0 — Preparação)</h3>
+
+<div class="card gold">
+  <span class="tag tag-custo">Alto valor estratégico</span>
+  <h4>O que faz</h4>
+  <p>A IA <strong>identifica automaticamente a legislação aplicável</strong> para um tipo de licenciamento + atividade + estado, e gera os requisitos de conformidade correspondentes.</p>
+  <h4>Como funciona</h4>
+  <ol>
+    <li>Consultor informa: LAC1, atividade A-02 (mineração), classe 4, MG</li>
+    <li>IA consulta a base pré-mapeada (DN COPAM 217, LGLA, CONAMA)</li>
+    <li>Verifica se houve atualizações legislativas desde o último mapeamento</li>
+    <li>Complementa com requisitos adicionais que a IA encontra na legislação</li>
+    <li>Sinaliza requisitos que podem ter sido afetados por alterações recentes</li>
+  </ol>
+  <h4>Valor</h4>
+  <p><strong>A base de requisitos nunca fica desatualizada.</strong> Quando uma nova deliberação é publicada, a IA detecta e sugere atualizações. Elimina o risco de trabalhar com requisitos obsoletos.</p>
+  <h4>Custo por uso</h4>
+  <p>~US$ 0,10-0,30 por consulta (texto legislativo pode ser extenso).</p>
+</div>
+
+<h3>2.5. Verificação de Atualizações Legislativas (Contínuo)</h3>
+
+<div class="card">
+  <span class="tag tag-fase">Automação contínua</span>
+  <h4>O que faz</h4>
+  <p>Periodicamente (semanal ou mensal), a IA <strong>verifica se houve publicações no Diário Oficial</strong> que afetem os requisitos mapeados — novas deliberações, alterações de normas, revogações.</p>
+  <h4>Como funciona</h4>
+  <ol>
+    <li>Sistema consulta fontes públicas de legislação (Diário Oficial, CONAMA, COPAM)</li>
+    <li>IA compara com a base de requisitos existente</li>
+    <li>Gera alerta: <em>"DN COPAM 246/2022 alterou critérios de classificação que afetam 23 requisitos da base"</em></li>
+    <li>Consultor valida e a base é atualizada</li>
+  </ol>
+  <h4>Valor</h4>
+  <p>Posiciona a Summo como referência em conformidade regulatória atualizada. Diferencial competitivo significativo.</p>
+  <h4>Custo</h4>
+  <p>~US$ 1-5/mês (verificação periódica com baixo volume).</p>
+</div>
+
+<!-- OUTROS MÓDULOS -->
+<h2>3. Outros Módulos — Possibilidades de IA</h2>
+
+<h3>3.1. Monitoramento de Indicadores — Alertas Inteligentes</h3>
+
+<div class="card green">
+  <h4>O que faz</h4>
+  <p>A IA analisa os dados de CFEM, produção, comércio exterior e licenciamento e <strong>gera briefings executivos automáticos</strong> com os destaques do período.</p>
+  <h4>Exemplos de output</h4>
+  <ul>
+    <li><em>"A arrecadação de CFEM em ferro caiu 15% no último trimestre vs. mesmo período do ano anterior, concentrada em URA Sul de Minas."</em></li>
+    <li><em>"Sigma Lithium aumentou produção em 40% — requerimentos de expansão identificados no Cadastro Mineiro."</em></li>
+    <li><em>"Taxa de aprovação para atividade A-05-02-0 em classe 5 atingiu mínimo histórico de 35%."</em></li>
+  </ul>
+  <h4>Valor</h4>
+  <p>Transforma dados em inteligência acionável. O visitante do site recebe insights que não encontra em nenhum outro lugar.</p>
+</div>
+
+<h3>3.2. Monitoramento de Projetos — Curadoria Assistida</h3>
+
+<div class="card">
+  <h4>O que faz</h4>
+  <p>A IA <strong>monitora notícias e press releases</strong> das grandes mineradoras e sugere atualizações para a base de 31 projetos curados.</p>
+  <h4>Como funciona</h4>
+  <ol>
+    <li>Periodicamente, IA pesquisa por notícias de "Vale S11D", "Anglo Minas-Rio", etc.</li>
+    <li>Identifica mudanças: novos investimentos, licenças concedidas, atrasos</li>
+    <li>Gera sugestão: <em>"Atualizar projeto Vale S11D — comissionamento confirmado para Q3 2026 (fonte: vale.com, 15/03/2026)"</em></li>
+    <li>Equipe Summo valida e atualiza a base</li>
+  </ol>
+  <h4>Valor</h4>
+  <p>Mantém a base de projetos sempre atualizada com mínimo esforço manual. Cada atualização tem fonte rastreável.</p>
+</div>
+
+<h3>3.3. Consulta Empresa — Dossier Enriquecido</h3>
+
+<div class="card">
+  <h4>O que faz</h4>
+  <p>Quando o usuário consulta uma empresa por CNPJ, a IA <strong>gera um resumo executivo</strong> cruzando todos os dados disponíveis: decisões, infrações, CFEM, processos ANM, concessões.</p>
+  <h4>Exemplo de output</h4>
+  <p><em>"A empresa X possui 23 processos de licenciamento em MG, dos quais 18 foram deferidos (taxa 78%, acima da média do setor). Possui 3 infrações IBAMA nos últimos 5 anos, todas quitadas. CFEM regular desde 2019. Recomendação: perfil de baixo risco regulatório para novas operações."</em></p>
+  <h4>Valor</h4>
+  <p>O consultor recebe em segundos uma análise que levaria horas para compilar manualmente. Ideal para due diligence de M&A e prospecção de investimentos.</p>
+</div>
+
+<h3>3.4. Mineradora Modelo — Diagnóstico Automatizado</h3>
+
+<div class="card">
+  <h4>O que faz</h4>
+  <p>O cliente responde um questionário sobre sua operação e a IA <strong>compara com o modelo ideal</strong>, gerando um relatório de gaps e um plano de implementação personalizado.</p>
+  <h4>Como funciona</h4>
+  <ol>
+    <li>Cliente responde 20-30 perguntas por setor (Planejamento, Operação, etc.)</li>
+    <li>IA compara respostas com os KPIs ideais da Mineradora Modelo</li>
+    <li>Gera relatório: <em>"Seu setor de Manutenção está no nível 2 (Reativo). O modelo ideal é nível 4 (Preditivo). Gaps identificados: MTBF abaixo do target, sem sistema de monitoramento de condição."</em></li>
+    <li>Proposta de trabalho gerada automaticamente</li>
+  </ol>
+  <h4>Valor</h4>
+  <p>Escala a capacidade de diagnóstico da Summo. Pode atender dezenas de clientes em paralelo, gerando propostas de consultoria automaticamente.</p>
+</div>
+
+<h3>3.5. Chat Inteligente — Assistente do Sistema</h3>
+
+<div class="card">
+  <h4>O que faz</h4>
+  <p>Um chat integrado ao sistema onde o usuário pode fazer perguntas em linguagem natural sobre os dados.</p>
+  <h4>Exemplos</h4>
+  <ul>
+    <li><em>"Quais concessões de ouro estão ativas no Pará?"</em> → tabela filtrada</li>
+    <li><em>"Qual a taxa de aprovação para mineração classe 5 em URA Central?"</em> → resposta direta com dados</li>
+    <li><em>"Resuma o perfil ambiental da Vale em MG"</em> → briefing contextualizado</li>
+  </ul>
+  <h4>Valor</h4>
+  <p>Torna o sistema acessível para usuários não-técnicos. O sócio que não sabe navegar por filtros pode simplesmente perguntar.</p>
+  <h4>Nota</h4>
+  <p>A infraestrutura de chat já existe no sistema (<code>/api/chat/stream</code> com SSE). Precisa apenas de ativação e refinamento do prompt de sistema.</p>
+</div>
+
+<!-- QUADRO RESUMO -->
+<h2>4. Quadro Resumo: Priorização por Impacto × Esforço</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Funcionalidade</th>
+      <th>Módulo</th>
+      <th>Impacto</th>
+      <th>Esforço</th>
+      <th>Custo/uso</th>
+      <th>Prioridade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Avaliação automática de requisitos</strong></td>
+      <td>Due Diligence</td>
+      <td style="color:var(--danger);font-weight:700;">Altíssimo</td>
+      <td>Médio</td>
+      <td>US$ 1-5/DD</td>
+      <td style="color:var(--danger);font-weight:700;">P1</td>
+    </tr>
+    <tr>
+      <td><strong>Plano de ação contextualizado</strong></td>
+      <td>Due Diligence</td>
+      <td style="color:var(--danger);font-weight:700;">Alto</td>
+      <td>Baixo</td>
+      <td>US$ 0,50/DD</td>
+      <td style="color:var(--danger);font-weight:700;">P1</td>
+    </tr>
+    <tr>
+      <td><strong>Identificação automática de documentos</strong></td>
+      <td>Due Diligence</td>
+      <td>Médio</td>
+      <td>Baixo</td>
+      <td>US$ 0,10/DD</td>
+      <td style="color:var(--orange);font-weight:700;">P2</td>
+    </tr>
+    <tr>
+      <td><strong>Briefings de monitoramento</strong></td>
+      <td>Mineral Intelligence</td>
+      <td>Alto</td>
+      <td>Baixo</td>
+      <td>US$ 2-5/mês</td>
+      <td style="color:var(--orange);font-weight:700;">P2</td>
+    </tr>
+    <tr>
+      <td><strong>Dossier enriquecido</strong></td>
+      <td>Consulta Empresa</td>
+      <td>Alto</td>
+      <td>Baixo</td>
+      <td>US$ 0,05/consulta</td>
+      <td style="color:var(--orange);font-weight:700;">P2</td>
+    </tr>
+    <tr>
+      <td><strong>Mapeamento legislativo</strong></td>
+      <td>Due Diligence</td>
+      <td style="color:var(--danger);font-weight:700;">Alto</td>
+      <td>Alto</td>
+      <td>US$ 0,30/consulta</td>
+      <td>P3</td>
+    </tr>
+    <tr>
+      <td><strong>Curadoria de projetos assistida</strong></td>
+      <td>Monitoramento</td>
+      <td>Médio</td>
+      <td>Médio</td>
+      <td>US$ 5/mês</td>
+      <td>P3</td>
+    </tr>
+    <tr>
+      <td><strong>Diagnóstico Mineradora Modelo</strong></td>
+      <td>SQ Solutions</td>
+      <td>Alto</td>
+      <td>Médio</td>
+      <td>US$ 0,50/diagnóstico</td>
+      <td>P3</td>
+    </tr>
+    <tr>
+      <td><strong>Verificação legislativa contínua</strong></td>
+      <td>Due Diligence</td>
+      <td>Médio</td>
+      <td>Alto</td>
+      <td>US$ 5/mês</td>
+      <td>P4</td>
+    </tr>
+    <tr>
+      <td><strong>Chat inteligente</strong></td>
+      <td>Todos</td>
+      <td>Médio</td>
+      <td>Baixo</td>
+      <td>US$ 0,02/pergunta</td>
+      <td>P4</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- CUSTOS -->
+<h2>5. Estimativa de Custos</h2>
+
+<h3>Cenário: uso moderado (5 DDs/mês + briefings + consultas)</h3>
+
+<table>
+  <thead>
+    <tr><th>Item</th><th>Volume/mês</th><th>Custo estimado</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Due Diligence completa (avaliação + plano de ação)</td><td>5 DDs</td><td>US$ 10-25</td></tr>
+    <tr><td>Briefings de monitoramento</td><td>4 briefings</td><td>US$ 2-5</td></tr>
+    <tr><td>Consultas empresa (dossier)</td><td>20 consultas</td><td>US$ 1-2</td></tr>
+    <tr><td>Chat/perguntas</td><td>50 perguntas</td><td>US$ 1</td></tr>
+    <tr style="font-weight:700;"><td>Total mensal estimado</td><td></td><td>US$ 15-35</td></tr>
+  </tbody>
+</table>
+
+<div class="highlight">
+  <strong>Comparação de custo-benefício:</strong> uma Due Diligence manual que leva 3 dias de trabalho de um consultor (~R$ 3.000 de custo interno) pode ser pré-analisada em 10 minutos por ~R$ 25. O consultor revisa e valida, reduzindo o tempo para meio dia.
+</div>
+
+<!-- REQUISITOS TÉCNICOS -->
+<h2>6. Requisitos Técnicos</h2>
+
+<h3>O que já está pronto</h3>
+<ul>
+  <li><strong>SDK Anthropic instalado</strong> — pacote <code>anthropic</code> v0.91.0 já no ambiente</li>
+  <li><strong>Endpoint de upload</strong> — <code>POST /api/due-diligence/upload</code> extrai texto de PDF</li>
+  <li><strong>Endpoint de análise</strong> — <code>POST /api/due-diligence/analyze</code> preparado para Claude</li>
+  <li><strong>Chat SSE</strong> — <code>/api/chat/stream</code> com streaming já implementado</li>
+  <li><strong>Briefing scheduler</strong> — geração periódica de briefings já no código</li>
+</ul>
+
+<h3>O que falta para ativar</h3>
+<ol>
+  <li><strong>Criar conta na Anthropic</strong> — <a href="https://console.anthropic.com/">console.anthropic.com</a></li>
+  <li><strong>Gerar API key</strong> — começa com <code>sk-ant-...</code></li>
+  <li><strong>Configurar no sistema</strong> — criar arquivo <code>.env</code> com <code>ANTHROPIC_API_KEY=sk-ant-...</code></li>
+  <li><strong>Pronto</strong> — as funcionalidades "ligam" automaticamente quando a chave está presente</li>
+</ol>
+
+<p>Não é necessário nenhum outro software, servidor, ou configuração. O sistema já detecta a presença da chave e ativa os recursos de IA automaticamente.</p>
+
+<!-- ROADMAP -->
+<h2>7. Roadmap Sugerido de Ativação</h2>
+
+<div class="card green">
+  <h4>Fase 1 — Validação (semana 1)</h4>
+  <ul>
+    <li>Configurar API key</li>
+    <li>Testar avaliação automática de requisitos com um EIA real (Herculano)</li>
+    <li>Validar qualidade das sugestões com equipe</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h4>Fase 2 — Produção DD (semana 2-3)</h4>
+  <ul>
+    <li>Ativar avaliação automática no workflow de 5 fases</li>
+    <li>Ativar plano de ação contextualizado</li>
+    <li>Primeira DD real com IA para cliente teste</li>
+  </ul>
+</div>
+
+<div class="card gold">
+  <h4>Fase 3 — Expansão (mês 2)</h4>
+  <ul>
+    <li>Ativar briefings de monitoramento</li>
+    <li>Ativar dossier enriquecido na consulta empresa</li>
+    <li>Ativar chat inteligente</li>
+  </ul>
+</div>
+
+<!-- CONCLUSÃO -->
+<h2>8. Conclusão</h2>
+
+<p>A integração de IA no Sistema Summo Quartile representa um <strong>salto qualitativo na entrega de valor</strong> para os clientes e na eficiência operacional da equipe. As funcionalidades de maior impacto (avaliação automática de requisitos e plano de ação) podem ser ativadas em <strong>menos de uma semana</strong> após a configuração da API key, com custo mensal estimado de <strong>US$ 15-35</strong>.</p>
+
+<p>A abordagem recomendada é <strong>incremental</strong>: validar com um caso real (Herculano), ajustar a qualidade das sugestões, e expandir gradualmente para os demais módulos.</p>
+
+<p>Toda a infraestrutura técnica já está implementada. A decisão é exclusivamente de negócio.</p>
+
+<div class="footer">
+  Summo Quartile · summoquartile.com · Relatório gerado em Abril 2026<br>
+  Sistema Integrado Summo Quartile — Documento interno
+</div>
+
+</div>
+
+</body>
+</html>
