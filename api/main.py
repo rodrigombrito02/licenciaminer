@@ -24,6 +24,7 @@ from api.routers import (
     prospeccao,
     reports,
     simulator,
+    viabilidade,
 )
 from api.services.database import close_connection, get_connection
 
@@ -78,6 +79,7 @@ app.include_router(reports.router, prefix="/api", tags=["Relatórios"])
 app.include_router(due_diligence.router, prefix="/api", tags=["Due Diligence"])
 app.include_router(copam.router, prefix="/api", tags=["COPAM"])
 app.include_router(chat.router, prefix="/api", tags=["Chat"])
+app.include_router(viabilidade.router, prefix="/api", tags=["Viabilidade"])
 
 
 @app.get("/health")

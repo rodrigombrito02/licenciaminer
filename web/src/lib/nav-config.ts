@@ -42,7 +42,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/explorar", label: "Base de Dados", icon: Database },
       { href: "/empresa", label: "Consulta Empresa", icon: Building2 },
       { href: "/decisoes", label: "Análise de Decisões", icon: BarChart3 },
-      { href: "/viabilidade", label: "Viabilidade", icon: Search, disabled: true },
+      { href: "/viabilidade", label: "Viabilidade", icon: Search },
       { href: "/due-diligence", label: "Due Diligence", icon: ShieldCheck },
     ],
   },

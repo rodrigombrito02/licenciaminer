@@ -1177,20 +1177,7 @@ export function fetchRegionais() {
   return apiFetch<string[]>("/consulta/regionais");
 }
 
-export function fetchViabilidade(params: {
-  atividade?: string;
-  classe?: number;
-  regional?: string;
-  cnpj?: string;
-}) {
-  const qs = new URLSearchParams();
-  if (params.atividade) qs.set("atividade", params.atividade);
-  if (params.classe != null) qs.set("classe", String(params.classe));
-  if (params.regional) qs.set("regional", params.regional);
-  if (params.cnpj) qs.set("cnpj", params.cnpj);
-  const q = qs.toString();
-  return apiFetch<ViabilidadeResponse>(`/consulta/viabilidade${q ? `?${q}` : ""}`);
-}
+// fetchViabilidade moved to Viabilidade section below
 
 /* ── COPAM ── */
 
@@ -1379,6 +1366,58 @@ export interface ProjetosResponse {
 
 export function fetchMonitoringProjetos() {
   return apiFetch<ProjetosResponse>("/intelligence/monitoring/projetos");
+}
+
+/* ── Viabilidade ── */
+
+export interface ViabilidadeFator {
+  fator: string;
+  valor: string;
+  risco: "alto" | "moderado" | "baixo";
+}
+
+export interface ViabilidadeResult {
+  perfil: {
+    probabilidade: number | null;
+    n_decisoes: number;
+    media_geral: number;
+    rigor_delta: number | null;
+    tendencia: number | null;
+  };
+  fatores: ViabilidadeFator[];
+  escopo: {
+    licenca_tipo: string;
+    licenca_desc: string;
+    n_documentos: number;
+    n_requisitos: number;
+    n_normas: number;
+  };
+  risco_geral: string;
+  recomendacao: string;
+  empresa: Record<string, unknown> | null;
+  input: {
+    atividade: string;
+    classe: number;
+    regional: string | null;
+    licenca_tipo: string;
+  };
+}
+
+export function fetchViabilidade(params: {
+  atividade: string;
+  classe: number;
+  regional?: string;
+  licenca_tipo?: string;
+  cnpj?: string;
+}) {
+  const qs = new URLSearchParams({
+    atividade: params.atividade,
+    classe: String(params.classe),
+  });
+  if (params.regional) qs.set("regional", params.regional);
+  if (params.licenca_tipo) qs.set("licenca_tipo", params.licenca_tipo);
+  if (params.cnpj) qs.set("cnpj", params.cnpj);
+  return apiFetch<ViabilidadeResult>(`/viabilidade/perfil?${qs}`);
 }
 
 /* ── Formatting re-exports (canonical source: lib/format.ts) ── */

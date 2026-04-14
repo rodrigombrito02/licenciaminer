@@ -70,6 +70,22 @@ def get_requirements(
     }
 
 
+# Explicit mapping: which req-documento keys apply to each license type
+LICENCA_REQ_KEYS: dict[str, list[str]] = {
+    "LAS": ["Cadastro via SEI"],
+    "LAS-RAS": ["Cadastro via SEI", "LAS_RAS"],
+    "LAC1": ["Cadastro via SEI", "LAS_RAS", "EIA", "RIMA_LAE", "PCA", "PRAD", "PEA", "PGA", "PIA", "PAFEM", "IDAL", "RADA"],
+    "LAC2": ["Cadastro via SEI", "LAS_RAS", "EIA", "PCA", "PRAD", "PEA", "PGA", "PIA", "PAFEM", "IDAL", "RADA"],
+    "LP": ["EIA", "PRAD", "PEA", "PGA", "PIA", "PAFEM", "IDAL", "RADA"],
+    "LI": ["PCA", "PRAD", "PEA", "PGA", "PIA", "PAFEM", "IDAL"],
+    "LO": ["PCA", "PRAD"],
+    "LAU": ["RCA_LAU", "PCA_LAU", "PROJ_LAU"],
+    "LAC_FED": ["RCE_LAC", "TAC_LAC"],
+    "LAE": ["EIA_LAE", "RIMA_LAE", "PBA_LAE"],
+    "LOC": ["RCA_LOC", "PCA_LOC"],
+}
+
+
 @router.get("/due-diligence/all-requirements")
 def get_all_requirements(
     licenca_tipo: str = Query(..., description="Tipo de licença (LAS, LAS-RAS, LAC1, etc.)"),
@@ -80,22 +96,6 @@ def get_all_requirements(
     """
     docs = filtrar_documentos(licenca_tipo)
     all_reqs_data = load_requisitos()
-
-    # Explicit mapping: which req-documento keys apply to each license type
-    # These match the 'documento' column in dd_requisitos_testes.csv
-    LICENCA_REQ_KEYS: dict[str, list[str]] = {
-        "LAS": ["Cadastro via SEI"],
-        "LAS-RAS": ["Cadastro via SEI", "LAS_RAS"],
-        "LAC1": ["Cadastro via SEI", "LAS_RAS", "EIA", "RIMA_LAE", "PCA", "PRAD", "PEA", "PGA", "PIA", "PAFEM", "IDAL", "RADA"],
-        "LAC2": ["Cadastro via SEI", "LAS_RAS", "EIA", "PCA", "PRAD", "PEA", "PGA", "PIA", "PAFEM", "IDAL", "RADA"],
-        "LP": ["EIA", "PRAD", "PEA", "PGA", "PIA", "PAFEM", "IDAL", "RADA"],
-        "LI": ["PCA", "PRAD", "PEA", "PGA", "PIA", "PAFEM", "IDAL"],
-        "LO": ["PCA", "PRAD"],
-        "LAU": ["RCA_LAU", "PCA_LAU", "PROJ_LAU"],
-        "LAC_FED": ["RCE_LAC", "TAC_LAC"],
-        "LAE": ["EIA_LAE", "RIMA_LAE", "PBA_LAE"],
-        "LOC": ["RCA_LOC", "PCA_LOC"],
-    }
 
     # Collect applicable req-doc keys
     req_doc_keys = set(LICENCA_REQ_KEYS.get(licenca_tipo, []))
