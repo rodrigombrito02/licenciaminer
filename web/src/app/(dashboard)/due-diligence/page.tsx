@@ -435,6 +435,24 @@ export default function DueDiligencePage() {
     return (score / total) * 100;
   }, [evaluations]);
 
+  // Reusable step navigation buttons (rendered at top and bottom of each step)
+  const stepNav = (prevStep: number | null, nextStep: number | null, nextLabel?: string, nextDisabled?: boolean, onNext?: () => void) => (
+    <div className="flex justify-between">
+      {prevStep !== null ? (
+        <Button variant="outline" size="sm" onClick={() => setStep(prevStep)}>
+          <ChevronLeft className="mr-1 h-3.5 w-3.5" />
+          Voltar
+        </Button>
+      ) : <div />}
+      {nextStep !== null && (
+        <Button size="sm" disabled={nextDisabled} onClick={onNext ?? (() => setStep(nextStep))}>
+          {nextLabel ?? "Próximo"}
+          <ChevronRight className="ml-1 h-3.5 w-3.5" />
+        </Button>
+      )}
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       <div>
@@ -471,6 +489,8 @@ export default function DueDiligencePage() {
 
       {/* Step 1: Configuration */}
       {step === 1 && (
+        <>
+        {stepNav(null, 2, "Próximo", !selectedLicense || loadingDocs)}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 font-heading">
@@ -629,10 +649,14 @@ export default function DueDiligencePage() {
             </div>
           </CardContent>
         </Card>
+        {stepNav(null, 2, "Próximo", !selectedLicense || loadingDocs)}
+        </>
       )}
 
       {/* Step 2: Document checklist */}
       {step === 2 && (
+        <>
+        {stepNav(1, 3, "Próximo", false, async () => { await loadRequirements(); setStep(3); })}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 font-heading">
@@ -898,11 +922,14 @@ export default function DueDiligencePage() {
             </div>
           </CardContent>
         </Card>
+        {stepNav(1, 3, "Próximo", false, async () => { await loadRequirements(); setStep(3); })}
+        </>
       )}
 
       {/* Step 3: Conformance assessment */}
       {step === 3 && (
         <div className="space-y-4">
+          {result ? stepNav(2, 4, "Gerar Plano de Ação") : stepNav(2, null)}
           {/* Live score bar */}
           <Card>
             <CardContent className="flex items-center gap-4 p-4">
@@ -1140,6 +1167,7 @@ export default function DueDiligencePage() {
       {/* Step 4: Plano de Ação PDCA */}
       {step === 4 && result && (
         <div className="space-y-6">
+          {stepNav(3, 5, "Ver Resultado Final")}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-heading">
@@ -1208,6 +1236,7 @@ export default function DueDiligencePage() {
       {/* Step 5: Results */}
       {step === 5 && result && (
         <div className="space-y-6">
+          {stepNav(4, null)}
           {/* Config summary */}
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
             <span><strong>Licença:</strong> {selectedLicense}</span>

@@ -300,3 +300,163 @@ def analyze_criticality(request: CriticalityRequest):
             "baixa_prioridade": sum(1 for n in non_conformes if "Baixa" in n["quadrante"]),
         },
     }
+
+
+# ── Export XLSX ──────────────────────────────────────────────────────────
+
+
+class XlsxExportRequest(BaseModel):
+    """Payload para exportar planilha de acompanhamento."""
+    avaliacoes: dict[str, str]
+    doc_status: dict[str, str] | None = None
+    licenca_tipo: str = ""
+
+
+@router.post("/due-diligence/export-xlsx")
+def export_xlsx(request: XlsxExportRequest):
+    """Gera planilha XLSX de acompanhamento com 4 abas."""
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from starlette.responses import StreamingResponse
+
+    wb = Workbook()
+    thin_border = Border(
+        left=Side(style="thin", color="CCCCCC"),
+        right=Side(style="thin", color="CCCCCC"),
+        top=Side(style="thin", color="CCCCCC"),
+        bottom=Side(style="thin", color="CCCCCC"),
+    )
+    header_font = Font(bold=True, color="FFFFFF", size=10)
+    header_fill = PatternFill(start_color="0A2540", end_color="0A2540", fill_type="solid")
+
+    all_reqs = load_requisitos()
+    req_map = {r["requisito_id"]: r for r in all_reqs}
+    resultado = calcular_conformidade(request.avaliacoes)
+
+    # ── Aba 1: Dashboard ──
+    ws1 = wb.active
+    ws1.title = "Dashboard"
+    ws1["A1"] = "Due Diligence - Dashboard"
+    ws1["A1"].font = Font(bold=True, size=14, color="0A2540")
+    ws1["A3"] = "Score Global"
+    ws1["B3"] = f"{round(resultado.conformidade_nao_ponderada * 100, 1)}%"
+    ws1["B3"].font = Font(bold=True, size=16)
+    ws1["A4"] = "Classificacao"
+    ws1["B4"] = resultado.classificacao
+    ws1["A5"] = "Total Requisitos"
+    ws1["B5"] = resultado.total_requisitos
+    ws1["A6"] = "Atende"
+    ws1["B6"] = resultado.atende
+    ws1["A7"] = "Parcial"
+    ws1["B7"] = resultado.atende_parcial
+    ws1["A8"] = "Nao Atende"
+    ws1["B8"] = resultado.nao_atende
+    ws1["A9"] = "Nao Aplica"
+    ws1["B9"] = resultado.nao_aplica
+    ws1["A11"] = "Licenca"
+    ws1["B11"] = request.licenca_tipo
+    for row in ws1.iter_rows(min_row=3, max_row=11, min_col=1, max_col=1):
+        for cell in row:
+            cell.font = Font(bold=True)
+
+    # ── Aba 2: Inventario ──
+    ws2 = wb.create_sheet("Inventario")
+    inv_headers = ["#", "Documento", "Status", "Arquivo Vinculado"]
+    for col, h in enumerate(inv_headers, 1):
+        c = ws2.cell(row=1, column=col, value=h)
+        c.font = header_font
+        c.fill = header_fill
+        c.alignment = Alignment(horizontal="center")
+    doc_status = request.doc_status or {}
+    inventario = load_inventario()
+    for i, doc in enumerate(inventario):
+        doc_name = doc.get("documento", "")
+        status = doc_status.get(doc_name, "Nao Apresentado")
+        ws2.cell(row=i+2, column=1, value=i+1)
+        ws2.cell(row=i+2, column=2, value=doc_name)
+        c = ws2.cell(row=i+2, column=3, value=status)
+        if status == "Apresentado":
+            c.fill = PatternFill(start_color="E8F5E9", end_color="E8F5E9", fill_type="solid")
+        elif status == "Nao Apresentado":
+            c.fill = PatternFill(start_color="FFEBEE", end_color="FFEBEE", fill_type="solid")
+        ws2.cell(row=i+2, column=4, value="")
+    ws2.column_dimensions["B"].width = 45
+    ws2.column_dimensions["C"].width = 18
+    ws2.column_dimensions["D"].width = 30
+    ws2.auto_filter.ref = f"A1:D{len(inventario)+1}"
+
+    # ── Aba 3: Avaliacao ──
+    ws3 = wb.create_sheet("Avaliacao")
+    eval_headers = ["ID", "Documento", "Modulo", "Topico", "Teste", "Evidencia", "Resultado", "Observacoes"]
+    for col, h in enumerate(eval_headers, 1):
+        c = ws3.cell(row=1, column=col, value=h)
+        c.font = header_font
+        c.fill = header_fill
+    row_num = 2
+    for req_id, avaliacao in sorted(request.avaliacoes.items()):
+        req = req_map.get(req_id, {})
+        ws3.cell(row=row_num, column=1, value=req_id)
+        ws3.cell(row=row_num, column=2, value=req.get("documento", ""))
+        ws3.cell(row=row_num, column=3, value=req.get("modulo", ""))
+        ws3.cell(row=row_num, column=4, value=req.get("topico", ""))
+        ws3.cell(row=row_num, column=5, value=req.get("teste_aderencia", ""))
+        ws3.cell(row=row_num, column=6, value=req.get("evidencia_esperada", ""))
+        c = ws3.cell(row=row_num, column=7, value=avaliacao)
+        if avaliacao == "Atende":
+            c.fill = PatternFill(start_color="E8F5E9", end_color="E8F5E9", fill_type="solid")
+        elif "Parcial" in avaliacao:
+            c.fill = PatternFill(start_color="FFF3E0", end_color="FFF3E0", fill_type="solid")
+        elif "Nao" in avaliacao:
+            c.fill = PatternFill(start_color="FFEBEE", end_color="FFEBEE", fill_type="solid")
+        ws3.cell(row=row_num, column=8, value="")
+        row_num += 1
+    ws3.column_dimensions["A"].width = 8
+    ws3.column_dimensions["B"].width = 20
+    ws3.column_dimensions["C"].width = 20
+    ws3.column_dimensions["D"].width = 25
+    ws3.column_dimensions["E"].width = 50
+    ws3.column_dimensions["F"].width = 40
+    ws3.column_dimensions["G"].width = 18
+    ws3.column_dimensions["H"].width = 30
+    ws3.auto_filter.ref = f"A1:H{row_num-1}"
+
+    # ── Aba 4: Plano de Acao ──
+    ws4 = wb.create_sheet("Plano de Acao")
+    plan_headers = ["#", "Prioridade", "Tipo", "Documento", "Requisito", "Acao", "Responsavel", "Prazo", "Status"]
+    for col, h in enumerate(plan_headers, 1):
+        c = ws4.cell(row=1, column=col, value=h)
+        c.font = header_font
+        c.fill = header_fill
+    recomendacoes = gerar_recomendacoes(request.avaliacoes, all_reqs, doc_status=request.doc_status)
+    for i, rec in enumerate(recomendacoes):
+        ws4.cell(row=i+2, column=1, value=i+1)
+        c = ws4.cell(row=i+2, column=2, value=rec.get("prioridade", ""))
+        if rec.get("prioridade") == "Alta":
+            c.fill = PatternFill(start_color="FFEBEE", end_color="FFEBEE", fill_type="solid")
+        ws4.cell(row=i+2, column=3, value=rec.get("tipo", ""))
+        ws4.cell(row=i+2, column=4, value=rec.get("documento", ""))
+        ws4.cell(row=i+2, column=5, value=rec.get("requisito_id", ""))
+        ws4.cell(row=i+2, column=6, value=rec.get("teste", "") or rec.get("evidencia", ""))
+        ws4.cell(row=i+2, column=7, value="")  # Responsavel (vazio)
+        ws4.cell(row=i+2, column=8, value="")  # Prazo (vazio)
+        ws4.cell(row=i+2, column=9, value="")  # Status (vazio)
+    ws4.column_dimensions["B"].width = 12
+    ws4.column_dimensions["C"].width = 20
+    ws4.column_dimensions["D"].width = 20
+    ws4.column_dimensions["E"].width = 10
+    ws4.column_dimensions["F"].width = 50
+    ws4.column_dimensions["G"].width = 20
+    ws4.column_dimensions["H"].width = 15
+    ws4.column_dimensions["I"].width = 15
+    ws4.auto_filter.ref = f"A1:I{len(recomendacoes)+1}"
+
+    # Save to bytes
+    output = io.BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": "attachment; filename=DD_Acompanhamento.xlsx"},
+    )
