@@ -26,6 +26,24 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+@router.post("/viabilidade/generate-report")
+def generate_viability_report(
+    atividade: str = Query(...),
+    classe: int = Query(..., ge=1, le=6),
+    regional: str | None = Query(None),
+    licenca_tipo: str = Query("LAC1"),
+    cnpj: str | None = Query(None),
+):
+    """Gera relatório HTML de viabilidade com dados reais."""
+    from starlette.responses import HTMLResponse
+    from api.services.report_templates import render_viabilidade
+
+    # Reutiliza o endpoint de perfil para obter dados
+    data = get_viability_profile(atividade, classe, regional, licenca_tipo, cnpj)
+    html = render_viabilidade(data)
+    return HTMLResponse(content=html)
+
+
 @router.get("/viabilidade/perfil")
 def get_viability_profile(
     atividade: str = Query(..., description="Código de atividade (ex: A-02)"),

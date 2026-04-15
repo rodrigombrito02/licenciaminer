@@ -460,3 +460,69 @@ def export_xlsx(request: XlsxExportRequest):
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": "attachment; filename=DD_Acompanhamento.xlsx"},
     )
+
+
+# ── Report generation ───────────────────────────────────────────────────
+
+
+class ReportFase1Request(BaseModel):
+    licenca_tipo: str
+    atividade: str
+    classe: int
+    cnpj: str | None = None
+
+
+@router.post("/due-diligence/report/fase1")
+def generate_dd_report_fase1(request: ReportFase1Request):
+    """Gera relatório HTML da Fase 1 (Configuração e Escopo) com dados reais."""
+    from starlette.responses import HTMLResponse
+    from api.services.report_templates import render_dd_fase1
+    from api.services.database import safe_query
+
+    # Get profile data
+    where_parts = ["atividade LIKE ?"]
+    params = [f"{request.atividade}%"]
+    if request.classe:
+        where_parts.append("classe = ?")
+        params.append(request.classe)
+    where = "WHERE " + " AND ".join(where_parts)
+
+    profile_rows = safe_query(
+        f"""SELECT COUNT(*) AS n, ROUND(100.0 * SUM(CASE WHEN decisao='deferido' THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) AS prob
+        FROM v_mg_semad {where}""", params)
+    global_rows = safe_query("SELECT ROUND(100.0 * SUM(CASE WHEN decisao='deferido' THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 1) AS m FROM v_mg_semad")
+    tend_rows = safe_query(f"""SELECT
+        ROUND(100.0 * SUM(CASE WHEN CAST(ano AS INT) >= 2023 AND decisao='deferido' THEN 1 ELSE 0 END) / NULLIF(SUM(CASE WHEN CAST(ano AS INT) >= 2023 THEN 1 ELSE 0 END), 0), 1) AS r,
+        ROUND(100.0 * SUM(CASE WHEN CAST(ano AS INT) BETWEEN 2020 AND 2022 AND decisao='deferido' THEN 1 ELSE 0 END) / NULLIF(SUM(CASE WHEN CAST(ano AS INT) BETWEEN 2020 AND 2022 THEN 1 ELSE 0 END), 0), 1) AS a
+        FROM v_mg_semad {where}""", params)
+
+    perfil = {
+        "probabilidade": profile_rows[0]["prob"] if profile_rows else 0,
+        "n_decisoes": profile_rows[0]["n"] if profile_rows else 0,
+        "media_geral": global_rows[0]["m"] if global_rows else 78.3,
+        "rigor_delta": 0,
+        "tendencia": round((tend_rows[0]["r"] or 0) - (tend_rows[0]["a"] or 0), 1) if tend_rows and tend_rows[0].get("r") and tend_rows[0].get("a") else 0,
+    }
+
+    # Get scope
+    docs = filtrar_documentos(request.licenca_tipo)
+    req_keys = set(LICENCA_REQ_KEYS.get(request.licenca_tipo, []))
+    for d in docs:
+        did = (d.get("doc_id") or "").strip()
+        if did and did != "-":
+            req_keys.add(did)
+    all_reqs = load_requisitos()
+    n_reqs = sum(1 for r in all_reqs if (r.get("documento") or "").strip() in req_keys)
+
+    licenca_desc = LICENCA_DESC.get(request.licenca_tipo, request.licenca_tipo)
+
+    html = render_dd_fase1(
+        licenca_tipo=request.licenca_tipo,
+        licenca_desc=licenca_desc,
+        atividade=request.atividade,
+        classe=request.classe,
+        n_docs=len(docs),
+        n_reqs=n_reqs,
+        perfil=perfil,
+    )
+    return HTMLResponse(content=html)

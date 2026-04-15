@@ -1138,7 +1138,39 @@ export function fetchSimSetor(setor: string) {
   return apiFetch<SimSetorResponse>(`/simulator/setores/${encodeURIComponent(setor)}`);
 }
 
-/* ── Viabilidade ── */
+/* ── Report Generation ── */
+
+export async function generateDDReportFase1(data: { licenca_tipo: string; atividade: string; classe: number; cnpj?: string }): Promise<void> {
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  const res = await fetch(`${API}/due-diligence/report/fase1`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(`Report failed: ${res.status}`);
+  const html = await res.text();
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
+}
+
+export async function generateViabilidadeReport(params: {
+  atividade: string; classe: number; regional?: string; licenca_tipo?: string; cnpj?: string;
+}): Promise<void> {
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  const qs = new URLSearchParams({ atividade: params.atividade, classe: String(params.classe) });
+  if (params.regional) qs.set("regional", params.regional);
+  if (params.licenca_tipo) qs.set("licenca_tipo", params.licenca_tipo);
+  if (params.cnpj) qs.set("cnpj", params.cnpj);
+  const res = await fetch(`${API}/viabilidade/generate-report?${qs}`, { method: "POST" });
+  if (!res.ok) throw new Error(`Report failed: ${res.status}`);
+  const html = await res.text();
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
+}
+
+/* ── Viabilidade (legacy) ── */
 
 export interface ViabilidadeStats {
   total: number;

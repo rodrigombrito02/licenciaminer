@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   ArrowRight,
   ChevronRight,
+  Download,
   ExternalLink,
   Loader2,
   Search,
@@ -28,6 +29,7 @@ import {
 import {
   fetchViabilidade,
   fetchLicenseTypes,
+  generateViabilidadeReport,
   fmtNumber,
   fmtPct,
   type ViabilidadeResult,
@@ -188,9 +190,24 @@ export default function ViabilidadePage() {
       {/* Step 2: Result */}
       {step === 2 && result && (
         <div className="space-y-6">
-          <Button variant="outline" size="sm" onClick={() => setStep(1)}>
-            Voltar e ajustar
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => setStep(1)}>
+              Voltar e ajustar
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => generateViabilidadeReport({
+                atividade,
+                classe: Number(classe),
+                licenca_tipo: licenca,
+                cnpj: cnpj || undefined,
+              })}
+            >
+              <Download className="mr-1 h-3.5 w-3.5" />
+              Gerar Relatório
+            </Button>
+          </div>
 
           {/* Gauge + Perfil */}
           <Card>

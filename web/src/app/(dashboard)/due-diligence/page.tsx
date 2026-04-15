@@ -37,6 +37,7 @@ import {
   fetchDDDocuments,
   fetchDDRequirements,
   fetchAllDDRequirements,
+  generateDDReportFase1,
   submitDDScore,
   submitDDCriticality,
   uploadDDDocument,
@@ -649,6 +650,26 @@ export default function DueDiligencePage() {
             </div>
           </CardContent>
         </Card>
+        <div className="flex justify-between items-center">
+          <div />
+          <div className="flex gap-2">
+            {selectedLicense && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => generateDDReportFase1({
+                  licenca_tipo: selectedLicense,
+                  atividade: selectedAtividade,
+                  classe: Number(selectedClasse),
+                  cnpj: cnpj || undefined,
+                })}
+              >
+                <Download className="mr-1 h-3.5 w-3.5" />
+                Gerar Relatório
+              </Button>
+            )}
+          </div>
+        </div>
         {stepNav(null, 2, "Próximo", !selectedLicense || loadingDocs)}
         </>
       )}
