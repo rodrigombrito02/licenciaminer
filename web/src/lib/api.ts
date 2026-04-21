@@ -1154,6 +1154,48 @@ export async function generateDDReportFase1(data: { licenca_tipo: string; ativid
   window.open(url, "_blank");
 }
 
+async function _postReport(endpoint: string, body: unknown): Promise<void> {
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  const res = await fetch(`${API}${endpoint}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`Report failed: ${res.status}`);
+  const html = await res.text();
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
+}
+
+export function generateDDReportFase2(data: {
+  licenca_tipo: string; atividade: string; classe: number;
+  doc_status: Record<string, { status: string }>;
+}): Promise<void> {
+  return _postReport("/due-diligence/report/fase2", data);
+}
+
+export function generateDDReportFase3(data: {
+  licenca_tipo: string; atividade: string; classe: number;
+  evaluations: Record<string, string>; criticality: Record<string, string>;
+}): Promise<void> {
+  return _postReport("/due-diligence/report/fase3", data);
+}
+
+export function generateDDReportFase4(data: {
+  licenca_tipo: string; atividade: string; classe: number;
+  action_items: Array<{ documento: string; requisito: string; criticidade: string; acao: string; prazo: string }>;
+}): Promise<void> {
+  return _postReport("/due-diligence/report/fase4", data);
+}
+
+export function generateDDReportFase5(data: {
+  licenca_tipo: string; atividade: string; classe: number;
+  result: Record<string, unknown>; n_documentos: number;
+}): Promise<void> {
+  return _postReport("/due-diligence/report/fase5", data);
+}
+
 export async function generateViabilidadeReport(params: {
   atividade: string; classe: number; regional?: string; licenca_tipo?: string; cnpj?: string;
 }): Promise<void> {
@@ -1450,6 +1492,185 @@ export function fetchViabilidade(params: {
   if (params.licenca_tipo) qs.set("licenca_tipo", params.licenca_tipo);
   if (params.cnpj) qs.set("cnpj", params.cnpj);
   return apiFetch<ViabilidadeResult>(`/viabilidade/perfil?${qs}`);
+}
+
+/* ── Pilhas (Conformidade de pilhas de rejeito/estéril) ── */
+
+export interface PilhasStats {
+  total_documentos: number;
+  total_requisitos: number;
+  total_normas: number;
+  por_etapa: Record<string, number>;
+}
+
+export interface PilhasEtapa {
+  codigo: string;
+  descricao: string;
+}
+
+export interface PilhasModalidade {
+  code: string;
+  description: string;
+}
+
+export interface PilhasModo {
+  codigo: string;
+  descricao: string;
+  etapas: string[];
+}
+
+export interface DadosPilha {
+  nome?: string;
+  classe?: number;
+  tipo?: string;
+  metodo_construtivo?: string;
+  material?: string;
+  altura_m?: number;
+  volume_m3?: number;
+  data_inicio?: string;
+  consequencia?: string;
+  municipio?: string;
+  cnpj?: string;
+}
+
+export interface PilhasAtividade {
+  codigo: string;
+  descricao: string;
+}
+
+export interface PilhasNorma {
+  norma: string;
+  esfera: string;
+  orgao: string;
+  classificacao: string;
+  descricao: string;
+  status: string;
+  url?: string;
+}
+
+export interface PilhasDocumento {
+  num: string;
+  abrangencia: string;
+  classificacao: string;
+  modalidade: string;
+  etapa: string;
+  fase: string;
+  licenca: string;
+  documento: string;
+  doc_id: string;
+  descricao: string;
+  aplicabilidade: string;
+  esfera: string;
+  norma_referencia: string;
+}
+
+export interface PilhasRequisito {
+  requisito_id: string;
+  tipo: string;
+  documento: string;
+  modulo: string;
+  topico: string;
+  teste_aderencia: string;
+  evidencia_esperada: string;
+  peso: string;
+  impacto: string;
+  norma_origem: string;
+  artigo_referencia: string;
+}
+
+export interface PilhasScoreResult {
+  conformidade_nao_ponderada: number;
+  conformidade_ponderada: number;
+  requisitos_aplicaveis: number;
+  atende: number;
+  atende_parcial: number;
+  nao_atende: number;
+  nao_aplica: number;
+  classificacao: string;
+  cor: string;
+  descricao: string;
+  recomendacoes: {
+    requisito_id: string;
+    prioridade: string;
+    documento: string;
+    teste: string;
+    evidencia?: string;
+  }[];
+  modalidade: string;
+  incluir_gistm: boolean;
+}
+
+export function fetchPilhasStats() {
+  return apiFetch<PilhasStats>("/pilhas/stats");
+}
+
+export function fetchPilhasEtapas() {
+  return apiFetch<PilhasEtapa[]>("/pilhas/etapas");
+}
+
+export function fetchPilhasModalidades() {
+  return apiFetch<PilhasModalidade[]>("/pilhas/modalidades");
+}
+
+export function fetchPilhasModos() {
+  return apiFetch<PilhasModo[]>("/pilhas/modos");
+}
+
+export function fetchPilhasAtividades() {
+  return apiFetch<PilhasAtividade[]>("/pilhas/atividades");
+}
+
+export function fetchPilhasNormas() {
+  return apiFetch<PilhasNorma[]>("/pilhas/normas");
+}
+
+export function fetchPilhasDocuments(params: {
+  modo?: string;
+  modalidade?: string;
+  incluirGistm?: boolean;
+  etapa?: string;
+}) {
+  const qs = new URLSearchParams();
+  if (params.modo) qs.set("modo", params.modo);
+  if (params.modalidade) qs.set("modalidade", params.modalidade);
+  if (params.incluirGistm) qs.set("incluir_gistm", "true");
+  if (params.etapa) qs.set("etapa", params.etapa);
+  return apiFetch<{ total: number; documents: PilhasDocumento[] }>(
+    `/pilhas/documents?${qs}`
+  );
+}
+
+export function fetchPilhasAllRequirements(params: {
+  modo?: string;
+  modalidade?: string;
+  incluirGistm?: boolean;
+}) {
+  const qs = new URLSearchParams();
+  if (params.modo) qs.set("modo", params.modo);
+  if (params.modalidade) qs.set("modalidade", params.modalidade);
+  if (params.incluirGistm) qs.set("incluir_gistm", "true");
+  return apiFetch<{ total: number; requirements: PilhasRequisito[] }>(
+    `/pilhas/all-requirements?${qs}`
+  );
+}
+
+export function submitPilhasScore(payload: {
+  modo?: string;
+  modalidade?: string;
+  incluir_gistm?: boolean;
+  avaliacoes: Record<string, string>;
+  doc_status?: Record<string, string>;
+  dados_pilha?: DadosPilha;
+}) {
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  return fetch(`${API}/pilhas/score`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  }).then((r) => {
+    if (!r.ok) throw new Error(`score failed: ${r.status}`);
+    return r.json() as Promise<PilhasScoreResult>;
+  });
 }
 
 /* ── Formatting re-exports (canonical source: lib/format.ts) ── */

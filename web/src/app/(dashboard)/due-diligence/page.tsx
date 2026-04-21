@@ -38,6 +38,10 @@ import {
   fetchDDRequirements,
   fetchAllDDRequirements,
   generateDDReportFase1,
+  generateDDReportFase2,
+  generateDDReportFase3,
+  generateDDReportFase4,
+  generateDDReportFase5,
   submitDDScore,
   submitDDCriticality,
   uploadDDDocument,
@@ -943,6 +947,17 @@ export default function DueDiligencePage() {
             </div>
           </CardContent>
         </Card>
+        <div className="flex justify-end">
+          <Button variant="outline" size="sm" onClick={() => generateDDReportFase2({
+            licenca_tipo: selectedLicense,
+            atividade: selectedAtividade,
+            classe: Number(selectedClasse),
+            doc_status: Object.fromEntries(Object.entries(docStatus).map(([k, v]) => [k, { status: (v || "").toLowerCase() }])),
+          })}>
+            <Download className="mr-1 h-3.5 w-3.5" />
+            Gerar Relatório Fase 2
+          </Button>
+        </div>
         {stepNav(1, 3, "Próximo", false, async () => { await loadRequirements(); setStep(3); })}
         </>
       )}
@@ -1080,10 +1095,22 @@ export default function DueDiligencePage() {
                 <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             ) : (
-              <Button onClick={() => setStep(4)}>
-                Gerar Plano de Ação
-                <ChevronRight className="ml-1 h-4 w-4" />
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => generateDDReportFase3({
+                  licenca_tipo: selectedLicense,
+                  atividade: selectedAtividade,
+                  classe: Number(selectedClasse),
+                  evaluations,
+                  criticality: {},
+                })}>
+                  <Download className="mr-1 h-3.5 w-3.5" />
+                  Gerar Relatório Fase 3
+                </Button>
+                <Button onClick={() => setStep(4)}>
+                  Gerar Plano de Ação
+                  <ChevronRight className="ml-1 h-4 w-4" />
+                </Button>
+              </div>
             )}
           </div>
 
@@ -1246,10 +1273,27 @@ export default function DueDiligencePage() {
               <ChevronLeft className="mr-1 h-4 w-4" />
               Voltar
             </Button>
-            <Button onClick={() => setStep(5)}>
-              Ver Resultado Final
-              <ChevronRight className="ml-1 h-4 w-4" />
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => generateDDReportFase4({
+                licenca_tipo: selectedLicense,
+                atividade: selectedAtividade,
+                classe: Number(selectedClasse),
+                action_items: (result?.recomendacoes || []).map((r: Record<string, string>) => ({
+                  documento: r.documento || "",
+                  requisito: r.teste || r.requisito || "",
+                  criticidade: (r.prioridade || "").toLowerCase(),
+                  acao: r.evidencia || r.acao || "Corrigir",
+                  prazo: r.prazo || "30 dias",
+                })),
+              })}>
+                <Download className="mr-1 h-3.5 w-3.5" />
+                Gerar Relatório Fase 4
+              </Button>
+              <Button onClick={() => setStep(5)}>
+                Ver Resultado Final
+                <ChevronRight className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       )}
@@ -1288,6 +1332,20 @@ export default function DueDiligencePage() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => generateDDReportFase5({
+                      licenca_tipo: selectedLicense,
+                      atividade: selectedAtividade,
+                      classe: Number(selectedClasse),
+                      result: result as unknown as Record<string, unknown>,
+                      n_documentos: documents?.length ?? 0,
+                    })}
+                  >
+                    <Download className="mr-2 h-3.5 w-3.5" />
+                    Gerar Relatório Fase 5
+                  </Button>
                   {cnpj && (
                     <Button
                       variant="outline"
@@ -1309,7 +1367,7 @@ export default function DueDiligencePage() {
                       ) : (
                         <Download className="mr-2 h-3.5 w-3.5" />
                       )}
-                      Relatório PDF
+                      Relatório CNPJ
                     </Button>
                   )}
                 </div>

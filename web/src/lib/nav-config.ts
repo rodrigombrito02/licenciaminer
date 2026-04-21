@@ -7,6 +7,7 @@ import {
   FileSearch,
   Globe,
   Home,
+  Layers,
   Lock,
   Map,
   Search,
@@ -44,6 +45,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/decisoes", label: "Análise de Decisões", icon: BarChart3 },
       { href: "/viabilidade", label: "Viabilidade", icon: Search },
       { href: "/due-diligence", label: "Due Diligence", icon: ShieldCheck },
+      { href: "/pilhas", label: "Conformidade de Pilhas", icon: Layers },
     ],
   },
   {

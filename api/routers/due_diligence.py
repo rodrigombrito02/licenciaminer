@@ -526,3 +526,110 @@ def generate_dd_report_fase1(request: ReportFase1Request):
         perfil=perfil,
     )
     return HTMLResponse(content=html)
+
+
+class ReportFase2Request(BaseModel):
+    licenca_tipo: str
+    atividade: str
+    classe: int
+    doc_status: dict[str, dict] = {}
+
+
+@router.post("/due-diligence/report/fase2")
+def generate_dd_report_fase2(request: ReportFase2Request):
+    from starlette.responses import HTMLResponse
+    from api.services.report_templates import render_dd_fase2
+
+    docs = filtrar_documentos(request.licenca_tipo)
+    licenca_desc = LICENCA_DESC.get(request.licenca_tipo, request.licenca_tipo)
+    html = render_dd_fase2(
+        licenca_tipo=request.licenca_tipo,
+        licenca_desc=licenca_desc,
+        atividade=request.atividade,
+        classe=request.classe,
+        documents=docs,
+        doc_status=request.doc_status or {},
+    )
+    return HTMLResponse(content=html)
+
+
+class ReportFase3Request(BaseModel):
+    licenca_tipo: str
+    atividade: str
+    classe: int
+    evaluations: dict[str, str] = {}
+    criticality: dict[str, str] = {}
+
+
+@router.post("/due-diligence/report/fase3")
+def generate_dd_report_fase3(request: ReportFase3Request):
+    from starlette.responses import HTMLResponse
+    from api.services.report_templates import render_dd_fase3
+
+    licenca_desc = LICENCA_DESC.get(request.licenca_tipo, request.licenca_tipo)
+    html = render_dd_fase3(
+        licenca_tipo=request.licenca_tipo,
+        licenca_desc=licenca_desc,
+        atividade=request.atividade,
+        classe=request.classe,
+        evaluations=request.evaluations or {},
+        criticality=request.criticality or {},
+    )
+    return HTMLResponse(content=html)
+
+
+class ActionItem(BaseModel):
+    documento: str = ""
+    requisito: str = ""
+    criticidade: str = ""
+    acao: str = ""
+    prazo: str = ""
+
+
+class ReportFase4Request(BaseModel):
+    licenca_tipo: str
+    atividade: str
+    classe: int
+    action_items: list[ActionItem] = []
+
+
+@router.post("/due-diligence/report/fase4")
+def generate_dd_report_fase4(request: ReportFase4Request):
+    from starlette.responses import HTMLResponse
+    from api.services.report_templates import render_dd_fase4
+
+    licenca_desc = LICENCA_DESC.get(request.licenca_tipo, request.licenca_tipo)
+    items = [a.model_dump() for a in request.action_items]
+    html = render_dd_fase4(
+        licenca_tipo=request.licenca_tipo,
+        licenca_desc=licenca_desc,
+        atividade=request.atividade,
+        classe=request.classe,
+        action_items=items,
+    )
+    return HTMLResponse(content=html)
+
+
+class ReportFase5Request(BaseModel):
+    licenca_tipo: str
+    atividade: str
+    classe: int
+    result: dict
+    n_documentos: int = 0
+
+
+@router.post("/due-diligence/report/fase5")
+def generate_dd_report_fase5(request: ReportFase5Request):
+    from starlette.responses import HTMLResponse
+    from api.services.report_templates import render_dd_fase5
+
+    licenca_desc = LICENCA_DESC.get(request.licenca_tipo, request.licenca_tipo)
+    html = render_dd_fase5(
+        licenca_tipo=request.licenca_tipo,
+        licenca_desc=licenca_desc,
+        atividade=request.atividade,
+        classe=request.classe,
+        result=request.result or {},
+        n_documentos=request.n_documentos,
+    )
+    return HTMLResponse(content=html)

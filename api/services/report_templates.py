@@ -339,3 +339,287 @@ def render_dd_fase1(
 </div>"""
 
     return _html_wrap(f"{ref} - Fase 1", body)
+
+
+def render_dd_fase2(
+    licenca_tipo: str,
+    licenca_desc: str,
+    atividade: str,
+    classe: int,
+    documents: list[dict],
+    doc_status: dict[str, dict],
+    ref: str = "",
+) -> str:
+    """Fase 2 — Diagnóstico Documental (inventário + status de upload)."""
+    ref = ref or f"DD-{datetime.now().strftime('%Y-%m%d')}-R2"
+    total = len(documents)
+    apresentados = sum(1 for d in documents if doc_status.get(d.get("doc_name") or d.get("nome_documento") or "", {}).get("status") == "apresentado")
+    ausentes = total - apresentados
+    pct = round(100.0 * apresentados / total, 1) if total else 0.0
+
+    cover = _cover(
+        'Diagnostico<br><span class="gold">Documental</span>', "",
+        "Fase 2/5 - Inventario e Status",
+        f"{licenca_tipo} . Classe {classe} . {atividade}",
+        "Relatorio 2/5 - Diagnostico Documental", "tag-teal",
+        [("Atividade", atividade), ("Classe", str(classe)), ("Modalidade", licenca_tipo),
+         ("Emissao", _fmt_date()), ("Documentos", str(total)), ("Referencia", ref)]
+    )
+
+    tl = _timeline([("1","Config","td2"),("2","Docs","ta"),("3","Avaliacao","tp"),("4","Plano","tp"),("5","Resultado","tp")])
+
+    rows = ""
+    for d in documents[:60]:
+        nm = d.get("doc_name") or d.get("nome_documento") or ""
+        st = doc_status.get(nm, {}).get("status") or "pendente"
+        if st == "apresentado":
+            bc, label = "bg", "Apresentado"
+        elif st == "ausente":
+            bc, label = "br2", "Ausente"
+        else:
+            bc, label = "bgy", "Pendente"
+        rows += f'<tr><td>{nm}</td><td>{d.get("doc_id") or "-"}</td><td><span class="b {bc}">{label}</span></td></tr>'
+
+    body = f"""{cover}
+<div class="pg">{_page_header(f"{ref} . Fase 2/5")}
+
+<h2><span class="ic t">&#9432;</span> Sumario do Diagnostico</h2>
+
+<div class="ks">
+<div class="k"><div class="n">{total}</div><div class="lb">Documentos</div></div>
+<div class="k"><div class="n">{apresentados}</div><div class="lb">Apresentados</div></div>
+<div class="k"><div class="n">{ausentes}</div><div class="lb">Ausentes</div></div>
+<div class="k"><div class="n">{pct}%</div><div class="lb">Cobertura</div></div>
+</div>
+
+{tl}
+
+<h2><span class="ic gl">&#9776;</span> Inventario de Documentos</h2>
+<table><thead><tr><th>Documento</th><th>Codigo</th><th>Status</th></tr></thead>
+<tbody>{rows}</tbody></table>
+
+<div class="cl {"next" if pct >= 80 else "warn"}"><div class="ci">{"&#10004;" if pct >= 80 else "&#9888;"}</div><div class="bd">
+<strong>{"Cobertura adequada - prossiga para avaliacao." if pct >= 80 else "Cobertura incompleta - complete envio antes da avaliacao."}</strong>
+{ausentes} documentos pendentes de envio.</div></div>
+
+<p class="xs mu" style="margin-top:14px;">Diagnostico inicial. Valido por 30 dias.</p>
+{_page_footer("Summo Quartile . " + ref, "1/1")}
+</div>"""
+    return _html_wrap(f"{ref} - Fase 2", body)
+
+
+def render_dd_fase3(
+    licenca_tipo: str,
+    licenca_desc: str,
+    atividade: str,
+    classe: int,
+    evaluations: dict[str, str],
+    criticality: dict[str, str] | None = None,
+    ref: str = "",
+) -> str:
+    """Fase 3 — Avaliação de requisitos + criticidade."""
+    ref = ref or f"DD-{datetime.now().strftime('%Y-%m%d')}-R3"
+    criticality = criticality or {}
+
+    counts = {"atende": 0, "atende_parcial": 0, "nao_atende": 0, "nao_aplica": 0}
+    for v in evaluations.values():
+        k = v.replace(" ", "_").lower().replace("atende_parcialmente", "atende_parcial").replace("não_atende", "nao_atende").replace("não_aplica", "nao_aplica")
+        if k in counts:
+            counts[k] += 1
+
+    total = sum(counts.values()) or 1
+    conformidade = round(100.0 * (counts["atende"] + 0.5 * counts["atende_parcial"]) / max(1, total - counts["nao_aplica"]), 1)
+    angle = conformidade * 1.8
+
+    crit_counts = {"alta": 0, "media": 0, "baixa": 0}
+    for v in criticality.values():
+        k = (v or "").lower()
+        if k in crit_counts:
+            crit_counts[k] += 1
+
+    cover = _cover(
+        'Avaliacao de<br><span class="gold">Conformidade</span>', "",
+        "Fase 3/5 - Requisitos e Criticidade",
+        f"{licenca_tipo} . Classe {classe} . {atividade}",
+        "Relatorio 3/5 - Avaliacao e Criticidade", "tag-orange",
+        [("Atividade", atividade), ("Classe", str(classe)), ("Modalidade", licenca_tipo),
+         ("Emissao", _fmt_date()), ("Requisitos", str(total)), ("Referencia", ref)]
+    )
+
+    tl = _timeline([("1","Config","td2"),("2","Docs","td2"),("3","Avaliacao","ta"),("4","Plano","tp"),("5","Resultado","tp")])
+
+    body = f"""{cover}
+<div class="pg">{_page_header(f"{ref} . Fase 3/5")}
+
+<h2><span class="ic t">&#9432;</span> Resultado da Avaliacao</h2>
+
+<div class="gw">
+<div class="ga"><div class="ga-bg"></div><div class="ga-m"></div><div class="ga-n" style="--angle:{angle}deg;"></div><div class="ga-v">{conformidade}%</div></div>
+<div class="gi"><div class="ti">Conformidade: {conformidade}%</div>
+<div class="de">{total} requisitos avaliados.</div></div></div>
+
+<div class="ks">
+<div class="k"><div class="n">{counts["atende"]}</div><div class="lb">Atende</div></div>
+<div class="k"><div class="n">{counts["atende_parcial"]}</div><div class="lb">Parcial</div></div>
+<div class="k"><div class="n">{counts["nao_atende"]}</div><div class="lb">Nao Atende</div></div>
+<div class="k"><div class="n">{counts["nao_aplica"]}</div><div class="lb">Nao Aplica</div></div>
+</div>
+
+{tl}
+
+<h2><span class="ic r">&#9888;</span> Matriz de Criticidade</h2>
+<div class="pf-grid">
+<div class="pf-c red2"><div class="bar"></div><div class="val">{crit_counts["alta"]}</div><div class="lab">Criticidade Alta</div></div>
+<div class="pf-c org"><div class="bar"></div><div class="val">{crit_counts["media"]}</div><div class="lab">Criticidade Media</div></div>
+<div class="pf-c grn"><div class="bar"></div><div class="val">{crit_counts["baixa"]}</div><div class="lab">Criticidade Baixa</div></div>
+</div>
+
+<div class="cl {"danger" if counts["nao_atende"] > 5 else "warn" if counts["nao_atende"] > 0 else "next"}">
+<div class="ci">{"&#10060;" if counts["nao_atende"] > 5 else "&#9888;" if counts["nao_atende"] > 0 else "&#10004;"}</div>
+<div class="bd"><strong>{counts["nao_atende"]} nao-conformidades identificadas.</strong>
+{"Elaboracao de plano de acao PDCA recomendada (Fase 4)." if counts["nao_atende"] > 0 else "Conformidade plena. Prossiga para Fase 4."}</div></div>
+
+<p class="xs mu" style="margin-top:14px;">Avaliacao tecnica. Valida por 60 dias.</p>
+{_page_footer("Summo Quartile . " + ref, "1/1")}
+</div>"""
+    return _html_wrap(f"{ref} - Fase 3", body)
+
+
+def render_dd_fase4(
+    licenca_tipo: str,
+    licenca_desc: str,
+    atividade: str,
+    classe: int,
+    action_items: list[dict],
+    ref: str = "",
+) -> str:
+    """Fase 4 — Plano de Ação PDCA."""
+    ref = ref or f"DD-{datetime.now().strftime('%Y-%m%d')}-R4"
+    total = len(action_items)
+    alta = sum(1 for a in action_items if (a.get("criticidade") or "").lower() == "alta")
+    media = sum(1 for a in action_items if (a.get("criticidade") or "").lower() == "media")
+    baixa = sum(1 for a in action_items if (a.get("criticidade") or "").lower() == "baixa")
+
+    cover = _cover(
+        'Plano de<br><span class="gold">Acao PDCA</span>', "",
+        "Fase 4/5 - Plano Corretivo",
+        f"{licenca_tipo} . Classe {classe} . {atividade}",
+        "Relatorio 4/5 - Plano de Acao", "tag-orange",
+        [("Atividade", atividade), ("Classe", str(classe)), ("Modalidade", licenca_tipo),
+         ("Emissao", _fmt_date()), ("Acoes", str(total)), ("Referencia", ref)]
+    )
+
+    tl = _timeline([("1","Config","td2"),("2","Docs","td2"),("3","Avaliacao","td2"),("4","Plano","tao"),("5","Resultado","tp")])
+
+    rows = ""
+    for a in action_items[:40]:
+        crit = (a.get("criticidade") or "").lower()
+        bc = "br2" if crit == "alta" else "bo" if crit == "media" else "bg"
+        rows += f"""<tr>
+<td>{a.get("documento", "-")}</td>
+<td>{a.get("requisito", "-")}</td>
+<td><span class="b {bc}">{crit.title() or "-"}</span></td>
+<td>{a.get("acao", "-")}</td>
+<td>{a.get("prazo", "-")}</td>
+</tr>"""
+
+    body = f"""{cover}
+<div class="pg">{_page_header(f"{ref} . Fase 4/5")}
+
+<h2><span class="ic t">&#9432;</span> Sumario do Plano</h2>
+
+<div class="ks">
+<div class="k"><div class="n">{total}</div><div class="lb">Acoes</div></div>
+<div class="k"><div class="n">{alta}</div><div class="lb">Criticas</div></div>
+<div class="k"><div class="n">{media}</div><div class="lb">Medias</div></div>
+<div class="k"><div class="n">{baixa}</div><div class="lb">Baixas</div></div>
+</div>
+
+{tl}
+
+<h2><span class="ic o">&#9776;</span> Ciclo PDCA</h2>
+<p><strong>P</strong>lan: identificacao e priorizacao / <strong>D</strong>o: execucao das acoes corretivas / <strong>C</strong>heck: verificacao de eficacia / <strong>A</strong>ct: padronizacao e melhoria continua.</p>
+
+<h2><span class="ic gl">&#9776;</span> Acoes Corretivas</h2>
+<table><thead><tr><th>Documento</th><th>Requisito</th><th>Criticidade</th><th>Acao</th><th>Prazo</th></tr></thead>
+<tbody>{rows or '<tr><td colspan="5" class="mu">Nenhuma acao pendente</td></tr>'}</tbody></table>
+
+<div class="cl info"><div class="ci">&#9432;</div><div class="bd">
+<strong>Responsaveis a designar</strong>Atribua responsavel e prazo para cada acao antes do protocolo.</div></div>
+
+<p class="xs mu" style="margin-top:14px;">Plano de acao. Revisar trimestralmente.</p>
+{_page_footer("Summo Quartile . " + ref, "1/1")}
+</div>"""
+    return _html_wrap(f"{ref} - Fase 4", body)
+
+
+def render_dd_fase5(
+    licenca_tipo: str,
+    licenca_desc: str,
+    atividade: str,
+    classe: int,
+    result: dict,
+    n_documentos: int,
+    ref: str = "",
+) -> str:
+    """Fase 5 — Resultado final."""
+    ref = ref or f"DD-{datetime.now().strftime('%Y-%m%d')}-R5"
+    score = round((result.get("conformidade_nao_ponderada", 0) or 0) * 100, 1)
+    angle = score * 1.8
+    classificacao = result.get("classificacao", "-")
+    descricao = result.get("descricao", "")
+
+    cover = _cover(
+        'Resultado<br><span class="gold">Final</span>', "",
+        "Fase 5/5 - Relatorio Conclusivo",
+        f"{licenca_tipo} . Classe {classe} . {atividade}",
+        "Relatorio 5/5 - Resultado Final", "tag-gold",
+        [("Atividade", atividade), ("Classe", str(classe)), ("Modalidade", licenca_tipo),
+         ("Emissao", _fmt_date()), ("Score", f"{score}%"), ("Referencia", ref)]
+    )
+
+    tl = _timeline([("1","Config","td2"),("2","Docs","td2"),("3","Avaliacao","td2"),("4","Plano","td2"),("5","Resultado","ta")])
+
+    atende = result.get("atende", 0)
+    parcial = result.get("atende_parcial", 0)
+    nao_atende = result.get("nao_atende", 0)
+    nao_aplica = result.get("nao_aplica", 0)
+
+    body = f"""{cover}
+<div class="pg">{_page_header(f"{ref} . Fase 5/5")}
+
+<h2><span class="ic t">&#9432;</span> Score de Conformidade</h2>
+
+<div class="gw">
+<div class="ga"><div class="ga-bg"></div><div class="ga-m"></div><div class="ga-n" style="--angle:{angle}deg;"></div><div class="ga-v">{score}%</div></div>
+<div class="gi"><div class="ti">{classificacao}</div>
+<div class="de">{descricao}</div></div></div>
+
+<div class="ks">
+<div class="k"><div class="n">{atende}</div><div class="lb">Atende</div></div>
+<div class="k"><div class="n">{parcial}</div><div class="lb">Parcial</div></div>
+<div class="k"><div class="n">{nao_atende}</div><div class="lb">Nao Atende</div></div>
+<div class="k"><div class="n">{nao_aplica}</div><div class="lb">Nao Aplica</div></div>
+</div>
+
+{tl}
+
+<h2><span class="ic gl">&#9776;</span> Perfil da Operacao</h2>
+<table>
+<tr><th>Item</th><th>Valor</th></tr>
+<tr><td>Modalidade de licenciamento</td><td><strong>{licenca_tipo}</strong> - {licenca_desc}</td></tr>
+<tr><td>Atividade</td><td>{atividade}</td></tr>
+<tr><td>Classe de impacto</td><td>Classe {classe}</td></tr>
+<tr><td>Documentos analisados</td><td>{n_documentos}</td></tr>
+<tr><td>Requisitos avaliados</td><td>{result.get("requisitos_aplicaveis", atende+parcial+nao_atende)}</td></tr>
+</table>
+
+<div class="cl {"next" if score >= 80 else "warn" if score >= 60 else "danger"}">
+<div class="ci">{"&#10004;" if score >= 80 else "&#9888;" if score >= 60 else "&#10060;"}</div>
+<div class="bd"><strong>{"Conformidade adequada - Pronto para protocolo." if score >= 80 else "Conformidade parcial - Ajustes recomendados." if score >= 60 else "Conformidade critica - Plano de acao mandatorio."}</strong>
+{"Recomenda-se protocolar a licenca com os documentos atuais." if score >= 80 else "Revise o plano de acao da Fase 4 antes do protocolo."}</div></div>
+
+<p class="xs mu" style="margin-top:14px;">Relatorio conclusivo da Due Diligence. Validade: 180 dias.</p>
+{_page_footer("Summo Quartile . " + ref, "1/1")}
+</div>"""
+    return _html_wrap(f"{ref} - Fase 5", body)

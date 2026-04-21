@@ -21,6 +21,7 @@ from api.routers import (
     geospatial,
     intelligence,
     overview,
+    pilhas,
     prospeccao,
     reports,
     simulator,
@@ -80,6 +81,7 @@ app.include_router(due_diligence.router, prefix="/api", tags=["Due Diligence"])
 app.include_router(copam.router, prefix="/api", tags=["COPAM"])
 app.include_router(chat.router, prefix="/api", tags=["Chat"])
 app.include_router(viabilidade.router, prefix="/api", tags=["Viabilidade"])
+app.include_router(pilhas.router, prefix="/api", tags=["Pilhas"])
 
 
 @app.get("/health")
