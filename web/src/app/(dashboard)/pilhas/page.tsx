@@ -14,6 +14,7 @@ import {
   ClipboardList,
   Calendar,
   Ruler,
+  Download,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -41,6 +42,8 @@ import {
   fetchPilhasDocuments,
   fetchPilhasAllRequirements,
   submitPilhasScore,
+  generatePilhasReport,
+  downloadPilhasXlsx,
   type PilhasStats,
   type PilhasEtapa,
   type PilhasModo,
@@ -84,6 +87,8 @@ export default function PilhasPage() {
   const [avaliacoes, setAvaliacoes] = useState<Record<string, Avaliacao>>({});
   const [loadingDocs, setLoadingDocs] = useState(false);
   const [scoring, setScoring] = useState(false);
+  const [generatingReport, setGeneratingReport] = useState(false);
+  const [generatingXlsx, setGeneratingXlsx] = useState(false);
 
   // Dados da pilha (Modo Auditoria)
   const [dadosPilha, setDadosPilha] = useState<DadosPilha>({
@@ -99,6 +104,35 @@ export default function PilhasPage() {
     municipio: "",
     cnpj: "",
   });
+
+  // Persistência local — restaurar
+  useEffect(() => {
+    try {
+      const savedAval = localStorage.getItem("pilhas_avaliacoes");
+      const savedDados = localStorage.getItem("pilhas_dadosPilha");
+      const savedModo = localStorage.getItem("pilhas_modo");
+      if (savedAval) setAvaliacoes(JSON.parse(savedAval));
+      if (savedDados) setDadosPilha(JSON.parse(savedDados));
+      if (savedModo) setModo(savedModo as Modo);
+    } catch {}
+  }, []);
+
+  // Persistência local — salvar
+  useEffect(() => {
+    try {
+      localStorage.setItem("pilhas_avaliacoes", JSON.stringify(avaliacoes));
+    } catch {}
+  }, [avaliacoes]);
+  useEffect(() => {
+    try {
+      localStorage.setItem("pilhas_dadosPilha", JSON.stringify(dadosPilha));
+    } catch {}
+  }, [dadosPilha]);
+  useEffect(() => {
+    try {
+      localStorage.setItem("pilhas_modo", modo);
+    } catch {}
+  }, [modo]);
 
   useEffect(() => {
     Promise.all([
@@ -141,6 +175,42 @@ export default function PilhasPage() {
     : docs;
 
   const etapasDoModo = modos.find((m) => m.codigo === modo)?.etapas || [];
+
+  const handleXlsx = async () => {
+    setGeneratingXlsx(true);
+    try {
+      await downloadPilhasXlsx({
+        modo,
+        modalidade: modo === "LICENCIAMENTO" ? modalidade : undefined,
+        incluir_gistm: incluirGistm,
+        avaliacoes,
+        doc_status: {},
+        dados_pilha: modo !== "LICENCIAMENTO" ? dadosPilha : undefined,
+      });
+    } catch (e) {
+      console.error("Erro ao gerar XLSX:", e);
+    } finally {
+      setGeneratingXlsx(false);
+    }
+  };
+
+  const handleReport = async () => {
+    setGeneratingReport(true);
+    try {
+      await generatePilhasReport({
+        modo,
+        modalidade: modo === "LICENCIAMENTO" ? modalidade : undefined,
+        incluir_gistm: incluirGistm,
+        avaliacoes,
+        doc_status: {},
+        dados_pilha: modo !== "LICENCIAMENTO" ? dadosPilha : undefined,
+      });
+    } catch (e) {
+      console.error("Erro ao gerar relatório:", e);
+    } finally {
+      setGeneratingReport(false);
+    }
+  };
 
   const handleScore = async () => {
     setScoring(true);
@@ -665,15 +735,41 @@ export default function PilhasPage() {
                   </Select>
                 </div>
               ))}
-              <Button
-                onClick={handleScore}
-                disabled={scoring || Object.keys(avaliacoes).length === 0}
-              >
-                {scoring ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : null}
-                Calcular Conformidade
-              </Button>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  onClick={handleScore}
+                  disabled={scoring || Object.keys(avaliacoes).length === 0}
+                >
+                  {scoring ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : null}
+                  Calcular Conformidade
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={handleReport}
+                  disabled={generatingReport || Object.keys(avaliacoes).length === 0}
+                >
+                  {generatingReport ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="mr-2 h-4 w-4" />
+                  )}
+                  Gerar Relatório (HTML/PDF)
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleXlsx}
+                  disabled={generatingXlsx || Object.keys(avaliacoes).length === 0}
+                >
+                  {generatingXlsx ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="mr-2 h-4 w-4" />
+                  )}
+                  Baixar Planilha (XLSX)
+                </Button>
+              </div>
 
               {result && (
                 <Card className="border-2 mt-4" style={{ borderColor: result.cor }}>

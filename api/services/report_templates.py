@@ -553,6 +553,140 @@ def render_dd_fase4(
     return _html_wrap(f"{ref} - Fase 4", body)
 
 
+def render_pilhas_conformidade(
+    modo: str,
+    modo_desc: str,
+    dados_pilha: dict | None,
+    resultado: dict,
+    recomendacoes: list[dict],
+    incluir_gistm: bool = False,
+    ref: str = "",
+) -> str:
+    """Relatório de Conformidade de Pilha (Auditoria / Licenciamento / Fechamento).
+
+    Args:
+        modo: AUDITORIA | LICENCIAMENTO | FECHAMENTO_MODO
+        modo_desc: descricao do modo
+        dados_pilha: dict com campos de DadosPilha (nome, classe, tipo, etc.)
+        resultado: output de /api/pilhas/score (conformidade, classificacao, cor, counts)
+        recomendacoes: lista de recomendacoes geradas pelo motor DD
+        incluir_gistm: se o módulo GISTM premium foi ativado
+    """
+    ref = ref or f"PILHA-{datetime.now().strftime('%Y-%m%d')}-" + (modo[:3] if modo else "AUD")
+    dp = dados_pilha or {}
+    nome = dp.get("nome") or "Pilha nao identificada"
+    classe = dp.get("classe") or "-"
+    tipo = (dp.get("tipo") or "-").replace("_", " ").title()
+    metodo = (dp.get("metodo_construtivo") or "-").replace("_", " ").title()
+    material = (dp.get("material") or "-").replace("_", " ").title()
+    altura = dp.get("altura_m")
+    volume = dp.get("volume_m3")
+    municipio = dp.get("municipio") or "-"
+    consequencia = (dp.get("consequencia") or "-").replace("_", " ").title()
+
+    score = round((resultado.get("conformidade_nao_ponderada", 0) or 0) * 100, 1)
+    angle = score * 1.8
+    classificacao = resultado.get("classificacao", "-")
+    descricao = resultado.get("descricao", "")
+    cor = resultado.get("cor", "#156082")
+
+    atende = resultado.get("atende", 0)
+    parcial = resultado.get("atende_parcial", 0)
+    nao_atende = resultado.get("nao_atende", 0)
+    nao_aplica = resultado.get("nao_aplica", 0)
+    n_reqs = resultado.get("requisitos_aplicaveis", atende + parcial + nao_atende)
+
+    modo_tag_class = "tag-teal" if modo == "AUDITORIA" else "tag-orange" if modo == "LICENCIAMENTO" else "tag-gold"
+    modo_label = {"AUDITORIA": "Auditoria de Ativo", "LICENCIAMENTO": "Licenciamento", "FECHAMENTO_MODO": "Fechamento"}.get(modo, modo)
+
+    cover = _cover(
+        'Conformidade de<br><span class="gold">Pilhas</span>', "",
+        modo_label,
+        f"{nome} . {tipo} . Classe {classe}",
+        f"Relatorio de Conformidade - {modo_label}", modo_tag_class,
+        [("Pilha", nome),
+         ("Classe", f"Classe {classe}"),
+         ("Metodo", metodo),
+         ("Emissao", _fmt_date()),
+         ("Score", f"{score}%"),
+         ("Referencia", ref)]
+    )
+
+    # Dados da pilha (detalhes)
+    dados_rows = f"""
+<tr><td>Nome da pilha</td><td><strong>{nome}</strong></td></tr>
+<tr><td>Classe (DN COPAM 217)</td><td>Classe {classe}</td></tr>
+<tr><td>Tipo de material</td><td>{tipo}</td></tr>
+<tr><td>Metodo construtivo</td><td>{metodo}</td></tr>
+<tr><td>Material beneficiado</td><td>{material}</td></tr>
+<tr><td>Altura (m)</td><td>{altura if altura else "-"}</td></tr>
+<tr><td>Volume (m3)</td><td>{_fmt_num(volume) if volume else "-"}</td></tr>
+<tr><td>Municipio</td><td>{municipio}</td></tr>
+<tr><td>Classe de consequencia (GISTM)</td><td>{consequencia}</td></tr>
+"""
+
+    # Recomendações (top 15)
+    rec_rows = ""
+    for r in (recomendacoes or [])[:15]:
+        crit = (r.get("criticidade") or "").lower()
+        bc = "br2" if crit == "alta" else "bo" if crit == "media" else "bg"
+        rec_rows += f"""<tr>
+<td>{r.get("documento", "-")}</td>
+<td>{r.get("requisito", "-")}</td>
+<td><span class="b {bc}">{crit.title() or "-"}</span></td>
+<td>{r.get("acao", "-")}</td>
+</tr>"""
+    if not rec_rows:
+        rec_rows = '<tr><td colspan="4" class="mu">Nenhuma recomendacao - conformidade plena.</td></tr>'
+
+    gistm_badge = '<span class="b bt">GISTM Premium ativo</span>' if incluir_gistm else ""
+
+    body = f"""{cover}
+<div class="pg">{_page_header(f"{ref} . {modo_label}")}
+
+<h2><span class="ic t">&#9432;</span> Sumario Executivo</h2>
+<p>Avaliacao de conformidade da pilha <strong>{nome}</strong> ({tipo}, Classe {classe}) segundo o arcabouço regulatório brasileiro e boas praticas internacionais. {gistm_badge}</p>
+
+<div class="gw">
+<div class="ga"><div class="ga-bg"></div><div class="ga-m"></div><div class="ga-n" style="--angle:{angle}deg;"></div><div class="ga-v">{score}%</div></div>
+<div class="gi"><div class="ti" style="color:{cor};">{classificacao}</div>
+<div class="de">{descricao}</div></div></div>
+
+<div class="ks">
+<div class="k"><div class="n">{atende}</div><div class="lb">Atende</div></div>
+<div class="k"><div class="n">{parcial}</div><div class="lb">Parcial</div></div>
+<div class="k"><div class="n">{nao_atende}</div><div class="lb">Nao Atende</div></div>
+<div class="k"><div class="n">{nao_aplica}</div><div class="lb">Nao Aplica</div></div>
+</div>
+
+<h2><span class="ic gl">&#9776;</span> Dados da Pilha</h2>
+<table><thead><tr><th>Atributo</th><th>Valor</th></tr></thead>
+<tbody>{dados_rows}</tbody></table>
+
+<h2><span class="ic o">&#9888;</span> Plano de Acao - Recomendacoes</h2>
+<table><thead><tr><th>Documento</th><th>Requisito</th><th>Criticidade</th><th>Acao recomendada</th></tr></thead>
+<tbody>{rec_rows}</tbody></table>
+
+<h2><span class="ic t">&#9432;</span> Arcabouco Regulatorio Aplicado</h2>
+<div class="lg"><div class="nm">Lei Geral do Licenciamento Ambiental (Lei 15.190/2025)</div><div class="ds">Modalidades de licenciamento federais e estaduais.</div></div>
+<div class="lg"><div class="nm">DN COPAM 217/2017 (MG)</div><div class="ds">Classificacao por porte e potencial poluidor. Atividades A-05-04-5/7.</div></div>
+<div class="lg"><div class="nm">NRM-19 / Res. ANM 85/2021 / 189/2024 / 191/2024</div><div class="ds">Regulamentacao mineraria - PAE/PAEBM, PARE (aproveitamento), instrumentacao.</div></div>
+<div class="lg"><div class="nm">NBR 13028/13029:2017-2025</div><div class="ds">Elaboracao e operacao de pilhas de esteril/rejeito.</div></div>
+{'<div class="lg"><div class="nm">GISTM (ICMM 2020)</div><div class="ds">Global Industry Standard on Tailings Management - 15 principios, 77 requisitos.</div></div>' if incluir_gistm else ""}
+<div class="lg"><div class="nm">Boas praticas - ICMM / MAC / ANCOLD / AECOM</div><div class="ds">Instrumentacao continua, RISR, MoC, engajamento de stakeholders, gestao de mudancas climaticas.</div></div>
+
+<div class="cl {"next" if score >= 80 else "warn" if score >= 60 else "danger"}">
+<div class="ci">{"&#10004;" if score >= 80 else "&#9888;" if score >= 60 else "&#10060;"}</div>
+<div class="bd"><strong>{"Alta aderencia - Conformidade adequada." if score >= 80 else "Aderencia parcial - Ajustes recomendados antes de auditoria externa." if score >= 60 else "Baixa aderencia - Acao corretiva mandatoria."}</strong>
+{n_reqs} requisitos avaliados. {nao_atende} nao-conformidades identificadas.</div></div>
+
+<p class="xs mu" style="margin-top:14px;">Relatorio de conformidade. Validade: 180 dias. Confidencial.</p>
+{_page_footer("Summo Quartile . " + ref, "1/1")}
+</div>"""
+
+    return _html_wrap(f"{ref} - Conformidade de Pilha", body)
+
+
 def render_dd_fase5(
     licenca_tipo: str,
     licenca_desc: str,

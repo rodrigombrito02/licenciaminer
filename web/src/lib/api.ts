@@ -1673,6 +1673,54 @@ export function submitPilhasScore(payload: {
   });
 }
 
+export async function generatePilhasReport(payload: {
+  modo?: string;
+  modalidade?: string;
+  incluir_gistm?: boolean;
+  avaliacoes: Record<string, string>;
+  doc_status?: Record<string, string>;
+  dados_pilha?: DadosPilha;
+}): Promise<void> {
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  const res = await fetch(`${API}/pilhas/report/conformidade`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(`Report failed: ${res.status}`);
+  const html = await res.text();
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
+}
+
+export async function downloadPilhasXlsx(payload: {
+  modo?: string;
+  modalidade?: string;
+  incluir_gistm?: boolean;
+  avaliacoes: Record<string, string>;
+  doc_status?: Record<string, string>;
+  dados_pilha?: DadosPilha;
+}): Promise<void> {
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  const res = await fetch(`${API}/pilhas/export-xlsx`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(`XLSX export failed: ${res.status}`);
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  const slug = (payload.dados_pilha?.nome || "Pilha").replace(/[^a-zA-Z0-9]/g, "_");
+  a.download = `Auditoria_${slug}.xlsx`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 /* ── Formatting re-exports (canonical source: lib/format.ts) ── */
 
 export { fmtReais, fmtPct, fmtBR as fmtNumber } from "./format";

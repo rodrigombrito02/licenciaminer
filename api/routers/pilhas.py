@@ -44,6 +44,9 @@ from app.components.dd_scoring import (
     calcular_conformidade,
     gerar_recomendacoes,
 )
+from api.services.report_templates import render_pilhas_conformidade
+from fastapi.responses import HTMLResponse, StreamingResponse
+import io
 
 logger = logging.getLogger(__name__)
 
@@ -261,3 +264,248 @@ def score_pilhas(request: PilhaScoreRequest):
 def get_conformidade_scale():
     """Escala de conformidade (cores e faixas)."""
     return CONFORMIDADE_ESCALA
+
+
+@router.post("/pilhas/report/conformidade", response_class=HTMLResponse)
+def gerar_relatorio_conformidade(request: PilhaScoreRequest):
+    """Gera relatório HTML de conformidade da pilha.
+
+    Recebe o mesmo payload do /pilhas/score, calcula o resultado e
+    renderiza relatório pronto para impressão (Ctrl+P → PDF).
+    """
+    modo = (request.modo or "AUDITORIA").upper()
+    if modo != "LICENCIAMENTO":
+        reqs = requisitos_por_modo(modo, incluir_gistm=request.incluir_gistm)
+    elif request.modalidade:
+        reqs = requisitos_por_modalidade(request.modalidade, incluir_gistm=request.incluir_gistm)
+    else:
+        reqs = requisitos_por_modo("AUDITORIA", incluir_gistm=request.incluir_gistm)
+
+    all_ids = {r["requisito_id"] for r in reqs}
+    aval_filtrada = {k: v for k, v in request.avaliacoes.items() if k in all_ids}
+    pesos: dict[str, float] = {}
+    for r in reqs:
+        try:
+            pesos[r["requisito_id"]] = float(r.get("peso") or 1.0)
+        except (TypeError, ValueError):
+            pesos[r["requisito_id"]] = 1.0
+
+    resultado = calcular_conformidade(aval_filtrada, pesos)
+    recomendacoes = gerar_recomendacoes(aval_filtrada, reqs, doc_status=request.doc_status)
+
+    if hasattr(resultado, "__dict__"):
+        resultado_dict = resultado.__dict__
+    elif hasattr(resultado, "model_dump"):
+        resultado_dict = resultado.model_dump()
+    else:
+        resultado_dict = dict(resultado)
+
+    html = render_pilhas_conformidade(
+        modo=modo,
+        modo_desc=MODO_DESC.get(modo, modo),
+        dados_pilha=request.dados_pilha.model_dump() if request.dados_pilha else None,
+        resultado=resultado_dict,
+        recomendacoes=recomendacoes or [],
+        incluir_gistm=request.incluir_gistm,
+    )
+    return HTMLResponse(content=html)
+
+
+@router.post("/pilhas/export-xlsx")
+def export_pilhas_xlsx(request: PilhaScoreRequest):
+    """Gera planilha XLSX de auditoria de pilha com 4 abas:
+    Dashboard · Inventário de Documentos · Avaliação de Requisitos · Plano de Ação.
+    """
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill, Alignment
+
+    modo = (request.modo or "AUDITORIA").upper()
+    incluir_gistm = request.incluir_gistm
+
+    # Carrega documentos e requisitos do escopo do modo
+    if modo != "LICENCIAMENTO":
+        docs = filtrar_por_modo(modo, incluir_gistm=incluir_gistm)
+        reqs = requisitos_por_modo(modo, incluir_gistm=incluir_gistm)
+    else:
+        from app.components.pilhas_inventory import filtrar_documentos
+        docs = filtrar_documentos(request.modalidade or "LAC1", incluir_gistm=incluir_gistm)
+        reqs = requisitos_por_modalidade(request.modalidade or "LAC1", incluir_gistm=incluir_gistm)
+
+    req_map = {r["requisito_id"]: r for r in reqs}
+    all_ids = set(req_map.keys())
+    aval_filtrada = {k: v for k, v in request.avaliacoes.items() if k in all_ids}
+
+    pesos: dict[str, float] = {}
+    for r in reqs:
+        try:
+            pesos[r["requisito_id"]] = float(r.get("peso") or 1.0)
+        except (TypeError, ValueError):
+            pesos[r["requisito_id"]] = 1.0
+
+    resultado = calcular_conformidade(aval_filtrada, pesos)
+    recomendacoes = gerar_recomendacoes(aval_filtrada, reqs, doc_status=request.doc_status)
+
+    if hasattr(resultado, "__dict__"):
+        res = resultado.__dict__
+    else:
+        res = dict(resultado) if not hasattr(resultado, "model_dump") else resultado.model_dump()
+
+    wb = Workbook()
+    header_font = Font(bold=True, color="FFFFFF", size=10)
+    header_fill = PatternFill(start_color="0A2540", end_color="0A2540", fill_type="solid")
+    title_font = Font(bold=True, size=14, color="0A2540")
+
+    dp = request.dados_pilha.model_dump() if request.dados_pilha else {}
+
+    # ── Aba 1: Dashboard ──
+    ws1 = wb.active
+    ws1.title = "Dashboard"
+    ws1["A1"] = "Auditoria de Pilha - Dashboard"
+    ws1["A1"].font = title_font
+    ws1.merge_cells("A1:C1")
+
+    rows = [
+        ("Pilha", dp.get("nome") or "-"),
+        ("Modo", modo),
+        ("Modalidade", request.modalidade or "-"),
+        ("GISTM Premium", "Sim" if incluir_gistm else "Nao"),
+        ("Classe (DN COPAM 217)", dp.get("classe") or "-"),
+        ("Tipo", dp.get("tipo") or "-"),
+        ("Metodo construtivo", dp.get("metodo_construtivo") or "-"),
+        ("Material", dp.get("material") or "-"),
+        ("Altura (m)", dp.get("altura_m") or "-"),
+        ("Volume (m3)", dp.get("volume_m3") or "-"),
+        ("Municipio", dp.get("municipio") or "-"),
+        ("Consequencia (GISTM)", dp.get("consequencia") or "-"),
+        ("CNPJ", dp.get("cnpj") or "-"),
+        ("", ""),
+        ("Score Global", f"{round((res.get('conformidade_nao_ponderada', 0) or 0) * 100, 1)}%"),
+        ("Classificacao", res.get("classificacao", "-")),
+        ("Total Requisitos Aplicaveis", res.get("requisitos_aplicaveis", len(aval_filtrada))),
+        ("Atende", res.get("atende", 0)),
+        ("Atende Parcialmente", res.get("atende_parcial", 0)),
+        ("Nao Atende", res.get("nao_atende", 0)),
+        ("Nao Aplica", res.get("nao_aplica", 0)),
+    ]
+    for i, (k, v) in enumerate(rows, start=3):
+        ws1.cell(row=i, column=1, value=k).font = Font(bold=True)
+        ws1.cell(row=i, column=2, value=v)
+    ws1.column_dimensions["A"].width = 28
+    ws1.column_dimensions["B"].width = 36
+
+    # ── Aba 2: Inventario ──
+    ws2 = wb.create_sheet("Inventario")
+    inv_headers = ["#", "Etapa", "Documento", "Esfera", "Norma", "Status", "Arquivo Vinculado"]
+    for col, h in enumerate(inv_headers, 1):
+        c = ws2.cell(row=1, column=col, value=h)
+        c.font = header_font
+        c.fill = header_fill
+        c.alignment = Alignment(horizontal="center")
+    ds = request.doc_status or {}
+    for i, doc in enumerate(docs, start=2):
+        nome = doc.get("documento", "")
+        status = ds.get(nome, "Pendente")
+        ws2.cell(row=i, column=1, value=i - 1)
+        ws2.cell(row=i, column=2, value=doc.get("etapa", ""))
+        ws2.cell(row=i, column=3, value=nome)
+        ws2.cell(row=i, column=4, value=doc.get("esfera", ""))
+        ws2.cell(row=i, column=5, value=doc.get("norma_referencia", ""))
+        c = ws2.cell(row=i, column=6, value=status)
+        if status.lower() == "apresentado":
+            c.fill = PatternFill(start_color="E8F5E9", end_color="E8F5E9", fill_type="solid")
+        elif status.lower() == "ausente":
+            c.fill = PatternFill(start_color="FFEBEE", end_color="FFEBEE", fill_type="solid")
+        ws2.cell(row=i, column=7, value="")
+    ws2.column_dimensions["B"].width = 18
+    ws2.column_dimensions["C"].width = 55
+    ws2.column_dimensions["D"].width = 16
+    ws2.column_dimensions["E"].width = 24
+    ws2.column_dimensions["F"].width = 16
+    ws2.column_dimensions["G"].width = 32
+    ws2.auto_filter.ref = f"A1:G{max(2, len(docs) + 1)}"
+
+    # ── Aba 3: Avaliacao ──
+    ws3 = wb.create_sheet("Avaliacao")
+    eval_headers = ["ID", "Modulo", "Topico", "Documento", "Teste de Aderencia", "Evidencia Esperada", "Peso", "Resultado", "Observacoes"]
+    for col, h in enumerate(eval_headers, 1):
+        c = ws3.cell(row=1, column=col, value=h)
+        c.font = header_font
+        c.fill = header_fill
+    row_num = 2
+    for r in reqs:
+        rid = r.get("requisito_id", "")
+        avaliacao = aval_filtrada.get(rid, "")
+        ws3.cell(row=row_num, column=1, value=rid)
+        ws3.cell(row=row_num, column=2, value=r.get("modulo", ""))
+        ws3.cell(row=row_num, column=3, value=r.get("topico", ""))
+        ws3.cell(row=row_num, column=4, value=r.get("documento", ""))
+        ws3.cell(row=row_num, column=5, value=r.get("teste_aderencia", ""))
+        ws3.cell(row=row_num, column=6, value=r.get("evidencia_esperada", ""))
+        ws3.cell(row=row_num, column=7, value=r.get("peso", ""))
+        c = ws3.cell(row=row_num, column=8, value=avaliacao)
+        if avaliacao == "Atende":
+            c.fill = PatternFill(start_color="E8F5E9", end_color="E8F5E9", fill_type="solid")
+        elif "Parcial" in avaliacao:
+            c.fill = PatternFill(start_color="FFF3E0", end_color="FFF3E0", fill_type="solid")
+        elif avaliacao.startswith("Nao Atende"):
+            c.fill = PatternFill(start_color="FFEBEE", end_color="FFEBEE", fill_type="solid")
+        ws3.cell(row=row_num, column=9, value="")
+        row_num += 1
+    ws3.column_dimensions["A"].width = 8
+    ws3.column_dimensions["B"].width = 28
+    ws3.column_dimensions["C"].width = 28
+    ws3.column_dimensions["D"].width = 32
+    ws3.column_dimensions["E"].width = 55
+    ws3.column_dimensions["F"].width = 32
+    ws3.column_dimensions["G"].width = 8
+    ws3.column_dimensions["H"].width = 18
+    ws3.column_dimensions["I"].width = 30
+    ws3.auto_filter.ref = f"A1:I{max(2, row_num - 1)}"
+
+    # ── Aba 4: Plano de Acao ──
+    ws4 = wb.create_sheet("Plano de Acao")
+    plan_headers = ["#", "Prioridade", "Tipo", "Modulo", "Documento", "Requisito ID", "Acao Recomendada", "Responsavel", "Prazo", "Status"]
+    for col, h in enumerate(plan_headers, 1):
+        c = ws4.cell(row=1, column=col, value=h)
+        c.font = header_font
+        c.fill = header_fill
+    for i, rec in enumerate(recomendacoes, start=2):
+        ws4.cell(row=i, column=1, value=i - 1)
+        c = ws4.cell(row=i, column=2, value=rec.get("prioridade", ""))
+        if rec.get("prioridade") == "Alta":
+            c.fill = PatternFill(start_color="FFEBEE", end_color="FFEBEE", fill_type="solid")
+        elif rec.get("prioridade") == "Media":
+            c.fill = PatternFill(start_color="FFF3E0", end_color="FFF3E0", fill_type="solid")
+        ws4.cell(row=i, column=3, value=rec.get("tipo", ""))
+        rid = rec.get("requisito_id", "")
+        modulo = req_map.get(rid, {}).get("modulo", "")
+        ws4.cell(row=i, column=4, value=modulo)
+        ws4.cell(row=i, column=5, value=rec.get("documento", ""))
+        ws4.cell(row=i, column=6, value=rid)
+        ws4.cell(row=i, column=7, value=rec.get("teste", "") or rec.get("evidencia", ""))
+        # Responsavel/Prazo/Status em branco para o cliente preencher
+    ws4.column_dimensions["B"].width = 12
+    ws4.column_dimensions["C"].width = 14
+    ws4.column_dimensions["D"].width = 28
+    ws4.column_dimensions["E"].width = 32
+    ws4.column_dimensions["F"].width = 12
+    ws4.column_dimensions["G"].width = 60
+    ws4.column_dimensions["H"].width = 22
+    ws4.column_dimensions["I"].width = 14
+    ws4.column_dimensions["J"].width = 14
+    ws4.auto_filter.ref = f"A1:J{max(2, len(recomendacoes) + 1)}"
+
+    output = io.BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    nome_arquivo = "Auditoria_Pilha"
+    if dp.get("nome"):
+        slug = "".join(c if c.isalnum() else "_" for c in dp["nome"])[:40]
+        nome_arquivo = f"Auditoria_{slug}"
+
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f"attachment; filename={nome_arquivo}.xlsx"},
+    )
