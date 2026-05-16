@@ -1728,6 +1728,25 @@ export interface PilhasCnpjLookup {
   };
 }
 
+export async function generatePilhasPortalPublico(payload: {
+  dados_pilha: DadosPilha;
+  avaliacoes?: Record<string, string>;
+  incluir_gistm?: boolean;
+  empresa?: { razao_social?: string; municipio_sede?: string };
+}): Promise<void> {
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  const res = await fetch(`${API}/pilhas/portal-publico`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(`Portal generation failed: ${res.status}`);
+  const html = await res.text();
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
+}
+
 export async function lookupPilhasByCnpj(cnpj: string): Promise<PilhasCnpjLookup> {
   const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
   const cleaned = cnpj.replace(/\D/g, "");

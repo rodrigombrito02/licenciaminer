@@ -44,6 +44,7 @@ import {
   submitPilhasScore,
   generatePilhasReport,
   downloadPilhasXlsx,
+  generatePilhasPortalPublico,
   lookupPilhasByCnpj,
   type PilhasCnpjLookup,
   type PilhasStats,
@@ -93,6 +94,7 @@ export default function PilhasPage() {
   const [generatingXlsx, setGeneratingXlsx] = useState(false);
   const [cnpjLookup, setCnpjLookup] = useState<PilhasCnpjLookup | null>(null);
   const [lookingUp, setLookingUp] = useState(false);
+  const [generatingPortal, setGeneratingPortal] = useState(false);
 
   // Dados da pilha (Modo Auditoria)
   const [dadosPilha, setDadosPilha] = useState<DadosPilha>({
@@ -203,6 +205,29 @@ export default function PilhasPage() {
       setCnpjLookup({ cnpj, encontrado: false, mensagem: "Falha ao consultar." });
     } finally {
       setLookingUp(false);
+    }
+  };
+
+  const handlePortal = async () => {
+    if (!dadosPilha.nome) {
+      alert("Informe ao menos o nome da pilha antes de gerar o portal público.");
+      return;
+    }
+    setGeneratingPortal(true);
+    try {
+      await generatePilhasPortalPublico({
+        dados_pilha: dadosPilha,
+        avaliacoes,
+        incluir_gistm: incluirGistm,
+        empresa: cnpjLookup?.empresa ? {
+          razao_social: cnpjLookup.empresa.razao_social,
+          municipio_sede: cnpjLookup.empresa.municipio_sede || undefined,
+        } : undefined,
+      });
+    } catch (e) {
+      console.error("Erro ao gerar portal:", e);
+    } finally {
+      setGeneratingPortal(false);
     }
   };
 
@@ -872,6 +897,19 @@ export default function PilhasPage() {
                     <Download className="mr-2 h-4 w-4" />
                   )}
                   Baixar Planilha (XLSX)
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={handlePortal}
+                  disabled={generatingPortal || !dadosPilha.nome}
+                  title="Gera página pública conforme PL 2.519/2024 MG e PL 3.799/2024 Federal"
+                >
+                  {generatingPortal ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="mr-2 h-4 w-4" />
+                  )}
+                  Portal Público (PL 2.519/3.799)
                 </Button>
               </div>
 

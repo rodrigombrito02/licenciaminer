@@ -615,6 +615,253 @@ resposta a emergencia e disclosure publico.</div></div>
 """
 
 
+def render_pilhas_portal_publico(
+    dados_pilha: dict | None,
+    resultado: dict | None = None,
+    gistm_data: dict | None = None,
+    empresa: dict | None = None,
+    base_url: str = "",
+) -> str:
+    """Gera página pública de transparência conforme PL 2.519/2024 (MG) e PL 3.799/2024 (Fed).
+
+    Diferente do relatório confidencial: linguagem acessível à comunidade,
+    foco em segurança e emergência, sem expor não-conformidades sensíveis.
+
+    Args:
+        dados_pilha: dict com campos de DadosPilha (nome, classe, tipo, etc.)
+        resultado: opcional — usado apenas para indicar nível de gestão (não expõe %)
+        gistm_data: opcional — se presente, mostra adesão GISTM
+        empresa: opcional — razão social, município sede
+        base_url: URL base se publicado (para canonical link)
+    """
+    dp = dados_pilha or {}
+    nome = dp.get("nome") or "Pilha sem identificacao"
+    classe = dp.get("classe") or "-"
+    tipo = (dp.get("tipo") or "-").replace("_", " ").title()
+    metodo = (dp.get("metodo_construtivo") or "-").replace("_", " ").title()
+    material = (dp.get("material") or "-").replace("_", " ").title()
+    altura = dp.get("altura_m")
+    volume = dp.get("volume_m3")
+    municipio = dp.get("municipio") or "-"
+    consequencia = (dp.get("consequencia") or "-").replace("_", " ").upper()
+    data_inicio = dp.get("data_inicio") or "-"
+
+    razao = (empresa or {}).get("razao_social") or "Empresa nao informada"
+
+    # Status simplificado da gestao (sem expor %)
+    nivel_gestao = "Em conformidade"
+    nivel_cor = "#27AE60"
+    nivel_icone = "&#10004;"
+    if resultado:
+        score = (resultado.get("conformidade_nao_ponderada", 0) or 0) * 100
+        if score >= 80:
+            nivel_gestao = "Em conformidade com arcabouco regulatorio aplicavel"
+            nivel_cor = "#27AE60"
+        elif score >= 60:
+            nivel_gestao = "Em adequacao - plano de acao em execucao"
+            nivel_cor = "#F39C12"
+            nivel_icone = "&#9888;"
+        else:
+            nivel_gestao = "Em remediacao prioritaria"
+            nivel_cor = "#E74C3C"
+            nivel_icone = "&#9888;"
+
+    # Indicador GISTM (se aplicavel)
+    gistm_html = ""
+    if gistm_data and gistm_data.get("score_global_gistm") is not None:
+        gscore = gistm_data["score_global_gistm"]
+        gistm_html = f"""
+<div class="card-info">
+  <h3>Adesao ao Padrao Internacional GISTM</h3>
+  <p>Esta pilha tem cobertura avaliada nos <strong>15 principios do Global Industry
+  Standard on Tailings Management</strong> (ICMM, UNEP, PRI - 2020), padrao internacional
+  de referencia para gestao de rejeitos de mineracao.</p>
+  <p><strong>{gscore}%</strong> de aderencia agregada aos principios avaliados
+  ({gistm_data.get("principios_avaliados", 0)}/15 com avaliacao suficiente).</p>
+</div>
+"""
+
+    # Consequencia humanizada
+    consequencia_desc = {
+        "LOW": "Baixa",
+        "SIGNIFICANT": "Significativa",
+        "HIGH": "Alta",
+        "VERY HIGH": "Muito Alta",
+        "EXTREME": "Extrema",
+    }.get(consequencia, consequencia)
+
+    portal_css = """
+@page{size:A4;margin:14mm 14mm;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:#1f2937;line-height:1.65;background:#f9fafb;}
+.wrap{max-width:920px;margin:0 auto;padding:32px 24px;background:#fff;}
+.hdr{background:linear-gradient(135deg,#0A2540 0%,#156082 100%);color:#fff;padding:36px 28px;border-radius:14px;margin-bottom:28px;}
+.hdr h1{font-size:28px;font-weight:800;line-height:1.15;margin-bottom:6px;}
+.hdr .sub{font-size:13px;color:rgba(255,255,255,.75);}
+.hdr .tag{display:inline-block;margin-top:14px;padding:6px 16px;background:rgba(255,192,0,.18);border:1px solid rgba(255,192,0,.4);color:#FFC000;font-size:11px;font-weight:700;border-radius:20px;letter-spacing:.5px;text-transform:uppercase;}
+.banner{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#92400e;}
+section{margin-bottom:28px;}
+h2{font-size:18px;font-weight:800;color:#0A2540;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #e5e7eb;}
+h3{font-size:14px;font-weight:700;color:#156082;margin-top:14px;margin-bottom:6px;}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:14px 0;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0;}
+.metric{background:#f3f4f6;border-radius:10px;padding:14px 16px;border-left:4px solid #156082;}
+.metric .l{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#6b7280;margin-bottom:4px;font-weight:600;}
+.metric .v{font-size:15px;font-weight:700;color:#0A2540;}
+.metric.alert{border-left-color:#FF5F00;background:#fff7ed;}
+.metric.alert .v{color:#9a3412;}
+.status-box{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:10px;color:#fff;font-weight:600;margin:14px 0;}
+.status-box .icn{font-size:22px;}
+.card-info{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:16px 18px;margin:14px 0;}
+.card-info h3{margin-top:0;color:#1e40af;}
+.card-info p{font-size:13px;color:#1e3a8a;margin-bottom:6px;}
+.emergency{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:18px 20px;}
+.emergency h2{border-bottom-color:#fecaca;color:#991b1b;}
+.emergency p{color:#7f1d1d;font-size:14px;}
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;}
+.contact .item{padding:10px 14px;background:#fff;border-radius:8px;border:1px solid #fecaca;}
+.contact .label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#991b1b;font-weight:600;}
+.contact .value{font-size:14px;color:#7f1d1d;font-weight:700;margin-top:2px;}
+.footer{margin-top:36px;padding-top:18px;border-top:1px solid #e5e7eb;font-size:11px;color:#6b7280;text-align:center;}
+.footer strong{color:#0A2540;}
+.legal-list{background:#f9fafb;border-radius:8px;padding:14px 18px;font-size:12px;}
+.legal-list li{margin-bottom:4px;color:#374151;}
+ul{padding-left:22px;}
+"""
+
+    html_body = f"""
+<div class="hdr">
+  <h1>Portal Publico de Transparencia</h1>
+  <p class="sub">Informacoes da pilha de rejeito/esteril conforme PL 2.519/2024 MG e PL 3.799/2024 Federal</p>
+  <span class="tag">Transparencia Ativa</span>
+</div>
+
+<div class="banner">
+  Esta pagina e mantida em conformidade com os requisitos de transparencia ativa
+  para ativos minerarios estabelecidos no PL 2.519/2024 (MG) e PL 3.799/2024 (Federal).
+  Informacoes atualizadas a cada ciclo de auditoria.
+</div>
+
+<section>
+  <h2>Identificacao do ativo</h2>
+  <div class="grid">
+    <div class="metric"><div class="l">Nome da pilha</div><div class="v">{nome}</div></div>
+    <div class="metric"><div class="l">Empresa responsavel</div><div class="v">{razao}</div></div>
+    <div class="metric"><div class="l">Municipio</div><div class="v">{municipio}</div></div>
+    <div class="metric"><div class="l">Tipo de material</div><div class="v">{tipo}</div></div>
+    <div class="metric"><div class="l">Metodo construtivo</div><div class="v">{metodo}</div></div>
+    <div class="metric"><div class="l">Material beneficiado</div><div class="v">{material}</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Caracteristicas tecnicas</h2>
+  <div class="grid-3">
+    <div class="metric"><div class="l">Classe (DN COPAM 217)</div><div class="v">Classe {classe}</div></div>
+    <div class="metric"><div class="l">Altura (m)</div><div class="v">{altura if altura else "n/d"}</div></div>
+    <div class="metric"><div class="l">Volume (m3)</div><div class="v">{_fmt_num(volume) if volume else "n/d"}</div></div>
+  </div>
+  <div class="grid">
+    <div class="metric alert"><div class="l">Classe de consequencia (GISTM)</div><div class="v">{consequencia_desc}</div></div>
+    <div class="metric"><div class="l">Data de inicio de operacao</div><div class="v">{data_inicio}</div></div>
+  </div>
+  <p style="font-size:12px;color:#6b7280;margin-top:8px;">
+  <em>A classe de consequencia indica a magnitude potencial de impacto em caso de
+  ruptura hipotetica. Classes Alta, Muito Alta e Extrema demandam controles
+  reforcados de monitoramento e plano de emergencia robusto.</em>
+  </p>
+</section>
+
+<section>
+  <h2>Status de gestao</h2>
+  <div class="status-box" style="background:{nivel_cor};">
+    <span class="icn">{nivel_icone}</span>
+    <span>{nivel_gestao}</span>
+  </div>
+  <p style="font-size:13px;color:#4b5563;">
+  Avaliacao mais recente da gestao da pilha contra o arcabouco regulatorio
+  brasileiro aplicavel (DN COPAM 217/2017, Res. ANM 85/2021, 189/2024 e 191/2024,
+  NBR 13029:2017) e boas praticas internacionais.
+  </p>
+  {gistm_html}
+</section>
+
+<section class="emergency">
+  <h2>Resposta a emergencia</h2>
+  <p>Em caso de emergencia ou risco percebido envolvendo este ativo, contate
+  imediatamente o Plano de Acao de Emergencia (PAE).</p>
+  <div class="contact">
+    <div class="item">
+      <div class="label">Defesa Civil (Federal)</div>
+      <div class="value">199</div>
+    </div>
+    <div class="item">
+      <div class="label">Bombeiros</div>
+      <div class="value">193</div>
+    </div>
+    <div class="item">
+      <div class="label">Contato emergencia 24h da empresa</div>
+      <div class="value">A ser publicado pela operadora</div>
+    </div>
+    <div class="item">
+      <div class="label">Ouvidoria publica ANM</div>
+      <div class="value">https://www.gov.br/anm/ouvidoria</div>
+    </div>
+  </div>
+  <p style="font-size:12px;color:#7f1d1d;margin-top:14px;">
+  <strong>Zona de Autossalvamento (ZAS) e Zona de Seguranca Secundaria (ZSS):</strong>
+  Comunidades situadas em ZAS/ZSS recebem treinamento periodico e simulados.
+  Em emergencia, sirenes e/ou comunicacao direta serao acionadas.
+  </p>
+</section>
+
+<section>
+  <h2>Mecanismo de manifestacao publica</h2>
+  <p>Qualquer cidadao pode solicitar informacoes adicionais sobre esta pilha
+  ou registrar manifestacao referente ao ativo.</p>
+  <ul>
+    <li>Solicitacao formal via Lei de Acesso a Informacao (LAI) ao orgao licenciador
+    (SEMAD/MG ou IBAMA conforme caso)</li>
+    <li>Canal de relacionamento com comunidade da empresa operadora</li>
+    <li>Ouvidoria publica da ANM para questoes de seguranca de barragens e pilhas</li>
+  </ul>
+  <p style="font-size:12px;color:#6b7280;margin-top:8px;">
+  <em>Prazo de resposta a solicitacoes via LAI: 20 dias uteis, prorrogavel por
+  10 dias mediante justificativa.</em>
+  </p>
+</section>
+
+<section>
+  <h2>Arcabouco legal aplicavel</h2>
+  <ul class="legal-list">
+    <li><strong>Lei Federal 12.334/2010</strong> - Politica Nacional de Seguranca de Barragens (PNSB)</li>
+    <li><strong>Lei MG 23.291/2019</strong> - Politica Estadual de Seguranca de Barragens</li>
+    <li><strong>DN COPAM 217/2017 (MG)</strong> - Classificacao e licenciamento ambiental</li>
+    <li><strong>Resolucao ANM 85/2021, 95/2022, 189/2024 e 191/2024</strong> - PAEBM, PARE, monitoramento</li>
+    <li><strong>NBR 13028, 13029 e 22336 (ABNT)</strong> - Elaboracao, operacao e geoquimica de pilhas</li>
+    <li><strong>NRM-19 (ANM)</strong> - Norma reguladora de mineracao - disposicao de esteril e rejeito</li>
+    <li><strong>GISTM - Global Industry Standard on Tailings Management</strong> (ICMM/UNEP/PRI 2020)</li>
+    <li><strong>PL 2.519/2024 (MG)</strong> - Projeto de Lei de transparencia ativa (em tramitacao)</li>
+    <li><strong>PL 3.799/2024 (Federal)</strong> - Projeto de Lei federal de transparencia (em tramitacao)</li>
+  </ul>
+</section>
+
+<div class="footer">
+  Pagina publicada via <strong>Summo Quartile</strong> - plataforma de governanca e
+  conformidade de ativos minerarios.
+  <br>
+  Conteudo de responsabilidade da empresa operadora. Atualizado em {_fmt_date()}.
+</div>
+"""
+
+    return f"""<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Portal Publico - {nome} - {razao}</title>
+<meta name="description" content="Pagina de transparencia ativa da pilha {nome} - {razao}, conforme PL 2.519/2024 MG e PL 3.799/2024 Federal.">
+<style>{portal_css}</style></head>
+<body><div class="wrap">{html_body}</div></body></html>"""
+
+
 def render_pilhas_conformidade(
     modo: str,
     modo_desc: str,

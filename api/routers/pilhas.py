@@ -51,7 +51,7 @@ from licenciaminer.database.queries import (
     QUERY_CNPJ_CFEM,
     QUERY_CNPJ_INFRACOES,
 )
-from api.services.report_templates import render_pilhas_conformidade
+from api.services.report_templates import render_pilhas_conformidade, render_pilhas_portal_publico
 from fastapi.responses import HTMLResponse, StreamingResponse
 import io
 
@@ -525,6 +525,55 @@ def gerar_relatorio_conformidade(request: PilhaScoreRequest):
         recomendacoes=recomendacoes or [],
         incluir_gistm=request.incluir_gistm,
         gistm_data=gistm_data,
+    )
+    return HTMLResponse(content=html)
+
+
+class PortalPublicoRequest(BaseModel):
+    """Payload para gerar pagina publica de transparencia (PL 2.519/3.799)."""
+    dados_pilha: DadosPilha
+    avaliacoes: dict[str, str] = {}
+    incluir_gistm: bool = False
+    empresa: dict | None = None  # {"razao_social": "...", "municipio_sede": "..."}
+
+
+@router.post("/pilhas/portal-publico", response_class=HTMLResponse)
+def gerar_portal_publico(request: PortalPublicoRequest):
+    """Gera pagina publica de transparencia para a pilha (PL 2.519 MG / PL 3.799 Fed).
+
+    Diferente do relatorio confidencial: linguagem acessivel a comunidade,
+    foco em seguranca e emergencia, omite percentuais sensiveis. Pronta para
+    publicacao no portal institucional da empresa operadora.
+
+    Quando avaliacoes sao fornecidas, indica nivel de gestao (em conformidade /
+    em adequacao / em remediacao) sem expor score numerico. Quando incluir_gistm
+    e true, adiciona bloco de adesao ao padrao internacional.
+    """
+    resultado_dict = None
+    if request.avaliacoes:
+        # Calcula resultado apenas para classificar nivel (sem expor %)
+        all_reqs = load_requisitos()
+        all_ids = {r["requisito_id"] for r in all_reqs}
+        aval = {k: v for k, v in request.avaliacoes.items() if k in all_ids}
+        if aval:
+            pesos = {r["requisito_id"]: 1.0 for r in all_reqs}
+            res = calcular_conformidade(aval, pesos)
+            if hasattr(res, "__dict__"):
+                resultado_dict = res.__dict__
+            elif hasattr(res, "model_dump"):
+                resultado_dict = res.model_dump()
+            else:
+                resultado_dict = dict(res)
+
+    gistm_data = None
+    if request.incluir_gistm and request.avaliacoes:
+        gistm_data = score_gistm_by_principle(GistmScoreRequest(avaliacoes=request.avaliacoes))
+
+    html = render_pilhas_portal_publico(
+        dados_pilha=request.dados_pilha.model_dump(),
+        resultado=resultado_dict,
+        gistm_data=gistm_data,
+        empresa=request.empresa,
     )
     return HTMLResponse(content=html)
 
