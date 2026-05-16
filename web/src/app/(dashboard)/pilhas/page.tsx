@@ -44,6 +44,8 @@ import {
   submitPilhasScore,
   generatePilhasReport,
   downloadPilhasXlsx,
+  lookupPilhasByCnpj,
+  type PilhasCnpjLookup,
   type PilhasStats,
   type PilhasEtapa,
   type PilhasModo,
@@ -89,6 +91,8 @@ export default function PilhasPage() {
   const [scoring, setScoring] = useState(false);
   const [generatingReport, setGeneratingReport] = useState(false);
   const [generatingXlsx, setGeneratingXlsx] = useState(false);
+  const [cnpjLookup, setCnpjLookup] = useState<PilhasCnpjLookup | null>(null);
+  const [lookingUp, setLookingUp] = useState(false);
 
   // Dados da pilha (Modo Auditoria)
   const [dadosPilha, setDadosPilha] = useState<DadosPilha>({
@@ -175,6 +179,32 @@ export default function PilhasPage() {
     : docs;
 
   const etapasDoModo = modos.find((m) => m.codigo === modo)?.etapas || [];
+
+  const handleCnpjLookup = async () => {
+    const cnpj = (dadosPilha.cnpj || "").replace(/\D/g, "");
+    if (cnpj.length !== 14) {
+      setCnpjLookup({ cnpj, encontrado: false, mensagem: "Informe um CNPJ válido (14 dígitos)." });
+      return;
+    }
+    setLookingUp(true);
+    try {
+      const r = await lookupPilhasByCnpj(cnpj);
+      setCnpjLookup(r);
+      if (r.encontrado && r.sugestao_auto_populate) {
+        const sug = r.sugestao_auto_populate;
+        setDadosPilha((d) => ({
+          ...d,
+          material: d.material || sug.material || d.material,
+          municipio: d.municipio || sug.municipio || d.municipio,
+        }));
+      }
+    } catch (e) {
+      console.error(e);
+      setCnpjLookup({ cnpj, encontrado: false, mensagem: "Falha ao consultar." });
+    } finally {
+      setLookingUp(false);
+    }
+  };
 
   const handleXlsx = async () => {
     setGeneratingXlsx(true);
@@ -309,13 +339,24 @@ export default function PilhasPage() {
               <label className="text-xs font-medium text-muted-foreground block mb-1">
                 CNPJ da titular
               </label>
-              <Input
-                value={dadosPilha.cnpj || ""}
-                onChange={(e) =>
-                  setDadosPilha({ ...dadosPilha, cnpj: e.target.value })
-                }
-                placeholder="00.000.000/0000-00"
-              />
+              <div className="flex gap-1">
+                <Input
+                  value={dadosPilha.cnpj || ""}
+                  onChange={(e) =>
+                    setDadosPilha({ ...dadosPilha, cnpj: e.target.value })
+                  }
+                  placeholder="00.000.000/0000-00"
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCnpjLookup}
+                  disabled={lookingUp}
+                  title="Consultar bases públicas (ANM, CFEM, IBAMA)"
+                >
+                  {lookingUp ? <Loader2 className="h-4 w-4 animate-spin" /> : "🔍"}
+                </Button>
+              </div>
             </div>
             <div>
               <label className="text-xs font-medium text-muted-foreground block mb-1">
@@ -483,6 +524,69 @@ export default function PilhasPage() {
                 </SelectContent>
               </Select>
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* RESULTADO DO LOOKUP CNPJ */}
+      {cnpjLookup && modo !== "LICENCIAMENTO" && (
+        <Card className={cnpjLookup.encontrado ? "border-brand-teal/40" : "border-amber-400/40"}>
+          <CardContent className="p-4 space-y-2">
+            {!cnpjLookup.encontrado ? (
+              <div className="text-sm text-muted-foreground">
+                <AlertTriangle className="h-4 w-4 inline mr-1 text-amber-500" />
+                {cnpjLookup.mensagem || "CNPJ não encontrado nas bases públicas."}
+              </div>
+            ) : (
+              <>
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="font-bold">{cnpjLookup.empresa?.razao_social}</span>
+                  {cnpjLookup.analise_pilhas?.provavel_opera_pilhas && (
+                    <Badge className="bg-brand-teal text-white">
+                      Provavelmente opera pilhas
+                    </Badge>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                  <div>
+                    <div className="text-muted-foreground">Títulos ANM</div>
+                    <div className="font-bold text-base">{cnpjLookup.titulos_anm?.total ?? 0}</div>
+                    <div className="text-[10px] text-muted-foreground">
+                      {cnpjLookup.titulos_anm?.lavra_concessao ?? 0} em lavra/concessão
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">CFEM (meses)</div>
+                    <div className="font-bold text-base">{cnpjLookup.cfem?.meses_pagamento ?? 0}</div>
+                    <div className="text-[10px] text-muted-foreground">
+                      R$ {((cnpjLookup.cfem?.total_pago ?? 0) / 1_000_000).toFixed(1)}M total
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Infrações IBAMA</div>
+                    <div className="font-bold text-base">{cnpjLookup.infracoes?.total ?? 0}</div>
+                    <div className="text-[10px] text-muted-foreground">
+                      em {cnpjLookup.infracoes?.anos_com_infracao ?? 0} anos
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Substância principal</div>
+                    <div className="font-bold text-sm leading-tight">
+                      {cnpjLookup.cfem?.substancias_top?.[0]?.substancia || "—"}
+                    </div>
+                    <div className="text-[10px] text-muted-foreground">
+                      {cnpjLookup.cfem?.substancias_top?.[0]?.municipio || ""}
+                    </div>
+                  </div>
+                </div>
+                {cnpjLookup.sugestao_auto_populate?.material && (
+                  <div className="text-xs text-muted-foreground italic pt-1">
+                    Campos "Material" e "Município" auto-preenchidos com base em CFEM.
+                    Revise antes de prosseguir.
+                  </div>
+                )}
+              </>
+            )}
           </CardContent>
         </Card>
       )}

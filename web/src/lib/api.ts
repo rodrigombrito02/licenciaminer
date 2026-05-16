@@ -1694,6 +1694,48 @@ export async function generatePilhasReport(payload: {
   window.open(url, "_blank");
 }
 
+export interface PilhasCnpjLookup {
+  cnpj: string;
+  encontrado: boolean;
+  mensagem?: string;
+  empresa?: {
+    razao_social: string;
+    municipio_sede: string | null;
+    uf_sede: string | null;
+    situacao: string | null;
+  };
+  titulos_anm?: {
+    total: number;
+    lavra_concessao: number;
+    amostra: Array<Record<string, unknown>>;
+  };
+  cfem?: {
+    meses_pagamento: number;
+    total_pago: number;
+    substancias_top: Array<{ substancia: string; municipio: string; n_pagamentos: number }>;
+  };
+  infracoes?: {
+    total: number;
+    anos_com_infracao: number;
+  };
+  analise_pilhas?: {
+    provavel_opera_pilhas: boolean;
+    criterios: Record<string, boolean>;
+  };
+  sugestao_auto_populate?: {
+    material?: string;
+    municipio?: string;
+  };
+}
+
+export async function lookupPilhasByCnpj(cnpj: string): Promise<PilhasCnpjLookup> {
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  const cleaned = cnpj.replace(/\D/g, "");
+  const res = await fetch(`${API}/pilhas/lookup-by-cnpj/${cleaned}`);
+  if (!res.ok) throw new Error(`Lookup failed: ${res.status}`);
+  return res.json();
+}
+
 export async function downloadPilhasXlsx(payload: {
   modo?: string;
   modalidade?: string;

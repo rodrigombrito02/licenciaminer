@@ -44,6 +44,13 @@ from app.components.dd_scoring import (
     calcular_conformidade,
     gerar_recomendacoes,
 )
+from api.services.database import run_query
+from licenciaminer.database.queries import (
+    QUERY_CNPJ_PROFILE,
+    QUERY_CNPJ_ANM_TITULOS,
+    QUERY_CNPJ_CFEM,
+    QUERY_CNPJ_INFRACOES,
+)
 from api.services.report_templates import render_pilhas_conformidade
 from fastapi.responses import HTMLResponse, StreamingResponse
 import io
@@ -264,6 +271,110 @@ def score_pilhas(request: PilhaScoreRequest):
 def get_conformidade_scale():
     """Escala de conformidade (cores e faixas)."""
     return CONFORMIDADE_ESCALA
+
+
+@router.get("/pilhas/lookup-by-cnpj/{cnpj}")
+def lookup_pilha_by_cnpj(cnpj: str):
+    """Lookup de dados públicos por CNPJ para auto-popular DadosPilha.
+
+    Reaproveita queries da plataforma (perfil empresa + títulos ANM +
+    CFEM + infrações) e devolve um pacote pré-mastigado para o frontend
+    sugerir campos do form.
+
+    Heurística de "provavelmente opera pilhas":
+    - tem ≥ 1 título ANM em fase de Lavra/Concessão
+    - paga CFEM ativamente (≥ 6 meses)
+    - substância principal é minério de ferro/ouro/bauxita/cobre/zinco
+      (atividades A-05 da DN COPAM 217 com pilhas obrigatórias)
+    """
+    cnpj_clean = "".join(c for c in cnpj if c.isdigit())
+    if len(cnpj_clean) != 14:
+        return {"erro": "CNPJ inválido — informe 14 dígitos", "cnpj": cnpj}
+
+    profile_rows = run_query(QUERY_CNPJ_PROFILE, [cnpj_clean])
+    profile = profile_rows[0] if profile_rows else None
+    if not profile:
+        return {
+            "cnpj": cnpj_clean,
+            "encontrado": False,
+            "mensagem": "CNPJ não encontrado nas bases públicas (ANM/IBAMA/CFEM).",
+        }
+
+    razao = profile.get("razao_social") or ""
+    titulos = run_query(QUERY_CNPJ_ANM_TITULOS, [razao]) if razao else []
+    cfem_rows = run_query(QUERY_CNPJ_CFEM, [cnpj_clean])
+    infracoes_rows = run_query(QUERY_CNPJ_INFRACOES, [cnpj_clean])
+
+    # CFEM breakdown por substância para identificar material principal
+    cfem_subst = run_query(
+        """
+        SELECT
+            "Substância" AS substancia,
+            "Município" AS municipio,
+            COUNT(*) AS n_pagamentos
+        FROM v_cfem
+        WHERE CPF_CNPJ = ?
+        GROUP BY 1, 2
+        ORDER BY n_pagamentos DESC
+        LIMIT 10
+        """,
+        [cnpj_clean],
+    )
+
+    # Heurística pilha
+    cfem_meses = (cfem_rows[0].get("meses_pagamento", 0) if cfem_rows else 0) or 0
+    n_titulos_lavra = sum(
+        1 for t in titulos
+        if any(k in (t.get("fase") or "").lower()
+               for k in ("lavra", "concessão", "concessao"))
+    )
+    substancias = [(s.get("substancia") or "").lower() for s in cfem_subst]
+    SUBST_PILHAS = {"ferro", "ouro", "bauxita", "cobre", "zinco", "manganês", "manganes",
+                    "níquel", "niquel", "fosfato", "fosfático", "fosfatico"}
+    tem_subst_pilha = any(any(p in s for p in SUBST_PILHAS) for s in substancias)
+    # Heurística: opera pilhas se há produção em curso (CFEM ativo) em substância
+    # que normativamente gera pilhas, OU se tem título de lavra em substância pilha
+    provavel_opera_pilhas = tem_subst_pilha and (cfem_meses >= 12 or n_titulos_lavra >= 1)
+
+    # Sugestão de auto-populate
+    sugestao = {}
+    if cfem_subst:
+        sugestao["material"] = cfem_subst[0].get("substancia")
+        sugestao["municipio"] = cfem_subst[0].get("municipio")
+
+    return {
+        "cnpj": cnpj_clean,
+        "encontrado": True,
+        "empresa": {
+            "razao_social": razao,
+            "municipio_sede": profile.get("municipio"),
+            "uf_sede": profile.get("uf"),
+            "situacao": profile.get("situacao_cadastral"),
+        },
+        "titulos_anm": {
+            "total": len(titulos),
+            "lavra_concessao": n_titulos_lavra,
+            "amostra": titulos[:5],
+        },
+        "cfem": {
+            "meses_pagamento": cfem_meses,
+            "total_pago": (cfem_rows[0].get("total_pago", 0) if cfem_rows else 0) or 0,
+            "substancias_top": cfem_subst[:5],
+        },
+        "infracoes": {
+            "total": (infracoes_rows[0].get("total_infracoes", 0) if infracoes_rows else 0) or 0,
+            "anos_com_infracao": (infracoes_rows[0].get("anos_com_infracao", 0) if infracoes_rows else 0) or 0,
+        },
+        "analise_pilhas": {
+            "provavel_opera_pilhas": provavel_opera_pilhas,
+            "criterios": {
+                "cfem_meses_>=6": cfem_meses >= 6,
+                "titulos_lavra_>=1": n_titulos_lavra >= 1,
+                "substancia_pilha_obrigatoria": tem_subst_pilha,
+            },
+        },
+        "sugestao_auto_populate": sugestao,
+    }
 
 
 @router.get("/pilhas/gistm-principles")
