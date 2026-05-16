@@ -266,6 +266,107 @@ def get_conformidade_scale():
     return CONFORMIDADE_ESCALA
 
 
+@router.get("/pilhas/gistm-principles")
+def get_gistm_principles():
+    """Lista os 15 princípios GISTM com requisitos mapeados em cada um.
+
+    Retorna a estrutura usada pelo overlay premium para roll-up de scoring
+    por princípio (e não apenas por requisito individual).
+    """
+    all_reqs = load_requisitos()
+    gistm_reqs = [r for r in all_reqs if "GISTM" in (r.get("modulo") or "")]
+
+    principles: dict[int, dict] = {}
+    for r in gistm_reqs:
+        topico = r.get("topico", "")
+        # Formato esperado: "P01 - Engajamento..."
+        if not topico.startswith("P"):
+            continue
+        try:
+            pnum = int(topico[1:3])
+        except ValueError:
+            continue
+        if pnum not in principles:
+            principles[pnum] = {
+                "principio": pnum,
+                "nome": topico.split(" - ", 1)[1] if " - " in topico else topico,
+                "requisitos": [],
+            }
+        principles[pnum]["requisitos"].append({
+            "requisito_id": r.get("requisito_id"),
+            "teste": r.get("teste_aderencia"),
+            "peso": r.get("peso"),
+            "impacto": r.get("impacto"),
+        })
+
+    return {
+        "total_principios": len(principles),
+        "total_requisitos": len(gistm_reqs),
+        "principios": [principles[k] for k in sorted(principles.keys())],
+    }
+
+
+class GistmScoreRequest(BaseModel):
+    avaliacoes: dict[str, str]
+
+
+@router.post("/pilhas/gistm-score")
+def score_gistm_by_principle(request: GistmScoreRequest):
+    """Calcula score por princípio GISTM a partir das avaliações.
+
+    Útil para o overlay premium: mostra rating de aderência aos 15 princípios
+    independentemente do score global do modo.
+    """
+    all_reqs = load_requisitos()
+    gistm_reqs = [r for r in all_reqs if "GISTM" in (r.get("modulo") or "")]
+
+    per_principle: dict[int, dict] = {}
+    for r in gistm_reqs:
+        topico = r.get("topico", "")
+        if not topico.startswith("P"):
+            continue
+        try:
+            pnum = int(topico[1:3])
+        except ValueError:
+            continue
+        if pnum not in per_principle:
+            per_principle[pnum] = {
+                "principio": pnum,
+                "nome": topico.split(" - ", 1)[1] if " - " in topico else topico,
+                "atende": 0, "parcial": 0, "nao_atende": 0, "nao_aplica": 0,
+                "nao_avaliado": 0, "total": 0, "score_pct": None,
+            }
+        bucket = per_principle[pnum]
+        bucket["total"] += 1
+        aval = request.avaliacoes.get(r["requisito_id"], "")
+        if aval == "Atende":
+            bucket["atende"] += 1
+        elif "Parcial" in aval:
+            bucket["parcial"] += 1
+        elif aval.startswith("Nao Atende") or aval == "Não Atende":
+            bucket["nao_atende"] += 1
+        elif "Aplica" in aval and "Nao" in aval or aval == "Não Aplica":
+            bucket["nao_aplica"] += 1
+        else:
+            bucket["nao_avaliado"] += 1
+
+    for p in per_principle.values():
+        avaliados = p["total"] - p["nao_aplica"] - p["nao_avaliado"]
+        if avaliados > 0:
+            p["score_pct"] = round(100.0 * (p["atende"] + 0.5 * p["parcial"]) / avaliados, 1)
+
+    # Score global GISTM (média ponderada simples)
+    scores_validos = [p["score_pct"] for p in per_principle.values() if p["score_pct"] is not None]
+    global_score = round(sum(scores_validos) / len(scores_validos), 1) if scores_validos else None
+
+    return {
+        "score_global_gistm": global_score,
+        "principios_avaliados": len(scores_validos),
+        "total_principios": len(per_principle),
+        "principios": [per_principle[k] for k in sorted(per_principle.keys())],
+    }
+
+
 @router.post("/pilhas/report/conformidade", response_class=HTMLResponse)
 def gerar_relatorio_conformidade(request: PilhaScoreRequest):
     """Gera relatório HTML de conformidade da pilha.
@@ -300,6 +401,11 @@ def gerar_relatorio_conformidade(request: PilhaScoreRequest):
     else:
         resultado_dict = dict(resultado)
 
+    # GISTM overlay quando solicitado
+    gistm_data = None
+    if request.incluir_gistm:
+        gistm_data = score_gistm_by_principle(GistmScoreRequest(avaliacoes=request.avaliacoes))
+
     html = render_pilhas_conformidade(
         modo=modo,
         modo_desc=MODO_DESC.get(modo, modo),
@@ -307,6 +413,7 @@ def gerar_relatorio_conformidade(request: PilhaScoreRequest):
         resultado=resultado_dict,
         recomendacoes=recomendacoes or [],
         incluir_gistm=request.incluir_gistm,
+        gistm_data=gistm_data,
     )
     return HTMLResponse(content=html)
 

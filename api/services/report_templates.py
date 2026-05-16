@@ -553,6 +553,68 @@ def render_dd_fase4(
     return _html_wrap(f"{ref} - Fase 4", body)
 
 
+def _render_gistm_block(gistm_data: dict | None) -> str:
+    """Bloco premium GISTM no relatório — rating por princípio."""
+    if not gistm_data or not gistm_data.get("principios"):
+        return ""
+    global_score = gistm_data.get("score_global_gistm")
+    avaliados = gistm_data.get("principios_avaliados", 0)
+    total_p = gistm_data.get("total_principios", 15)
+    angle = (global_score or 0) * 1.8
+
+    rows = ""
+    for p in gistm_data["principios"]:
+        score = p.get("score_pct")
+        if score is None:
+            bc, badge = "bgy", "Nao avaliado"
+        elif score >= 80:
+            bc, badge = "bg", f"{score}%"
+        elif score >= 60:
+            bc, badge = "bo", f"{score}%"
+        else:
+            bc, badge = "br2", f"{score}%"
+        avaliados_p = p["total"] - p["nao_aplica"] - p["nao_avaliado"]
+        rows += f"""<tr>
+<td><strong>P{p["principio"]:02d}</strong></td>
+<td>{p["nome"]}</td>
+<td class="nc">{avaliados_p}/{p["total"]}</td>
+<td class="nc">{p["atende"]}</td>
+<td class="nc">{p["parcial"]}</td>
+<td class="nc">{p["nao_atende"]}</td>
+<td><span class="b {bc}">{badge}</span></td>
+</tr>"""
+
+    score_label = f"{global_score}%" if global_score is not None else "n/d"
+    color_classe = "next" if (global_score or 0) >= 80 else "warn" if (global_score or 0) >= 60 else "danger"
+    icon = "&#10004;" if (global_score or 0) >= 80 else "&#9888;" if (global_score or 0) >= 60 else "&#10060;"
+    summary = (
+        "Aderencia GISTM compativel com expectativa ICMM para disclosure publico."
+        if (global_score or 0) >= 80 else
+        "Aderencia GISTM parcial - revisar princpios com maior gap antes de Conformance Report."
+        if (global_score or 0) >= 60 else
+        "Aderencia GISTM critica - rota de remediacao mandatoria antes de divulgacao publica."
+    )
+
+    return f"""
+<h2><span class="ic gl">&#9776;</span> GISTM - Conformidade por Principio (Premium)</h2>
+<div class="gw">
+<div class="ga"><div class="ga-bg"></div><div class="ga-m"></div><div class="ga-n" style="--angle:{angle}deg;"></div><div class="ga-v">{score_label}</div></div>
+<div class="gi"><div class="ti">Score Global GISTM: {score_label}</div>
+<div class="de">{avaliados}/{total_p} principios com avaliacao suficiente. Padrao global de gestao de rejeitos
+publicado por ICMM, UNEP e PRI em 2020.</div></div></div>
+
+<table>
+<thead><tr><th>#</th><th>Principio</th><th>Aval.</th><th>Atende</th><th>Parc.</th><th>Nao At.</th><th>Score</th></tr></thead>
+<tbody>{rows}</tbody>
+</table>
+
+<div class="cl {color_classe}"><div class="ci">{icon}</div><div class="bd">
+<strong>{summary}</strong>Cobertura dos 15 principios GISTM nos 6 topicos:
+comunidades afetadas, base de conhecimento, design e monitoramento, gestao e governanca,
+resposta a emergencia e disclosure publico.</div></div>
+"""
+
+
 def render_pilhas_conformidade(
     modo: str,
     modo_desc: str,
@@ -560,6 +622,7 @@ def render_pilhas_conformidade(
     resultado: dict,
     recomendacoes: list[dict],
     incluir_gistm: bool = False,
+    gistm_data: dict | None = None,
     ref: str = "",
 ) -> str:
     """Relatório de Conformidade de Pilha (Auditoria / Licenciamento / Fechamento).
@@ -662,6 +725,8 @@ def render_pilhas_conformidade(
 <h2><span class="ic gl">&#9776;</span> Dados da Pilha</h2>
 <table><thead><tr><th>Atributo</th><th>Valor</th></tr></thead>
 <tbody>{dados_rows}</tbody></table>
+
+{_render_gistm_block(gistm_data) if incluir_gistm else ""}
 
 <h2><span class="ic o">&#9888;</span> Plano de Acao - Recomendacoes</h2>
 <table><thead><tr><th>Documento</th><th>Requisito</th><th>Criticidade</th><th>Acao recomendada</th></tr></thead>
