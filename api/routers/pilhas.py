@@ -321,6 +321,66 @@ def lookup_pilha_by_cnpj(cnpj: str):
         [cnpj_clean],
     )
 
+    # Cruzamento espacial — UC, TI, biomas dos processos ANM da empresa
+    spatial_rows = run_query(
+        """
+        SELECT
+            COUNT(*) AS total_processos,
+            SUM(CASE WHEN s.tem_uc THEN 1 ELSE 0 END) AS proc_com_uc,
+            SUM(CASE WHEN s.tem_ti THEN 1 ELSE 0 END) AS proc_com_ti,
+            STRING_AGG(DISTINCT s.ucs_sobrepostas, ' | ') FILTER (WHERE s.tem_uc) AS ucs_concat,
+            STRING_AGG(DISTINCT s.tis_sobrepostas, ' | ') FILTER (WHERE s.tem_ti) AS tis_concat,
+            STRING_AGG(DISTINCT s.biomas, ' | ') FILTER (WHERE s.biomas IS NOT NULL AND s.biomas != '') AS biomas_concat
+        FROM v_anm a
+        LEFT JOIN v_spatial s ON a.PROCESSO = s.PROCESSO
+        WHERE a.NOME = ?
+        """,
+        [razao],
+    ) if razao else []
+
+    sp = spatial_rows[0] if spatial_rows else {}
+    proc_com_uc = sp.get("proc_com_uc") or 0
+    proc_com_ti = sp.get("proc_com_ti") or 0
+
+    # Lista única de biomas
+    biomas_raw = sp.get("biomas_concat") or ""
+    biomas_set: set[str] = set()
+    for b in biomas_raw.split("|"):
+        for bb in b.split(","):
+            x = bb.strip()
+            if x:
+                biomas_set.add(x)
+
+    # Top 5 UCs/TIs distintas
+    def _top_distintos(concat: str | None, limit: int = 5) -> list[str]:
+        if not concat:
+            return []
+        items: set[str] = set()
+        for chunk in concat.split("|"):
+            for sub in chunk.split(","):
+                v = sub.strip()
+                if v:
+                    items.add(v)
+        return sorted(items)[:limit]
+
+    ucs_top = _top_distintos(sp.get("ucs_concat"))
+    tis_top = _top_distintos(sp.get("tis_concat"))
+
+    # Alertas espaciais
+    alertas_espaciais: list[str] = []
+    if proc_com_uc > 0:
+        alertas_espaciais.append(
+            f"{proc_com_uc} processo(s) sobrepostos a Unidade de Conservacao"
+        )
+    if proc_com_ti > 0:
+        alertas_espaciais.append(
+            f"{proc_com_ti} processo(s) sobrepostos a Terra Indigena"
+        )
+    if "Mata Atlantica" in biomas_set or "Mata Atlântica" in biomas_set:
+        alertas_espaciais.append(
+            "Atividade em bioma Mata Atlantica (Lei 11.428/2006 - rigor adicional)"
+        )
+
     # Heurística pilha
     cfem_meses = (cfem_rows[0].get("meses_pagamento", 0) if cfem_rows else 0) or 0
     n_titulos_lavra = sum(
@@ -372,6 +432,15 @@ def lookup_pilha_by_cnpj(cnpj: str):
                 "titulos_lavra_>=1": n_titulos_lavra >= 1,
                 "substancia_pilha_obrigatoria": tem_subst_pilha,
             },
+        },
+        "espacial": {
+            "total_processos_avaliados": sp.get("total_processos") or 0,
+            "processos_com_uc": proc_com_uc,
+            "processos_com_ti": proc_com_ti,
+            "ucs_top": ucs_top,
+            "tis_top": tis_top,
+            "biomas": sorted(biomas_set),
+            "alertas": alertas_espaciais,
         },
         "sugestao_auto_populate": sugestao,
     }

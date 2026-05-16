@@ -1722,6 +1722,15 @@ export interface PilhasCnpjLookup {
     provavel_opera_pilhas: boolean;
     criterios: Record<string, boolean>;
   };
+  espacial?: {
+    total_processos_avaliados: number;
+    processos_com_uc: number;
+    processos_com_ti: number;
+    ucs_top: string[];
+    tis_top: string[];
+    biomas: string[];
+    alertas: string[];
+  };
   sugestao_auto_populate?: {
     material?: string;
     municipio?: string;

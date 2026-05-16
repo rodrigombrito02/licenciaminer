@@ -610,6 +610,34 @@ export default function PilhasPage() {
                     Revise antes de prosseguir.
                   </div>
                 )}
+
+                {/* Alertas espaciais */}
+                {cnpjLookup.espacial && (cnpjLookup.espacial.alertas.length > 0 || cnpjLookup.espacial.biomas.length > 0) && (
+                  <div className="border-t pt-2 mt-2 space-y-2">
+                    <div className="text-xs font-semibold text-brand-navy">
+                      Cruzamento espacial ({cnpjLookup.espacial.total_processos_avaliados} processos avaliados):
+                    </div>
+                    {cnpjLookup.espacial.alertas.map((a, i) => (
+                      <div key={i} className="text-xs flex items-start gap-2 text-amber-700">
+                        <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+                        <span>{a}</span>
+                      </div>
+                    ))}
+                    {cnpjLookup.espacial.biomas.length > 0 && (
+                      <div className="text-xs flex items-start gap-2 text-muted-foreground">
+                        <span className="font-medium">Biomas:</span>
+                        <span>{cnpjLookup.espacial.biomas.join(", ")}</span>
+                      </div>
+                    )}
+                    {cnpjLookup.espacial.ucs_top.length > 0 && (
+                      <div className="text-[11px] text-muted-foreground">
+                        <span className="font-medium">UCs sobrepostas:</span>{" "}
+                        {cnpjLookup.espacial.ucs_top.slice(0, 3).join(" · ")}
+                        {cnpjLookup.espacial.ucs_top.length > 3 && ` (+${cnpjLookup.espacial.ucs_top.length - 3})`}
+                      </div>
+                    )}
+                  </div>
+                )}
               </>
             )}
           </CardContent>
