@@ -22,12 +22,14 @@ from api.routers import (
     intelligence,
     overview,
     pilhas,
+    planos_acao,
     prospeccao,
     reports,
     simulator,
     viabilidade,
 )
 from api.services.database import close_connection, get_connection
+from licenciaminer.planos_acao.database import init_db as init_planos_acao_db
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -38,6 +40,8 @@ async def lifespan(app: FastAPI):
     """Gerencia ciclo de vida: conexão DuckDB no startup, cleanup no shutdown."""
     logger.info("Inicializando DuckDB...")
     get_connection()
+    logger.info("Inicializando SQLite (Plano de Acoes)...")
+    init_planos_acao_db()
     from api.routers.intelligence import start_briefing_scheduler
     start_briefing_scheduler()
     logger.info("API pronta")
@@ -82,6 +86,7 @@ app.include_router(copam.router, prefix="/api", tags=["COPAM"])
 app.include_router(chat.router, prefix="/api", tags=["Chat"])
 app.include_router(viabilidade.router, prefix="/api", tags=["Viabilidade"])
 app.include_router(pilhas.router, prefix="/api", tags=["Pilhas"])
+app.include_router(planos_acao.router)  # ja tem prefix /api/planos-acao
 
 
 @app.get("/health")

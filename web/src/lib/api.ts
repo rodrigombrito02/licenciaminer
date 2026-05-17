@@ -1791,6 +1791,137 @@ export async function downloadPilhasXlsx(payload: {
   URL.revokeObjectURL(url);
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   PLANO DE AÇÕES — upload heterogêneo + CRUD
+   ══════════════════════════════════════════════════════════════════ */
+
+const PA_API = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api")
+  .replace(/\/api$/, "") + "/api/planos-acao";
+
+export interface PaCliente {
+  id: number;
+  nome: string;
+  descricao?: string | null;
+  criado_em: string;
+  n_projetos: number;
+  n_planos: number;
+}
+
+export interface PaProjeto {
+  id: number;
+  cliente_id: number;
+  nome: string;
+  descricao?: string | null;
+  status: string;
+  data_inicio?: string | null;
+  data_fim?: string | null;
+  criado_em: string;
+  n_planos: number;
+}
+
+export interface PaPlano {
+  id: number;
+  cliente_id: number;
+  projeto_estrategico_id: number | null;
+  nome: string;
+  descricao: string | null;
+  arquivo_origem: string | null;
+  coluna_mapping: Record<string, string | null> | null;
+  import_stats: Record<string, unknown> | null;
+  versao: number;
+  criado_em: string;
+  atualizado_em: string;
+  n_tarefas: number;
+}
+
+export interface PaTarefa {
+  id: number;
+  plano_id: number;
+  ordem: number;
+  descricao: string | null;
+  data_inicio: string | null;
+  data_fim: string | null;
+  responsavel_pessoa: string | null;
+  area_responsavel: string | null;
+  status: string | null;
+  classificacao: string | null;
+  eap_codigo: string | null;
+  eap_nivel: number | null;
+  parent_eap: string | null;
+  pct_concluido: number | null;
+  raw_extra: Record<string, unknown> | null;
+}
+
+export interface PaUploadPreview {
+  filename: string;
+  sheet: string | null;
+  headers: string[];
+  mapping_sugerido: Record<string, string | null>;
+  campos_canonicos: string[];
+  n_linhas_total: number;
+  n_linhas_validas: number;
+  amostra: Partial<PaTarefa>[];
+}
+
+export const paApi = {
+  listarClientes: () => fetch(`${PA_API}/clientes`).then(r => r.json() as Promise<PaCliente[]>),
+  criarCliente: (data: { nome: string; descricao?: string }) =>
+    fetch(`${PA_API}/clientes`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() as Promise<PaCliente>; }),
+  deletarCliente: (id: number) =>
+    fetch(`${PA_API}/clientes/${id}`, { method: "DELETE" }).then(r => r.json()),
+
+  listarProjetos: (clienteId?: number) => {
+    const url = clienteId ? `${PA_API}/projetos?cliente_id=${clienteId}` : `${PA_API}/projetos`;
+    return fetch(url).then(r => r.json() as Promise<PaProjeto[]>);
+  },
+  criarProjeto: (data: { cliente_id: number; nome: string; descricao?: string }) =>
+    fetch(`${PA_API}/projetos`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() as Promise<PaProjeto>; }),
+  deletarProjeto: (id: number) =>
+    fetch(`${PA_API}/projetos/${id}`, { method: "DELETE" }).then(r => r.json()),
+
+  listarPlanos: (clienteId?: number) => {
+    const url = clienteId ? `${PA_API}/planos?cliente_id=${clienteId}` : `${PA_API}/planos`;
+    return fetch(url).then(r => r.json() as Promise<PaPlano[]>);
+  },
+  detalhePlano: (id: number) => fetch(`${PA_API}/planos/${id}`).then(r => r.json() as Promise<PaPlano>),
+  tarefasDoPlano: (id: number) => fetch(`${PA_API}/planos/${id}/tarefas`).then(r => r.json() as Promise<PaTarefa[]>),
+  deletarPlano: (id: number) => fetch(`${PA_API}/planos/${id}`, { method: "DELETE" }).then(r => r.json()),
+
+  uploadPreview: async (file: File): Promise<PaUploadPreview> => {
+    const fd = new FormData();
+    fd.append("file", file);
+    const r = await fetch(`${PA_API}/upload/preview`, { method: "POST", body: fd });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  },
+
+  uploadImportar: async (data: {
+    file: File;
+    cliente_id: number;
+    nome: string;
+    projeto_id?: number;
+    descricao?: string;
+    custom_mapping?: Record<string, string>;
+  }): Promise<PaPlano> => {
+    const fd = new FormData();
+    fd.append("file", data.file);
+    fd.append("cliente_id", String(data.cliente_id));
+    fd.append("nome", data.nome);
+    if (data.projeto_id) fd.append("projeto_id", String(data.projeto_id));
+    if (data.descricao) fd.append("descricao", data.descricao);
+    if (data.custom_mapping) fd.append("custom_mapping", JSON.stringify(data.custom_mapping));
+    const r = await fetch(`${PA_API}/upload/importar`, { method: "POST", body: fd });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  },
+};
+
 /* ── Formatting re-exports (canonical source: lib/format.ts) ── */
 
 export { fmtReais, fmtPct, fmtBR as fmtNumber } from "./format";
