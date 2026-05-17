@@ -7,12 +7,33 @@ import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { fetchFreshness } from "@/lib/api";
-import { NAV_SECTIONS, type NavSection } from "@/lib/nav-config";
+import { NAV_GROUPS, NAV_SECTIONS, type NavSection } from "@/lib/nav-config";
+
+const COLLAPSE_KEY = "sidebar_collapsed_v2";
+const GROUP_COLLAPSE_KEY = "sidebar_group_collapsed_v2";
 
 export function SidebarNav() {
   const pathname = usePathname();
   const [freshness, setFreshness] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [groupCollapsed, setGroupCollapsed] = useState<Record<string, boolean>>({});
+
+  // Hydrate from localStorage
+  useEffect(() => {
+    try {
+      const s = localStorage.getItem(COLLAPSE_KEY);
+      if (s) setCollapsed(JSON.parse(s));
+      const g = localStorage.getItem(GROUP_COLLAPSE_KEY);
+      if (g) setGroupCollapsed(JSON.parse(g));
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try { localStorage.setItem(COLLAPSE_KEY, JSON.stringify(collapsed)); } catch {}
+  }, [collapsed]);
+  useEffect(() => {
+    try { localStorage.setItem(GROUP_COLLAPSE_KEY, JSON.stringify(groupCollapsed)); } catch {}
+  }, [groupCollapsed]);
 
   useEffect(() => {
     let cancelled = false;
@@ -21,6 +42,18 @@ export function SidebarNav() {
       .catch(() => {});
     return () => { cancelled = true; };
   }, []);
+
+  function toggleGroup(key: string) {
+    setGroupCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
+  }
+
+  function isGroupCollapsed(key: string) {
+    // Default: collapsed unless user expanded OR any item active
+    if (key in groupCollapsed) return groupCollapsed[key];
+    const groupSections = NAV_SECTIONS.filter((s) => s.group === key);
+    const anyActive = groupSections.some((s) => isSectionActive(s));
+    return !anyActive;
+  }
 
   function isSectionActive(section: NavSection) {
     return section.items.some((item) =>
@@ -56,13 +89,37 @@ export function SidebarNav() {
 
       {/* Nav sections */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-        {NAV_SECTIONS.map((section) => {
+        {NAV_SECTIONS.map((section, idx) => {
           const isOpen = !isSectionCollapsed(section);
           const active = isSectionActive(section);
+          const prevSection = idx > 0 ? NAV_SECTIONS[idx - 1] : null;
+          const groupChanged = section.group && section.group !== prevSection?.group;
+          const groupMeta = groupChanged
+            ? NAV_GROUPS.find((g) => g.key === section.group)
+            : null;
+          const groupHidden = section.group ? isGroupCollapsed(section.group) : false;
 
           return (
             <div key={section.label || "home"}>
-              {section.standalone ? (
+              {/* Group separator (renders once per group) */}
+              {groupMeta && (
+                <button
+                  onClick={() => toggleGroup(groupMeta.key)}
+                  className="mt-5 mb-1 flex w-full items-center justify-between rounded-md px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-sidebar-foreground/50 hover:bg-sidebar-accent/30 hover:text-sidebar-foreground/80 transition-colors border-t border-sidebar-border pt-3"
+                  title={groupMeta.description}
+                >
+                  <span>{groupMeta.label}</span>
+                  <ChevronDown
+                    className={cn(
+                      "h-3 w-3 transition-transform duration-200",
+                      isGroupCollapsed(groupMeta.key) ? "-rotate-90" : "rotate-0"
+                    )}
+                  />
+                </button>
+              )}
+
+              {/* Hide group sections when group collapsed */}
+              {groupHidden ? null : section.standalone ? (
                 /* Home link — no section header */
                 <ul>
                   {section.items.map((item) => (

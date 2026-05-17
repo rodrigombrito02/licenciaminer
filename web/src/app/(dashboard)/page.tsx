@@ -181,7 +181,7 @@ export default function HomePage() {
           Módulos da Plataforma
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Cinco unidades de negócio integradas em uma única plataforma
+          Cinco unidades comerciais + ferramentas internas, integradas em uma plataforma única
         </p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {BUSINESS_UNITS.map((unit) => {
