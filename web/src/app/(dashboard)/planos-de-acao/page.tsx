@@ -333,6 +333,7 @@ function UploadPlanoDialog({
   const [projetoId, setProjetoId] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [mappingOverride, setMappingOverride] = useState<Record<string, string>>({});
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
@@ -343,6 +344,12 @@ function UploadPlanoDialog({
     try {
       const p = await paApi.uploadPreview(f);
       setPreview(p);
+      // Iniciar override com o mapping sugerido (usuario pode mudar)
+      const initial: Record<string, string> = {};
+      for (const [k, v] of Object.entries(p.mapping_sugerido)) {
+        if (v) initial[k] = v;
+      }
+      setMappingOverride(initial);
     } catch (e) {
       alert("Erro no preview: " + (e instanceof Error ? e.message : String(e)));
     } finally { setLoading(false); }
@@ -352,11 +359,17 @@ function UploadPlanoDialog({
     if (!file || !nome.trim()) return;
     setImporting(true);
     try {
+      // Filtrar vazios para nao enviar key sem value
+      const cleanMapping: Record<string, string> = {};
+      for (const [k, v] of Object.entries(mappingOverride)) {
+        if (v) cleanMapping[k] = v;
+      }
       await paApi.uploadImportar({
         file, cliente_id: clienteId, nome: nome.trim(),
         projeto_id: projetoId ? Number(projetoId) : undefined,
+        custom_mapping: Object.keys(cleanMapping).length > 0 ? cleanMapping : undefined,
       });
-      setOpen(false); setFile(null); setPreview(null); setNome(""); setProjetoId("");
+      setOpen(false); reset();
       onUploaded();
     } catch (e) {
       alert("Erro no import: " + (e instanceof Error ? e.message : String(e)));
@@ -364,7 +377,7 @@ function UploadPlanoDialog({
   }
 
   function reset() {
-    setFile(null); setPreview(null); setNome(""); setProjetoId("");
+    setFile(null); setPreview(null); setNome(""); setProjetoId(""); setMappingOverride({});
   }
 
   return (
@@ -398,16 +411,52 @@ function UploadPlanoDialog({
                 <div><strong>{preview.headers.length}</strong> colunas detectadas</div>
               </div>
 
-              <div className="text-xs">
-                <div className="font-bold mb-1">Mapeamento automático:</div>
-                <div className="grid grid-cols-2 gap-1">
-                  {Object.entries(preview.mapping_sugerido).map(([campo, col]) => (
-                    <div key={campo} className="flex items-center gap-1">
-                      {col ? <CheckCircle2 className="h-3 w-3 text-success" /> : <AlertTriangle className="h-3 w-3 text-warning" />}
-                      <span className="font-medium">{campo}:</span>
-                      <span className="text-muted-foreground truncate">{col || "(não encontrado)"}</span>
-                    </div>
-                  ))}
+              <div className="text-xs space-y-2">
+                <div className="font-bold flex items-center gap-2">
+                  Mapeamento de colunas
+                  <span className="text-[10px] font-normal text-muted-foreground">
+                    (auto-detectado, edite se necessário)
+                  </span>
+                </div>
+                <div className="grid md:grid-cols-2 gap-2 max-h-[280px] overflow-y-auto p-1">
+                  {preview.campos_canonicos.map((campo) => {
+                    const sugerido = preview.mapping_sugerido[campo];
+                    const valor = mappingOverride[campo] ?? "";
+                    const conflito = sugerido && valor !== sugerido;
+                    return (
+                      <div key={campo} className="flex items-center gap-1.5">
+                        {valor ? (
+                          <CheckCircle2 className={`h-3 w-3 flex-shrink-0 ${conflito ? "text-warning" : "text-success"}`} />
+                        ) : (
+                          <AlertTriangle className="h-3 w-3 flex-shrink-0 text-warning" />
+                        )}
+                        <span className="font-medium w-28 truncate" title={campo}>{campo}:</span>
+                        <Select
+                          value={valor || "__none__"}
+                          onValueChange={(v) =>
+                            setMappingOverride(prev => ({
+                              ...prev,
+                              [campo]: v === "__none__" ? "" : v,
+                            }))
+                          }
+                        >
+                          <SelectTrigger className="h-7 text-xs flex-1">
+                            <SelectValue placeholder="(não mapeado)" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="__none__"><em>(não mapeado)</em></SelectItem>
+                            {preview.headers.filter(h => h).map(h => (
+                              <SelectItem key={h} value={h} className="text-xs">{h}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="text-[10px] text-muted-foreground bg-muted/40 p-2 rounded">
+                  ℹ️ Colunas não mapeadas viram <strong>filtros customizados</strong> no dashboard
+                  (campo <code>raw_extra</code>). Não perdem-se.
                 </div>
               </div>
 
