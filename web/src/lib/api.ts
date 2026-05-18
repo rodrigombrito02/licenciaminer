@@ -1901,6 +1901,9 @@ export const paApi = {
     return r.json();
   },
 
+  cockpitCliente: (id: number) => fetch(`${PA_API}/clientes/${id}/cockpit`).then(r => r.json()),
+  cockpitProjeto: (id: number) => fetch(`${PA_API}/projetos/${id}/cockpit`).then(r => r.json()),
+
   uploadImportar: async (data: {
     file: File;
     cliente_id: number;

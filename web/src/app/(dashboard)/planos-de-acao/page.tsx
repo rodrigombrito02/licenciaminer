@@ -157,6 +157,11 @@ export default function PlanosDeAcaoPage() {
               projetos={projetos}
               onUploaded={recarregar}
             />
+            <Link href={`/planos-de-acao/cliente/${cliente.id}`}>
+              <Button size="sm" variant="default" className="bg-brand-navy hover:bg-brand-navy/90">
+                Cockpit {cliente.nome} <ChevronRight className="h-3 w-3 ml-1" />
+              </Button>
+            </Link>
           </div>
 
           {/* Projetos estratégicos */}
@@ -170,7 +175,9 @@ export default function PlanosDeAcaoPage() {
                 <Card key={projeto.id}>
                   <CardHeader className="pb-2">
                     <CardTitle className="flex items-center justify-between text-base font-heading">
-                      <span>{projeto.nome}</span>
+                      <Link href={`/planos-de-acao/projeto/${projeto.id}`} className="hover:text-brand-teal flex items-center gap-1">
+                        {projeto.nome} <ChevronRight className="h-3 w-3 opacity-50" />
+                      </Link>
                       <Badge variant="outline">{planosPrj.length} planos · {planosPrj.reduce((s, p) => s + p.n_tarefas, 0)} tarefas</Badge>
                     </CardTitle>
                     {projeto.descricao && (

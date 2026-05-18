@@ -413,6 +413,241 @@ async def upload_importar(
 # Meta
 # ══════════════════════════════════════════════════════════════════
 
+def _agg_tarefas(tarefas: list[TarefaPA]) -> dict:
+    """Agregacao reusada para cockpit (cliente e projeto)."""
+    from datetime import date as _date
+
+    total = len(tarefas)
+    if total == 0:
+        return {
+            "total": 0, "concluidas": 0, "em_andamento": 0,
+            "atrasadas": 0, "nao_iniciadas": 0, "sem_status": 0,
+            "sem_responsavel": 0, "sem_area": 0,
+            "pct_medio": 0, "pct_concluidas": 0,
+            "por_status": {}, "por_area": {}, "por_responsavel": {},
+            "por_classificacao": {},
+            "prazos": {
+                "atrasadas_top": [], "proximas_30d": [],
+                "data_min": None, "data_max": None,
+            },
+            "conflitos_responsavel": [],
+        }
+
+    hoje = _date.today()
+    concluidas = sum(1 for t in tarefas if t.status and t.status.lower() in ("concluido", "concluído", "finalizado", "feito"))
+    em_andamento = sum(1 for t in tarefas if t.status and t.status.lower() in ("em andamento", "em execucao", "em execução"))
+    nao_iniciadas = sum(1 for t in tarefas if t.status and t.status.lower() in ("nao iniciado", "não iniciado", "pendente", "aberto"))
+    sem_status = sum(1 for t in tarefas if not t.status)
+    sem_resp = sum(1 for t in tarefas if not t.responsavel_pessoa)
+    sem_area = sum(1 for t in tarefas if not t.area_responsavel)
+
+    atrasadas: list[dict] = []
+    proximas_30d: list[dict] = []
+    for t in tarefas:
+        if not t.data_fim:
+            continue
+        eh_concluida = t.status and t.status.lower() in ("concluido", "concluído", "finalizado", "feito")
+        if eh_concluida:
+            continue
+        dias = (t.data_fim - hoje).days
+        if dias < 0:
+            atrasadas.append({
+                "plano_id": t.plano_id,
+                "descricao": t.descricao,
+                "responsavel": t.responsavel_pessoa,
+                "area": t.area_responsavel,
+                "data_fim": t.data_fim.isoformat(),
+                "dias_atraso": -dias,
+                "status": t.status,
+            })
+        elif 0 <= dias <= 30:
+            proximas_30d.append({
+                "plano_id": t.plano_id,
+                "descricao": t.descricao,
+                "responsavel": t.responsavel_pessoa,
+                "area": t.area_responsavel,
+                "data_fim": t.data_fim.isoformat(),
+                "dias_restantes": dias,
+                "status": t.status,
+            })
+
+    atrasadas.sort(key=lambda x: -x["dias_atraso"])
+    proximas_30d.sort(key=lambda x: x["dias_restantes"])
+
+    pcts = [t.pct_concluido for t in tarefas if t.pct_concluido is not None]
+    pct_medio = round(sum(pcts) / len(pcts), 1) if pcts else 0
+
+    by_status: dict[str, int] = {}
+    by_area: dict[str, int] = {}
+    by_resp: dict[str, int] = {}
+    by_classif: dict[str, int] = {}
+    for t in tarefas:
+        if t.status:
+            by_status[t.status] = by_status.get(t.status, 0) + 1
+        if t.area_responsavel:
+            by_area[t.area_responsavel] = by_area.get(t.area_responsavel, 0) + 1
+        if t.responsavel_pessoa:
+            by_resp[t.responsavel_pessoa] = by_resp.get(t.responsavel_pessoa, 0) + 1
+        if t.classificacao:
+            by_classif[t.classificacao] = by_classif.get(t.classificacao, 0) + 1
+
+    # Conflitos: mesmo responsavel com prazos sobrepostos em planos diferentes
+    conflitos: list[dict] = []
+    by_resp_tasks: dict[str, list[TarefaPA]] = {}
+    for t in tarefas:
+        if t.responsavel_pessoa and t.data_inicio and t.data_fim and not (
+            t.status and t.status.lower() in ("concluido", "concluído", "finalizado", "feito")
+        ):
+            by_resp_tasks.setdefault(t.responsavel_pessoa, []).append(t)
+    for resp, items in by_resp_tasks.items():
+        items_sorted = sorted(items, key=lambda x: x.data_inicio)
+        for i, a in enumerate(items_sorted):
+            for b in items_sorted[i + 1:]:
+                if b.data_inicio > a.data_fim:
+                    break
+                if a.plano_id != b.plano_id:  # so reporta conflito cross-plano
+                    conflitos.append({
+                        "responsavel": resp,
+                        "tarefa_a": a.descricao,
+                        "plano_a": a.plano_id,
+                        "tarefa_b": b.descricao,
+                        "plano_b": b.plano_id,
+                        "sobreposicao_inicio": max(a.data_inicio, b.data_inicio).isoformat(),
+                        "sobreposicao_fim": min(a.data_fim, b.data_fim).isoformat(),
+                    })
+
+    datas_inicio = [t.data_inicio for t in tarefas if t.data_inicio]
+    datas_fim = [t.data_fim for t in tarefas if t.data_fim]
+
+    return {
+        "total": total,
+        "concluidas": concluidas,
+        "em_andamento": em_andamento,
+        "atrasadas": len(atrasadas),
+        "nao_iniciadas": nao_iniciadas,
+        "sem_status": sem_status,
+        "sem_responsavel": sem_resp,
+        "sem_area": sem_area,
+        "pct_medio": pct_medio,
+        "pct_concluidas": round(100.0 * concluidas / total, 1),
+        "por_status": by_status,
+        "por_area": by_area,
+        "por_responsavel": dict(sorted(by_resp.items(), key=lambda x: -x[1])[:15]),
+        "por_classificacao": by_classif,
+        "prazos": {
+            "atrasadas_top": atrasadas[:20],
+            "proximas_30d": proximas_30d[:20],
+            "data_min": min(datas_inicio).isoformat() if datas_inicio else None,
+            "data_max": max(datas_fim).isoformat() if datas_fim else None,
+        },
+        "conflitos_responsavel": conflitos[:20],
+    }
+
+
+@router.get("/clientes/{cliente_id}/cockpit")
+def cockpit_cliente(cliente_id: int, db: Session = Depends(get_session)):
+    """Cockpit consolidado de um cliente — agregados de todos os planos."""
+    cliente = db.query(ClientePA).filter(ClientePA.id == cliente_id).first()
+    if not cliente:
+        raise HTTPException(404, "Cliente nao encontrado")
+
+    planos = (
+        db.query(Plano)
+        .filter(Plano.cliente_id == cliente_id)
+        .order_by(Plano.atualizado_em.desc())
+        .all()
+    )
+    tarefas_todas: list[TarefaPA] = []
+    planos_resumo: list[dict] = []
+
+    for p in planos:
+        ts = list(p.tarefas)
+        tarefas_todas.extend(ts)
+        agg = _agg_tarefas(ts)
+        planos_resumo.append({
+            "plano_id": p.id,
+            "plano_nome": p.nome,
+            "projeto_estrategico_id": p.projeto_estrategico_id,
+            "n_tarefas": agg["total"],
+            "concluidas": agg["concluidas"],
+            "atrasadas": agg["atrasadas"],
+            "pct_medio": agg["pct_medio"],
+            "pct_concluidas": agg["pct_concluidas"],
+            "arquivo_origem": p.arquivo_origem,
+            "atualizado_em": p.atualizado_em.isoformat(),
+        })
+
+    projetos = (
+        db.query(ProjetoEstrategico)
+        .filter(ProjetoEstrategico.cliente_id == cliente_id)
+        .all()
+    )
+    projetos_resumo: list[dict] = []
+    for proj in projetos:
+        ts_proj = [t for p in proj.planos for t in p.tarefas]
+        agg = _agg_tarefas(ts_proj)
+        projetos_resumo.append({
+            "projeto_id": proj.id,
+            "projeto_nome": proj.nome,
+            "n_planos": len(proj.planos),
+            "n_tarefas": agg["total"],
+            "concluidas": agg["concluidas"],
+            "atrasadas": agg["atrasadas"],
+            "pct_medio": agg["pct_medio"],
+            "pct_concluidas": agg["pct_concluidas"],
+        })
+
+    consolidado = _agg_tarefas(tarefas_todas)
+
+    return {
+        "cliente": {"id": cliente.id, "nome": cliente.nome, "descricao": cliente.descricao},
+        "n_projetos_estrategicos": len(projetos),
+        "n_planos": len(planos),
+        "consolidado": consolidado,
+        "projetos": projetos_resumo,
+        "planos": planos_resumo,
+    }
+
+
+@router.get("/projetos/{projeto_id}/cockpit")
+def cockpit_projeto(projeto_id: int, db: Session = Depends(get_session)):
+    """Cockpit consolidado de um projeto estrategico — agrega seus planos filhos."""
+    proj = db.query(ProjetoEstrategico).filter(ProjetoEstrategico.id == projeto_id).first()
+    if not proj:
+        raise HTTPException(404, "Projeto nao encontrado")
+
+    planos = proj.planos
+    tarefas_todas: list[TarefaPA] = []
+    planos_resumo: list[dict] = []
+    for p in planos:
+        ts = list(p.tarefas)
+        tarefas_todas.extend(ts)
+        agg = _agg_tarefas(ts)
+        planos_resumo.append({
+            "plano_id": p.id,
+            "plano_nome": p.nome,
+            "n_tarefas": agg["total"],
+            "concluidas": agg["concluidas"],
+            "atrasadas": agg["atrasadas"],
+            "pct_medio": agg["pct_medio"],
+            "pct_concluidas": agg["pct_concluidas"],
+            "arquivo_origem": p.arquivo_origem,
+            "atualizado_em": p.atualizado_em.isoformat(),
+        })
+
+    consolidado = _agg_tarefas(tarefas_todas)
+
+    return {
+        "projeto": {
+            "id": proj.id, "nome": proj.nome, "descricao": proj.descricao,
+            "status": proj.status, "cliente_id": proj.cliente_id,
+        },
+        "n_planos": len(planos),
+        "consolidado": consolidado,
+        "planos": planos_resumo,
+    }
+
+
 @router.get("/meta/campos-canonicos")
 def get_campos_canonicos():
     """Lista os campos canônicos com sinônimos reconhecidos automaticamente."""
