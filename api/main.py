@@ -30,6 +30,7 @@ from api.routers import (
 )
 from api.services.database import close_connection, get_connection
 from licenciaminer.planos_acao.database import init_db as init_planos_acao_db
+from licenciaminer.viabilidade.database import init_db as init_viabilidade_db
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -42,6 +43,8 @@ async def lifespan(app: FastAPI):
     get_connection()
     logger.info("Inicializando SQLite (Plano de Acoes)...")
     init_planos_acao_db()
+    logger.info("Inicializando SQLite (Viabilidade)...")
+    init_viabilidade_db()
     from api.routers.intelligence import start_briefing_scheduler
     start_briefing_scheduler()
     logger.info("API pronta")

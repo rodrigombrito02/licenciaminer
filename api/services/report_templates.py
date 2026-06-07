@@ -553,6 +553,165 @@ def render_dd_fase4(
     return _html_wrap(f"{ref} - Fase 4", body)
 
 
+def render_proposta_tecnica_viabilidade(data: dict) -> str:
+    """Gera Proposta Tecnica (HTML) a partir de uma analise de viabilidade.
+
+    Inclui escopo da DD recomendada, cronograma macro, entregaveis, condicoes
+    gerais e validade. NAO inclui preco — decisao comercial dos socios.
+    """
+    perfil = data.get("perfil", {})
+    escopo = data.get("escopo", {})
+    inp = data.get("input", {})
+    empresa = data.get("empresa") or {}
+    fatores = data.get("fatores", [])
+
+    prob = perfil.get("probabilidade") or 0
+    risco_geral = data.get("risco_geral", "moderado")
+
+    # Tag color por risco
+    if risco_geral == "alto":
+        tag_class, tag_text = "tag-orange", "DD Completa Recomendada"
+    elif risco_geral == "moderado":
+        tag_class, tag_text = "tag-teal", "DD Padrao Recomendada"
+    else:
+        tag_class, tag_text = "tag-gold", "DD Simplificada Recomendada"
+
+    titulo_empresa = empresa.get("razao_social") or "Empreendimento a definir"
+    cnpj_str = inp.get("cnpj") or empresa.get("cnpj") or "-"
+    if cnpj_str and len(cnpj_str) == 14 and cnpj_str.isdigit():
+        cnpj_str = f"{cnpj_str[:2]}.{cnpj_str[2:5]}.{cnpj_str[5:8]}/{cnpj_str[8:12]}-{cnpj_str[12:]}"
+
+    ref = f"PROP-VIAB-{datetime.now().strftime('%Y%m%d')}"
+
+    # Cronograma adaptativo conforme risco
+    cronograma = [
+        ("Semana 1", "Configuracao e escopo (Fase 1)", "Reuniao kick-off, escopo formal, plano de DD"),
+        ("Semana 2-3", "Diagnostico documental (Fase 2)", "Coleta + checklist + inventario completo"),
+        ("Semana 4-5", "Avaliacao tecnica (Fase 3)", "Analise de requisitos + matriz de criticidade"),
+    ]
+    if risco_geral != "baixo":
+        cronograma.extend([
+            ("Semana 6", "Plano de acao PDCA (Fase 4)", "Acoes corretivas + responsaveis + prazos"),
+            ("Semana 7-8", "Resultado final (Fase 5)", "Relatorio conclusivo + apresentacao"),
+        ])
+    else:
+        cronograma.append(
+            ("Semana 6", "Resultado integrado (Fase 4+5)", "Relatorio + plano de acao consolidado")
+        )
+
+    cronograma_rows = "".join(
+        f'<tr><td><strong>{s}</strong></td><td>{ent}</td><td class="mu sm">{det}</td></tr>'
+        for s, ent, det in cronograma
+    )
+
+    # Entregaveis
+    entregaveis = [
+        "Relatorio de Configuracao e Escopo (R1)",
+        "Diagnostico Documental com inventario completo (R2)",
+        "Avaliacao de Conformidade + Matriz de Criticidade (R3)",
+    ]
+    if risco_geral != "baixo":
+        entregaveis.append("Plano de Acao PDCA estruturado (R4)")
+    entregaveis.extend([
+        "Relatorio Conclusivo com score de conformidade (R5)",
+        "Planilha XLSX de acompanhamento (4 abas)",
+        "Apresentacao executiva (versao para Conselho)",
+    ])
+
+    entregaveis_html = "".join(f"<li>{e}</li>" for e in entregaveis)
+
+    # Fatores de risco
+    fator_rows = ""
+    for f in fatores:
+        bc = "br2" if f.get("risco") == "alto" else "bo" if f.get("risco") == "moderado" else "bg"
+        fator_rows += f'<tr><td>{f.get("fator","")}</td><td>{f.get("valor","")}</td><td><span class="b {bc}">{f.get("risco","").title()}</span></td></tr>'
+
+    cover = _cover(
+        'Proposta<br><span class="gold">Tecnica</span>',
+        "",
+        titulo_empresa,
+        f'Due Diligence Ambiental . {escopo.get("licenca_tipo","")} . Classe {inp.get("classe","")}',
+        tag_text, tag_class,
+        [("Empreendimento", titulo_empresa),
+         ("CNPJ", cnpj_str),
+         ("Atividade", inp.get("atividade", "")),
+         ("Modalidade", escopo.get("licenca_tipo", "")),
+         ("Classe", f"Classe {inp.get('classe','')}"),
+         ("Emissao", _fmt_date()),
+         ("Validade", "30 dias"),
+         ("Referencia", ref)]
+    )
+
+    body = f"""{cover}
+<div class="pg">{_page_header(f"{ref} . Proposta Tecnica")}
+
+<h2><span class="ic t">&#9432;</span> Objeto</h2>
+<p>Esta proposta tem por objeto a contratacao dos servicos de
+<strong>Due Diligence Ambiental</strong> da Summo Quartile para o empreendimento
+<strong>{titulo_empresa}</strong>, modalidade
+<strong>{escopo.get("licenca_tipo","")}</strong> ({escopo.get("licenca_desc","")}),
+classe de impacto <strong>{inp.get("classe","")}</strong>, atividade
+<strong>{inp.get("atividade","")}</strong>.</p>
+
+<p>O escopo recomendado considera a analise preliminar de viabilidade conduzida,
+que apurou <strong>{prob}% de probabilidade historica de aprovacao</strong> baseada em
+{_fmt_num(perfil.get("n_decisoes", 0))} decisoes similares na base
+SEMAD/MG e classificou o caso como <strong>risco geral {risco_geral.upper()}</strong>.</p>
+
+<h2><span class="ic o">&#9888;</span> Fatores de Atencao</h2>
+<table><thead><tr><th>Fator</th><th>Valor</th><th>Risco</th></tr></thead>
+<tbody>{fator_rows}</tbody></table>
+
+<h2><span class="ic gl">&#9776;</span> Escopo dos Servicos</h2>
+<p>A Due Diligence Ambiental sera conduzida em <strong>{"3 fases" if risco_geral == "baixo" else "5 fases"}</strong>
+do ciclo PDCA, com base no inventario completo aplicavel a modalidade
+<strong>{escopo.get("licenca_tipo","")}</strong>:</p>
+
+<div class="ks">
+<div class="k"><div class="n">{escopo.get("n_documentos", 0)}</div><div class="lb">Documentos analisados</div></div>
+<div class="k"><div class="n">{_fmt_num(escopo.get("n_requisitos", 0))}</div><div class="lb">Requisitos avaliados</div></div>
+<div class="k"><div class="n">{escopo.get("n_normas", 6)}</div><div class="lb">Normas aplicaveis</div></div>
+<div class="k"><div class="n">{"3" if risco_geral == "baixo" else "5"}</div><div class="lb">Fases PDCA</div></div>
+</div>
+
+<h2><span class="ic t">&#9432;</span> Cronograma Macro</h2>
+<table><thead><tr><th>Periodo</th><th>Entrega</th><th>Detalhe</th></tr></thead>
+<tbody>{cronograma_rows}</tbody>
+<tfoot><tr><td colspan="3" style="text-align:right;"><strong>Prazo total estimado: {"6 semanas" if risco_geral == "baixo" else "8 semanas"}</strong></td></tr></tfoot>
+</table>
+
+<h2><span class="ic gl">&#9776;</span> Entregaveis</h2>
+<ol style="padding-left:22px;font-size:10pt;line-height:1.8;">{entregaveis_html}</ol>
+
+<h2><span class="ic t">&#9432;</span> Condicoes Gerais</h2>
+<table>
+<tr><td><strong>Validade desta proposta</strong></td><td>30 dias a partir da data de emissao</td></tr>
+<tr><td><strong>Local de execucao</strong></td><td>Sede do CLIENTE + escritorios da Summo Quartile</td></tr>
+<tr><td><strong>Metodologia</strong></td><td>DD em 5 fases (PDCA) sobre arcabouco regulatorio aplicavel</td></tr>
+<tr><td><strong>Base de dados utilizada</strong></td><td>Sistema Summo Quartile (16+ fontes publicas oficiais, dados auditaveis)</td></tr>
+<tr><td><strong>Equipe alocada</strong></td><td>Consultor senior responsavel + analista de dados + revisor independente</td></tr>
+<tr><td><strong>Reunioes incluidas</strong></td><td>Kick-off + 3 reunioes de andamento + apresentacao final</td></tr>
+<tr><td><strong>Condicoes comerciais</strong></td><td>A definir em sessao executiva com socios da Summo</td></tr>
+</table>
+
+<div class="cl info"><div class="ci">&#9432;</div><div class="bd">
+<strong>Sobre o investimento</strong>
+Os valores referentes a esta proposta serao apresentados em documento complementar,
+apos confirmacao do escopo final pelo CLIENTE. A Summo Quartile considera modelos
+flexiveis (projeto fechado, hora tecnica ou subscription) conforme conveniencia.
+</div></div>
+
+<p class="xs mu" style="margin-top:18px;">
+Documento elaborado pela Summo Quartile . www.summoquartile.com . Confidencial.
+Validade: 30 dias. Esta proposta nao constitui obrigacao contratual ate
+formalizacao via instrumento juridico especifico.
+</p>
+{_page_footer("Summo Quartile . " + ref, "1/1")}
+</div>"""
+
+    return _html_wrap(f"{ref} - Proposta Tecnica - {titulo_empresa}", body)
+
+
 def _render_gistm_block(gistm_data: dict | None) -> str:
     """Bloco premium GISTM no relatório — rating por princípio."""
     if not gistm_data or not gistm_data.get("principios"):

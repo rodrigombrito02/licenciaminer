@@ -10,16 +10,22 @@ import base64
 import logging
 from pathlib import Path
 
-from fastapi import APIRouter, Query
-from pydantic import BaseModel
+from typing import Optional
 
-from api.services.database import safe_query
+from fastapi import APIRouter, Depends, HTTPException, Path, Query
+from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
+from api.services.database import run_query, safe_query
 from app.components.dd_inventory import (
     LICENCA_DESC,
     LICENCA_MAP,
     filtrar_documentos,
     load_requisitos,
 )
+from licenciaminer.database.queries import QUERY_CNPJ_PROFILE
+from licenciaminer.viabilidade.database import Analise, get_session
 
 logger = logging.getLogger(__name__)
 
@@ -210,3 +216,226 @@ def get_viability_profile(
             "licenca_tipo": licenca_tipo,
         },
     }
+
+
+# ══════════════════════════════════════════════════════════════════
+# Lookup por CNPJ — auto-populate de atividade/classe/regional
+# ══════════════════════════════════════════════════════════════════
+
+@router.get("/viabilidade/lookup-by-cnpj/{cnpj}")
+def lookup_viabilidade_by_cnpj(cnpj: str):
+    """Lookup que sugere atividade, classe e regional mais comuns para o CNPJ."""
+    cnpj_clean = "".join(c for c in cnpj if c.isdigit())
+    if len(cnpj_clean) != 14:
+        return {"erro": "CNPJ invalido — informe 14 digitos", "cnpj": cnpj}
+
+    profile_rows = run_query(QUERY_CNPJ_PROFILE, [cnpj_clean])
+    profile = profile_rows[0] if profile_rows else None
+    if not profile:
+        return {
+            "cnpj": cnpj_clean,
+            "encontrado": False,
+            "mensagem": "CNPJ nao tem decisoes SEMAD-MG historicas.",
+        }
+
+    razao = profile.get("razao_social") or ""
+
+    ativ_rows = safe_query(
+        "SELECT atividade, COUNT(*) AS n FROM v_mg_semad "
+        "WHERE cnpj_cpf = ? AND atividade LIKE 'A-0%' "
+        "GROUP BY atividade ORDER BY n DESC LIMIT 5",
+        [cnpj_clean],
+    )
+    classe_rows = safe_query(
+        "SELECT classe, COUNT(*) AS n FROM v_mg_semad "
+        "WHERE cnpj_cpf = ? AND classe IS NOT NULL "
+        "GROUP BY classe ORDER BY n DESC LIMIT 3",
+        [cnpj_clean],
+    )
+    reg_rows = safe_query(
+        "SELECT regional, COUNT(*) AS n FROM v_mg_semad "
+        "WHERE cnpj_cpf = ? AND regional IS NOT NULL AND regional != '' "
+        "GROUP BY regional ORDER BY n DESC LIMIT 3",
+        [cnpj_clean],
+    )
+    modal_rows = safe_query(
+        "SELECT modalidade, COUNT(*) AS n FROM v_mg_semad "
+        "WHERE cnpj_cpf = ? AND modalidade IS NOT NULL AND modalidade != '' "
+        "GROUP BY modalidade ORDER BY n DESC LIMIT 5",
+        [cnpj_clean],
+    )
+
+    sugestao = {
+        "atividade": ativ_rows[0]["atividade"][:4] if ativ_rows else None,
+        "classe": int(classe_rows[0]["classe"]) if classe_rows and classe_rows[0]["classe"] else None,
+        "regional": reg_rows[0]["regional"] if reg_rows else None,
+        "licenca_tipo": modal_rows[0]["modalidade"] if modal_rows else None,
+    }
+
+    return {
+        "cnpj": cnpj_clean,
+        "encontrado": True,
+        "razao_social": razao,
+        "total_decisoes": profile.get("total_decisoes", 0),
+        "taxa_aprovacao_historica": profile.get("taxa_aprovacao"),
+        "atividades_top": [{"codigo": a["atividade"], "n": a["n"]} for a in ativ_rows],
+        "classes_top": [{"classe": int(c["classe"]) if c["classe"] else None, "n": c["n"]} for c in classe_rows],
+        "regionais_top": [{"regional": r["regional"], "n": r["n"]} for r in reg_rows],
+        "modalidades_top": [{"modalidade": m["modalidade"], "n": m["n"]} for m in modal_rows],
+        "sugestao_auto_populate": sugestao,
+    }
+
+
+# ══════════════════════════════════════════════════════════════════
+# Historico de analises (SQLite isolado)
+# ══════════════════════════════════════════════════════════════════
+
+class AnaliseSalvarRequest(BaseModel):
+    titulo: str
+    cnpj: Optional[str] = None
+    razao_social: Optional[str] = None
+    atividade: str
+    classe: int
+    regional: Optional[str] = None
+    licenca_tipo: str
+    resultado: dict
+    notas: Optional[str] = None
+
+
+class AnaliseOut(BaseModel):
+    id: int
+    titulo: str
+    cnpj: Optional[str]
+    razao_social: Optional[str]
+    atividade: str
+    classe: int
+    regional: Optional[str]
+    licenca_tipo: str
+    criado_em: str
+    atualizado_em: str
+    probabilidade: Optional[float] = None
+    risco_geral: Optional[str] = None
+    notas: Optional[str] = None
+
+
+@router.post("/viabilidade/historico", response_model=AnaliseOut)
+def salvar_analise(payload: AnaliseSalvarRequest, db: Session = Depends(get_session)):
+    """Salva uma analise no historico para retomada posterior."""
+    cnpj_clean = None
+    if payload.cnpj:
+        cnpj_clean = "".join(c for c in payload.cnpj if c.isdigit()) or None
+    a = Analise(
+        titulo=payload.titulo.strip()[:200],
+        cnpj=cnpj_clean,
+        razao_social=payload.razao_social,
+        atividade=payload.atividade,
+        classe=payload.classe,
+        regional=payload.regional,
+        licenca_tipo=payload.licenca_tipo,
+        resultado=payload.resultado,
+        notas=payload.notas,
+    )
+    db.add(a)
+    db.commit()
+    db.refresh(a)
+    prob = (a.resultado or {}).get("perfil", {}).get("probabilidade")
+    risco = (a.resultado or {}).get("risco_geral")
+    return AnaliseOut(
+        id=a.id, titulo=a.titulo, cnpj=a.cnpj, razao_social=a.razao_social,
+        atividade=a.atividade, classe=a.classe, regional=a.regional,
+        licenca_tipo=a.licenca_tipo,
+        criado_em=a.criado_em.isoformat(), atualizado_em=a.atualizado_em.isoformat(),
+        probabilidade=prob, risco_geral=risco, notas=a.notas,
+    )
+
+
+@router.get("/viabilidade/historico", response_model=list[AnaliseOut])
+def listar_analises(
+    cnpj: Optional[str] = Query(None),
+    limit: int = Query(50, ge=1, le=200),
+    db: Session = Depends(get_session),
+):
+    q = db.query(Analise).order_by(Analise.atualizado_em.desc())
+    if cnpj:
+        cnpj_clean = "".join(c for c in cnpj if c.isdigit())
+        if cnpj_clean:
+            q = q.filter(Analise.cnpj == cnpj_clean)
+    rows = q.limit(limit).all()
+    out: list[AnaliseOut] = []
+    for a in rows:
+        prob = (a.resultado or {}).get("perfil", {}).get("probabilidade")
+        risco = (a.resultado or {}).get("risco_geral")
+        out.append(AnaliseOut(
+            id=a.id, titulo=a.titulo, cnpj=a.cnpj, razao_social=a.razao_social,
+            atividade=a.atividade, classe=a.classe, regional=a.regional,
+            licenca_tipo=a.licenca_tipo,
+            criado_em=a.criado_em.isoformat(), atualizado_em=a.atualizado_em.isoformat(),
+            probabilidade=prob, risco_geral=risco, notas=a.notas,
+        ))
+    return out
+
+
+@router.get("/viabilidade/historico/{analise_id}")
+def detalhe_analise(analise_id: int, db: Session = Depends(get_session)):
+    a = db.query(Analise).filter(Analise.id == analise_id).first()
+    if not a:
+        raise HTTPException(404, "Analise nao encontrada")
+    return {
+        "id": a.id, "titulo": a.titulo, "cnpj": a.cnpj, "razao_social": a.razao_social,
+        "atividade": a.atividade, "classe": a.classe, "regional": a.regional,
+        "licenca_tipo": a.licenca_tipo,
+        "resultado": a.resultado, "notas": a.notas,
+        "criado_em": a.criado_em.isoformat(),
+        "atualizado_em": a.atualizado_em.isoformat(),
+    }
+
+
+@router.delete("/viabilidade/historico/{analise_id}")
+def deletar_analise(analise_id: int, db: Session = Depends(get_session)):
+    a = db.query(Analise).filter(Analise.id == analise_id).first()
+    if not a:
+        raise HTTPException(404, "Analise nao encontrada")
+    db.delete(a)
+    db.commit()
+    return {"ok": True, "deletado": analise_id}
+
+
+# ══════════════════════════════════════════════════════════════════
+# Proposta Tecnica
+# ══════════════════════════════════════════════════════════════════
+
+class PropostaRequest(BaseModel):
+    atividade: str
+    classe: int
+    regional: Optional[str] = None
+    licenca_tipo: str = "LAC1"
+    cnpj: Optional[str] = None
+    razao_social: Optional[str] = None
+    titulo_empreendimento: Optional[str] = None
+
+
+@router.post("/viabilidade/generate-proposta", response_class=HTMLResponse)
+def gerar_proposta_tecnica(request: PropostaRequest):
+    """Gera Proposta Tecnica em HTML a partir de uma analise de viabilidade."""
+    from api.services.report_templates import render_proposta_tecnica_viabilidade
+
+    perfil_data = get_viability_profile(
+        atividade=request.atividade,
+        classe=request.classe,
+        regional=request.regional,
+        licenca_tipo=request.licenca_tipo,
+        cnpj=request.cnpj,
+    )
+
+    if request.razao_social:
+        emp = perfil_data.get("empresa") or {}
+        emp["razao_social"] = request.razao_social
+        perfil_data["empresa"] = emp
+
+    if request.cnpj:
+        inp = perfil_data.get("input", {}) or {}
+        inp["cnpj"] = request.cnpj
+        perfil_data["input"] = inp
+
+    html = render_proposta_tecnica_viabilidade(perfil_data)
+    return HTMLResponse(content=html)

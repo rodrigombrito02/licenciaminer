@@ -30,12 +30,20 @@ import {
   fetchViabilidade,
   fetchLicenseTypes,
   generateViabilidadeReport,
+  lookupViabilidadeByCnpj,
+  salvarAnaliseViabilidade,
+  listarHistoricoViabilidade,
+  deletarAnaliseViabilidade,
+  gerarPropostaTecnica,
   fmtNumber,
   fmtPct,
   type ViabilidadeResult,
   type LicenseType,
+  type ViabilidadeCnpjLookup,
+  type ViabilidadeAnaliseSalva,
 } from "@/lib/api";
 import { useEffect } from "react";
+import { Building2, FileText, History, Save, Trash2 } from "lucide-react";
 
 const ATIVIDADES = [
   { code: "A-01", label: "Pesquisa Mineral" },
@@ -70,10 +78,98 @@ export default function ViabilidadePage() {
   const [classe, setClasse] = useState("4");
   const [licenca, setLicenca] = useState("LAC1");
   const [cnpj, setCnpj] = useState("");
+  const [tituloEmpreendimento, setTituloEmpreendimento] = useState("");
+
+  // Lookup / histórico / proposta
+  const [cnpjLookup, setCnpjLookup] = useState<ViabilidadeCnpjLookup | null>(null);
+  const [lookingUp, setLookingUp] = useState(false);
+  const [historico, setHistorico] = useState<ViabilidadeAnaliseSalva[]>([]);
+  const [gerandoProposta, setGerandoProposta] = useState(false);
+  const [salvando, setSalvando] = useState(false);
+  const [mostraHistorico, setMostraHistorico] = useState(false);
 
   useEffect(() => {
     fetchLicenseTypes().then(setLicenseTypes).catch(() => {});
+    listarHistoricoViabilidade().then(setHistorico).catch(() => {});
   }, []);
+
+  const handleCnpjLookup = async () => {
+    const clean = cnpj.replace(/\D/g, "");
+    if (clean.length !== 14) {
+      setCnpjLookup({ cnpj: clean, encontrado: false, mensagem: "CNPJ inválido (14 dígitos)" });
+      return;
+    }
+    setLookingUp(true);
+    try {
+      const r = await lookupViabilidadeByCnpj(clean);
+      setCnpjLookup(r);
+      if (r.encontrado && r.sugestao_auto_populate) {
+        const s = r.sugestao_auto_populate;
+        if (s.atividade) setAtividade(s.atividade);
+        if (s.classe) setClasse(String(s.classe));
+        if (s.licenca_tipo && licenseTypes?.find(l => l.code === s.licenca_tipo)) {
+          setLicenca(s.licenca_tipo);
+        }
+        if (r.razao_social && !tituloEmpreendimento) {
+          setTituloEmpreendimento(r.razao_social);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      setCnpjLookup({ cnpj: clean, encontrado: false, mensagem: "Falha ao consultar" });
+    } finally {
+      setLookingUp(false);
+    }
+  };
+
+  const handleSalvar = async () => {
+    if (!result) return;
+    setSalvando(true);
+    try {
+      const titulo = tituloEmpreendimento ||
+        cnpjLookup?.razao_social ||
+        `${atividade} Classe ${classe} ${licenca}`;
+      await salvarAnaliseViabilidade({
+        titulo,
+        cnpj: cnpj || undefined,
+        razao_social: cnpjLookup?.razao_social,
+        atividade,
+        classe: Number(classe),
+        licenca_tipo: licenca,
+        resultado: result as unknown as object,
+      });
+      const novo = await listarHistoricoViabilidade();
+      setHistorico(novo);
+      alert("Análise salva no histórico");
+    } catch (e) {
+      alert("Erro: " + (e instanceof Error ? e.message : String(e)));
+    } finally {
+      setSalvando(false);
+    }
+  };
+
+  const handleGerarProposta = async () => {
+    setGerandoProposta(true);
+    try {
+      await gerarPropostaTecnica({
+        atividade, classe: Number(classe), licenca_tipo: licenca,
+        cnpj: cnpj || undefined,
+        razao_social: cnpjLookup?.razao_social,
+        titulo_empreendimento: tituloEmpreendimento || cnpjLookup?.razao_social,
+      });
+    } catch (e) {
+      alert("Erro: " + (e instanceof Error ? e.message : String(e)));
+    } finally {
+      setGerandoProposta(false);
+    }
+  };
+
+  const handleDeletarAnalise = async (id: number) => {
+    if (!confirm("Deletar esta análise?")) return;
+    await deletarAnaliseViabilidade(id);
+    const novo = await listarHistoricoViabilidade();
+    setHistorico(novo);
+  };
 
   const handleAnalyze = async () => {
     setLoading(true);
@@ -165,24 +261,121 @@ export default function ViabilidadePage() {
               </div>
               <div>
                 <label className="mb-1 block text-sm font-medium">CNPJ (opcional)</label>
+                <div className="flex gap-1">
+                  <Input
+                    placeholder="12.345.678/0001-90"
+                    value={cnpj}
+                    onChange={(e) => setCnpj(e.target.value)}
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCnpjLookup}
+                    disabled={lookingUp || !cnpj}
+                    title="Auto-popular atividade/classe/regional/modalidade pelo histórico SEMAD"
+                  >
+                    {lookingUp ? <Loader2 className="h-4 w-4 animate-spin" /> : "🔍"}
+                  </Button>
+                </div>
+                <p className="mt-1 text-[10px] text-muted-foreground">
+                  Informe + lupa: sugere atividade/classe/modalidade pelo histórico SEMAD
+                </p>
+              </div>
+              <div className="sm:col-span-2">
+                <label className="mb-1 block text-sm font-medium">Título do empreendimento (opcional)</label>
                 <Input
-                  placeholder="12.345.678/0001-90"
-                  value={cnpj}
-                  onChange={(e) => setCnpj(e.target.value)}
+                  placeholder="Ex: Beneficiamento Casa de Pedra"
+                  value={tituloEmpreendimento}
+                  onChange={(e) => setTituloEmpreendimento(e.target.value)}
                 />
                 <p className="mt-1 text-[10px] text-muted-foreground">
-                  Informe para incluir contexto historico da empresa
+                  Aparece no cabeçalho da Proposta Técnica
                 </p>
               </div>
             </div>
 
-            <div className="flex justify-end">
+            {/* Card resultado do lookup */}
+            {cnpjLookup && (
+              <Card className={cnpjLookup.encontrado ? "border-brand-teal/40" : "border-amber-400/40"}>
+                <CardContent className="p-3 space-y-2">
+                  {!cnpjLookup.encontrado ? (
+                    <div className="text-sm text-muted-foreground flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4 text-amber-500" />
+                      {cnpjLookup.mensagem}
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-2 font-bold">
+                        <Building2 className="h-4 w-4 text-brand-teal" />
+                        {cnpjLookup.razao_social}
+                        <Badge className="bg-brand-teal text-white text-xs">
+                          {cnpjLookup.total_decisoes} decisões históricas
+                        </Badge>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                        <div>
+                          <div className="text-muted-foreground">Taxa hist.</div>
+                          <div className="font-bold">{cnpjLookup.taxa_aprovacao_historica ?? "—"}%</div>
+                        </div>
+                        <div>
+                          <div className="text-muted-foreground">Atividade top</div>
+                          <div className="font-bold">{cnpjLookup.atividades_top?.[0]?.codigo ?? "—"}</div>
+                        </div>
+                        <div>
+                          <div className="text-muted-foreground">Classe top</div>
+                          <div className="font-bold">{cnpjLookup.classes_top?.[0]?.classe ?? "—"}</div>
+                        </div>
+                        <div>
+                          <div className="text-muted-foreground">Modalidade top</div>
+                          <div className="font-bold">{cnpjLookup.modalidades_top?.[0]?.modalidade ?? "—"}</div>
+                        </div>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground italic">
+                        Campos auto-preenchidos com a sugestão. Revise e ajuste se necessário.
+                      </p>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <Button variant="ghost" size="sm" onClick={() => setMostraHistorico(!mostraHistorico)}>
+                <History className="mr-1 h-3.5 w-3.5" />
+                Histórico ({historico.length})
+              </Button>
               <Button onClick={handleAnalyze} disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Analisar Viabilidade
                 <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             </div>
+
+            {/* Histórico expansível */}
+            {mostraHistorico && (
+              <div className="border-t pt-3 space-y-1 max-h-72 overflow-y-auto">
+                {historico.length === 0 ? (
+                  <p className="text-xs text-muted-foreground italic p-2">Nenhuma análise salva ainda.</p>
+                ) : historico.map(h => (
+                  <div key={h.id} className="flex items-center gap-2 p-2 hover:bg-muted/30 rounded text-xs">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">{h.titulo}</div>
+                      <div className="text-muted-foreground text-[10px]">
+                        {h.atividade} · Classe {h.classe} · {h.licenca_tipo}
+                        {h.probabilidade != null && ` · ${h.probabilidade}%`}
+                        {h.risco_geral && ` · risco ${h.risco_geral}`}
+                      </div>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground">
+                      {new Date(h.atualizado_em).toLocaleDateString("pt-BR")}
+                    </span>
+                    <Button variant="ghost" size="sm" onClick={() => handleDeletarAnalise(h.id)}>
+                      <Trash2 className="h-3 w-3 text-destructive" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
@@ -206,6 +399,29 @@ export default function ViabilidadePage() {
             >
               <Download className="mr-1 h-3.5 w-3.5" />
               Gerar Relatório
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleGerarProposta}
+              disabled={gerandoProposta}
+              className="bg-brand-orange hover:bg-brand-orange/90"
+            >
+              {gerandoProposta
+                ? <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+                : <FileText className="mr-1 h-3.5 w-3.5" />}
+              Proposta Técnica
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSalvar}
+              disabled={salvando}
+            >
+              {salvando
+                ? <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+                : <Save className="mr-1 h-3.5 w-3.5" />}
+              Salvar no histórico
             </Button>
           </div>
 

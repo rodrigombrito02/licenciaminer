@@ -1196,6 +1196,105 @@ export function generateDDReportFase5(data: {
   return _postReport("/due-diligence/report/fase5", data);
 }
 
+export interface ViabilidadeCnpjLookup {
+  cnpj: string;
+  encontrado: boolean;
+  razao_social?: string;
+  total_decisoes?: number;
+  taxa_aprovacao_historica?: number | null;
+  atividades_top?: Array<{ codigo: string; n: number }>;
+  classes_top?: Array<{ classe: number | null; n: number }>;
+  regionais_top?: Array<{ regional: string; n: number }>;
+  modalidades_top?: Array<{ modalidade: string; n: number }>;
+  sugestao_auto_populate?: {
+    atividade?: string | null;
+    classe?: number | null;
+    regional?: string | null;
+    licenca_tipo?: string | null;
+  };
+  mensagem?: string;
+}
+
+export async function lookupViabilidadeByCnpj(cnpj: string): Promise<ViabilidadeCnpjLookup> {
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  const cleaned = cnpj.replace(/\D/g, "");
+  const res = await fetch(`${API}/viabilidade/lookup-by-cnpj/${cleaned}`);
+  if (!res.ok) throw new Error(`Lookup failed: ${res.status}`);
+  return res.json();
+}
+
+export interface ViabilidadeAnaliseSalva {
+  id: number;
+  titulo: string;
+  cnpj?: string | null;
+  razao_social?: string | null;
+  atividade: string;
+  classe: number;
+  regional?: string | null;
+  licenca_tipo: string;
+  criado_em: string;
+  atualizado_em: string;
+  probabilidade?: number | null;
+  risco_geral?: string | null;
+  notas?: string | null;
+}
+
+export async function salvarAnaliseViabilidade(payload: {
+  titulo: string;
+  cnpj?: string;
+  razao_social?: string;
+  atividade: string;
+  classe: number;
+  regional?: string;
+  licenca_tipo: string;
+  resultado: object;
+  notas?: string;
+}): Promise<ViabilidadeAnaliseSalva> {
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  const res = await fetch(`${API}/viabilidade/historico`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(`Save failed: ${res.status}`);
+  return res.json();
+}
+
+export async function listarHistoricoViabilidade(cnpj?: string): Promise<ViabilidadeAnaliseSalva[]> {
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  const url = cnpj ? `${API}/viabilidade/historico?cnpj=${encodeURIComponent(cnpj)}` : `${API}/viabilidade/historico`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`List failed: ${res.status}`);
+  return res.json();
+}
+
+export async function deletarAnaliseViabilidade(id: number): Promise<void> {
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  await fetch(`${API}/viabilidade/historico/${id}`, { method: "DELETE" });
+}
+
+export async function gerarPropostaTecnica(payload: {
+  atividade: string;
+  classe: number;
+  regional?: string;
+  licenca_tipo: string;
+  cnpj?: string;
+  razao_social?: string;
+  titulo_empreendimento?: string;
+}): Promise<void> {
+  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+  const res = await fetch(`${API}/viabilidade/generate-proposta`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(`Proposta failed: ${res.status}`);
+  const html = await res.text();
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
+}
+
 export async function generateViabilidadeReport(params: {
   atividade: string; classe: number; regional?: string; licenca_tipo?: string; cnpj?: string;
 }): Promise<void> {
