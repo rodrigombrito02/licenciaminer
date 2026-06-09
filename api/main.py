@@ -60,15 +60,30 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+import os
+
+# CORS configurável via env var (separa por vírgula). Defaults cobrem dev local
+# + as URLs de producao ja conhecidas (Vercel + Railway).
+_default_origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:3004",
+    "http://127.0.0.1:3004",
+    "https://summo-quartile.vercel.app",
+    "https://licenciaminer-production.up.railway.app",
+]
+_env_origins = [
+    o.strip()
+    for o in (os.getenv("CORS_ORIGINS", "") or "").split(",")
+    if o.strip()
+]
+_cors_origins = list({*_default_origins, *_env_origins})
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "https://summo-quartile.vercel.app",
-        "https://licenciaminer-production.up.railway.app",
-    ],
-    allow_origin_regex=r"https://summo-quartile[a-z0-9-]*\.vercel\.app$",
+    allow_origins=_cors_origins,
+    # Aceita qualquer subdomínio Vercel do projeto (preview deploys, branches)
+    allow_origin_regex=r"https://(summo-quartile|summoquartile|licenciaminer)[a-z0-9-]*\.vercel\.app$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
