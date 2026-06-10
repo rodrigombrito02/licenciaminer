@@ -120,24 +120,30 @@ export function SidebarNav() {
 
               {/* Hide group sections when group collapsed */}
               {groupHidden ? null : section.standalone ? (
-                /* Home link — no section header */
+                /* Standalone item — link direto, sem header */
                 <ul>
-                  {section.items.map((item) => (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        className={cn(
-                          "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
-                          pathname === "/"
-                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                            : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
-                        )}
-                      >
-                        <item.icon className="h-4 w-4 shrink-0" />
-                        {item.label}
-                      </Link>
-                    </li>
-                  ))}
+                  {section.items.map((item) => {
+                    const isActive =
+                      item.href === "/"
+                        ? pathname === "/"
+                        : pathname === item.href || pathname.startsWith(item.href + "/");
+                    return (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+                            isActive
+                              ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                              : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+                          )}
+                        >
+                          <item.icon className="h-4 w-4 shrink-0" />
+                          {item.label}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               ) : (
                 <>

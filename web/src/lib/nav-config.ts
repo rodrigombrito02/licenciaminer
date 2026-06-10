@@ -69,38 +69,30 @@ export const NAV_SECTIONS: NavSection[] = [
     items: [{ href: "/", label: "Início", icon: Home }],
   },
 
-  // ── Produtos Comerciais (4 caixas)
+  // ── Produtos Comerciais (4 caixas, cada uma e um link direto)
   {
-    label: "Summo Ambiental",
-    color: "text-brand-teal",
+    label: "",
+    standalone: true,
     group: "produtos",
-    items: [
-      { href: "/ambiental", label: "Capa", icon: ShieldCheck },
-    ],
+    items: [{ href: "/ambiental", label: "Summo Ambiental", icon: ShieldCheck }],
   },
   {
-    label: "Direitos e Concessões",
-    color: "text-brand-teal",
+    label: "",
+    standalone: true,
     group: "produtos",
-    items: [
-      { href: "/direitos", label: "Capa", icon: Map },
-    ],
+    items: [{ href: "/direitos", label: "Direitos e Concessões", icon: Map }],
   },
   {
-    label: "Mineral Intelligence",
-    color: "text-brand-gold",
+    label: "",
+    standalone: true,
     group: "produtos",
-    items: [
-      { href: "/inteligencia-comercial", label: "Capa", icon: TrendingUp },
-    ],
+    items: [{ href: "/inteligencia-comercial", label: "Mineral Intelligence", icon: TrendingUp }],
   },
   {
-    label: "SQ Solutions",
-    color: "text-brand-orange",
+    label: "",
+    standalone: true,
     group: "produtos",
-    items: [
-      { href: "/sq-solutions", label: "Capa", icon: Cpu },
-    ],
+    items: [{ href: "/sq-solutions", label: "SQ Solutions", icon: Cpu }],
   },
 
   // ── Ferramentas Internas (6 ferramentas, 1 item por ferramenta)

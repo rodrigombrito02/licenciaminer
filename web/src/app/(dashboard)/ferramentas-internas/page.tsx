@@ -7,10 +7,13 @@ import {
   AlertTriangle,
   MessageSquare,
   Target,
+  Upload,
+  Layers,
+  Repeat,
 } from "lucide-react";
 import { ModuleHero } from "@/components/module-hero";
 import { BigActionCard } from "@/components/big-action-card";
-import { Card, CardContent } from "@/components/ui/card";
+import { ValueProp } from "@/components/value-prop";
 import { useRole } from "@/hooks/use-role";
 
 export default function FerramentasInternasPage() {
@@ -23,22 +26,21 @@ export default function FerramentasInternasPage() {
         icon={Workflow}
         badge="Ferramentas Internas"
         title="Cockpit operacional Summo"
-        description="Ferramentas que apoiam o trabalho do consultor em projetos de cliente — gestão de tarefas, projetos, riscos, crises, comunicações e oportunidades."
+        description="Ferramentas que apoiam o trabalho da consultoria em projetos de cliente — tarefas, projetos, riscos, crises, comunicações e oportunidades."
         variant="orange"
       />
 
       <section>
         <h2 className="font-heading text-lg font-semibold mb-1">Ferramentas disponíveis</h2>
         <p className="text-sm text-muted-foreground mb-5">
-          Cada ferramenta opera com base em <strong>Cliente → Projeto/Caso → Itens</strong>.
-          Você pode criar quantos clientes e projetos quiser, e importar planos, riscos
-          ou comunicações de arquivos XLSX.
+          Cada ferramenta opera por <strong>Cliente → Projeto/Caso → Itens</strong>.
+          Crie quantos clientes e projetos quiser, ou importe dados existentes.
         </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           <BigActionCard
             icon={ListTodo}
             title="Plano de Ações"
-            description="Importe planos heterogêneos (XLSX) e veja Gantt, EAP, drill-down e cockpit multi-plano. Para qualquer cliente."
+            description="Importe planos (XLSX) e veja Gantt, EAP, drill-down e cockpit multi-plano. Para qualquer cliente."
             href="/planos-de-acao"
             color="teal"
             badge="Operacional"
@@ -54,7 +56,7 @@ export default function FerramentasInternasPage() {
           <BigActionCard
             icon={AlertTriangle}
             title="Riscos"
-            description="ERM Corporativo (COSO) + Riscos de Projeto (ISO 31000) + Bowtie + KRIs + Apetite. Multi-cliente."
+            description="ERM Corporativo + Riscos de Projeto + Bowtie + KRIs + Apetite. Multi-cliente."
             href="/riscos"
             color="orange"
             badge="Operacional"
@@ -62,7 +64,7 @@ export default function FerramentasInternasPage() {
           <BigActionCard
             icon={AlertTriangle}
             title="Gestão de Crises"
-            description="Cenários, comitês, simulados e BCP. Resposta estruturada a crise por cliente/projeto."
+            description="Cenários, comitês, simulados e BCP. Resposta estruturada por cliente/projeto."
             href="/gestao-crises"
             color="orange"
             badge="Operacional"
@@ -70,7 +72,7 @@ export default function FerramentasInternasPage() {
           <BigActionCard
             icon={MessageSquare}
             title="Comunicações"
-            description="Stakeholders, templates de comunicação, matriz RACI e envios. Apoia gestão de partes interessadas."
+            description="Stakeholders, templates, matriz RACI e envios. Apoia gestão de partes interessadas."
             href="/comunicacoes"
             color="teal"
             badge="Operacional"
@@ -88,28 +90,32 @@ export default function FerramentasInternasPage() {
         </div>
       </section>
 
-      {/* Princípio comum */}
-      <Card>
-        <CardContent className="p-6 space-y-3">
-          <h3 className="font-heading text-base font-bold">Como usar</h3>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Todas as ferramentas seguem o mesmo padrão:
-          </p>
-          <ol className="text-sm space-y-2 pl-5 list-decimal text-muted-foreground">
-            <li><strong>Crie um cliente</strong> (ex: Vale, CSN, ou um cliente fictício de teste).</li>
-            <li><strong>Crie um projeto/caso</strong> dentro do cliente.</li>
-            <li>
-              <strong>Importe arquivos XLSX</strong> existentes do cliente
-              (planos de ação, matriz de riscos, etc.) — o sistema lê e organiza
-              automaticamente.
-            </li>
-            <li>
-              <strong>Use o cockpit</strong>: dashboards adaptativos, alertas,
-              gantt, EAP, kanban, filtros dinâmicos.
-            </li>
-          </ol>
-        </CardContent>
-      </Card>
+      <section>
+        <h2 className="font-heading text-lg font-semibold mb-1">Por que as Ferramentas Internas Summo</h2>
+        <p className="text-sm text-muted-foreground mb-5">
+          Três diferenciais que tornam o trabalho do consultor mais produtivo.
+        </p>
+        <div className="grid md:grid-cols-3 gap-3">
+          <ValueProp
+            icon={Upload}
+            title="Import flexível"
+            description="Suba planos XLSX, XER, CSV no formato que o cliente já usa. O sistema lê e organiza — sem padronização forçada."
+            color="teal"
+          />
+          <ValueProp
+            icon={Layers}
+            title="Multi-cliente isolado"
+            description="Cada cliente tem seu universo de projetos, riscos e tarefas. Sem cruzamento indesejado entre clientes."
+            color="gold"
+          />
+          <ValueProp
+            icon={Repeat}
+            title="Templates reutilizáveis"
+            description="Estruturas que funcionaram em um projeto viram template para o próximo cliente. O conhecimento Summo se acumula."
+            color="orange"
+          />
+        </div>
+      </section>
     </div>
   );
 }

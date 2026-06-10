@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import {
   ArrowRight,
   BarChart3,
@@ -13,10 +12,11 @@ import {
   Search,
   ShieldCheck,
   TrendingUp,
-  FileSearch,
-  Layers,
+  Zap,
+  CheckCircle2,
+  FileText,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Accordion,
   AccordionContent,
@@ -25,8 +25,9 @@ import {
 } from "@/components/ui/accordion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { StatCard } from "@/components/stat-card";
+import { ModuleHero } from "@/components/module-hero";
+import { BigActionCard } from "@/components/big-action-card";
 import {
   fetchOverviewStats,
   fetchMetaSources,
@@ -68,29 +69,15 @@ export default function AmbientalPage() {
 
   return (
     <div className="space-y-8">
-      {/* Hero */}
-      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0A2540] via-[#156082] to-[#0A2540] px-8 py-10 lg:py-14">
-        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
-        <div className="relative z-10 max-w-2xl">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="rounded-lg bg-brand-teal/30 p-2">
-              <ShieldCheck className="h-6 w-6 text-white" />
-            </div>
-            <Badge className="bg-brand-gold/20 text-brand-gold border-brand-gold/40">
-              Summo Ambiental
-            </Badge>
-          </div>
-          <h1 className="font-heading text-2xl lg:text-3xl font-bold tracking-tight text-white mb-2">
-            Análise e conformidade ambiental para mineração
-          </h1>
-          <p className="text-sm leading-relaxed text-white/70 max-w-lg">
-            Dados públicos auditáveis (SEMAD-MG, IBAMA, COPAM, ANM) cruzados com
-            décadas de experiência da Summo em licenciamento minerário.
-          </p>
-        </div>
-      </section>
+      <ModuleHero
+        icon={ShieldCheck}
+        badge="Summo Ambiental"
+        title="Análise e conformidade ambiental para mineração"
+        description="Dados públicos auditáveis e décadas de experiência Summo em licenciamento minerário. Da análise preliminar à Diligência completa, em minutos."
+        variant="teal"
+      />
 
-      {/* 3 botões principais — coração da página */}
+      {/* 3 botões grandes — coração da página */}
       <section>
         <h2 className="font-heading text-lg font-semibold mb-1">O que você quer fazer?</h2>
         <p className="text-sm text-muted-foreground mb-5">
@@ -121,6 +108,34 @@ export default function AmbientalPage() {
         </div>
       </section>
 
+      {/* Value props — por que escolher Summo Ambiental */}
+      <section>
+        <h2 className="font-heading text-lg font-semibold mb-1">Por que Summo Ambiental</h2>
+        <p className="text-sm text-muted-foreground mb-5">
+          Três diferenciais que tornam nossas análises mais rápidas e confiáveis.
+        </p>
+        <div className="grid md:grid-cols-3 gap-3">
+          <ValueProp
+            icon={CheckCircle2}
+            title="Dados auditáveis"
+            description="Cada registro do sistema é rastreável até a URL da fonte oficial (SEMAD, IBAMA, ANM). Sem caixa preta."
+            color="teal"
+          />
+          <ValueProp
+            icon={Zap}
+            title="Análise em minutos"
+            description="O que tradicionalmente leva semanas — diagnóstico documental, scoring, recomendações — sai em segundos com a metodologia automatizada Summo."
+            color="gold"
+          />
+          <ValueProp
+            icon={FileText}
+            title="Identidade Summo"
+            description="Relatórios prontos para apresentar a clientes e órgãos reguladores, com padrão visual e metodológico Summo Quartile."
+            color="orange"
+          />
+        </div>
+      </section>
+
       {/* Error state */}
       {error && (
         <Card className="border-destructive/30">
@@ -136,11 +151,11 @@ export default function AmbientalPage() {
         </Card>
       )}
 
-      {/* KPIs ambientais (movidos da home antiga) */}
+      {/* KPIs */}
       <section>
-        <h2 className="font-heading text-lg font-semibold mb-1">Visão geral dos dados</h2>
+        <h2 className="font-heading text-lg font-semibold mb-1">A base de conhecimento</h2>
         <p className="text-sm text-muted-foreground mb-5">
-          Indicadores agregados do que processamos hoje.
+          Volume agregado do que processamos para análises ambientais hoje.
         </p>
         {stats ? (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -176,61 +191,61 @@ export default function AmbientalPage() {
         ) : null}
       </section>
 
-      {/* Fontes de dados */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-heading text-base">
-            <Database className="h-4 w-4 text-brand-teal" /> Fontes de Dados
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="border-b text-left text-muted-foreground">
-                  <th className="pb-2 pr-4 font-medium">Fonte</th>
-                  <th className="pb-2 pr-4 text-right font-medium">Registros</th>
-                  <th className="pb-2 pr-4 font-medium">Atualização</th>
-                  <th className="pb-2 font-medium">Link</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {(sources ?? FALLBACK_SOURCES).map((src) => {
-                  const isFresh = !!src.last_collected;
-                  return (
-                    <tr key={src.key ?? src.name}>
-                      <td className="py-2 pr-4 font-medium">
-                        <span
-                          className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle"
-                          style={{ background: isFresh ? "var(--success)" : "var(--danger)" }}
-                        />
-                        {src.name}
-                      </td>
-                      <td className="py-2 pr-4 text-right tabular-nums">
-                        {src.records != null ? fmtNumber(src.records) : <span className="text-muted-foreground">—</span>}
-                      </td>
-                      <td className="py-2 pr-4 text-muted-foreground tabular-nums" title={src.last_collected ?? undefined}>
-                        {src.last_collected ? relativeTime(src.last_collected) : "—"}
-                      </td>
-                      <td className="py-2">
-                        {src.url ? (
-                          <a href={src.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-brand-teal hover:underline">
-                            verificar <ExternalLink className="h-3 w-3" />
-                          </a>
-                        ) : null}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Fontes + Metodologia em accordion FECHADO */}
+      <Accordion type="multiple" className="space-y-3">
+        <AccordionItem value="fontes" className="rounded-xl border bg-card shadow-sm">
+          <AccordionTrigger className="px-6 py-4 hover:no-underline">
+            <div className="flex items-center gap-2 font-heading text-base">
+              <Database className="h-4 w-4 text-brand-teal" />
+              Fontes de Dados <span className="text-xs text-muted-foreground font-normal">(clique para ver as 9 bases)</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-4">
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b text-left text-muted-foreground">
+                    <th className="pb-2 pr-4 font-medium">Fonte</th>
+                    <th className="pb-2 pr-4 text-right font-medium">Registros</th>
+                    <th className="pb-2 pr-4 font-medium">Atualização</th>
+                    <th className="pb-2 font-medium">Link</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {(sources ?? FALLBACK_SOURCES).map((src) => {
+                    const isFresh = !!src.last_collected;
+                    return (
+                      <tr key={src.key ?? src.name}>
+                        <td className="py-2 pr-4 font-medium">
+                          <span
+                            className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle"
+                            style={{ background: isFresh ? "var(--success)" : "var(--danger)" }}
+                          />
+                          {src.name}
+                        </td>
+                        <td className="py-2 pr-4 text-right tabular-nums">
+                          {src.records != null ? fmtNumber(src.records) : <span className="text-muted-foreground">—</span>}
+                        </td>
+                        <td className="py-2 pr-4 text-muted-foreground tabular-nums" title={src.last_collected ?? undefined}>
+                          {src.last_collected ? relativeTime(src.last_collected) : "—"}
+                        </td>
+                        <td className="py-2">
+                          {src.url ? (
+                            <a href={src.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-brand-teal hover:underline">
+                              verificar <ExternalLink className="h-3 w-3" />
+                            </a>
+                          ) : null}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Sobre/Metodologia */}
-      <Accordion type="single" collapsible>
-        <AccordionItem value="methodology" className="rounded-xl border bg-card shadow-sm">
+        <AccordionItem value="metodologia" className="rounded-xl border bg-card shadow-sm">
           <AccordionTrigger className="px-6 py-4 hover:no-underline">
             <div className="flex items-center gap-2 font-heading text-base">
               <Info className="h-4 w-4 text-brand-orange" /> Metodologia e Auditabilidade
@@ -259,54 +274,31 @@ export default function AmbientalPage() {
   );
 }
 
-function BigActionCard({
-  icon: Icon, title, description, href, color,
+function ValueProp({
+  icon: Icon,
+  title,
+  description,
+  color,
 }: {
   icon: React.ComponentType<{ className?: string }>;
-  title: string; description: string; href: string;
+  title: string;
+  description: string;
   color: "teal" | "gold" | "orange";
 }) {
   const colorMap = {
-    teal: {
-      border: "border-brand-teal/30 hover:border-brand-teal",
-      bg: "bg-brand-teal/5 group-hover:bg-brand-teal/10",
-      iconBg: "bg-brand-teal/15 group-hover:bg-brand-teal/25",
-      iconColor: "text-brand-teal",
-      title: "group-hover:text-brand-teal",
-    },
-    gold: {
-      border: "border-brand-gold/40 hover:border-brand-gold",
-      bg: "bg-brand-gold/5 group-hover:bg-brand-gold/10",
-      iconBg: "bg-brand-gold/15 group-hover:bg-brand-gold/25",
-      iconColor: "text-brand-gold",
-      title: "group-hover:text-brand-gold",
-    },
-    orange: {
-      border: "border-brand-orange/30 hover:border-brand-orange",
-      bg: "bg-brand-orange/5 group-hover:bg-brand-orange/10",
-      iconBg: "bg-brand-orange/15 group-hover:bg-brand-orange/25",
-      iconColor: "text-brand-orange",
-      title: "group-hover:text-brand-orange",
-    },
+    teal: "border-l-brand-teal bg-brand-teal/5 text-brand-teal",
+    gold: "border-l-brand-gold bg-brand-gold/5 text-brand-gold",
+    orange: "border-l-brand-orange bg-brand-orange/5 text-brand-orange",
   }[color];
 
   return (
-    <Link href={href}>
-      <Card className={`group h-full border-2 ${colorMap.border} ${colorMap.bg} transition-all cursor-pointer`}>
-        <CardContent className="p-6 space-y-3">
-          <div className={`inline-flex rounded-xl p-3 ${colorMap.iconBg} transition-colors`}>
-            <Icon className={`h-7 w-7 ${colorMap.iconColor}`} />
-          </div>
-          <h3 className={`font-heading text-base font-bold ${colorMap.title} transition-colors`}>
-            {title}
-          </h3>
-          <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
-          <div className={`flex items-center gap-1 text-xs ${colorMap.iconColor} font-medium pt-1`}>
-            Acessar <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-          </div>
-        </CardContent>
-      </Card>
-    </Link>
+    <Card className={`border-l-4 ${colorMap}`}>
+      <CardContent className="p-4 space-y-2">
+        <Icon className="h-5 w-5" />
+        <h4 className="font-bold text-sm text-foreground">{title}</h4>
+        <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
+      </CardContent>
+    </Card>
   );
 }
 

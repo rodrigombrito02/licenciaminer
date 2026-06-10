@@ -1,9 +1,17 @@
 "use client";
 
-import { AlertTriangle, Briefcase, ShieldAlert, Flame } from "lucide-react";
+import {
+  AlertTriangle,
+  Briefcase,
+  ShieldAlert,
+  Flame,
+  GitBranch,
+  FolderTree,
+  Zap,
+} from "lucide-react";
 import { ModuleHero } from "@/components/module-hero";
 import { BigActionCard } from "@/components/big-action-card";
-import { Card, CardContent } from "@/components/ui/card";
+import { ValueProp } from "@/components/value-prop";
 
 export default function RiscosPage() {
   return (
@@ -12,7 +20,7 @@ export default function RiscosPage() {
         icon={AlertTriangle}
         badge="Riscos & Crises"
         title="Gestão de riscos e resposta a crises"
-        description="ERM Corporativo, Riscos de Projeto (ISO 31000) e Gestão de Crises — todos operam por cliente/projeto. Importe matrizes existentes ou crie do zero."
+        description="ERM Corporativo, Riscos de Projeto (ISO 31000) e Gestão de Crises — três frameworks complementares operando por cliente/projeto."
         variant="orange"
       />
 
@@ -25,7 +33,7 @@ export default function RiscosPage() {
           <BigActionCard
             icon={Briefcase}
             title="Riscos Corporativos (ERM)"
-            description="COSO ERM — taxonomia de riscos, BSC, 3 linhas de defesa, snapshots para conselho. Para empresas com governança corporativa."
+            description="COSO ERM — taxonomia, BSC, 3 linhas de defesa, snapshots para conselho. Visão estratégica do risco corporativo."
             href="/riscos-corporativos"
             color="navy"
             badge="ERM"
@@ -33,7 +41,7 @@ export default function RiscosPage() {
           <BigActionCard
             icon={ShieldAlert}
             title="Riscos de Projeto"
-            description="ISO 31000 aplicada a ativos específicos — bowtie, KRIs, controles, apetite a risco, plano de ações."
+            description="ISO 31000 aplicada a ativos — bowtie, KRIs, controles, apetite a risco, plano de ações operacional."
             href="/gestao-riscos"
             color="orange"
             badge="ISO 31000"
@@ -49,16 +57,32 @@ export default function RiscosPage() {
         </div>
       </section>
 
-      <Card>
-        <CardContent className="p-6 space-y-2">
-          <h3 className="font-heading text-base font-bold">Como usar</h3>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Todos os módulos permitem <strong>criar projetos novos do zero</strong> ou
-            <strong> importar dados de exemplo</strong> para testar. Quando o cliente
-            tem uma matriz de riscos em XLSX, basta fazer upload e o sistema organiza.
-          </p>
-        </CardContent>
-      </Card>
+      <section>
+        <h2 className="font-heading text-lg font-semibold mb-1">Por que o módulo Riscos Summo</h2>
+        <p className="text-sm text-muted-foreground mb-5">
+          Três diferenciais que tornam a operação de risco mais robusta.
+        </p>
+        <div className="grid md:grid-cols-3 gap-3">
+          <ValueProp
+            icon={GitBranch}
+            title="Frameworks integrados"
+            description="COSO ERM + ISO 31000 + BCP convivem na mesma plataforma. Sem ter que escolher um padrão e abandonar outro."
+            color="navy"
+          />
+          <ValueProp
+            icon={FolderTree}
+            title="Multi-cliente"
+            description="Cada cliente tem seu universo isolado. Riscos, controles, KRIs e cenários separados — sem cruzamento indesejado."
+            color="orange"
+          />
+          <ValueProp
+            icon={Zap}
+            title="Import de matrizes"
+            description="Suba sua matriz de riscos em XLSX e o sistema organiza. Sem ter que recriar do zero o que o cliente já tem."
+            color="gold"
+          />
+        </div>
+      </section>
     </div>
   );
 }
