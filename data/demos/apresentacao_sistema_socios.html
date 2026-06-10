@@ -12,8 +12,8 @@
   --gold: #FFC000;
   --orange: #FF5F00;
   --success: #27AE60;
-  --danger: #E74C3C;
   --warning: #F39C12;
+  --danger: #E74C3C;
   --light: #F8F9FB;
   --gray: #6B7280;
   --gray-light: #9CA3AF;
@@ -21,18 +21,15 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   font-family: 'Segoe UI', system-ui, sans-serif;
-  color: #1a1a1a;
-  line-height: 1.65;
+  color: #1a1a1a; line-height: 1.65;
   background: var(--light);
 }
 
-/* ───────── Top nav ───────── */
 nav.topnav {
   position: sticky; top: 0; z-index: 100;
-  background: var(--navy);
-  color: #fff;
+  background: var(--navy); color: #fff;
   padding: 10px 32px;
-  display: flex; align-items: center; gap: 24px;
+  display: flex; align-items: center; gap: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,.15);
   flex-wrap: wrap;
 }
@@ -40,106 +37,59 @@ nav.topnav .logo { font-weight: 800; font-size: 14px; letter-spacing: .5px; }
 nav.topnav .logo span { color: var(--gold); }
 nav.topnav a {
   color: rgba(255,255,255,.7); text-decoration: none;
-  font-size: 11.5px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .8px;
-  padding: 6px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .8px; padding: 6px 10px; border-radius: 6px;
   transition: all .2s;
 }
 nav.topnav a:hover { color: #fff; background: rgba(255,255,255,.08); }
-nav.topnav a.active { color: var(--gold); background: rgba(255,192,0,.1); }
 
-/* ───────── Hero (capa) ───────── */
 .hero {
   background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 60%, var(--teal) 130%);
-  color: #fff;
-  padding: 60px 32px 80px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+  color: #fff; padding: 60px 32px 80px;
+  text-align: center; position: relative; overflow: hidden;
 }
 .hero::before {
   content: ''; position: absolute; inset: 0;
   background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.06) 1px, transparent 0);
-  background-size: 32px 32px;
-  opacity: .4;
+  background-size: 32px 32px; opacity: .4;
 }
 .hero > * { position: relative; z-index: 1; }
-.hero .accent {
-  display: inline-flex; gap: 5px; margin-bottom: 18px;
-}
+.hero .accent { display: inline-flex; gap: 5px; margin-bottom: 18px; }
 .hero .accent span:nth-child(1) { width: 56px; height: 4px; background: var(--gold); border-radius: 2px; }
 .hero .accent span:nth-child(2) { width: 18px; height: 4px; background: var(--teal); border-radius: 2px; }
 .hero .accent span:nth-child(3) { width: 9px; height: 4px; background: var(--orange); border-radius: 2px; }
-.hero h1 {
-  font-size: 44px; font-weight: 800; line-height: 1.1;
-  margin-bottom: 10px;
-}
+.hero h1 { font-size: 44px; font-weight: 800; line-height: 1.1; margin-bottom: 10px; }
 .hero h1 .gold { color: var(--gold); }
-.hero .sub {
-  font-size: 17px; color: rgba(255,255,255,.7); margin-bottom: 8px;
-}
-.hero .who {
-  font-size: 13px; color: rgba(255,255,255,.45);
-  text-transform: uppercase; letter-spacing: 2px;
-}
-.hero .stats {
-  display: flex; justify-content: center; gap: 40px;
-  margin-top: 40px;
-  flex-wrap: wrap;
-}
-.hero .stat .n {
-  font-size: 32px; font-weight: 800; color: var(--gold); line-height: 1;
-}
-.hero .stat .l {
-  font-size: 10px; color: rgba(255,255,255,.5);
-  text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;
-}
+.hero .sub { font-size: 17px; color: rgba(255,255,255,.7); margin-bottom: 8px; max-width: 720px; margin-left: auto; margin-right: auto; }
+.hero .who { font-size: 13px; color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: 2px; }
+.hero .stats { display: flex; justify-content: center; gap: 40px; margin-top: 40px; flex-wrap: wrap; }
+.hero .stat .n { font-size: 32px; font-weight: 800; color: var(--gold); line-height: 1; }
+.hero .stat .l { font-size: 10px; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
 
-/* ───────── Fluxograma SVG ───────── */
-.flux-wrap {
-  background: #fff;
-  padding: 48px 24px;
-  display: flex; justify-content: center;
-}
-.flux-wrap svg {
-  max-width: 100%; height: auto;
-}
+.flux-wrap { background: #fff; padding: 48px 24px; display: flex; justify-content: center; }
+.flux-wrap svg { max-width: 100%; height: auto; }
 
-/* ───────── Sections ───────── */
-section.block {
-  padding: 64px 32px;
-  max-width: 1200px; margin: 0 auto;
+section.block { padding: 64px 32px; max-width: 1200px; margin: 0 auto; }
+section.block.alt {
+  background: #fff; max-width: none;
+  padding-left: max(32px, calc(50% - 600px));
+  padding-right: max(32px, calc(50% - 600px));
 }
-section.block.alt { background: #fff; max-width: none; padding-left: max(32px, calc(50% - 600px)); padding-right: max(32px, calc(50% - 600px)); }
 
 h2.title {
-  font-size: 28px; font-weight: 800;
-  color: var(--navy);
-  margin-bottom: 6px;
-  display: flex; align-items: center; gap: 12px;
+  font-size: 28px; font-weight: 800; color: var(--navy);
+  margin-bottom: 6px; display: flex; align-items: center; gap: 12px;
 }
-h2.title .lead {
-  width: 36px; height: 4px; background: var(--gold); border-radius: 2px;
-}
+h2.title .lead { width: 36px; height: 4px; background: var(--gold); border-radius: 2px; }
 .subtitle { font-size: 14px; color: var(--gray); margin-bottom: 36px; }
 
-/* ───────── Tabs por caixa ───────── */
-.tabs-wrap {
-  display: flex; gap: 6px; margin-bottom: 24px;
-  border-bottom: 2px solid #e5e7eb;
-  overflow-x: auto;
-}
+.tabs-wrap { display: flex; gap: 6px; margin-bottom: 24px; border-bottom: 2px solid #e5e7eb; overflow-x: auto; }
 .tab-btn {
-  background: transparent; border: none;
-  padding: 10px 18px;
-  font-weight: 600; font-size: 12.5px;
-  color: var(--gray);
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  margin-bottom: -2px;
-  text-transform: uppercase; letter-spacing: .5px;
-  transition: all .2s;
-  white-space: nowrap;
+  background: transparent; border: none; padding: 10px 18px;
+  font-weight: 600; font-size: 12.5px; color: var(--gray);
+  cursor: pointer; border-bottom: 3px solid transparent;
+  margin-bottom: -2px; text-transform: uppercase; letter-spacing: .5px;
+  transition: all .2s; white-space: nowrap;
 }
 .tab-btn:hover { color: var(--navy); }
 .tab-btn.active { color: var(--navy); border-bottom-color: var(--gold); }
@@ -147,16 +97,14 @@ h2.title .lead {
 .tab-content.active { display: block; animation: fadeIn .2s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ───────── Box do módulo ───────── */
 .box-header {
   background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
-  color: #fff;
-  padding: 24px 28px;
-  border-radius: 14px 14px 0 0;
+  color: #fff; padding: 24px 28px; border-radius: 14px 14px 0 0;
   display: flex; align-items: center; gap: 16px;
 }
 .box-header.orange { background: linear-gradient(135deg, var(--orange) 0%, #B0410E 100%); }
 .box-header.gold { background: linear-gradient(135deg, var(--gold) 0%, #B8860B 100%); color: var(--navy); }
+.box-header.gray { background: linear-gradient(135deg, var(--gray) 0%, #4B5563 100%); }
 .box-header .num {
   width: 56px; height: 56px; border-radius: 14px;
   background: rgba(255,255,255,.15);
@@ -168,37 +116,28 @@ h2.title .lead {
 .box-header .s { font-size: 12px; opacity: .8; }
 
 .box-body {
-  background: #fff;
-  padding: 28px;
-  border: 1px solid #e5e7eb;
-  border-top: 0;
+  background: #fff; padding: 28px;
+  border: 1px solid #e5e7eb; border-top: 0;
   border-radius: 0 0 14px 14px;
 }
 .box-body .lead-text {
   font-size: 14.5px; color: var(--navy);
-  margin-bottom: 22px;
-  padding-left: 14px; border-left: 3px solid var(--gold);
-  line-height: 1.7;
+  margin-bottom: 22px; padding-left: 14px;
+  border-left: 3px solid var(--gold); line-height: 1.7;
 }
 .modulos {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 16px;
 }
 .modulo {
-  background: var(--light);
-  border-radius: 10px;
-  padding: 18px;
-  border-left: 3px solid var(--teal);
+  background: var(--light); border-radius: 10px;
+  padding: 18px; border-left: 3px solid var(--teal);
   transition: transform .2s, box-shadow .2s;
 }
-.modulo:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(10,37,64,.08);
-}
+.modulo:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(10,37,64,.08); }
 .modulo h4 {
   font-size: 13.5px; font-weight: 700; color: var(--navy);
-  margin-bottom: 5px;
-  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 5px; display: flex; align-items: center; gap: 6px;
 }
 .modulo h4 .badge {
   background: var(--success); color: #fff;
@@ -207,84 +146,63 @@ h2.title .lead {
 }
 .modulo h4 .badge.beta { background: var(--warning); }
 .modulo h4 .badge.placeholder { background: var(--gray-light); }
-.modulo p {
-  font-size: 12px; color: var(--gray); line-height: 1.6;
-}
+.modulo h4 .badge.admin { background: var(--gold); color: var(--navy); }
+.modulo p { font-size: 12px; color: var(--gray); line-height: 1.6; }
 .modulo .url {
-  display: inline-block;
-  font-family: 'Courier New', monospace;
-  font-size: 10.5px; color: var(--teal);
-  margin-top: 6px;
+  display: inline-block; font-family: 'Courier New', monospace;
+  font-size: 10.5px; color: var(--teal); margin-top: 6px;
 }
 
-/* ───────── Cards genéricos ───────── */
 .cards-3 {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
 }
 .card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  border: 1px solid #e5e7eb;
+  background: #fff; border-radius: 12px;
+  padding: 24px; border: 1px solid #e5e7eb;
 }
 .card h3 {
   font-size: 15px; font-weight: 700; color: var(--navy);
-  margin-bottom: 10px;
-  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
 }
 .card h3 .icon {
   width: 32px; height: 32px; border-radius: 8px;
-  background: rgba(21,96,130,.1);
-  color: var(--teal);
+  background: rgba(21,96,130,.1); color: var(--teal);
   display: flex; align-items: center; justify-content: center;
   font-size: 16px;
 }
 .card h3 .icon.gold { background: rgba(255,192,0,.15); color: #B8860B; }
 .card h3 .icon.orange { background: rgba(255,95,0,.1); color: var(--orange); }
 .card h3 .icon.green { background: rgba(39,174,96,.1); color: var(--success); }
+.card h3 .icon.navy { background: rgba(10,37,64,.1); color: var(--navy); }
 .card p { font-size: 12.5px; color: var(--gray); line-height: 1.7; }
-.card ul {
-  list-style: none; margin-top: 10px;
-}
+.card ul { list-style: none; margin-top: 10px; }
 .card ul li {
   font-size: 12px; color: #374151;
-  padding: 4px 0 4px 18px;
-  position: relative;
+  padding: 4px 0 4px 18px; position: relative;
 }
 .card ul li::before {
   content: '▸'; position: absolute; left: 0;
   color: var(--teal); font-weight: 800;
 }
 
-/* ───────── Roadmap timeline ───────── */
-.timeline {
-  position: relative;
-  padding-left: 32px;
-  margin-top: 24px;
-}
+.timeline { position: relative; padding-left: 32px; margin-top: 24px; }
 .timeline::before {
   content: ''; position: absolute;
-  left: 8px; top: 8px; bottom: 8px;
-  width: 3px; background: linear-gradient(to bottom, var(--gold), var(--teal), var(--orange));
+  left: 8px; top: 8px; bottom: 8px; width: 3px;
+  background: linear-gradient(to bottom, var(--gold), var(--teal), var(--orange));
   border-radius: 2px;
 }
 .tl-item {
-  position: relative;
-  margin-bottom: 24px;
-  background: #fff;
-  border-radius: 10px;
-  padding: 16px 20px;
-  border: 1px solid #e5e7eb;
+  position: relative; margin-bottom: 24px;
+  background: #fff; border-radius: 10px;
+  padding: 16px 20px; border: 1px solid #e5e7eb;
 }
 .tl-item::before {
   content: ''; position: absolute;
-  left: -32px; top: 18px;
-  width: 18px; height: 18px;
-  background: var(--gold);
-  border: 3px solid #fff;
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px var(--gold);
+  left: -32px; top: 18px; width: 18px; height: 18px;
+  background: var(--gold); border: 3px solid #fff;
+  border-radius: 50%; box-shadow: 0 0 0 2px var(--gold);
 }
 .tl-item.done::before { background: var(--success); box-shadow: 0 0 0 2px var(--success); }
 .tl-item.now::before { background: var(--teal); box-shadow: 0 0 0 2px var(--teal); animation: pulse 2s infinite; }
@@ -301,50 +219,60 @@ h2.title .lead {
 .tl-item h4 { font-size: 14.5px; color: var(--navy); margin-bottom: 4px; }
 .tl-item p { font-size: 12px; color: var(--gray); line-height: 1.6; }
 
-/* ───────── Stats inline ───────── */
 .stats-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 14px; margin: 24px 0;
 }
 .stat-mini {
-  background: #fff;
-  padding: 18px 20px;
-  border-radius: 10px;
+  background: #fff; padding: 18px 20px; border-radius: 10px;
   border-top: 3px solid var(--teal);
 }
 .stat-mini.gold { border-top-color: var(--gold); }
 .stat-mini.orange { border-top-color: var(--orange); }
 .stat-mini.green { border-top-color: var(--success); }
+.stat-mini.navy { border-top-color: var(--navy); }
 .stat-mini .n { font-size: 26px; font-weight: 800; color: var(--navy); line-height: 1; }
 .stat-mini .l { font-size: 10.5px; color: var(--gray); text-transform: uppercase; letter-spacing: .8px; margin-top: 6px; }
 
-/* ───────── Callouts ───────── */
 .callout {
   background: rgba(21,96,130,.05);
   border-left: 4px solid var(--teal);
-  border-radius: 6px;
-  padding: 16px 20px;
-  font-size: 13.5px;
-  color: var(--navy);
-  margin: 20px 0;
-  line-height: 1.7;
+  border-radius: 6px; padding: 16px 20px;
+  font-size: 13.5px; color: var(--navy);
+  margin: 20px 0; line-height: 1.7;
 }
 .callout.gold { background: rgba(255,192,0,.06); border-left-color: var(--gold); }
 .callout.orange { background: rgba(255,95,0,.05); border-left-color: var(--orange); }
+.callout.success { background: rgba(39,174,96,.05); border-left-color: var(--success); }
 .callout strong { display: block; margin-bottom: 4px; font-size: 14px; }
 
-/* ───────── Footer ───────── */
+table {
+  width: 100%; border-collapse: collapse; margin: 18px 0;
+  background: #fff; border-radius: 10px; overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04); font-size: 13px;
+}
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; }
+th {
+  background: var(--navy); color: #fff;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .8px; font-weight: 600;
+}
+tr:last-child td { border-bottom: 0; }
+tr:hover td { background: rgba(21,96,130,.02); }
+.badge-inline {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  padding: 3px 9px; border-radius: 10px;
+}
+.badge-inline.gray { background: #f0f0f0; color: var(--gray); }
+.badge-inline.gold { background: rgba(255,192,0,.15); color: #B8860B; }
+.badge-inline.teal { background: rgba(21,96,130,.12); color: var(--teal); }
+.badge-inline.navy { background: rgba(10,37,64,.12); color: var(--navy); }
+
 footer {
-  background: var(--navy);
-  color: rgba(255,255,255,.6);
-  padding: 32px;
-  text-align: center;
-  font-size: 11px;
-  line-height: 1.8;
+  background: var(--navy); color: rgba(255,255,255,.6);
+  padding: 32px; text-align: center; font-size: 11px; line-height: 1.8;
 }
 footer strong { color: var(--gold); }
 
-/* ───────── Responsive ───────── */
 @media (max-width: 768px) {
   .hero h1 { font-size: 32px; }
   .hero .stats { gap: 24px; }
@@ -363,37 +291,36 @@ footer strong { color: var(--gold); }
 </head>
 <body>
 
-<!-- ───────── Top nav ───────── -->
 <nav class="topnav">
   <div class="logo">SUMMO <span>QUARTILE</span></div>
   <a href="#capa" class="active">Capa</a>
-  <a href="#conceito">Conceito</a>
+  <a href="#objetivos">Objetivos</a>
+  <a href="#principios">Princípios</a>
+  <a href="#niveis">Acesso</a>
   <a href="#modulos">Módulos</a>
-  <a href="#expectativa">Expectativas</a>
-  <a href="#roadmap">Próximos Passos</a>
+  <a href="#expectativa">Geração de Valor</a>
+  <a href="#roadmap">Sprints</a>
 </nav>
 
-<!-- ═══════════════════════════ CAPA ═══════════════════════════ -->
+<!-- ═══════════ CAPA ═══════════ -->
 <section id="capa" class="hero">
-  <div class="accent">
-    <span></span><span></span><span></span>
-  </div>
-  <p class="who">Apresentação Interna · Sócios</p>
+  <div class="accent"><span></span><span></span><span></span></div>
+  <p class="who">Apresentação Interna · Sócios · v2.0</p>
   <h1>Sistema <span class="gold">Summo Quartile</span></h1>
-  <p class="sub">Braço digital e analítico da consultoria — apoio às 4 frentes existentes</p>
+  <p class="sub">Plataforma de inteligência mineral — atrai público qualificado, apoia consultoria interna e habilita sócios a prospectar oportunidades. 7 sprints entregues, sistema no ar.</p>
 
   <div class="stats">
-    <div class="stat"><div class="n">6</div><div class="l">Caixas de Módulos</div></div>
-    <div class="stat"><div class="n">20+</div><div class="l">Módulos Funcionais</div></div>
-    <div class="stat"><div class="n">16</div><div class="l">Fontes Públicas Integradas</div></div>
-    <div class="stat"><div class="n">100%</div><div class="l">Dados Rastreáveis</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">Objetivos Estratégicos</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">Níveis de Acesso</div></div>
+    <div class="stat"><div class="n">25+</div><div class="l">Módulos Funcionais</div></div>
+    <div class="stat"><div class="n">180</div><div class="l">Endpoints da API</div></div>
+    <div class="stat"><div class="n">16</div><div class="l">Fontes Públicas</div></div>
   </div>
 </section>
 
-<!-- ═══════════════════════════ FLUXOGRAMA ═══════════════════════════ -->
+<!-- ═══════════ FLUXOGRAMA ═══════════ -->
 <div class="flux-wrap">
-<svg viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background grid -->
+<svg viewBox="0 0 1000 660" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
       <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f0f0f0" stroke-width="1"/>
@@ -416,579 +343,653 @@ footer strong { color: var(--gold); }
     </linearGradient>
     <filter id="shadow"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.15"/></filter>
   </defs>
-  <rect width="1000" height="620" fill="url(#grid)"/>
+  <rect width="1000" height="660" fill="url(#grid)"/>
 
-  <!-- Título -->
-  <text x="500" y="40" text-anchor="middle" font-size="18" font-weight="800" fill="#0A2540">
+  <text x="500" y="36" text-anchor="middle" font-size="18" font-weight="800" fill="#0A2540">
     Arquitetura do Sistema Summo Quartile
   </text>
-  <text x="500" y="62" text-anchor="middle" font-size="11" fill="#6B7280">
-    6 caixas conectadas — produtos comerciais + cockpit operacional + base de dados
+  <text x="500" y="58" text-anchor="middle" font-size="11" fill="#6B7280">
+    3 serviços online · 5 produtos comerciais · 6 ferramentas internas · 4 níveis de acesso
   </text>
 
-  <!-- Núcleo central: base de dados + IA -->
-  <circle cx="500" cy="310" r="80" fill="url(#grad-navy)" filter="url(#shadow)"/>
-  <text x="500" y="298" text-anchor="middle" font-size="14" font-weight="800" fill="#FFC000">Núcleo</text>
-  <text x="500" y="316" text-anchor="middle" font-size="11" fill="#fff">Dados Públicos</text>
-  <text x="500" y="330" text-anchor="middle" font-size="11" fill="#fff">+ IA Aplicada</text>
-  <text x="500" y="348" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.7)">DuckDB · SQLite</text>
+  <!-- Núcleo central -->
+  <circle cx="500" cy="335" r="85" fill="url(#grad-navy)" filter="url(#shadow)"/>
+  <text x="500" y="320" text-anchor="middle" font-size="14" font-weight="800" fill="#FFC000">Backend</text>
+  <text x="500" y="338" text-anchor="middle" font-size="11" fill="#fff">FastAPI + DuckDB</text>
+  <text x="500" y="352" text-anchor="middle" font-size="11" fill="#fff">16 fontes públicas</text>
+  <text x="500" y="370" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.6)">Railway</text>
 
-  <!-- 4 caixas comerciais (orbitam o núcleo) -->
-  <!-- Caixa 1: Summo Ambiental (TL) -->
-  <g transform="translate(150,120)">
-    <rect width="190" height="80" rx="12" fill="url(#grad-teal)" filter="url(#shadow)"/>
-    <text x="95" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#FFC000">CAIXA 1</text>
-    <text x="95" y="50" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">Summo Ambiental</text>
-    <text x="95" y="68" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.8)">DD · Viabilidade · Pilhas · Decisões</text>
+  <!-- Produtos comerciais (esquerda) -->
+  <g transform="translate(70,150)">
+    <rect width="180" height="68" rx="10" fill="url(#grad-teal)" filter="url(#shadow)"/>
+    <text x="90" y="24" text-anchor="middle" font-size="9" font-weight="700" fill="#FFC000">PRODUTO</text>
+    <text x="90" y="42" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">Summo Ambiental</text>
+    <text x="90" y="58" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.7)">DD · Pilhas · Viabilidade</text>
+  </g>
+  <g transform="translate(70,235)">
+    <rect width="180" height="68" rx="10" fill="url(#grad-teal)" filter="url(#shadow)"/>
+    <text x="90" y="24" text-anchor="middle" font-size="9" font-weight="700" fill="#FFC000">PRODUTO</text>
+    <text x="90" y="42" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">Direitos e Concessões</text>
+    <text x="90" y="58" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.7)">Mapa · Prospecção · ANM</text>
+  </g>
+  <g transform="translate(70,320)">
+    <rect width="180" height="68" rx="10" fill="url(#grad-gold)" filter="url(#shadow)"/>
+    <text x="90" y="24" text-anchor="middle" font-size="9" font-weight="700" fill="#0A2540">PRODUTO</text>
+    <text x="90" y="42" text-anchor="middle" font-size="12" font-weight="800" fill="#0A2540">Mineral Intelligence</text>
+    <text x="90" y="58" text-anchor="middle" font-size="9" fill="rgba(10,37,64,0.65)">Mercado · Ranking · Premium</text>
+  </g>
+  <g transform="translate(70,405)">
+    <rect width="180" height="68" rx="10" fill="url(#grad-orange)" filter="url(#shadow)"/>
+    <text x="90" y="24" text-anchor="middle" font-size="9" font-weight="700" fill="#FFC000">PRODUTO</text>
+    <text x="90" y="42" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">SQ Solutions</text>
+    <text x="90" y="58" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.7)">Segurança · Mineradora IA</text>
   </g>
 
-  <!-- Caixa 2: Direitos e Concessões (TR) -->
-  <g transform="translate(660,120)">
-    <rect width="190" height="80" rx="12" fill="url(#grad-teal)" filter="url(#shadow)"/>
-    <text x="95" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#FFC000">CAIXA 2</text>
-    <text x="95" y="50" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">Direitos e Concessões</text>
-    <text x="95" y="68" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.8)">Mapa · Prospecção · ANM</text>
+  <!-- Ferramentas Internas (direita) -->
+  <g transform="translate(750,150)">
+    <rect width="180" height="68" rx="10" fill="url(#grad-orange)" filter="url(#shadow)"/>
+    <text x="90" y="24" text-anchor="middle" font-size="9" font-weight="700" fill="#FFC000">FERRAMENTA</text>
+    <text x="90" y="42" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">Plano de Ações</text>
+    <text x="90" y="58" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.7)">Kanban + Gantt + EAP</text>
+  </g>
+  <g transform="translate(750,235)">
+    <rect width="180" height="68" rx="10" fill="url(#grad-orange)" filter="url(#shadow)"/>
+    <text x="90" y="24" text-anchor="middle" font-size="9" font-weight="700" fill="#FFC000">FERRAMENTA</text>
+    <text x="90" y="42" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">Riscos &amp; Crises</text>
+    <text x="90" y="58" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.7)">ERM · ISO 31000 · BCP</text>
+  </g>
+  <g transform="translate(750,320)">
+    <rect width="180" height="68" rx="10" fill="url(#grad-orange)" filter="url(#shadow)"/>
+    <text x="90" y="24" text-anchor="middle" font-size="9" font-weight="700" fill="#FFC000">FERRAMENTA</text>
+    <text x="90" y="42" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">Projetos + Comunicações</text>
+    <text x="90" y="58" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.7)">PM Suite + Stakeholders</text>
+  </g>
+  <g transform="translate(750,405)">
+    <rect width="180" height="68" rx="10" fill="url(#grad-gold)" filter="url(#shadow)"/>
+    <text x="90" y="24" text-anchor="middle" font-size="9" font-weight="700" fill="#0A2540">SÓCIOS</text>
+    <text x="90" y="42" text-anchor="middle" font-size="12" font-weight="800" fill="#0A2540">Funil Oportunidades</text>
+    <text x="90" y="58" text-anchor="middle" font-size="9" fill="rgba(10,37,64,0.65)">Prospect → Operação</text>
   </g>
 
-  <!-- Caixa 3: Mineral Intelligence (R) -->
-  <g transform="translate(770,275)">
-    <rect width="190" height="80" rx="12" fill="url(#grad-gold)" filter="url(#shadow)"/>
-    <text x="95" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#0A2540">CAIXA 3</text>
-    <text x="95" y="50" text-anchor="middle" font-size="14" font-weight="800" fill="#0A2540">Mineral Intelligence</text>
-    <text x="95" y="68" text-anchor="middle" font-size="10" fill="rgba(10,37,64,0.7)">Inteligência Comercial</text>
+  <!-- Topo: Frontend Vercel -->
+  <g transform="translate(420,80)">
+    <rect width="160" height="44" rx="10" fill="#0A2540" filter="url(#shadow)"/>
+    <text x="80" y="20" text-anchor="middle" font-size="9" font-weight="700" fill="#FFC000">FRONTEND</text>
+    <text x="80" y="36" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">Vercel · Next.js</text>
   </g>
 
-  <!-- Caixa 4: SQ Solutions (BR) -->
-  <g transform="translate(660,440)">
-    <rect width="190" height="80" rx="12" fill="url(#grad-orange)" filter="url(#shadow)"/>
-    <text x="95" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#FFC000">CAIXA 4</text>
-    <text x="95" y="50" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">SQ Solutions</text>
-    <text x="95" y="68" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.8)">Segurança · Mineradora IA</text>
+  <!-- Base: Supabase Auth + Admin -->
+  <g transform="translate(290,520)">
+    <rect width="180" height="64" rx="10" fill="#3a2a0a" filter="url(#shadow)"/>
+    <text x="90" y="22" text-anchor="middle" font-size="9" font-weight="700" fill="#FFC000">AUTH</text>
+    <text x="90" y="40" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">Supabase</text>
+    <text x="90" y="56" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.7)">4 níveis de role</text>
+  </g>
+  <g transform="translate(530,520)">
+    <rect width="180" height="64" rx="10" fill="url(#grad-navy)" filter="url(#shadow)"/>
+    <text x="90" y="22" text-anchor="middle" font-size="9" font-weight="700" fill="#FFC000">ADMIN</text>
+    <text x="90" y="40" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">Painel de Gestão</text>
+    <text x="90" y="56" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.7)">Tráfego · Usuários</text>
   </g>
 
-  <!-- Caixa 6: Ferramentas Internas (BL) -->
-  <g transform="translate(150,440)">
-    <rect width="190" height="80" rx="12" fill="url(#grad-orange)" filter="url(#shadow)"/>
-    <text x="95" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#FFC000">CAIXA 6</text>
-    <text x="95" y="50" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">Ferramentas Internas</text>
-    <text x="95" y="68" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.8)">Riscos · Projetos · Planos</text>
+  <!-- Conexões -->
+  <g stroke="#156082" stroke-width="2" stroke-dasharray="4 3" opacity="0.4" fill="none">
+    <path d="M 250 184 L 415 320"/>
+    <path d="M 250 269 L 420 332"/>
+    <path d="M 250 354 L 420 345"/>
+    <path d="M 250 439 L 420 360"/>
+    <path d="M 750 184 L 585 320"/>
+    <path d="M 750 269 L 585 332"/>
+    <path d="M 750 354 L 585 345"/>
+    <path d="M 750 439 L 585 360"/>
+    <path d="M 500 124 L 500 250"/>
+    <path d="M 380 552 L 450 415"/>
+    <path d="M 620 552 L 550 415"/>
   </g>
 
-  <!-- Caixa 5: Gestão Interna (L) -->
-  <g transform="translate(40,275)">
-    <rect width="190" height="80" rx="12" fill="#9CA3AF" filter="url(#shadow)"/>
-    <text x="95" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">CAIXA 5</text>
-    <text x="95" y="50" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">Gestão Interna SQ</text>
-    <text x="95" y="68" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.85)">Painel Operacional</text>
-  </g>
-
-  <!-- Linhas conectando núcleo às 6 caixas -->
-  <g stroke="#156082" stroke-width="2" stroke-dasharray="4 3" opacity="0.5" fill="none">
-    <path d="M 430 290 L 340 200"/>
-    <path d="M 570 290 L 660 200"/>
-    <path d="M 580 310 L 770 315"/>
-    <path d="M 570 350 L 660 480"/>
-    <path d="M 430 350 L 340 480"/>
-    <path d="M 420 310 L 230 315"/>
-  </g>
-
-  <!-- Legenda inferior -->
-  <g transform="translate(160,565)">
+  <!-- Legenda -->
+  <g transform="translate(140,610)">
     <rect width="12" height="12" rx="2" fill="url(#grad-teal)"/>
-    <text x="20" y="10" font-size="10" fill="#374151">Produtos comerciais (Caixas 1-4)</text>
+    <text x="20" y="10" font-size="10" fill="#374151">Produtos comerciais (público pagante)</text>
 
     <rect x="280" width="12" height="12" rx="2" fill="url(#grad-orange)"/>
-    <text x="300" y="10" font-size="10" fill="#374151">Cockpit operacional interno (Caixa 6)</text>
+    <text x="300" y="10" font-size="10" fill="#374151">Ferramentas internas (consultor Summo)</text>
 
-    <rect x="600" width="12" height="12" rx="2" fill="#9CA3AF"/>
-    <text x="620" y="10" font-size="10" fill="#374151">Gestão própria da Summo (Caixa 5)</text>
+    <rect x="600" width="12" height="12" rx="2" fill="url(#grad-gold)"/>
+    <text x="620" y="10" font-size="10" fill="#374151">Restrito a sócios admin</text>
   </g>
 </svg>
 </div>
 
-<!-- ═══════════════════════════ CONCEITO ═══════════════════════════ -->
-<section id="conceito" class="block">
-  <h2 class="title"><span class="lead"></span>O conceito</h2>
-  <p class="subtitle">O que é, o que não é, e por que faz sentido para a Summo agora</p>
+<!-- ═══════════ OBJETIVOS ═══════════ -->
+<section id="objetivos" class="block">
+  <h2 class="title"><span class="lead"></span>Objetivos do sistema</h2>
+  <p class="subtitle">Quatro propósitos que orientam todas as decisões de produto e arquitetura.</p>
 
-  <div class="callout">
-    <strong>O sistema é um braço novo da Summo — não cria uma 5ª frente.</strong>
-    A Summo é consultoria estratégica de mineração e metalurgia, com sócios que somam décadas de experiência sênior no setor, organizada em 4 frentes
-    consolidadas (otimização da cadeia de valor, desenvolvimento de negócios, gestão de riscos
-    e crises, gestão de partes interessadas). O Sistema Summo Quartile <strong>potencializa</strong>
-    essas frentes com dados públicos curados, automação analítica e produtos digitais com
-    nossa marca.
-  </div>
-
-  <div class="cards-3" style="margin-top: 32px;">
+  <div class="cards-3">
     <div class="card">
-      <h3><span class="icon">📊</span>O que é</h3>
-      <p>Plataforma proprietária que consolida 16+ fontes públicas oficiais (ANM, IBAMA, SEMAD,
-      Receita Federal, CFEM, comércio exterior, geo) em base auditável. Sobre essa base,
-      módulos de análise, due diligence, conformidade, riscos e gestão.</p>
+      <h3><span class="icon gold">🎯</span>1. Atrair público qualificado</h3>
+      <p>Dados públicos curados + análises de mercado que fazem da Summo referência técnica. Tráfego qualificado vira lead de consultoria.</p>
+      <ul>
+        <li>Mapa interativo da mineração Brasil</li>
+        <li>Rankings CFEM por município e substância</li>
+        <li>Capa Ambiental com KPIs setoriais</li>
+        <li>Mineradora Modelo (showcase IA)</li>
+      </ul>
     </div>
     <div class="card">
-      <h3><span class="icon gold">⚡</span>O que entrega</h3>
-      <p>Velocidade analítica (DD em 2 semanas vs. 8), diferencial técnico em entregas
-      premium (GISTM, portal público, audit-as-a-service de pilhas), e cockpit operacional
-      interno que torna o consultor sênior 3x mais produtivo.</p>
+      <h3><span class="icon">⚙️</span>2. Ferramentas internas operacionais</h3>
+      <p>Cockpit de trabalho do consultor Summo em projetos de cliente. Mesma plataforma. Mesmo padrão. Multi-cliente.</p>
+      <ul>
+        <li>Plano de Ações (import ClickUp/Trello)</li>
+        <li>Riscos (ERM + Projeto + Crises)</li>
+        <li>Comunicações com stakeholders</li>
+        <li>Projetos PMBoK</li>
+      </ul>
     </div>
     <div class="card">
-      <h3><span class="icon orange">🎯</span>O que não é</h3>
-      <p>Não é uma startup paralela. Não substitui a consultoria — ela continua sendo o core.
-      Não pretende competir em SaaS de massa. É plataforma que <strong>fortalece a marca Summo</strong>
-      como referência técnica em mineração no Brasil.</p>
+      <h3><span class="icon orange">🛡️</span>3. Automatizar produto ambiental</h3>
+      <p>Diagnóstico, análise preliminar, DD e auditoria com identidade Summo. O que demora semanas vira minutos.</p>
+      <ul>
+        <li>Análise preliminar de licenciamento</li>
+        <li>DD em 5 fases PDCA automatizada</li>
+        <li>Auditoria de Pilhas (3 modos)</li>
+        <li>GISTM premium para mineradoras ICMM</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="icon green">💎</span>4. Funil de Oportunidades aos sócios</h3>
+      <p>Da prospecção à operação. Sócios identificam direitos minerários, avaliam 9 parâmetros, geram Relatório de Viabilidade.</p>
+      <ul>
+        <li>Pipeline visual em 8 etapas</li>
+        <li>Avaliação multi-parâmetro</li>
+        <li>Relatório de Viabilidade Summo</li>
+        <li>Captação de investidores assistida</li>
+      </ul>
     </div>
   </div>
 
   <div class="callout gold">
-    <strong>Vantagem competitiva difícil de copiar</strong>
-    Décadas de relacionamento sênior dos sócios + acesso C-level já existentes <strong>+</strong>
-    plataforma proprietária com dados públicos curados de anos de histórico.
-    No Brasil, ninguém junta os dois: consultorias grandes têm acesso mas não têm
-    produto; tech mineradoras têm produto mas não têm acesso.
+    <strong>Por que isso importa</strong>
+    O sistema não é uma startup paralela à Summo — é o <strong>braço digital da consultoria</strong>. Cada decisão de produto reforça o posicionamento da Summo como referência técnica em mineração. Cada interação pública é uma porta de entrada para consultoria. Cada ferramenta interna eleva a produtividade do consultor.
   </div>
 </section>
 
-<!-- ═══════════════════════════ MÓDULOS (abas por caixa) ═══════════════════════════ -->
+<!-- ═══════════ PRINCÍPIOS ═══════════ -->
+<section id="principios" class="block alt">
+  <h2 class="title"><span class="lead"></span>Princípios de design aplicados</h2>
+  <p class="subtitle">Aprendizados consolidados ao longo das sprints — valem pra todo o sistema.</p>
+
+  <div class="cards-3">
+    <div class="card">
+      <h3><span class="icon">📐</span>Coerência sistêmica</h3>
+      <p>Padrão único de capa em todo o sistema: <code>Hero → Botões grandes → Value Props → Extras em accordion fechado</code>. Se algo funciona numa caixa, replica em todas.</p>
+    </div>
+    <div class="card">
+      <h3><span class="icon green">🧑‍💼</span>Cliente → Projeto → Itens</h3>
+      <p>Todas as ferramentas internas operam multi-cliente. Nenhuma referência hardcoded a cliente específico. Você cria seu cliente, cria projetos, organiza tudo dentro.</p>
+    </div>
+    <div class="card">
+      <h3><span class="icon orange">📤</span>Import flexível</h3>
+      <p>O cliente sobe planilhas no formato que ele já usa (XLSX, CSV de ClickUp, Trello, Asana). O sistema lê e organiza. Sem padronização forçada.</p>
+    </div>
+    <div class="card">
+      <h3><span class="icon">🧭</span>Capa-primeiro na sidebar</h3>
+      <p>Sidebar mostra apenas capas (de 42+ itens para 12). Subitens redundantes removidos. Click no nome do módulo já vai pra capa.</p>
+    </div>
+    <div class="card">
+      <h3><span class="icon gold">🎯</span>Diferenciação por role</h3>
+      <p>Visitante anônimo vê vitrine. Pago vê análises. Consultor vê cockpit. Admin vê tudo + gestão. Cada nível habilita o que faz sentido.</p>
+    </div>
+    <div class="card">
+      <h3><span class="icon navy">📊</span>Identidade Summo nos relatórios</h3>
+      <p>Todo output (relatório, planilha, portal) sai com identidade Summo Quartile pronta para apresentar a cliente ou órgão regulador.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ NÍVEIS DE ACESSO ═══════════ -->
+<section id="niveis" class="block">
+  <h2 class="title"><span class="lead"></span>4 Níveis de Acesso</h2>
+  <p class="subtitle">Diferentes públicos têm necessidades diferentes — o sistema serve a todos com o nível certo.</p>
+
+  <table>
+    <thead>
+      <tr><th>Nível</th><th>Acessa</th><th>Para quem</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge-inline gray">Visitante</span></td>
+        <td>Home vitrine, mapa, concessões, Mineral Intelligence público, capa Ambiental, SQ Solutions demo</td>
+        <td>Anônimo (sem login)</td>
+      </tr>
+      <tr>
+        <td><span class="badge-inline gold">Visitante Premium</span></td>
+        <td>Tudo do Visitante + Análise Preliminar de Licenciamento + Consulta Empresa + Mineradora Modelo (parcial)</td>
+        <td>Cliente pagante</td>
+      </tr>
+      <tr>
+        <td><span class="badge-inline teal">Consultor</span></td>
+        <td>Tudo do Premium + Diligência Summo + Pilhas + Plano de Ações + Projetos + Riscos + Crises + Comunicações</td>
+        <td>Equipe Summo</td>
+      </tr>
+      <tr>
+        <td><span class="badge-inline navy">Admin</span></td>
+        <td>Tudo do Consultor + Funil de Oportunidades + Painel Admin (tráfego, conversões, usuários)</td>
+        <td>Sócios e Rodrigo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Status atual: 8 usuários cadastrados</strong>
+    6 sócios como <strong>Admin</strong> (Rodrigo, Maury, Bernardo, Mateus, Leonardo, Roberto), <strong>Giulia como Consultor</strong>, e <strong>visitante.demo@summoquartile.com como Visitante Premium</strong> (para demonstrações). Senha temporária inicial: <code>Summo@2026</code> (cada um troca no primeiro login).
+  </div>
+</section>
+
+<!-- ═══════════ MÓDULOS POR CAIXA ═══════════ -->
 <section id="modulos" class="block alt">
   <h2 class="title"><span class="lead"></span>Módulos por caixa</h2>
-  <p class="subtitle">Cada caixa agrupa módulos com função e público-alvo coerentes</p>
+  <p class="subtitle">5 produtos comerciais + ferramentas internas + painel admin.</p>
 
   <div class="tabs-wrap">
     <button class="tab-btn active" data-tab="c1">1. Summo Ambiental</button>
     <button class="tab-btn" data-tab="c2">2. Direitos e Concessões</button>
     <button class="tab-btn" data-tab="c3">3. Mineral Intelligence</button>
     <button class="tab-btn" data-tab="c4">4. SQ Solutions</button>
-    <button class="tab-btn" data-tab="c5">5. Gestão Interna</button>
-    <button class="tab-btn" data-tab="c6">6. Ferramentas Internas</button>
+    <button class="tab-btn" data-tab="c5">5. Ferramentas Internas</button>
+    <button class="tab-btn" data-tab="c6">6. Admin + Gestão</button>
   </div>
 
-  <!-- ───── CAIXA 1 ───── -->
+  <!-- CAIXA 1 -->
   <div class="tab-content active" id="tab-c1">
     <div class="box-header">
       <div class="num">1</div>
       <div>
         <div class="t">Summo Ambiental</div>
-        <div class="s">Produto comercial · análise e conformidade regulatória</div>
+        <div class="s">Produto comercial · 3 caminhos pra qualquer objetivo regulatório</div>
       </div>
     </div>
     <div class="box-body">
       <div class="lead-text">
-        Caixa principal para apoio às operações de mineração na esfera regulatória ambiental.
-        Combina dados públicos (SEMAD-MG, IBAMA, COPAM) com motor analítico para entregar
-        diagnóstico, viabilidade, due diligence e auditoria de pilhas.
+        Capa com 3 botões grandes: Análise de Dados Públicos, Análise Preliminar de Licenciamento, e Diligência Summo. Cada caminho destrava um conjunto de funcionalidades.
       </div>
       <div class="modulos">
         <div class="modulo">
-          <h4>Base de Dados <span class="badge">ativo</span></h4>
-          <p>Navegação livre nas 16 fontes — busca, filtros, exportação. Camada exploratória
-          para o consultor encontrar o que precisa rapidamente.</p>
+          <h4>Análise de Dados Públicos <span class="badge">ativo</span></h4>
+          <p>Exploração da base completa: decisões SEMAD, processos ANM, infrações IBAMA, CFEM. Filtros e exportação.</p>
           <span class="url">/explorar</span>
         </div>
         <div class="modulo">
           <h4>Consulta Empresa <span class="badge">ativo</span></h4>
-          <p>Lookup por CNPJ retorna perfil completo: títulos ANM, CFEM, infrações IBAMA,
-          processos SEMAD, decisões históricas e cruzamento espacial UC/TI/biomas.</p>
+          <p>Lookup por CNPJ: títulos ANM, CFEM, infrações, decisões, cruzamento espacial.</p>
           <span class="url">/empresa</span>
         </div>
         <div class="modulo">
           <h4>Análise de Decisões <span class="badge">ativo</span></h4>
-          <p>Padrões de aprovação por modalidade, atividade, classe e regional. Identifica
-          tendências de rigor, sazonalidades e benchmarks de probabilidade.</p>
+          <p>Padrões de aprovação por modalidade, atividade, classe e regional.</p>
           <span class="url">/decisoes</span>
         </div>
         <div class="modulo">
-          <h4>Viabilidade <span class="badge">ativo</span></h4>
-          <p>Análise preliminar pré-investimento. Gera relatório de viabilidade em
-          minutos com probabilidade de aprovação + fatores de atenção.</p>
+          <h4>Análise Preliminar <span class="badge">ativo</span></h4>
+          <p>Probabilidade de aprovação + fatores de atenção. Sai em minutos.</p>
           <span class="url">/viabilidade</span>
         </div>
         <div class="modulo">
-          <h4>Due Diligence <span class="badge">ativo</span></h4>
-          <p>5 fases automatizadas (PDCA) — configuração, diagnóstico documental,
-          avaliação, plano de ação e resultado. Cada fase gera relatório HTML/PDF.</p>
+          <h4>Diligência Ambiental <span class="badge">ativo</span></h4>
+          <p>DD em 5 fases automatizada com 5 relatórios HTML/PDF prontos.</p>
           <span class="url">/due-diligence</span>
         </div>
         <div class="modulo">
           <h4>Conformidade de Pilhas <span class="badge">ativo</span></h4>
-          <p>Auditoria de pilhas de rejeito/estéril em 3 modos (Auditoria · Licenciamento ·
-          Fechamento). 85 documentos, 186 requisitos, GISTM premium opcional, portal público
-          PL 2.519. Pronto para piloto comercial.</p>
+          <p>85 docs · 186 req · GISTM premium · Portal Público PL 2.519/2024.</p>
           <span class="url">/pilhas</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ───── CAIXA 2 ───── -->
+  <!-- CAIXA 2 -->
   <div class="tab-content" id="tab-c2">
     <div class="box-header">
       <div class="num">2</div>
       <div>
         <div class="t">Direitos e Concessões Minerárias</div>
-        <div class="s">Produto comercial · mapeamento geoespacial e prospecção</div>
+        <div class="s">Produto comercial · ANM SCM/SIGMINE em mapa + prospecção</div>
       </div>
     </div>
     <div class="box-body">
       <div class="lead-text">
-        Visão completa do regime mineiro brasileiro a partir da ANM SCM/SIGMINE.
-        Sobreposições com UC, TI e biomas pré-calculadas. Atende investidores,
-        prospectores e clientes que querem mapear oportunidades.
+        Visão completa do regime mineiro brasileiro. Sobreposições com UC, TI e biomas pré-calculadas.
       </div>
       <div class="modulos">
         <div class="modulo">
-          <h4>Concessões <span class="badge">ativo</span></h4>
-          <p>Lista filtrável de processos ANM por estado, substância, fase e titular.
-          Exportação CSV. Cada registro rastreável à URL oficial.</p>
-          <span class="url">/concessoes</span>
-        </div>
-        <div class="modulo">
           <h4>Mapa Geoespacial <span class="badge">ativo</span></h4>
-          <p>Visualização interativa dos polígonos minerários com camadas de UC, TI,
-          biomas e municípios. Útil para reconhecimento de áreas.</p>
+          <p>Polígonos minerários interativos com camadas de UCs, TIs, biomas.</p>
           <span class="url">/mapa</span>
         </div>
         <div class="modulo">
+          <h4>Concessões <span class="badge">ativo</span></h4>
+          <p>Lista filtrável de processos ANM por estado, substância, fase.</p>
+          <span class="url">/concessoes</span>
+        </div>
+        <div class="modulo">
           <h4>Prospecção <span class="badge">ativo</span></h4>
-          <p>Identificação de oportunidades — disponibilidades, processos arquivados,
-          áreas com sobreposição mínima. Filtros por substância, área mínima e UF.</p>
+          <p>Oportunidades — disponibilidades ANM, baixa sobreposição.</p>
           <span class="url">/prospeccao</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ───── CAIXA 3 ───── -->
+  <!-- CAIXA 3 -->
   <div class="tab-content" id="tab-c3">
     <div class="box-header gold">
       <div class="num">3</div>
       <div>
         <div class="t">Mineral Intelligence</div>
-        <div class="s">Produto comercial · inteligência de mercado e operação</div>
+        <div class="s">Produto comercial · inteligência de mercado mineral · 5 abas</div>
       </div>
     </div>
     <div class="box-body">
       <div class="lead-text">
-        Dashboards customizáveis de mercado mineral — preços, comércio exterior, produção,
-        royalties por substância e empresa. Camada estratégica que apoia as frentes de
-        otimização da cadeia de valor e desenvolvimento de negócios.
+        Reorganizado para atrair tráfego qualificado. 5 abas com highlights ao vivo: Top município CFEM, Top substância, fontes integradas. Lead generation embutido em cada aba.
       </div>
       <div class="modulos">
         <div class="modulo">
-          <h4>Inteligência Comercial <span class="badge">ativo</span></h4>
-          <p>Cotações (BCB PTAX), comércio exterior (Comex), produção (RAL), royalties
-          (CFEM). Análises por substância, empresa e período.</p>
-          <span class="url">/inteligencia-comercial</span>
+          <h4>Mercado <span class="badge">ativo</span></h4>
+          <p>BCB PTAX · commodities · Comex Stat · preços. Cotação em tempo histórico.</p>
         </div>
         <div class="modulo">
-          <h4>Monitoramento <span class="badge beta">beta</span></h4>
-          <p>Alertas de mudanças relevantes — preços, infrações novas, mudanças de fase
-          em processos ANM, decisões SEMAD recentes.</p>
-          <span class="url">/monitoramento</span>
+          <h4>Ranking <span class="badge">ativo</span></h4>
+          <p>Top 15 municípios + Top 15 substâncias por CFEM. Barras coloridas.</p>
+        </div>
+        <div class="modulo">
+          <h4>Produção &amp; Receita <span class="badge">ativo</span></h4>
+          <p>RAL produção + CFEM time series.</p>
+        </div>
+        <div class="modulo">
+          <h4>Território <span class="badge">ativo</span></h4>
+          <p>ANM SIGMINE estatísticas por substância e fase.</p>
+        </div>
+        <div class="modulo">
+          <h4>Premium <span class="badge beta">gated</span></h4>
+          <p>Relatório mensal PDF · Alertas customizados · Datasets curados · Briefing trimestral. Acesso por role.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ───── CAIXA 4 ───── -->
+  <!-- CAIXA 4 -->
   <div class="tab-content" id="tab-c4">
     <div class="box-header orange">
       <div class="num">4</div>
       <div>
         <div class="t">SQ Solutions</div>
-        <div class="s">Produto comercial · IA aplicada a operações</div>
+        <div class="s">Produto comercial · IA aplicada a operações minerárias</div>
       </div>
     </div>
     <div class="box-body">
       <div class="lead-text">
-        Vertical de soluções digitais para operações minerárias — segurança ocupacional,
-        gestão de risco operacional, modelos de IA aplicados. Conecta com a frente de
-        gestão de riscos e crises e desenvolvimento de negócios digitais.
+        Vertical de soluções digitais que demonstram capacidade técnica da Summo. Conecta com a frente de gestão de riscos e abre conversas de transformação digital.
       </div>
       <div class="modulos">
         <div class="modulo">
-          <h4>Segurança <span class="badge beta">beta</span></h4>
-          <p>Indicadores SST, taxas de acidente comparadas, conformidade com NRs.
-          Apoia clientes em compliance de saúde e segurança.</p>
+          <h4>Segurança Ocupacional <span class="badge beta">demo</span></h4>
+          <p>Indicadores SST, taxas de acidente, conformidade NRs.</p>
           <span class="url">/seguranca</span>
         </div>
         <div class="modulo">
-          <h4>Mineradora Modelo (IA) <span class="badge">ativo</span></h4>
-          <p>Showcase de IA aplicada — simulador de operação minerária com dados
-          fictícios. Demonstra capacidade analítica para clientes que avaliam adoção
-          de tecnologia.</p>
+          <h4>Mineradora Modelo (IA) <span class="badge">demo</span></h4>
+          <p>Showcase de IA aplicada à operação — simulação com dados fictícios.</p>
           <span class="url">/mineradora-modelo</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ───── CAIXA 5 ───── -->
+  <!-- CAIXA 5 - Ferramentas Internas -->
   <div class="tab-content" id="tab-c5">
-    <div class="box-header">
+    <div class="box-header orange">
       <div class="num">5</div>
       <div>
-        <div class="t">Gestão Interna SQ</div>
-        <div class="s">Operação própria da Summo (placeholder)</div>
+        <div class="t">Ferramentas Internas</div>
+        <div class="s">Cockpit operacional do consultor · multi-cliente · sem hardcode</div>
       </div>
     </div>
     <div class="box-body">
       <div class="lead-text">
-        Área restrita para a gestão própria da Summo — financeiro, comercial, comissionamento,
-        backlog de projetos. Estrutura prevista mas ainda não construída. Caixa separada
-        para deixar claro que <strong>não é cliente</strong>, é uso interno.
+        6 ferramentas operando com mesmo padrão <strong>Cliente → Projeto → Itens</strong>. Sem cliente hardcoded — você cria quantos quiser. Aceitam upload de arquivos no formato que o cliente já usa.
       </div>
       <div class="modulos">
         <div class="modulo">
-          <h4>Painel Interno <span class="badge placeholder">em breve</span></h4>
-          <p>Dashboard executivo do escritório — receita, backlog, ocupação, KPIs Summo.</p>
-          <span class="url">/gestao-interna</span>
+          <h4>Plano de Ações <span class="badge">ativo</span></h4>
+          <p>Upload XLSX/CSV (ClickUp, Trello, Asana). Kanban + Gantt + EAP + Tabela. Cockpit multi-plano por projeto.</p>
+          <span class="url">/planos-de-acao</span>
+        </div>
+        <div class="modulo">
+          <h4>Projetos (PM Suite) <span class="badge">ativo</span></h4>
+          <p>PMBoK aplicado: Charter, WBS, CPM, EVM, qualidade, aquisições.</p>
+          <span class="url">/projetos</span>
+        </div>
+        <div class="modulo">
+          <h4>Riscos (ERM + Projeto) <span class="badge">ativo</span></h4>
+          <p>COSO ERM + ISO 31000 + Bowtie + KRIs + Apetite. Versão v2 multi-cliente.</p>
+          <span class="url">/riscos</span>
+        </div>
+        <div class="modulo">
+          <h4>Gestão de Crises <span class="badge">ativo</span></h4>
+          <p>Cenários, comitês, simulados, BCP/Continuidade.</p>
+          <span class="url">/gestao-crises</span>
+        </div>
+        <div class="modulo">
+          <h4>Comunicações <span class="badge">ativo</span></h4>
+          <p>Stakeholders, templates, RACI, envios. Apoia gestão de partes interessadas.</p>
+          <span class="url">/comunicacoes</span>
+        </div>
+        <div class="modulo">
+          <h4>Funil de Oportunidades <span class="badge admin">admin</span></h4>
+          <p>Pipeline em 8 etapas · avaliação 9 parâmetros · Relatório de Viabilidade Summo.</p>
+          <span class="url">/oportunidades</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ───── CAIXA 6 ───── -->
+  <!-- CAIXA 6 - Admin -->
   <div class="tab-content" id="tab-c6">
-    <div class="box-header orange">
+    <div class="box-header gray">
       <div class="num">6</div>
       <div>
-        <div class="t">Ferramentas Internas</div>
-        <div class="s">Cockpit operacional — apoio ao trabalho do consultor</div>
+        <div class="t">Painel Admin + Gestão Interna</div>
+        <div class="s">Restrito a sócios · gestão da plataforma + financeiro futuro</div>
       </div>
     </div>
     <div class="box-body">
       <div class="lead-text">
-        Conjunto de ferramentas que apoiam o trabalho da consultoria em campo — gestão de
-        riscos, projetos, planos de ação dos clientes, crises e comunicações. Não é produto
-        de venda direta, é <strong>cockpit do consultor Summo</strong> em cliente.
+        Visibilidade do uso da plataforma e gestão dos usuários cadastrados. Tudo via Supabase Admin API + tracking de pageviews customizado. Módulo de Gestão Financeira reservado pra futuro.
       </div>
       <div class="modulos">
         <div class="modulo">
-          <h4>Plano de Ações <span class="badge">novo</span></h4>
-          <p>Upload heterogêneo (XLSX, CSV, XER) de planos de cliente, com leitura
-          inteligente e dashboard adaptativo. Gantt, S-curve, EAP tree, filtros dinâmicos,
-          cockpit multi-plano. Cliente → Projeto → Plano.</p>
-          <span class="url">/planos-de-acao</span>
+          <h4>Tráfego &amp; Conversões <span class="badge">ativo</span></h4>
+          <p>Pageview tracker · KPIs por período (7/30/90 dias) · Top 15 páginas · tráfego por role.</p>
+          <span class="url">/admin</span>
         </div>
         <div class="modulo">
-          <h4>Projetos (PM Suite) <span class="badge">ativo</span></h4>
-          <p>Gestão de projetos da consultoria com Charter, WBS, CR, Decisões.
-          Padrão PMBoK aplicado ao trabalho da Summo em cliente.</p>
-          <span class="url">/projetos</span>
+          <h4>Gestão de Usuários <span class="badge">ativo</span></h4>
+          <p>Lista de usuários do Supabase com email, nome, role, última sessão.</p>
+          <span class="url">/admin (tab Usuários)</span>
         </div>
         <div class="modulo">
-          <h4>Riscos Corporativos (ERM) <span class="badge">ativo</span></h4>
-          <p>COSO ERM aplicado — taxonomia de riscos, BSC, 3 linhas de defesa,
-          snapshots para conselho. Estrutura para empresas com governança corporativa.</p>
-          <span class="url">/riscos-corporativos</span>
-        </div>
-        <div class="modulo">
-          <h4>Riscos de Projeto <span class="badge">ativo</span></h4>
-          <p>ISO 31000 aplicada a ativos específicos — bowtie, KRIs, controles, apetite,
-          plano de ações. Piloto com 27 riscos MUSA importados.</p>
-          <span class="url">/gestao-riscos</span>
-        </div>
-        <div class="modulo">
-          <h4>Gestão de Crises <span class="badge">ativo</span></h4>
-          <p>Cenários, comitês, simulados, BCP. Estrutura formal para resposta a crise.</p>
-          <span class="url">/gestao-crises</span>
-        </div>
-        <div class="modulo">
-          <h4>Comunicações <span class="badge">ativo</span></h4>
-          <p>Stakeholders, templates de comunicação, RACI, envios. Apoia a frente de
-          gestão de partes interessadas em situações sensíveis.</p>
-          <span class="url">/comunicacoes</span>
+          <h4>Gestão Interna SQ <span class="badge placeholder">futuro</span></h4>
+          <p>Backlog de projetos, receita, pipeline comercial, financeiro Summo. A definir.</p>
+          <span class="url">/gestao-interna</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════ EXPECTATIVAS ═══════════════════════════ -->
+<!-- ═══════════ GERAÇÃO DE VALOR ═══════════ -->
 <section id="expectativa" class="block">
-  <h2 class="title"><span class="lead"></span>Expectativa e geração de valor</h2>
-  <p class="subtitle">Como o sistema potencializa cada uma das 4 frentes existentes da Summo</p>
+  <h2 class="title"><span class="lead"></span>Como o sistema gera valor</h2>
+  <p class="subtitle">Cinco frentes de valor concreto que o sistema entrega à Summo.</p>
 
   <div class="cards-3">
     <div class="card">
-      <h3><span class="icon">📈</span>Otimização da cadeia de valor</h3>
-      <p>Dashboards de inteligência mineral customizados para clientes mapearem competidores,
-      mercado de substâncias, preços, comércio exterior. Hoje feito em planilhas — sistema
-      institucionaliza e escala.</p>
+      <h3><span class="icon">📈</span>Tráfego qualificado → leads</h3>
+      <p>Conteúdo público de mercado mineral (Top municípios, ranking, mapa) atrai visitantes qualificados que viram leads para consultoria.</p>
       <ul>
-        <li>Mapeamento de competidores por substância</li>
-        <li>Análise de mercado mineral integrada</li>
-        <li>Benchmarks de produção e royalties</li>
+        <li>Mapa Mineral do Brasil</li>
+        <li>Top 100 mineradoras</li>
+        <li>Heatmap aprovação ambiental</li>
+        <li>Calculadora de licenciamento</li>
       </ul>
     </div>
     <div class="card">
-      <h3><span class="icon gold">🤝</span>Desenvolvimento de negócios</h3>
-      <p>Due Diligence pré-aquisição em 2 semanas vs. 8. Análise de viabilidade
-      em horas. Quando um sócio é convidado para DD em M&A mineral, o sistema entrega
-      em tempo recorde com qualidade superior.</p>
+      <h3><span class="icon gold">🤝</span>Aceleração comercial Summo</h3>
+      <p>Quando um sócio é convidado para DD/M&A em mineração, o sistema entrega em 2 semanas o que outras boutiques fazem em 8.</p>
       <ul>
-        <li>DD acelerada para M&A em mineração</li>
-        <li>Viabilidade pré-investimento automatizada</li>
-        <li>Prospecção de oportunidades geoespacial</li>
+        <li>DD acelerada (M&A mineral)</li>
+        <li>Viabilidade pré-investimento</li>
+        <li>Prospecção geoespacial</li>
       </ul>
     </div>
     <div class="card">
-      <h3><span class="icon orange">🛡️</span>Gestão de riscos e crises</h3>
-      <p>Auditoria de pilhas pós-Brumadinho. GISTM premium para clientes ICMM.
-      Cockpit ERM e Riscos de Projeto. Gestão de crise estruturada. Esta frente
-      é a que tem maior potencial de crescimento via sistema.</p>
+      <h3><span class="icon orange">🛡️</span>Produto de auditoria de pilhas</h3>
+      <p>Pós-Brumadinho, gestão de risco de pilhas virou prioridade C-level. Sistema com identidade Summo + GISTM premium para mineradoras ICMM.</p>
       <ul>
-        <li>Auditoria de pilhas (Audit-as-a-Service)</li>
-        <li>GISTM premium (mineradoras ICMM)</li>
-        <li>Monitoramento contínuo de ativos</li>
+        <li>Auditoria anual de pilhas</li>
+        <li>Subscription de monitoramento</li>
+        <li>GISTM premium (ICMM)</li>
       </ul>
     </div>
     <div class="card">
       <h3><span class="icon green">👥</span>Gestão de partes interessadas</h3>
-      <p>Portal público de transparência (PL 2.519 MG / PL 3.799 Federal) pronto
-      para o dia da promulgação. Módulo de comunicações com stakeholders. Plataforma
-      de relacionamento estruturada.</p>
+      <p>Portal Público PL 2.519/2024 MG e PL 3.799/2024 Federal — pronto para o dia da promulgação. Comunicações estruturadas com stakeholders.</p>
       <ul>
-        <li>Portal público de transparência</li>
-        <li>Templates de comunicação por persona</li>
-        <li>RACI e fluxo de envios documentado</li>
+        <li>Portal Público de Transparência</li>
+        <li>Templates de comunicação</li>
+        <li>RACI por projeto</li>
       </ul>
     </div>
     <div class="card">
-      <h3><span class="icon">⚙️</span>Cockpit do consultor</h3>
-      <p>Plano de Ações como cérebro operacional — qualquer plano de cliente importado
-      gera dashboard adaptativo. Útil em todos os engajamentos: o consultor não
-      precisa abrir Excel, abre o Summo Quartile.</p>
+      <h3><span class="icon">⚙️</span>Produtividade do consultor</h3>
+      <p>Plano de Ações é cérebro operacional. Qualquer XLSX do cliente importado gera dashboard adaptativo. Consultor não abre Excel — abre o sistema.</p>
       <ul>
-        <li>Leitura inteligente de planos heterogêneos</li>
-        <li>Gantt, EAP, filtros dinâmicos automáticos</li>
-        <li>Cockpit multi-plano e detecção de conflitos</li>
+        <li>Import flexível XLSX/CSV</li>
+        <li>Gantt · Kanban · EAP automáticos</li>
+        <li>Cockpit multi-plano</li>
       </ul>
     </div>
     <div class="card">
-      <h3><span class="icon gold">🏆</span>Marca e posicionamento</h3>
-      <p>A Summo passa a ter um <strong>ativo digital proprietário</strong> visível
-      em qualquer apresentação. Diferencial técnico ante boutiques e ante big-techs
-      sem acesso C-level. Vetor de modernização da marca sem desvirtuar o core.</p>
+      <h3><span class="icon gold">💎</span>Novo eixo de receita: oportunidades</h3>
+      <p>Sócios prospectam direitos minerários, avaliam com metodologia Summo, geram Relatório de Viabilidade, captam investidores. Eixo de receita novo.</p>
       <ul>
-        <li>Ativo de IP defensável</li>
-        <li>Modernização da marca consultiva</li>
-        <li>Vantagem em RFPs e pitchs comerciais</li>
+        <li>Funil 8 etapas (prospect → operação)</li>
+        <li>9 parâmetros de avaliação</li>
+        <li>Relatório Summo automatizado</li>
+        <li>Histórico comparável entre oportunidades</li>
       </ul>
     </div>
   </div>
 
   <div class="callout orange" style="margin-top: 32px;">
     <strong>Sobre precificação</strong>
-    Os modelos de receita possíveis (audit-as-a-service, subscription, dashboards
-    customizados, DD acelerada) foram identificados tecnicamente. A definição dos
-    valores e modelos de comercialização é decisão dos sócios — depende do custo-de-servir
-    da Summo, posicionamento de marca e dinâmica com a carteira atual de clientes.
+    Os modelos de receita possíveis (audit-as-a-service, subscription, dashboards customizados, DD acelerada, Premium Mineral Intelligence, comissão sobre oportunidades captadas) foram identificados tecnicamente. A definição dos valores e modelos de comercialização é decisão dos sócios — depende do custo-de-servir, posicionamento e dinâmica com a carteira atual.
   </div>
 </section>
 
-<!-- ═══════════════════════════ ROADMAP ═══════════════════════════ -->
+<!-- ═══════════ SPRINTS / ROADMAP ═══════════ -->
 <section id="roadmap" class="block alt">
-  <h2 class="title"><span class="lead"></span>Próximos passos</h2>
-  <p class="subtitle">O que está pronto, o que vem agora, o que demanda decisão</p>
+  <h2 class="title"><span class="lead"></span>7 Sprints entregues + próximos passos</h2>
+  <p class="subtitle">O que foi feito, o que vem agora, o que demanda decisão.</p>
 
   <div class="stats-grid">
-    <div class="stat-mini green"><div class="n">15+</div><div class="l">Módulos funcionais hoje</div></div>
-    <div class="stat-mini"><div class="n">7</div><div class="l">Commits desta sprint</div></div>
-    <div class="stat-mini gold"><div class="n">1</div><div class="l">Piloto em curso (MUSA)</div></div>
-    <div class="stat-mini orange"><div class="n">4</div><div class="l">Decisões pendentes dos sócios</div></div>
+    <div class="stat-mini green"><div class="n">7</div><div class="l">Sprints concluídas</div></div>
+    <div class="stat-mini"><div class="n">25+</div><div class="l">Páginas funcionais</div></div>
+    <div class="stat-mini gold"><div class="n">180</div><div class="l">Endpoints API</div></div>
+    <div class="stat-mini navy"><div class="n">5</div><div class="l">SQLites isolados</div></div>
+    <div class="stat-mini orange"><div class="n">4</div><div class="l">Decisões pendentes</div></div>
   </div>
 
   <div class="timeline">
     <div class="tl-item done">
-      <div class="phase">✓ Concluído</div>
-      <h4>Núcleo de dados + 4 caixas comerciais operacionais</h4>
-      <p>Base de dados integrada (16 fontes), DD em 5 fases, Viabilidade, Conformidade de
-      Pilhas com 3 modos + GISTM premium + portal público, Concessões e Mapa Geoespacial.</p>
+      <div class="phase">✓ Sprint 1</div>
+      <h4>Sistema de 4 Roles + Home redesenhada + Capa /ambiental</h4>
+      <p>Auth Supabase com 4 níveis (visitante_free, visitante_pago, consultor, admin). Middleware protege rotas. Home com 3 layouts adaptativos. Capa /ambiental com 3 botões grandes.</p>
     </div>
-
     <div class="tl-item done">
-      <div class="phase">✓ Concluído</div>
-      <h4>Reorganização da arquitetura — sidebar em 6 caixas</h4>
-      <p>Separação visual de produtos comerciais (caixas 1-4) e cockpit operacional
-      (caixa 6). Home redesenhada com 6 cards principais.</p>
+      <div class="phase">✓ Sprint 2</div>
+      <h4>Mineral Intelligence público redesenhado</h4>
+      <p>Hero com highlights ao vivo + Tab Ranking (Top 15 municípios e substâncias) + Tab Premium gated por role. Conteúdo focado em lead generation.</p>
     </div>
-
     <div class="tl-item done">
-      <div class="phase">✓ Concluído</div>
-      <h4>Módulo Plano de Ações — Sprints A-D</h4>
-      <p>Upload heterogêneo XLSX, mapeamento heurístico, dashboard adaptativo, cockpit
-      multi-plano. Pronto para receber arquivos reais da MUSA e validar.</p>
+      <div class="phase">✓ Sprint 3</div>
+      <h4>Sidebar minimalista + capas coerentes em todos os módulos</h4>
+      <p>De 42+ itens para 12 visíveis. Capas standalone para produtos. Capas novas para /direitos, /sq-solutions, /riscos, /ferramentas-internas. Componentes compartilhados ModuleHero e BigActionCard.</p>
     </div>
-
-    <div class="tl-item now">
-      <div class="phase">⟫ Em curso</div>
-      <h4>Piloto com cliente real — arquivos do cliente</h4>
-      <p>Aguardando 5 arquivos da MUSA (plano de testes, plano de drenagem, cronogramas
-      dos 3 projetos estratégicos). Refinamento do parser conforme padrões reais.</p>
+    <div class="tl-item done">
+      <div class="phase">✓ Sprint 4</div>
+      <h4>Funil de Oportunidades para sócios</h4>
+      <p>Pipeline visual com 8 etapas. Avaliação de 9 parâmetros (água, energia, logística, mão de obra, licenciamento, financeiro, stakeholder, geológico, climático). Score consolidado automático. Relatório de Viabilidade Summo HTML.</p>
+    </div>
+    <div class="tl-item done">
+      <div class="phase">✓ Sprint 5</div>
+      <h4>Kanban + import ClickUp/Trello CSV</h4>
+      <p>Tab Kanban adicionada ao detalhe do plano. Parser CSV com auto-detect de delimitador e encoding. Upload aceita XLSX, XLSM, CSV, TSV. Cliente pode subir export do ClickUp diretamente.</p>
+    </div>
+    <div class="tl-item done">
+      <div class="phase">✓ Sprint 6</div>
+      <h4>Riscos v2 (Cliente → Projeto multi-cliente)</h4>
+      <p>Backend genérico com SQLite isolado. Estrutura Cliente → Projeto (tipo erm/projeto/crise) → Risco. Matriz 5×5 com classificação automática. 13 endpoints. Frontend visual virá em próxima sprint.</p>
+    </div>
+    <div class="tl-item done">
+      <div class="phase">✓ Sprint 7</div>
+      <h4>Painel Admin + tracking de pageviews</h4>
+      <p>Página /admin. Pageview tracker automático no layout do dashboard. KPIs por período (7/30/90 dias). Top 15 páginas. Tráfego por role. Lista de usuários via Supabase Admin API.</p>
     </div>
 
     <div class="tl-item next">
-      <div class="phase">→ Próximo (decisão dos sócios)</div>
-      <h4>Publicação online — Vercel + Render</h4>
-      <p>Deploy para que sócios e clientes possam acessar remotamente sem o computador
-      do Rodrigo ligado. Custo mínimo viável: ~US$ 7-10/mês + domínio. Demanda autorização
-      e decisão de auth (Cloudflare Access ou login próprio).</p>
+      <div class="phase">→ Sprint 8 sugerida</div>
+      <h4>Frontend visual do Riscos v2</h4>
+      <p>Páginas multi-cliente do módulo de Riscos. Listagem de clientes, projetos, matriz 5×5 visual, importação de XLSX de matriz. Migração gradual do /gestao-riscos antigo.</p>
     </div>
-
     <div class="tl-item next">
-      <div class="phase">→ Próximo (decisão dos sócios)</div>
-      <h4>Revisão dos pitches comerciais</h4>
-      <p>Os HTMLs gerados em sessões anteriores precisam ser revisados à luz do
-      reposicionamento correto da Summo (consultoria sênior + braço digital novo,
-      não boutique regulatória).</p>
+      <div class="phase">→ Sprint 9 sugerida</div>
+      <h4>Relatórios de Riscos + Crises (HTML/PDF Summo)</h4>
+      <p>Gerador de relatórios profissionais para risco e crises. Hero Summo, matriz 5×5, plano de tratamento. Mesmo padrão dos relatórios Pilhas e Oportunidades.</p>
     </div>
-
-    <div class="tl-item later">
-      <div class="phase">○ Médio prazo</div>
-      <h4>Próximos objetos de conformidade</h4>
-      <p>Replicação da estrutura DD/Pilhas para outros objetos: NRs 22/01/35 (segurança
-      em mineração), Condicionantes ambientais (rastreio temporal), ESG/CSRD para
-      exportadoras (obrigatório UE a partir de 2026).</p>
+    <div class="tl-item next">
+      <div class="phase">→ Sprint 10 sugerida</div>
+      <h4>Gestão Interna SQ — módulo executivo</h4>
+      <p>Dashboard interno para sócios — backlog de projetos, receita, pipeline comercial. Tabelas SQLite isoladas ou integração com sistema financeiro existente.</p>
     </div>
-
     <div class="tl-item later">
-      <div class="phase">○ Médio prazo</div>
-      <h4>IC Shield v2 (prevenção de Informações Complementares)</h4>
-      <p>Atualmente on hold — depende de decisão de fluxo (CSV exportável ou cópia-cola
-      estruturada). Será apresentado à Giulia separadamente para alinhamento.</p>
-    </div>
-
-    <div class="tl-item later">
-      <div class="phase">○ Longo prazo</div>
-      <h4>Expansão da carteira na frente de gestão de riscos</h4>
-      <p>BHP, Nexa, CSN, CBA são clientes existentes da Summo com pilhas/barragens.
-      Auditoria de pilhas e GISTM premium são produtos prontos para oferecer.</p>
+      <div class="phase">○ Backlog</div>
+      <h4>Outras melhorias</h4>
+      <p>IC Shield v2 (snapshots semanais de IC FEAM), expansão para outros objetos de conformidade (NRs, ESG/CSRD), Cloudflare Access para auth corporativa, exportação Excel de cockpits, integração Vercel Analytics.</p>
     </div>
   </div>
 
   <div class="callout gold" style="margin-top: 36px;">
-    <strong>4 decisões que precisam dos sócios</strong>
-    1) Modelo de comercialização e precificação por linha (auditoria, subscription, etc.) ·
-    2) Autorização para publicar a plataforma online ·
-    3) Estratégia de auth (Cloudflare Access free ou login próprio) ·
-    4) Quais clientes da carteira priorizar para o primeiro piloto pago de auditoria de pilhas.
+    <strong>4 decisões pendentes para os sócios</strong>
+    1. Modelo de comercialização e precificação por linha (auditoria, subscription, etc.) ·
+    2. Avaliar contratação Pro do Vercel/Railway quando exceder trial atual ·
+    3. Quais clientes da carteira priorizar para o primeiro piloto pago ·
+    4. Estratégia de auth corporativa (Cloudflare Access ou alternativa).
   </div>
 </section>
 
-<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<!-- ═══════════ FOOTER ═══════════ -->
 <footer>
   <p>
-    <strong>Sistema Summo Quartile</strong> · Documento interno para discussão entre sócios<br>
-    Plataforma desenvolvida sobre dados públicos oficiais auditáveis · Versão de apresentação 1.0
+    <strong>Sistema Summo Quartile</strong> · Documento interno para discussão entre sócios · v2.0<br>
+    Plataforma rodando em <strong>summoquartile.vercel.app</strong> · Backend Railway · Auth Supabase
   </p>
 </footer>
 
-<!-- ═══════════════════════════ JS para tabs e scroll ═══════════════════════════ -->
 <script>
-// Tabs
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const tab = btn.dataset.tab;
@@ -999,8 +1000,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
-// Scroll spy
-const sections = ['capa', 'conceito', 'modulos', 'expectativa', 'roadmap'];
+const sections = ['capa', 'objetivos', 'principios', 'niveis', 'modulos', 'expectativa', 'roadmap'];
 const navLinks = document.querySelectorAll('nav.topnav a');
 window.addEventListener('scroll', () => {
   let current = sections[0];
@@ -1013,7 +1013,6 @@ window.addEventListener('scroll', () => {
   });
 });
 
-// Smooth scroll
 navLinks.forEach(a => {
   a.addEventListener('click', e => {
     e.preventDefault();

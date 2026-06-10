@@ -17,6 +17,17 @@ uv.lock
 *.duckdb
 *.duckdb.wal
 
+# SQLite (módulos isolados — DBs locais, produção fica no Railway)
+data/*.db
+data/*.db-*
+data/*.sqlite
+data/*.sqlite-*
+
+# Scratch e working dirs locais
+data/scratch/
+docs/docs_envio/
+web/.claude/
+
 # Python
 __pycache__/
 *.py[cod]
