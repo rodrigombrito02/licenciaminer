@@ -162,6 +162,127 @@ def _parse_pct(value: Any) -> float | None:
         return None
 
 
+def parse_csv_to_tarefas(
+    file_bytes: bytes,
+    custom_mapping: dict[str, str] | None = None,
+    encoding: str = "utf-8",
+) -> dict[str, Any]:
+    """Parseia CSV (ClickUp/Trello/Asana export) usando o mesmo motor do XLSX.
+
+    Suporta delimitadores comuns: virgula, ponto-e-virgula, tab.
+    Faz auto-detect do delimitador.
+    """
+    import csv
+    import io
+
+    # Try multiple encodings
+    text: str | None = None
+    for enc in (encoding, "utf-8-sig", "utf-8", "latin-1", "cp1252"):
+        try:
+            text = file_bytes.decode(enc)
+            break
+        except UnicodeDecodeError:
+            continue
+    if text is None:
+        return {
+            "headers": [], "mapping": {}, "mapping_inferido": {},
+            "tarefas": [], "n_linhas_total": 0, "n_linhas_validas": 0,
+            "sheet_name_usada": None,
+            "erro": "Nao foi possivel decodificar o CSV",
+        }
+
+    sample = text[:4096]
+    try:
+        dialect = csv.Sniffer().sniff(sample, delimiters=",;\t|")
+        delimiter = dialect.delimiter
+    except csv.Error:
+        delimiter = ","
+
+    reader = csv.reader(io.StringIO(text), delimiter=delimiter)
+    rows = list(reader)
+    if not rows:
+        return {"headers": [], "mapping": {}, "mapping_inferido": {},
+                "tarefas": [], "n_linhas_total": 0, "n_linhas_validas": 0,
+                "sheet_name_usada": None, "erro": "CSV vazio"}
+
+    header_row = [c.strip() for c in rows[0]]
+    auto_mapping = detect_column_mapping(header_row)
+    mapping: dict[str, str | None] = dict(auto_mapping)
+    if custom_mapping:
+        for k, v in custom_mapping.items():
+            if v:
+                mapping[k] = v
+
+    col_idx: dict[str, int | None] = {}
+    for canonical, header_name in mapping.items():
+        col_idx[canonical] = header_row.index(header_name) if header_name in header_row else None
+
+    tarefas: list[dict] = []
+    n_total = 0
+    n_validas = 0
+
+    for row in rows[1:]:
+        n_total += 1
+        if not row or all((not c or not str(c).strip()) for c in row):
+            continue
+        row_trunc = list(row[: len(header_row)]) + [""] * (len(header_row) - len(row[: len(header_row)]))
+
+        def _get(canonical: str) -> Any:
+            idx = col_idx[canonical]
+            if idx is None or idx >= len(row_trunc):
+                return None
+            v = row_trunc[idx]
+            return v if v and str(v).strip() else None
+
+        descricao = str(_get("descricao")).strip() if _get("descricao") else None
+        if not descricao:
+            continue
+        n_validas += 1
+
+        eap_cod, eap_niv, eap_par = _parse_eap(_get("eap_codigo"))
+
+        tarefa = {
+            "ordem": n_validas,
+            "descricao": descricao[:1000],
+            "data_inicio": _parse_date(_get("data_inicio")),
+            "data_fim": _parse_date(_get("data_fim")),
+            "responsavel_pessoa": str(_get("responsavel_pessoa")).strip()[:200] if _get("responsavel_pessoa") else None,
+            "area_responsavel": str(_get("area_responsavel")).strip()[:200] if _get("area_responsavel") else None,
+            "status": str(_get("status")).strip()[:80] if _get("status") else None,
+            "classificacao": str(_get("classificacao")).strip()[:120] if _get("classificacao") else None,
+            "eap_codigo": eap_cod,
+            "eap_nivel": eap_niv,
+            "parent_eap": eap_par,
+            "pct_concluido": _parse_pct(_get("pct_concluido")),
+        }
+
+        mapped_cols = {idx for idx in col_idx.values() if idx is not None}
+        raw_extra = {}
+        for j, h in enumerate(header_row):
+            if j in mapped_cols or not h:
+                continue
+            if j >= len(row_trunc):
+                continue
+            val = row_trunc[j]
+            if not val or not str(val).strip():
+                continue
+            raw_extra[h] = str(val)[:500]
+        if raw_extra:
+            tarefa["raw_extra"] = raw_extra
+
+        tarefas.append(tarefa)
+
+    return {
+        "headers": header_row,
+        "mapping": mapping,
+        "mapping_inferido": {k: (mapping[k] is not None) for k in CANONICAL_TERMS},
+        "tarefas": tarefas,
+        "n_linhas_total": n_total,
+        "n_linhas_validas": n_validas,
+        "sheet_name_usada": None,
+    }
+
+
 def parse_xlsx_to_tarefas(
     file_bytes: bytes,
     sheet_name: str | None = None,

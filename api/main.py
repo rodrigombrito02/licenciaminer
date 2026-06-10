@@ -21,9 +21,11 @@ from api.routers import (
     geospatial,
     intelligence,
     overview,
+    admin,
     oportunidades,
     pilhas,
     planos_acao,
+    riscos_v2,
     prospeccao,
     reports,
     simulator,
@@ -33,6 +35,7 @@ from api.services.database import close_connection, get_connection
 from licenciaminer.planos_acao.database import init_db as init_planos_acao_db
 from licenciaminer.viabilidade.database import init_db as init_viabilidade_db
 from licenciaminer.oportunidades.database import init_db as init_oportunidades_db
+from licenciaminer.riscos_v2.database import init_db as init_riscos_v2_db
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -50,6 +53,11 @@ async def _background_init():
         await asyncio.to_thread(init_viabilidade_db)
         logger.info("[bg] Inicializando SQLite (Oportunidades)...")
         await asyncio.to_thread(init_oportunidades_db)
+        logger.info("[bg] Inicializando SQLite (Riscos v2)...")
+        await asyncio.to_thread(init_riscos_v2_db)
+        from api.routers.admin import init_db_admin
+        logger.info("[bg] Inicializando SQLite (Admin events)...")
+        await asyncio.to_thread(init_db_admin)
         from api.routers.intelligence import start_briefing_scheduler
         await asyncio.to_thread(start_briefing_scheduler)
         logger.info("[bg] API totalmente pronta")
@@ -125,6 +133,8 @@ app.include_router(viabilidade.router, prefix="/api", tags=["Viabilidade"])
 app.include_router(pilhas.router, prefix="/api", tags=["Pilhas"])
 app.include_router(planos_acao.router)  # ja tem prefix /api/planos-acao
 app.include_router(oportunidades.router)  # ja tem prefix /api/oportunidades
+app.include_router(riscos_v2.router)  # ja tem prefix /api/riscos-v2
+app.include_router(admin.router)  # ja tem prefix /api/admin
 
 
 @app.get("/health")

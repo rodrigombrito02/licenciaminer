@@ -398,10 +398,10 @@ function UploadPlanoDialog({
           {!preview && (
             <div className="border-2 border-dashed rounded-lg p-6 text-center">
               <FileSpreadsheet className="h-10 w-10 mx-auto text-brand-teal mb-2" />
-              <p className="text-sm text-muted-foreground mb-3">Selecione um arquivo XLSX/XLSM</p>
+              <p className="text-sm text-muted-foreground mb-3">XLSX, XLSM, CSV ou TSV — export ClickUp / Trello / Asana funciona</p>
               <input
                 type="file"
-                accept=".xlsx,.xls,.xlsm"
+                accept=".xlsx,.xls,.xlsm,.csv,.tsv"
                 onChange={handleFile}
                 disabled={loading}
                 className="block mx-auto text-sm"

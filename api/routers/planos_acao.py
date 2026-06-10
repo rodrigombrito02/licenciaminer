@@ -24,8 +24,17 @@ from licenciaminer.planos_acao.models import (
 from licenciaminer.planos_acao.parser import (
     CANONICAL_TERMS,
     detect_column_mapping,
+    parse_csv_to_tarefas,
     parse_xlsx_to_tarefas,
 )
+
+
+def _parse_arquivo(filename: str, content: bytes, custom_mapping=None):
+    """Despacha entre parsers XLSX e CSV baseado na extensao do arquivo."""
+    name = (filename or "").lower()
+    if name.endswith(".csv") or name.endswith(".tsv"):
+        return parse_csv_to_tarefas(content, custom_mapping=custom_mapping)
+    return parse_xlsx_to_tarefas(content, custom_mapping=custom_mapping)
 
 logger = logging.getLogger(__name__)
 
@@ -301,11 +310,11 @@ async def upload_preview(file: UploadFile = File(...)):
     """
     if not file.filename:
         raise HTTPException(400, "Arquivo sem nome")
-    if not file.filename.lower().endswith((".xlsx", ".xls", ".xlsm")):
-        raise HTTPException(400, "Formato não suportado (use XLSX)")
+    if not file.filename.lower().endswith((".xlsx", ".xls", ".xlsm", ".csv", ".tsv")):
+        raise HTTPException(400, "Formato não suportado (use XLSX, CSV ou TSV)")
     content = await file.read()
     try:
-        result = parse_xlsx_to_tarefas(content)
+        result = _parse_arquivo(file.filename, content)
     except Exception as e:
         logger.exception("upload_preview erro")
         raise HTTPException(500, f"Erro no parse: {e}") from e
@@ -368,7 +377,7 @@ async def upload_importar(
             raise HTTPException(400, "custom_mapping inválido (use JSON)")
 
     try:
-        result = parse_xlsx_to_tarefas(content, custom_mapping=mapping_override)
+        result = _parse_arquivo(file.filename, content, custom_mapping=mapping_override)
     except Exception as e:
         logger.exception("upload_importar erro")
         raise HTTPException(500, f"Erro no parse: {e}") from e

@@ -117,7 +117,7 @@ export const NAV_SECTIONS: NavSection[] = [
     color: "text-sidebar-foreground/50",
     group: "gestao",
     items: [
-      { href: "/admin", label: "Painel Admin", icon: Briefcase, disabled: true },
+      { href: "/admin", label: "Painel Admin", icon: Briefcase },
       { href: "/gestao-interna", label: "Gestão Interna", icon: Lock, disabled: true },
     ],
   },

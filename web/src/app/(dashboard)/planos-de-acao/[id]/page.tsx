@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { paApi, type PaPlano, type PaTarefa } from "@/lib/api";
 import { Gantt } from "@/components/planos-acao/gantt";
+import { Kanban } from "@/components/planos-acao/kanban";
 import { Donut } from "@/components/planos-acao/donut";
 import { EapTree } from "@/components/planos-acao/eap-tree";
 
@@ -349,12 +350,16 @@ export default function PlanoDetailPage({ params }: { params: Promise<{ id: stri
               <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
                 <CardTitle className="text-sm">Visualizações</CardTitle>
                 <TabsList>
+                  <TabsTrigger value="kanban"><TableIcon className="h-3 w-3 mr-1" /> Kanban</TabsTrigger>
                   <TabsTrigger value="gantt"><CalendarRange className="h-3 w-3 mr-1" /> Gantt</TabsTrigger>
                   <TabsTrigger value="eap"><GitBranch className="h-3 w-3 mr-1" /> EAP</TabsTrigger>
                   <TabsTrigger value="tabela"><TableIcon className="h-3 w-3 mr-1" /> Tabela</TabsTrigger>
                 </TabsList>
               </CardHeader>
               <CardContent className="p-0">
+                <TabsContent value="kanban" className="m-0 p-3">
+                  <Kanban tarefas={filtered} />
+                </TabsContent>
                 <TabsContent value="gantt" className="m-0">
                   <Gantt tarefas={filtered} />
                 </TabsContent>
