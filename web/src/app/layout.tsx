@@ -21,9 +21,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Summo Quartile — Gestão de Conformidade Ambiental",
+  title: "Summo Quartile — Plataforma de Inteligência Mineral",
   description:
-    "Inteligência ambiental, mineral e operacional para o setor de mineração",
+    "Análise, conformidade e oportunidades em mineração. Dados públicos auditáveis + experiência da consultoria Summo.",
 };
 
 export default function RootLayout({
