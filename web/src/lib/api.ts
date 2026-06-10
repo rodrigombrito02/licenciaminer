@@ -334,6 +334,7 @@ export interface DDDocument {
   modalidade: string;
   licenca: string;
   descricao: string;
+  doc_id?: string;
 }
 
 export interface DDRequirement {
@@ -1342,6 +1343,18 @@ export interface ViabilidadeResponse {
   casos_similares: CasoSimilar[];
 }
 
+/** Endpoint legado /consulta/viabilidade (usado em /empresa/[cnpj] → ViabilidadeTab) */
+export function fetchConsultaViabilidade(params: {
+  atividade: string;
+  classe?: number;
+  regional?: string;
+}) {
+  const qs = new URLSearchParams({ atividade: params.atividade });
+  if (params.classe != null) qs.set("classe", String(params.classe));
+  if (params.regional) qs.set("regional", params.regional);
+  return apiFetch<ViabilidadeResponse>(`/consulta/viabilidade?${qs}`);
+}
+
 export function fetchAtividades() {
   return apiFetch<string[]>("/consulta/atividades");
 }
@@ -1578,15 +1591,15 @@ export interface ViabilidadeResult {
 
 export function fetchViabilidade(params: {
   atividade: string;
-  classe: number;
+  classe?: number;
   regional?: string;
   licenca_tipo?: string;
   cnpj?: string;
 }) {
   const qs = new URLSearchParams({
     atividade: params.atividade,
-    classe: String(params.classe),
   });
+  if (params.classe != null) qs.set("classe", String(params.classe));
   if (params.regional) qs.set("regional", params.regional);
   if (params.licenca_tipo) qs.set("licenca_tipo", params.licenca_tipo);
   if (params.cnpj) qs.set("cnpj", params.cnpj);
