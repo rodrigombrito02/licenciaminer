@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Alem do Licenciamento — Novos Objetos de Conformidade — Summo Quartile</title>
+<style>
+@page{size:A4;margin:14mm 12mm;}
+:root{--navy:#0A2540;--navy2:#1A2C42;--teal:#156082;--gold:#FFC000;--orange:#FF5F00;
+  --success:#27AE60;--danger:#E74C3C;--warning:#F39C12;--light:#F8F9FB;
+  --gray:#6B7280;--gray-light:#9CA3AF;--purple:#7C3AED;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:#1a1a1a;line-height:1.65;font-size:10.5pt;background:#fff;}
+.cover{background:var(--navy);color:#fff;padding:60px 56px 50px;min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;page-break-after:always;position:relative;overflow:hidden;}
+.cover::after{content:'';position:absolute;top:0;right:0;width:50%;height:100%;background:radial-gradient(ellipse at 80% 40%,rgba(21,96,130,.25) 0%,transparent 70%);}
+.cover *{position:relative;z-index:1;}
+.ca{display:flex;gap:5px;margin-bottom:32px;}.ca span:nth-child(1){width:56px;height:4px;background:var(--gold);border-radius:2px;}.ca span:nth-child(2){width:18px;height:4px;background:var(--teal);border-radius:2px;}.ca span:nth-child(3){width:9px;height:4px;background:var(--orange);border-radius:2px;}
+.cover h1{font-size:32pt;font-weight:800;line-height:1.06;margin-bottom:18px;}.cover h1 .gold{color:var(--gold);}
+.cover .sub{font-size:13pt;color:rgba(255,255,255,.7);margin-bottom:8px;max-width:640px;}
+.cover .brief{margin-top:24px;font-size:10.5pt;color:rgba(255,255,255,.82);max-width:640px;line-height:1.7;}
+.tag{display:inline-block;padding:7px 24px;border-radius:20px;font-size:10pt;font-weight:700;margin-top:28px;background:var(--gold);color:var(--navy);}
+.cc{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:24px 28px;margin-top:32px;}
+.cg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 28px;}
+.cg .l{font-size:7.5pt;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.4);margin-bottom:3px;}
+.cg .v{font-size:10pt;color:rgba(255,255,255,.9);font-weight:500;}
+.cf{margin-top:28px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:center;font-size:8.5pt;color:rgba(255,255,255,.45);}
+.pg{padding:36px 52px;max-width:210mm;margin:0 auto;page-break-before:always;}
+.ph{display:flex;justify-content:space-between;align-items:center;padding:0 0 12px;border-bottom:2px solid var(--light);margin-bottom:22px;}
+.ph .lt{display:flex;align-items:center;gap:10px;}.ph .sq{width:22px;height:22px;border-radius:5px;background:var(--navy);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:11px;font-weight:900;}
+.ph .lt span{font-size:9pt;font-weight:700;color:var(--navy);}.ph .rt{font-size:7.5pt;color:var(--gray-light);}
+h2{font-size:16pt;font-weight:800;color:var(--navy);margin:28px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--light);display:flex;align-items:center;gap:10px;}
+h2 .ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+h2 .ic.t{background:rgba(21,96,130,.12);color:var(--teal);}h2 .ic.o{background:rgba(255,95,0,.12);color:var(--orange);}h2 .ic.g{background:rgba(39,174,96,.12);color:var(--success);}h2 .ic.r{background:rgba(231,76,60,.12);color:var(--danger);}h2 .ic.gl{background:rgba(255,192,0,.14);color:#B8860B;}h2 .ic.p{background:rgba(124,58,237,.12);color:var(--purple);}
+h3{font-size:11.5pt;font-weight:700;color:var(--teal);margin:18px 0 7px;}
+p{margin-bottom:9px;}.mu{color:var(--gray);}.sm{font-size:9pt;}.xs{font-size:7.5pt;}
+strong{color:var(--navy);}ul{margin:6px 0 10px 22px;}li{margin-bottom:5px;}
+.ks{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0;}
+.k{background:var(--light);border-radius:11px;padding:16px;text-align:center;border-top:3px solid var(--teal);}
+.k:nth-child(2){border-top-color:var(--danger);}.k:nth-child(3){border-top-color:var(--orange);}.k:nth-child(4){border-top-color:var(--gold);}
+.k .n{font-size:22pt;font-weight:800;color:var(--navy);line-height:1.1;}
+.k .lb{font-size:7pt;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;}
+.k .sub2{font-size:7pt;color:var(--gray-light);margin-top:1px;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:9pt;}
+th{background:var(--navy);color:#fff;padding:7px 10px;text-align:left;font-size:7pt;text-transform:uppercase;letter-spacing:.6px;font-weight:600;}
+th:first-child{border-radius:6px 0 0 0;}th:last-child{border-radius:0 6px 0 0;}
+td{padding:6px 10px;border-bottom:1px solid #f0f0f0;vertical-align:top;}
+tr:hover td{background:rgba(21,96,130,.015);}
+.nc{text-align:right;font-variant-numeric:tabular-nums;}
+.b{display:inline-flex;align-items:center;gap:3px;font-size:7pt;padding:2px 8px;border-radius:10px;font-weight:600;}
+.bg{background:rgba(39,174,96,.12);color:var(--success);}.bo{background:rgba(255,95,0,.12);color:var(--orange);}
+.br2{background:rgba(231,76,60,.12);color:var(--danger);}.bgy{background:rgba(107,114,128,.12);color:var(--gray);}
+.bt{background:rgba(21,96,130,.12);color:var(--teal);}.bp{background:rgba(124,58,237,.1);color:var(--purple);}
+.cl{border-radius:11px;padding:15px 18px;margin:14px 0;display:flex;gap:12px;align-items:flex-start;}
+.cl .ci{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+.cl.info{background:rgba(21,96,130,.05);border:1px solid rgba(21,96,130,.14);}.cl.info .ci{background:rgba(21,96,130,.12);color:var(--teal);}
+.cl.warn{background:rgba(255,192,0,.06);border:1px solid rgba(255,192,0,.16);}.cl.warn .ci{background:rgba(255,192,0,.15);color:#B8860B;}
+.cl.next{background:rgba(39,174,96,.05);border:1px solid rgba(39,174,96,.14);}.cl.next .ci{background:rgba(39,174,96,.12);color:var(--success);}
+.cl.danger{background:rgba(231,76,60,.05);border:1px solid rgba(231,76,60,.14);}.cl.danger .ci{background:rgba(231,76,60,.12);color:var(--danger);}
+.cl .bd{flex:1;font-size:9.5pt;}.cl .bd strong{display:block;margin-bottom:3px;font-size:10pt;}
+.highlight{background:linear-gradient(transparent 60%,rgba(255,192,0,.35) 60%);padding:0 2px;font-weight:600;}
+.opp{border:2px solid rgba(21,96,130,.15);border-radius:12px;padding:18px;margin:14px 0;position:relative;overflow:hidden;}
+.opp .ribbon{position:absolute;top:0;right:0;background:var(--danger);color:#fff;font-size:7pt;font-weight:700;padding:3px 14px;border-radius:0 0 0 8px;text-transform:uppercase;letter-spacing:.8px;}
+.opp h4{font-size:12pt;color:var(--navy);margin-bottom:6px;}
+.opp .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;}
+.fc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:14px 0;}
+.fc{background:var(--light);border-radius:11px;padding:18px;border-left:4px solid var(--teal);}
+.fc:nth-child(2){border-left-color:var(--orange);}.fc:nth-child(3){border-left-color:var(--gold);}.fc:nth-child(4){border-left-color:var(--success);}
+.fc h4{font-size:10.5pt;color:var(--navy);margin-bottom:5px;}.fc p{font-size:8.5pt;color:var(--gray);line-height:1.55;margin-bottom:0;}
+.cycle{display:flex;gap:4px;margin:16px 0;align-items:stretch;}
+.cycle-s{flex:1;padding:14px 10px;border-radius:10px;text-align:center;position:relative;}
+.cycle-s .num{font-size:18pt;font-weight:800;line-height:1;}.cycle-s .tt{font-size:8pt;font-weight:700;margin:4px 0 2px;}.cycle-s .dd{font-size:7pt;color:rgba(255,255,255,.7);}
+.cycle-s.c1{background:var(--teal);color:#fff;}.cycle-s.c2{background:var(--navy);color:#fff;}.cycle-s.c3{background:var(--orange);color:#fff;}
+.cycle-s.c4{background:var(--gold);color:var(--navy);}.cycle-s.c5{background:var(--success);color:#fff;}.cycle-s.c6{background:var(--danger);color:#fff;}
+.cycle-s::after{content:'>';position:absolute;right:-8px;top:50%;transform:translateY(-50%);font-size:14pt;color:var(--gray-light);font-weight:300;z-index:1;}
+.cycle-s:last-child::after{content:'';}
+.rd{display:flex;gap:8px;margin:16px 0;}
+.rd-s{flex:1;padding:13px;border-radius:10px;background:var(--light);border-top:4px solid var(--teal);text-align:center;}
+.rd-s .n{font-size:11pt;font-weight:800;color:var(--teal);}.rd-s .t{font-size:8pt;font-weight:700;color:var(--navy);margin:3px 0 2px;}.rd-s .d{font-size:7pt;color:var(--gray);}
+.rd-s:nth-child(1){border-top-color:var(--success);}.rd-s:nth-child(1) .n{color:var(--success);}
+.rd-s:nth-child(3){border-top-color:var(--orange);}.rd-s:nth-child(3) .n{color:var(--orange);}
+.rd-s:nth-child(5){border-top-color:var(--gold);}.rd-s:nth-child(5) .n{color:#B8860B;}
+@media print{.cover{min-height:auto;padding:50px 0;}.pg{padding:18px 8px;}}
+</style>
+</head>
+<body>
+
+<!-- ═══════ COVER ═══════ -->
+<div class="cover">
+  <div>
+    <div class="ca"><span></span><span></span><span></span></div>
+    <h1>Alem do<br><span class="gold">Licenciamento</span></h1>
+    <p class="sub">O motor de conformidade do Summo Quartile aplicado a novos objetos, novos momentos do ciclo e novos setores industriais</p>
+    <p class="brief">
+      O sistema nao e uma "ferramenta de licenciamento" — e uma <strong style="color:var(--gold);">plataforma de auditoria de conformidade regulatoria</strong>.
+      Licenciamento ambiental foi o primeiro caso de uso. Este documento explora como o mesmo motor
+      (inventario de requisitos + evidencias + score + plano PDCA) se aplica a <em>outros objetos</em>
+      em todo o ciclo de vida do empreendimento.
+    </p>
+    <span class="tag">Analise estrategica para socios — Abril 2026</span>
+  </div>
+  <div>
+    <div class="cc"><div class="cg">
+      <div><div class="l">Motor central</div><div class="v">Inventario + Evidencias + Score + PDCA</div></div>
+      <div><div class="l">Caso validado</div><div class="v">DD Licenciamento (mineracao MG)</div></div>
+      <div><div class="l">Casos testados</div><div class="v">Barragens + Sistema eletrico</div></div>
+      <div><div class="l">Objetos avaliados</div><div class="v">8 novos objetos regulados</div></div>
+      <div><div class="l">Setores-alvo</div><div class="v">Mineracao · Siderurgia · Celulose · O&G</div></div>
+      <div><div class="l">Data</div><div class="v">17 de abril de 2026</div></div>
+    </div></div>
+    <div class="cf"><span>Summo Quartile — Inteligencia Estrategica</span><span>Confidencial — Socios</span></div>
+  </div>
+</div>
+
+<!-- ═══════ PAG 1 — O MOTOR ABSTRAIDO ═══════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Novos Objetos</span></div><div class="rt">1 / 8 · O motor</div></div>
+
+  <h2><span class="ic t">⚙</span> O que temos e nao sabemos que temos</h2>
+
+  <p>O sistema construido para DD de licenciamento ambiental e, na verdade, um <strong>motor generico de auditoria de conformidade regulatoria</strong>. Abstraido:</p>
+
+  <table>
+    <thead><tr><th>Componente</th><th>Na mineracao</th><th>Generalizado</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Inventario de requisitos</strong></td><td>2.212 requisitos de 11 modalidades (DN COPAM 217)</td><td>Qualquer checklist normativo: NRs, PNSB, ISO, CONAMA, ANP</td></tr>
+      <tr><td><strong>Evidencias</strong></td><td>PDFs de EIA/RIMA, PCA, PRAD, laudos</td><td>Qualquer documento: laudos eletricos, relatorios geotecnicos, certificados, ARTs</td></tr>
+      <tr><td><strong>Matching doc ↔ requisito</strong></td><td>Motor de matching com NLP</td><td>Identico — independe de dominio</td></tr>
+      <tr><td><strong>Avaliacao</strong></td><td>Atende / Parcial / Nao Atende / NA</td><td>Escala universal de conformidade</td></tr>
+      <tr><td><strong>Criticidade</strong></td><td>Impacto x complexidade</td><td>Mesma logica para qualquer regulacao</td></tr>
+      <tr><td><strong>Score + PDCA</strong></td><td>Conformidade 0-100% + plano corretivo</td><td>Identico</td></tr>
+      <tr><td><strong>Relatorios</strong></td><td>5 relatorios HTML por fase</td><td>Templates parametrizaveis</td></tr>
+    </tbody>
+  </table>
+
+  <h3>O ciclo completo de um empreendimento — 6 momentos de conformidade</h3>
+
+  <div class="cycle">
+    <div class="cycle-s c1"><div class="num">1</div><div class="tt">Viabilidade</div><div class="dd">"Consigo licenca?"</div></div>
+    <div class="cycle-s c2"><div class="num">2</div><div class="tt">Elaboracao</div><div class="dd">"O estudo esta<br>completo?"</div></div>
+    <div class="cycle-s c3"><div class="num">3</div><div class="tt">Pre-protocolo</div><div class="dd">"Vou receber IC?"</div></div>
+    <div class="cycle-s c4"><div class="num">4</div><div class="tt">Analise</div><div class="dd">"Recebi IC,<br>como respondo?"</div></div>
+    <div class="cycle-s c5"><div class="num">5</div><div class="tt">Operacao</div><div class="dd">"Cumpro<br>condicionantes?"</div></div>
+    <div class="cycle-s c6"><div class="num">6</div><div class="tt">Fechamento</div><div class="dd">"Descomissiono<br>corretamente?"</div></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Momento</th><th>Fazemos hoje?</th><th>Tipo de receita</th><th>Valor</th></tr></thead>
+    <tbody>
+      <tr><td>1. Viabilidade</td><td><span class="b bg">Sim</span></td><td>One-shot</td><td>Porta de entrada</td></tr>
+      <tr><td>2. Revisao de estudos (EIA/PCA)</td><td><span class="b br2">Nao</span></td><td>One-shot</td><td>Alto (pega antes do protocolo)</td></tr>
+      <tr><td>3. Pre-protocolo (DD)</td><td><span class="b bg">Sim</span></td><td>One-shot</td><td>Core atual</td></tr>
+      <tr><td>4. Resposta a IC</td><td><span class="b br2">Nao</span></td><td>Event-driven</td><td>Urgente = premium</td></tr>
+      <tr><td><strong>5. Operacao (condicionantes)</strong></td><td><span class="b bo">Parcial</span></td><td><strong>Recorrente (SaaS)</strong></td><td><span class="highlight">Maior valor: receita continua</span></td></tr>
+      <tr><td>6. Fechamento/descomissionamento</td><td><span class="b br2">Nao</span></td><td>One-shot (grande)</td><td>Alto ticket, nicho</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cl warn">
+    <div class="ci">!</div>
+    <div class="bd"><strong>Insight critico sobre timing</strong>
+    Hoje cobrimos os momentos 1 e 3 (one-shot). O momento 5 (operacao/condicionantes) e o unico que gera <strong>receita recorrente mensal</strong> — e onde Ambisis, Licentia, Onegreen e e-Licencie ja atuam. Precisamos entrar nesse ciclo para virar SaaS.</div>
+  </div>
+</div>
+
+<!-- ═══════ PAG 2 — PILHAS DE REJEITOS ═══════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Novos Objetos</span></div><div class="rt">2 / 8 · Pilhas de rejeitos</div></div>
+
+  <h2><span class="ic r">!</span> Oportunidade #1: Pilhas de rejeitos — a "proxima barragem"</h2>
+
+  <div class="opp">
+    <div class="ribbon">Vacuo regulatorio</div>
+    <h4>O cenario: 3.000+ pilhas sem regulacao federal</h4>
+    <div class="g2">
+      <div>
+        <p class="sm"><strong>O que aconteceu:</strong></p>
+        <ul class="sm">
+          <li>Lei 14.066/2020 proibiu barragens a montante</li>
+          <li>Vale: de 40% (2014) para <strong>70% empilhamento seco</strong></li>
+          <li>Samarco: <strong>80% filtrado</strong> desde 2020</li>
+          <li>Resultado: +3.000 pilhas no Brasil, crescendo</li>
+          <li>4+ deslizamentos documentados desde 2018</li>
+          <li>Jaguar Mining (dez/2024): 640 milhoes de litros</li>
+        </ul>
+      </div>
+      <div>
+        <p class="sm"><strong>A lacuna regulatoria:</strong></p>
+        <ul class="sm">
+          <li><span class="b br2">Zero regras federais</span> de fiscalizacao</li>
+          <li>ANM nao tem equipe dedicada a pilhas</li>
+          <li>Sem cadastro obrigatorio (vs 895 barragens no SIGBM)</li>
+          <li>Sem cronograma de vistorias</li>
+          <li>Drenagem projetada com dados de 40 anos atras</li>
+          <li><strong>ANM incluiu pilhas na agenda regulatoria 2025-2026</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>Projetos de lei em tramitacao</h3>
+  <table>
+    <thead><tr><th>PL</th><th>Autor</th><th>Esfera</th><th>Conteudo</th><th>Status (abr/2026)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>PL 2.519/24</strong></td><td>Beatriz Cerqueira (PT-MG)</td><td>Estadual MG (ALMG)</td><td>Plano de seguranca, monitoramento, desativacao, comunicacao em 2h de anomalias, transparencia</td><td><span class="b bo">Aprovado Comissao Seguranca Publica (15/04/2026). Segue para Meio Ambiente</span></td></tr>
+      <tr><td><strong>PL federal</strong></td><td>Duda Salabert (PDT-MG)</td><td>Federal (Camara)</td><td>Parametros tecnicos e seguranca para pilhas</td><td><span class="b bgy">Na Comissao de Meio Ambiente desde nov/2024. Sem relator</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="cl danger">
+    <div class="ci">⚡</div>
+    <div class="bd"><strong>Por que e urgente para nos</strong>
+    Quando a regulamentacao sair (prevista 2026-2027), <span class="highlight">3.000+ pilhas</span> precisarao se adequar de uma vez — plano de seguranca, monitoramento, documentacao.
+    Quem tiver a ferramenta de conformidade pronta <strong>antes</strong> da lei captura todo o mercado. E exatamente o cenario pre-Brumadinho para barragens, mas com janela de oportunidade explicita.</div>
+  </div>
+
+  <h3>O que nosso motor faz para pilhas</h3>
+  <table>
+    <thead><tr><th>Componente</th><th>Aplicacao para pilhas</th><th>Reuso</th></tr></thead>
+    <tbody>
+      <tr><td>Inventario de requisitos</td><td>Checklist baseado no PL 2.519/24 + futura norma ANM: projeto de engenharia, plano de seguranca, plano de monitoramento, plano de desativacao</td><td><span class="b bg">90%</span></td></tr>
+      <tr><td>Evidencias</td><td>Laudos geotecnicos, relatorios de drenagem, ARTs, PIEs, mapas de risco</td><td><span class="b bg">100%</span></td></tr>
+      <tr><td>Score + PDCA</td><td>Conformidade com norma futura → gap analysis → plano corretivo</td><td><span class="b bg">100%</span></td></tr>
+      <tr><td>Monitoramento espacial</td><td>Sobreposicao pilha × area de risco, APP, comunidades</td><td><span class="b bg">100%</span></td></tr>
+      <tr><td>IC Shield</td><td>Adaptavel: risco de exigencia do orgao na regularizacao</td><td><span class="b bo">70%</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="ks">
+    <div class="k"><div class="n">3.000+</div><div class="lb">pilhas no Brasil</div></div>
+    <div class="k"><div class="n">Zero</div><div class="lb">software de<br>conformidade</div></div>
+    <div class="k"><div class="n">2026-27</div><div class="lb">regulamentacao<br>prevista</div></div>
+    <div class="k"><div class="n">R$ 30-200k</div><div class="lb">ticket por<br>auditoria</div></div>
+  </div>
+</div>
+
+<!-- ═══════ PAG 3 — CONDICIONANTES ═══════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Novos Objetos</span></div><div class="rt">3 / 8 · Condicionantes</div></div>
+
+  <h2><span class="ic g">$</span> Oportunidade #2: Gestao de condicionantes — receita recorrente</h2>
+
+  <div class="opp">
+    <h4>Cada licenca ambiental gera 20 a 100 obrigacoes continuas</h4>
+    <div class="g2">
+      <div>
+        <p class="sm"><strong>A dor:</strong></p>
+        <ul class="sm">
+          <li>Condicionantes tem prazo (mensal, trimestral, anual)</li>
+          <li>Descumprimento → multa, embargo, <strong>cassacao da licenca</strong></li>
+          <li>Ninguem lembra de todas → Excel, sharepoint, post-it</li>
+          <li>Auditorias pegam de surpresa</li>
+          <li>Renovacao de licenca cobra cumprimento retroativo</li>
+        </ul>
+      </div>
+      <div>
+        <p class="sm"><strong>Concorrencia existente:</strong></p>
+        <ul class="sm">
+          <li><strong>Ambisis</strong>: lider (106 mil projetos). Gestao + alertas. Licencas + residuos</li>
+          <li><strong>Licentia</strong>: regras automatizadas, alem do binario</li>
+          <li><strong>Onegreen</strong>: licencas + condicionantes, alertas por e-mail</li>
+          <li><strong>e-Licencie</strong>: relatorios de acompanhamento</li>
+          <li><strong>Envix360</strong>: condicionantes + renovacao + prazos</li>
+        </ul>
+        <p class="xs mu">Todos fazem <em>gestao</em>. Nenhum faz <em>inteligencia</em>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cl next">
+    <div class="ci">★</div>
+    <div class="bd"><strong>Nosso diferencial vs Ambisis/Licentia/Onegreen</strong>
+    Eles dizem "voce tem 47 condicionantes, 12 vencem este mes". Nos dizemos "das 12 que vencem, <strong>3 tem historico de gerar IC na renovacao</strong> (cruzamento com IC Shield) e <strong>1 esta em zona de alto risco de embargo</strong> (cruzamento com infrações IBAMA do CNPJ)". A camada de inteligencia sobre o workflow e o que ninguem tem.</div>
+  </div>
+
+  <h3>Modelo de receita</h3>
+  <table>
+    <thead><tr><th>Faixa</th><th>Condicionantes</th><th>Assinatura mensal</th><th>Exemplos de cliente</th></tr></thead>
+    <tbody>
+      <tr><td>Pequeno</td><td>ate 50</td><td>R$ 1.500-3.000</td><td>Pedreira, usina solar, ETE</td></tr>
+      <tr><td>Medio</td><td>50-200</td><td>R$ 5.000-12.000</td><td>Mina media, parque eolico, fabrica</td></tr>
+      <tr><td>Grande</td><td>200+</td><td>R$ 15.000-40.000</td><td>Grande mineradora, siderurgica, LT</td></tr>
+    </tbody>
+  </table>
+  <p class="sm mu">Com 30 clientes medios: R$ 240-360k ARR. Com 100: R$ 800k-1.4M ARR. Escala SaaS classica.</p>
+
+  <h3>O que nosso motor ja faz nativamente</h3>
+  <ul>
+    <li><strong>Inventario de condicionantes</strong> = inventario de requisitos (ja temos o framework)</li>
+    <li><strong>Evidencias periodicas</strong> = upload de laudos/relatorios (ja temos upload + matching)</li>
+    <li><strong>Score de conformidade</strong> = exatamente nosso score DD (0-100%, atende/parcial/nao atende)</li>
+    <li><strong>PDCA</strong> = plano de acao para itens vencidos ou parciais</li>
+    <li><strong>Alertas</strong> = precisa adicionar cron + notificacao (1-2 dias de dev)</li>
+    <li><strong>Relatorios automaticos</strong> = mesma infra de report_templates.py</li>
+  </ul>
+</div>
+
+<!-- ═══════ PAG 4 — ESG/CVM 193 ═══════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Novos Objetos</span></div><div class="rt">4 / 8 · ESG obrigatorio</div></div>
+
+  <h2><span class="ic p">§</span> Oportunidade #3: CVM 193 / ISSB — ESG obrigatorio em 2026</h2>
+
+  <div class="ks">
+    <div class="k"><div class="n">2026</div><div class="lb">Voluntario<br>ano-base 2025</div></div>
+    <div class="k"><div class="n">2027</div><div class="lb">Obrigatorio<br>ano-base 2026</div></div>
+    <div class="k"><div class="n">IFRS S1+S2</div><div class="lb">Padrao ISSB<br>adotado pela CVM</div></div>
+    <div class="k"><div class="n">1o pais</div><div class="lb">Brasil = primeiro<br>a adotar ISSB</div></div>
+  </div>
+
+  <p><strong>Resolucao CVM 193/2023</strong> obriga companhias abertas a publicar relatorio de sustentabilidade conforme IFRS S1 e S2 (ISSB). Ano-base 2026 → publicacao ate maio/2027 com asseguracao razoavel. Afeta toda empresa listada na B3 + fornecedoras de empresas europeias (CSRD/UE).</p>
+
+  <div class="cl info">
+    <div class="ci">$</div>
+    <div class="bd"><strong>Por que nos temos vantagem</strong>
+    O pilar "E" (ambiental) do ESG precisa de dados que <strong>ja coletamos</strong>: licencas (IBAMA, SEMAD), infracoes (IBAMA), outorgas (ANA), areas protegidas (UC/TI), emissoes, residuos. Nosso dataset vira <em>input direto</em> do relatorio ISSB. Ninguem mais tem essa integracao pronta.</div>
+  </div>
+
+  <h3>Setores mais impactados (e que ja sao nossos alvos)</h3>
+  <table>
+    <thead><tr><th>Setor</th><th>Empresas listadas (B3)</th><th>Exposicao CSRD/UE</th><th>Urgencia</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Mineracao</strong></td><td>Vale, CSN Mineracao, Usiminas</td><td><span class="b br2">Altissima</span> (exportam para UE)</td><td><span class="b br2">Imediata</span></td></tr>
+      <tr><td><strong>Siderurgia</strong></td><td>Gerdau, CSN, ArcelorMittal, Usiminas</td><td><span class="b br2">Altissima</span></td><td><span class="b br2">Imediata</span></td></tr>
+      <tr><td><strong>Celulose</strong></td><td>Suzano, Klabin, Eldorado (CMPC)</td><td><span class="b br2">Altissima</span> (UE e principal destino)</td><td><span class="b br2">Imediata</span></td></tr>
+      <tr><td><strong>Oleo e Gas</strong></td><td>Petrobras, PRIO, 3R/Brava, Enauta</td><td><span class="b bo">Alta</span></td><td><span class="b bo">2026-27</span></td></tr>
+      <tr><td><strong>Energia</strong></td><td>ENGIE, CPFL, Neoenergia, Eletrobras</td><td><span class="b bo">Alta</span></td><td><span class="b bo">2026-27</span></td></tr>
+    </tbody>
+  </table>
+
+  <p class="sm mu">Ticket: R$ 100k-1M/ano por empresa para montagem + asseguracao do relatorio ISSB. As Big-4 (Deloitte, EY, PwC, KPMG) vao dominar asseguracao, mas <strong>o dado de entrada</strong> (dados ambientais estruturados) e o que nos temos.</p>
+</div>
+
+<!-- ═══════ PAG 5 — SETORES INDUSTRIAIS ═══════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Novos Objetos</span></div><div class="rt">5 / 8 · Setores industriais</div></div>
+
+  <h2><span class="ic o">◈</span> Aplicacao por setor industrial</h2>
+
+  <p>Voce mencionou mineracao, siderurgia, celulose e oleo e gas. Para cada um, o motor se aplica em <strong>multiplos objetos</strong> simultaneamente:</p>
+
+  <table>
+    <thead><tr><th>Setor</th><th>Objetos de conformidade</th><th>Norma principal</th><th>Recorrencia</th><th>Ticket</th></tr></thead>
+    <tbody>
+      <tr style="background:rgba(21,96,130,.03);"><td colspan="5" style="font-weight:700;color:var(--teal);padding:8px 10px;">MINERACAO (ja estamos)</td></tr>
+      <tr><td rowspan="5"></td><td>Licenciamento ambiental</td><td>CONAMA 237, LGLA, DN COPAM</td><td>Por projeto</td><td>R$ 50-500k</td></tr>
+      <tr><td><strong>Pilhas de rejeitos</strong></td><td>PL 2.519/24 + futura ANM</td><td>Semestral-anual</td><td>R$ 30-200k</td></tr>
+      <tr><td>Condicionantes de licenca</td><td>Cada licenca (20-100 itens)</td><td><strong>Mensal (SaaS)</strong></td><td>R$ 5-40k/mes</td></tr>
+      <tr><td>Fechamento de mina (PFM)</td><td>Res. ANM 68 + 191/2024</td><td>Quinquenal + final</td><td>R$ 50-300k</td></tr>
+      <tr><td>SIGBM (barragens)</td><td>Lei 12.334, Port. 70.389</td><td>Semestral (DCE)</td><td>R$ 30-150k</td></tr>
+      <tr style="background:rgba(255,95,0,.03);"><td colspan="5" style="font-weight:700;color:var(--orange);padding:8px 10px;">SIDERURGIA</td></tr>
+      <tr><td rowspan="4"></td><td>Licenciamento (emissoes, agua, residuos)</td><td>CONAMA 382 (emissoes), 430 (efluentes)</td><td>Por planta</td><td>R$ 100-400k</td></tr>
+      <tr><td>Condicionantes operacionais</td><td>Licenca da planta (50-150 condicionantes)</td><td><strong>Mensal (SaaS)</strong></td><td>R$ 15-40k/mes</td></tr>
+      <tr><td>NR-10/12/13 (caldeiras, fornos, eletrica)</td><td>NR-10, NR-12, NR-13</td><td><strong>Anual</strong></td><td>R$ 20-80k</td></tr>
+      <tr><td>ESG / CVM 193</td><td>IFRS S1+S2, CSRD</td><td><strong>Anual</strong></td><td>R$ 200k-1M</td></tr>
+      <tr style="background:rgba(39,174,96,.03);"><td colspan="5" style="font-weight:700;color:var(--success);padding:8px 10px;">CELULOSE E PAPEL</td></tr>
+      <tr><td rowspan="4"></td><td>Licenciamento (efluentes, emissoes Kraft, silvicultura)</td><td>CONAMA 382 (TRS), 430 (efluentes)</td><td>Por fabrica</td><td>R$ 100-300k</td></tr>
+      <tr><td>Certificacao FSC / PEFC</td><td>Padrao FSC-STD-BRA</td><td><strong>Anual + 5 anos</strong></td><td>R$ 50-200k</td></tr>
+      <tr><td>Condicionantes (floresta + fabrica)</td><td>Licenca + plano de manejo</td><td><strong>Mensal (SaaS)</strong></td><td>R$ 10-30k/mes</td></tr>
+      <tr><td>ESG / CSRD (UE e destino #1)</td><td>IFRS S1+S2, EUDR (desmatamento)</td><td><strong>Anual</strong></td><td>R$ 300k-1M</td></tr>
+      <tr style="background:rgba(124,58,237,.03);"><td colspan="5" style="font-weight:700;color:var(--purple);padding:8px 10px;">OLEO E GAS</td></tr>
+      <tr><td rowspan="4"></td><td>Licenciamento offshore/onshore</td><td>CONAMA 237, 398 (derramamento), ANP</td><td>Por campo/plataforma</td><td>R$ 200k-2M</td></tr>
+      <tr><td>Plano de Emergencia Individual (PEI)</td><td>CONAMA 398/2008</td><td><strong>Anual + simulado</strong></td><td>R$ 50-200k</td></tr>
+      <tr><td>Condicionantes (plataformas, dutos)</td><td>Licenca IBAMA (80-200 condicionantes)</td><td><strong>Mensal (SaaS)</strong></td><td>R$ 20-50k/mes</td></tr>
+      <tr><td>Descomissionamento (campos maduros)</td><td>Res. ANP 817, IBAMA</td><td>Por campo</td><td>R$ 500k-5M</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════ PAG 6 — RANKING PRIORIZADO ═══════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Novos Objetos</span></div><div class="rt">6 / 8 · Ranking</div></div>
+
+  <h2><span class="ic gl">★</span> Ranking: quais objetos atacar primeiro</h2>
+
+  <p>Criterios: (1) receita recorrente vs one-shot, (2) reaproveitamento do motor, (3) urgencia de mercado, (4) barreira de entrada, (5) sinergia com o que ja temos.</p>
+
+  <table>
+    <thead><tr><th>#</th><th>Objeto</th><th>Receita</th><th>Reuso</th><th>Urgencia</th><th>Barreira</th><th>Sinergia</th><th>Veredito</th></tr></thead>
+    <tbody>
+      <tr style="background:rgba(231,76,60,.04);"><td class="nc"><strong>1</strong></td><td><strong>Pilhas de rejeitos</strong></td><td><span class="b bo">Semestral</span></td><td>90%</td><td><span class="b br2">Altissima</span></td><td><span class="b bg">Baixa</span></td><td><span class="b bg">100%</span></td><td><span class="b br2">★ Primeiro mover</span></td></tr>
+      <tr style="background:rgba(39,174,96,.04);"><td class="nc"><strong>2</strong></td><td><strong>Condicionantes (SaaS)</strong></td><td><span class="b bg">Mensal</span></td><td>95%</td><td><span class="b bo">Alta</span></td><td><span class="b bo">Media</span> (concorrentes)</td><td><span class="b bg">100%</span></td><td><span class="b bg">★ Receita recorrente</span></td></tr>
+      <tr style="background:rgba(124,58,237,.04);"><td class="nc"><strong>3</strong></td><td><strong>ESG / CVM 193</strong></td><td><span class="b bo">Anual</span></td><td>70%</td><td><span class="b br2">Obrigatorio 2027</span></td><td><span class="b bo">Media</span> (Big-4)</td><td><span class="b bg">Alta</span></td><td><span class="b bp">★ Premium / C-level</span></td></tr>
+      <tr><td class="nc"><strong>4</strong></td><td><strong>Revisao de EIA/PCA</strong></td><td><span class="b bgy">One-shot</span></td><td>85%</td><td><span class="b bo">Alta</span></td><td><span class="b bg">Baixa</span></td><td><span class="b bg">100%</span></td><td><span class="b bt">Extensao natural da DD</span></td></tr>
+      <tr><td class="nc"><strong>5</strong></td><td><strong>NR-10/12/13</strong></td><td><span class="b bo">Anual</span></td><td>80%</td><td><span class="b bgy">Media</span></td><td><span class="b bg">Baixa</span></td><td><span class="b bo">Media</span></td><td><span class="b bt">Volume alto, ticket medio</span></td></tr>
+      <tr><td class="nc"><strong>6</strong></td><td><strong>Fechamento de mina (PFM)</strong></td><td><span class="b bgy">Quinquenal</span></td><td>75%</td><td><span class="b bgy">Media</span></td><td><span class="b bg">Baixa</span></td><td><span class="b bg">Alta</span></td><td><span class="b bgy">Nicho rentavel</span></td></tr>
+      <tr><td class="nc"><strong>7</strong></td><td><strong>Resposta a IC</strong></td><td><span class="b bgy">Event-driven</span></td><td>90%</td><td><span class="b bo">Alta</span></td><td><span class="b bg">Baixa</span></td><td><span class="b bg">100%</span></td><td><span class="b bt">Complemento IC Shield</span></td></tr>
+      <tr><td class="nc"><strong>8</strong></td><td><strong>PEI / CONAMA 398 (O&G)</strong></td><td><span class="b bo">Anual</span></td><td>70%</td><td><span class="b bgy">Media</span></td><td><span class="b bo">Alta</span> (setor fechado)</td><td><span class="b bo">Media</span></td><td><span class="b bgy">Futuro</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="cl danger">
+    <div class="ci">★</div>
+    <div class="bd"><strong>A combinacao vencedora</strong>
+    <strong>Pilhas</strong> (first-mover, vacuo regulatorio, 3.000+ estruturas) + <strong>Condicionantes</strong> (receita recorrente, SaaS, todo empreendimento licenciado) + <strong>ESG CVM 193</strong> (obrigatorio 2027, C-level, dados que ja temos). Tres objetos, tres modelos de receita (semestral + mensal + anual), mesmo motor, mesmos setores.</div>
+  </div>
+</div>
+
+<!-- ═══════ PAG 7 — PRODUTO INTEGRADO ═══════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Novos Objetos</span></div><div class="rt">7 / 8 · Produto integrado</div></div>
+
+  <h2><span class="ic t">◈</span> Visao de produto: plataforma de conformidade regulatoria</h2>
+
+  <p>O Summo Quartile deixa de ser "ferramenta de licenciamento ambiental" e vira <strong>"plataforma de conformidade regulatoria para industria pesada"</strong> — com modulos por objeto e receita mista (one-shot + SaaS + anual).</p>
+
+  <div class="fc-grid">
+    <div class="fc">
+      <h4>Modulo DD Ambiental</h4>
+      <p><strong>Ja temos.</strong> 5 fases, IC Shield, viabilidade, relatorios. Porta de entrada para o cliente. Receita one-shot por projeto.</p>
+    </div>
+    <div class="fc">
+      <h4>Modulo Pilhas</h4>
+      <p><strong>First-mover.</strong> Conformidade preventiva (pre-regulacao), auditoria de seguranca, gap analysis vs PL 2.519/24 e futura norma ANM. Receita semestral.</p>
+    </div>
+    <div class="fc">
+      <h4>Modulo Condicionantes</h4>
+      <p><strong>SaaS recorrente.</strong> Monitoramento continuo de 20-200 condicionantes por licenca, alertas, score, relatorios de compliance. Receita mensal por planta.</p>
+    </div>
+    <div class="fc">
+      <h4>Modulo ESG/ISSB</h4>
+      <p><strong>Premium.</strong> Dados ambientais estruturados como input do relatorio CVM 193. Cruzamento automatico licencas + infracoes + emissoes + areas protegidas. Receita anual.</p>
+    </div>
+  </div>
+
+  <h3>Composicao de receita por tipo de cliente</h3>
+  <table>
+    <thead><tr><th>Perfil de cliente</th><th>DD (one-shot)</th><th>Pilhas (semestral)</th><th>Condicionantes (mensal)</th><th>ESG (anual)</th><th>Total/ano</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Mineradora media</strong> (1 mina, 2 pilhas, 1 licenca)</td><td>R$ 80k</td><td>R$ 60k</td><td>R$ 120k</td><td>—</td><td class="nc"><strong>R$ 260k</strong></td></tr>
+      <tr><td><strong>Mineradora grande</strong> (3 minas, 10 pilhas, 5 licencas)</td><td>R$ 200k</td><td>R$ 300k</td><td>R$ 600k</td><td>R$ 300k</td><td class="nc"><strong>R$ 1.4M</strong></td></tr>
+      <tr><td><strong>Siderurgica</strong> (1 planta, 0 pilhas, 3 licencas)</td><td>R$ 150k</td><td>—</td><td>R$ 360k</td><td>R$ 500k</td><td class="nc"><strong>R$ 1.0M</strong></td></tr>
+      <tr><td><strong>Celulose</strong> (1 fabrica + floresta, 2 licencas + FSC)</td><td>R$ 120k</td><td>—</td><td>R$ 240k</td><td>R$ 400k</td><td class="nc"><strong>R$ 760k</strong></td></tr>
+    </tbody>
+  </table>
+  <p class="xs mu">Estimativas conservadoras. Com 10 clientes mistos: ARR de R$ 3-8M.</p>
+</div>
+
+<!-- ═══════ PAG 8 — CRONOGRAMA + DECISOES ═══════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Novos Objetos</span></div><div class="rt">8 / 8 · Plano e decisoes</div></div>
+
+  <h2><span class="ic t">→</span> Cronograma de expansao por objeto</h2>
+
+  <h3>Onda 1 — Agora (mai-ago 2026): pilhas + condicionantes</h3>
+  <div class="rd">
+    <div class="rd-s"><div class="n">Mai</div><div class="t">IC Shield v1</div><div class="d">Fechar mineracao</div></div>
+    <div class="rd-s"><div class="n">Jun</div><div class="t">Pilhas v0</div><div class="d">Inventario PL 2.519/24</div></div>
+    <div class="rd-s"><div class="n">Jul</div><div class="t">Condicionantes v0</div><div class="d">Modulo SaaS MVP</div></div>
+    <div class="rd-s"><div class="n">Ago</div><div class="t">Piloto pilhas</div><div class="d">1-2 mineradoras</div></div>
+    <div class="rd-s"><div class="n">Ago</div><div class="t">Piloto condic.</div><div class="d">3-5 licencas ativas</div></div>
+  </div>
+
+  <h3>Onda 2 — S2 2026: ESG + setores</h3>
+  <div class="rd">
+    <div class="rd-s"><div class="n">Set</div><div class="t">ESG v0</div><div class="d">Pilar E automatizado</div></div>
+    <div class="rd-s"><div class="n">Out</div><div class="t">Siderurgia</div><div class="d">Inventario CONAMA 382/430</div></div>
+    <div class="rd-s"><div class="n">Nov</div><div class="t">Celulose</div><div class="d">Inventario FSC + Kraft</div></div>
+    <div class="rd-s"><div class="n">Dez</div><div class="t">CVM 193 v1</div><div class="d">Relatorio ISSB automatico</div></div>
+  </div>
+
+  <h3>Onda 3 — 2027: plataforma completa</h3>
+  <div class="rd">
+    <div class="rd-s"><div class="n">S1</div><div class="t">O&G</div><div class="d">CONAMA 398 + PEI</div></div>
+    <div class="rd-s"><div class="n">S1</div><div class="t">NRs (SST)</div><div class="d">NR-10/12/13 modular</div></div>
+    <div class="rd-s"><div class="n">S1</div><div class="t">Multi-estado</div><div class="d">SP (CETESB), RJ (INEA)</div></div>
+    <div class="rd-s"><div class="n">S2</div><div class="t">White-label</div><div class="d">SDK para consultorias</div></div>
+    <div class="rd-s"><div class="n">S2</div><div class="t">Captacao</div><div class="d">Se fizer sentido</div></div>
+  </div>
+
+  <h2><span class="ic r">?</span> Decisoes para os socios</h2>
+
+  <table>
+    <thead><tr><th>#</th><th>Pergunta</th><th>Impacto</th></tr></thead>
+    <tbody>
+      <tr><td class="nc">1</td><td><strong>Pilhas: entrar antes da lei?</strong> Risco de a norma mudar vs. vantagem de first-mover. PL 2.519/24 ja define os eixos (seguranca, monitoramento, desativacao) — podemos antecipar com 80% de certeza.</td><td>Define timing da Onda 1</td></tr>
+      <tr><td class="nc">2</td><td><strong>Condicionantes: competir ou complementar Ambisis?</strong> Entrar como concorrente (produto standalone) ou como camada de inteligencia sobre plataformas existentes (API/parceria)?</td><td>Define modelo de go-to-market</td></tr>
+      <tr><td class="nc">3</td><td><strong>ESG: fazer o pilar E completo ou vender dado bruto?</strong> Relatorio ISSB proprio (produto premium, compete com Big-4) ou fornecer o dado ambiental estruturado para quem monta o relatorio (B2B, menor ticket, mais escala)?</td><td>Define posicionamento CVM 193</td></tr>
+      <tr><td class="nc">4</td><td><strong>Siderurgia/celulose: qual primeiro?</strong> Siderurgia tem sinergia natural (CSN faz mineracao + siderurgia). Celulose tem exposicao UE maxima (CSRD + EUDR desmatamento).</td><td>Define segundo setor</td></tr>
+      <tr><td class="nc">5</td><td><strong>Marca: "Summo Quartile" cobre tudo ou precisa de submarcas?</strong> "Quartile" remete a mineracao. Se virar plataforma multi-setorial, considerar reposicionamento.</td><td>Define branding</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cl next" style="margin-top:18px;">
+    <div class="ci">→</div>
+    <div class="bd"><strong>Proximos passos independente das respostas</strong>
+    (1) Fechar IC Shield v1 para mineracao (11h dev — ja em andamento).
+    (2) Montar inventario-piloto de requisitos para pilhas baseado no PL 2.519/24 (~2 dias).
+    (3) Fazer POC de condicionantes usando 1 licenca real de cliente existente (~3 dias).
+    Nenhum desses compromete direcao — todos geram valor imediato e informam a decisao estrategica.</div>
+  </div>
+
+  <div style="margin-top:28px;padding-top:18px;border-top:2px solid var(--light);text-align:center;font-size:7.5pt;color:var(--gray-light);">
+    Summo Quartile · Inteligencia Estrategica · summoquartile.com<br>
+    Documento estrategico · Confidencial — Circulacao restrita a socios · 17 de abril de 2026
+  </div>
+</div>
+
+</body>
+</html>

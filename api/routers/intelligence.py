@@ -1033,3 +1033,81 @@ def refresh_briefing():
     import threading
     threading.Thread(target=_generate_briefing_sync, daemon=True).start()
     return {"status": "regenerating"}
+
+
+# ── Monitoramento ─────────────────────────────────────────────────────────
+
+
+@router.get("/intelligence/monitoring/top-empresas")
+def get_monitoring_top_empresas(limit: int = Query(20, ge=5, le=50)):
+    """Top empresas por volume de processos ANM + CFEM."""
+    # Processos ANM (v_scm)
+    processos = _safe_query(
+        """
+        SELECT cpf_cnpj_do_titular AS cnpj,
+               MIN(titular) AS empresa,
+               COUNT(*) AS total_processos,
+               SUM(CASE WHEN fase_atual LIKE '%Pesquisa%' THEN 1 ELSE 0 END) AS pesquisas,
+               SUM(CASE WHEN fase_atual LIKE '%Lavra%' OR fase_atual LIKE '%Concess%' THEN 1 ELSE 0 END) AS lavras,
+               MIN(substancia_principal) AS substancia_exemplo
+        FROM v_scm
+        WHERE cpf_cnpj_do_titular IS NOT NULL AND cpf_cnpj_do_titular != ''
+        GROUP BY cpf_cnpj_do_titular
+        HAVING COUNT(*) >= 20
+        ORDER BY total_processos DESC
+        LIMIT ?
+        """,
+        [limit],
+    )
+
+    # CFEM por CNPJ
+    cfem_map: dict[str, float] = {}
+    try:
+        cfem_rows = _safe_query(
+            """
+            SELECT "CPF_CNPJ" AS cnpj,
+                   SUM(CAST(REPLACE("ValorRecolhido", ',', '.') AS DOUBLE)) AS cfem_total
+            FROM v_cfem
+            WHERE "CPF_CNPJ" IS NOT NULL
+            GROUP BY "CPF_CNPJ"
+            """
+        )
+        cfem_map = {r["cnpj"]: r["cfem_total"] for r in cfem_rows if r.get("cnpj")}
+    except Exception:
+        pass
+
+    # Merge
+    for p in processos:
+        cnpj = p.get("cnpj", "")
+        p["cfem_total"] = cfem_map.get(cnpj, 0)
+
+    return processos
+
+
+@router.get("/intelligence/monitoring/pipeline")
+def get_monitoring_pipeline():
+    """Pipeline minerário nacional: contagem por fase."""
+    return _safe_query(
+        """
+        SELECT fase_atual, COUNT(*) AS n
+        FROM v_scm
+        WHERE fase_atual IS NOT NULL AND fase_atual != ''
+        GROUP BY fase_atual
+        ORDER BY n DESC
+        """
+    )
+
+
+@router.get("/intelligence/monitoring/projetos")
+def get_monitoring_projetos():
+    """Projetos de mineração em destaque (base curada)."""
+    projetos_path = REFERENCE_DIR / "projetos_destaque.json"
+    if not projetos_path.exists():
+        return {"total": 0, "projetos": []}
+    with open(projetos_path, encoding="utf-8") as f:
+        data = json.load(f)
+    return {
+        "total": len(data.get("projetos", [])),
+        "atualizado_em": data.get("_metadata", {}).get("atualizado_em"),
+        "projetos": data.get("projetos", []),
+    }

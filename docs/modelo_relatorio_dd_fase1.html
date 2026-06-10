@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório Due Diligence — Fase 1: Configuração e Escopo</title>
+<style>
+@page { size: A4; margin: 20mm 18mm; }
+:root {
+  --navy: #0A2540;
+  --navy2: #1A2C42;
+  --teal: #156082;
+  --gold: #FFC000;
+  --orange: #FF5F00;
+  --success: #27AE60;
+  --danger: #E74C3C;
+  --warning: #F39C12;
+  --light: #F8F9FB;
+  --gray: #6B7280;
+  --gray-light: #9CA3AF;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; color: #1a1a1a; line-height: 1.6; font-size: 10.5pt; background: white; }
+
+/* Cover */
+.cover { background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%); color: white; padding: 80px 60px 60px; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always; }
+.cover-top { }
+.cover-accent { display: flex; gap: 4px; margin-bottom: 40px; }
+.cover-accent span:nth-child(1) { width: 60px; height: 4px; background: var(--gold); border-radius: 2px; }
+.cover-accent span:nth-child(2) { width: 20px; height: 4px; background: var(--teal); border-radius: 2px; }
+.cover-accent span:nth-child(3) { width: 10px; height: 4px; background: var(--orange); border-radius: 2px; }
+.cover h1 { font-size: 32pt; font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
+.cover .gold { color: var(--gold); }
+.cover .subtitle { font-size: 14pt; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
+.cover .phase-tag { display: inline-block; background: var(--teal); color: white; padding: 6px 20px; border-radius: 20px; font-size: 10pt; font-weight: 700; margin-top: 30px; letter-spacing: 0.5px; }
+.cover-bottom { }
+.cover-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+.cover-meta-item { }
+.cover-meta-item .label { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+.cover-meta-item .value { font-size: 11pt; color: rgba(255,255,255,0.9); }
+.cover-footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+.cover-footer .brand { font-size: 10pt; font-weight: 700; color: rgba(255,255,255,0.6); }
+.cover-footer .confidential { font-size: 8pt; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px; }
+
+/* Page header/footer */
+.page { padding: 0 60px; max-width: 210mm; margin: 0 auto; }
+.page-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0 15px; border-bottom: 2px solid var(--light); margin-bottom: 25px; }
+.page-header .brand { font-size: 9pt; font-weight: 700; color: var(--navy); }
+.page-header .doc-ref { font-size: 8pt; color: var(--gray-light); }
+.page-footer { margin-top: 30px; padding: 15px 0; border-top: 1px solid #eee; text-align: center; font-size: 7.5pt; color: var(--gray-light); page-break-after: always; }
+
+/* Typography */
+h2 { font-size: 16pt; font-weight: 700; color: var(--navy); margin: 30px 0 12px; padding-bottom: 8px; border-bottom: 2px solid var(--light); }
+h3 { font-size: 12pt; font-weight: 700; color: var(--teal); margin: 20px 0 8px; }
+p { margin-bottom: 10px; }
+.text-muted { color: var(--gray); }
+.text-sm { font-size: 9pt; }
+.text-xs { font-size: 8pt; }
+
+/* Summary box */
+.summary-box { background: var(--light); border-radius: 12px; padding: 20px 24px; margin: 16px 0; }
+.summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.summary-item { text-align: center; }
+.summary-item .num { font-size: 22pt; font-weight: 800; color: var(--navy); line-height: 1.2; }
+.summary-item .label { font-size: 8pt; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+.summary-item.teal .num { color: var(--teal); }
+.summary-item.orange .num { color: var(--orange); }
+.summary-item.gold .num { color: var(--gold); }
+
+/* Profile cards */
+.profile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+.profile-card { border-radius: 10px; padding: 16px; text-align: center; border: 1px solid #eee; }
+.profile-card .value { font-size: 20pt; font-weight: 800; line-height: 1.2; }
+.profile-card .label { font-size: 8pt; color: var(--gray); margin-top: 4px; }
+.profile-card .detail { font-size: 8pt; color: var(--gray-light); margin-top: 2px; }
+.profile-card.green { background: rgba(39,174,96,0.05); border-color: rgba(39,174,96,0.2); }
+.profile-card.green .value { color: var(--success); }
+.profile-card.orange { background: rgba(255,95,0,0.05); border-color: rgba(255,95,0,0.2); }
+.profile-card.orange .value { color: var(--orange); }
+.profile-card.red { background: rgba(231,76,60,0.05); border-color: rgba(231,76,60,0.2); }
+.profile-card.red .value { color: var(--danger); }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 9pt; }
+th { background: var(--navy); color: white; padding: 8px 10px; text-align: left; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+th:first-child { border-radius: 6px 0 0 0; }
+th:last-child { border-radius: 0 6px 0 0; }
+td { padding: 7px 10px; border-bottom: 1px solid #f0f0f0; }
+tr:hover td { background: rgba(21,96,130,0.02); }
+.badge { display: inline-block; font-size: 7pt; padding: 2px 8px; border-radius: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+.badge-green { background: rgba(39,174,96,0.1); color: var(--success); }
+.badge-orange { background: rgba(255,95,0,0.1); color: var(--orange); }
+.badge-red { background: rgba(231,76,60,0.1); color: var(--danger); }
+.badge-gray { background: rgba(107,114,128,0.1); color: var(--gray); }
+.badge-teal { background: rgba(21,96,130,0.1); color: var(--teal); }
+
+/* Legislation */
+.leg-card { border-left: 3px solid var(--teal); padding: 10px 16px; margin: 8px 0; background: rgba(21,96,130,0.03); border-radius: 0 8px 8px 0; }
+.leg-card .name { font-weight: 700; font-size: 9.5pt; color: var(--navy); }
+.leg-card .desc { font-size: 8.5pt; color: var(--gray); margin-top: 2px; }
+
+/* Action plan */
+.action-table td:first-child { width: 30px; text-align: center; font-weight: 700; }
+.priority-high { color: var(--danger); font-weight: 700; }
+.priority-medium { color: var(--orange); font-weight: 700; }
+.priority-low { color: var(--success); font-weight: 700; }
+
+/* Callout */
+.callout { border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+.callout.info { background: rgba(21,96,130,0.06); border: 1px solid rgba(21,96,130,0.15); }
+.callout.warning { background: rgba(255,192,0,0.08); border: 1px solid rgba(255,192,0,0.2); }
+.callout.next { background: rgba(39,174,96,0.06); border: 1px solid rgba(39,174,96,0.15); }
+.callout strong { color: var(--navy); }
+.callout.warning strong { color: #B8860B; }
+
+/* Timeline */
+.timeline { display: flex; margin: 16px 0; gap: 0; }
+.timeline-step { flex: 1; padding: 12px 14px; text-align: center; position: relative; }
+.timeline-step .num { font-size: 16pt; font-weight: 800; }
+.timeline-step .name { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+.timeline-step.active { background: var(--teal); color: white; border-radius: 8px; }
+.timeline-step.done { background: rgba(39,174,96,0.1); color: var(--success); border-radius: 8px 0 0 8px; }
+.timeline-step.pending { background: var(--light); color: var(--gray-light); }
+
+@media print {
+  .cover { min-height: auto; padding: 60px 0; }
+  .page { padding: 0; }
+  .page-footer { page-break-after: always; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CAPA -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-top">
+    <div class="cover-accent"><span></span><span></span><span></span></div>
+    <h1>Due Diligence<br>Ambiental</h1>
+    <p class="subtitle">Mineração Serra Verde Ltda</p>
+    <p class="subtitle" style="color:rgba(255,255,255,0.5);">Licenciamento Ambiental Concomitante 1 (LAC1) · Classe 4</p>
+    <span class="phase-tag">Relatório 1/5 — Configuração e Escopo</span>
+  </div>
+  <div class="cover-bottom">
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="label">Empresa</div>
+        <div class="value">Mineração Serra Verde Ltda</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">CNPJ</div>
+        <div class="value">12.345.678/0001-90</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">Atividade</div>
+        <div class="value">A-02 — Lavra a Céu Aberto</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">Regional</div>
+        <div class="value">URA Central Metropolitana</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">Emissão</div>
+        <div class="value">13 de abril de 2026</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">Referência</div>
+        <div class="value">DD-2026-0042-R1</div>
+      </div>
+    </div>
+    <div class="cover-footer">
+      <span class="brand">Summo Quartile · summoquartile.com</span>
+      <span class="confidential">Confidencial</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PÁGINA 1: SUMÁRIO EXECUTIVO -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">Summo Quartile — Due Diligence Ambiental</span>
+    <span class="doc-ref">DD-2026-0042-R1 · Fase 1/5 · Confidencial</span>
+  </div>
+
+  <h2>1. Sumário Executivo</h2>
+
+  <p>Este relatório formaliza o escopo da Due Diligence Ambiental para a <strong>Mineração Serra Verde Ltda</strong>, referente ao processo de licenciamento ambiental na modalidade <strong>LAC1 (Licenciamento Ambiental Concomitante 1)</strong>, classe de impacto <strong>4</strong>, para atividade de <strong>lavra a céu aberto (A-02)</strong> na regional <strong>URA Central Metropolitana</strong>.</p>
+
+  <div class="summary-box">
+    <div class="summary-grid">
+      <div class="summary-item teal">
+        <div class="num">100</div>
+        <div class="label">Documentos Aplicáveis</div>
+      </div>
+      <div class="summary-item orange">
+        <div class="num">1.780</div>
+        <div class="label">Requisitos Mapeados</div>
+      </div>
+      <div class="summary-item">
+        <div class="num">6</div>
+        <div class="label">Normas Aplicáveis</div>
+      </div>
+      <div class="summary-item gold">
+        <div class="num">61,4%</div>
+        <div class="label">Probabilidade Histórica</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>Objetivo deste relatório:</strong> definir o escopo da avaliação, identificar a legislação aplicável, mapear os documentos e requisitos necessários, e apresentar o perfil de licenciamento do empreendimento com base em dados históricos.
+  </div>
+
+  <!-- Progress timeline -->
+  <h3>Progresso do Projeto</h3>
+  <div class="timeline">
+    <div class="timeline-step active"><div class="num">1</div><div class="name">Configuração</div></div>
+    <div class="timeline-step pending"><div class="num">2</div><div class="name">Documentos</div></div>
+    <div class="timeline-step pending"><div class="num">3</div><div class="name">Avaliação</div></div>
+    <div class="timeline-step pending"><div class="num">4</div><div class="name">Criticidade</div></div>
+    <div class="timeline-step pending"><div class="num">5</div><div class="name">Resultado</div></div>
+  </div>
+
+  <div class="page-footer">
+    Summo Quartile · summoquartile.com · Este relatório reflete o estado do projeto em 13/04/2026. Dados rastreáveis às fontes públicas oficiais.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PÁGINA 2: PERFIL DE LICENCIAMENTO -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">Summo Quartile — Due Diligence Ambiental</span>
+    <span class="doc-ref">DD-2026-0042-R1 · Fase 1/5</span>
+  </div>
+
+  <h2>2. Perfil de Licenciamento</h2>
+
+  <p>Análise do histórico de decisões para o perfil <strong>A-02 (Lavra a Céu Aberto) · Classe 4 · URA Central Metropolitana</strong>, baseada em 42.758 decisões do Sistema de Licenciamento Ambiental de Minas Gerais (SEMAD).</p>
+
+  <div class="profile-grid">
+    <div class="profile-card orange">
+      <div class="value">61,4%</div>
+      <div class="label">Probabilidade de Aprovação</div>
+      <div class="detail">Perfil A-02, Classe 4 (N=503 decisões)</div>
+    </div>
+    <div class="profile-card red">
+      <div class="value">-5,2pp</div>
+      <div class="label">Rigor da Regional</div>
+      <div class="detail">URA CM mais rigorosa que a média geral (78,3%)</div>
+    </div>
+    <div class="profile-card green">
+      <div class="value">+2,0pp</div>
+      <div class="label">Tendência (3 anos)</div>
+      <div class="detail">Taxa de aprovação subiu nos últimos 3 anos</div>
+    </div>
+  </div>
+
+  <div class="callout warning">
+    <strong>Atenção:</strong> O perfil A-02 Classe 4 na URA Central Metropolitana apresenta taxa de aprovação de 61,4%, significativamente abaixo da média geral de 78,3%. Isso indica um perfil de <strong>risco moderado a alto</strong> que justifica a realização desta Due Diligence com rigor.
+  </div>
+
+  <h3>Contexto Histórico da Empresa</h3>
+
+  <table>
+    <thead>
+      <tr><th>Indicador</th><th>Valor</th><th>Observação</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Decisões anteriores (SEMAD)</td><td><strong>7</strong></td><td>5 deferidos, 1 indeferido, 1 arquivamento</td></tr>
+      <tr><td>Taxa de aprovação própria</td><td><strong>71,4%</strong></td><td>Acima da média do perfil (61,4%)</td></tr>
+      <tr><td>Infrações IBAMA</td><td><strong>2</strong></td><td>Ambas quitadas (2021, 2023)</td></tr>
+      <tr><td>CFEM (situação)</td><td><span class="badge badge-green">Regular</span></td><td>Pagamentos em dia desde 2019</td></tr>
+      <tr><td>Processos ANM ativos</td><td><strong>4</strong></td><td>2 concessões de lavra, 1 pesquisa, 1 licenciamento</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Benchmarking — Comparação com o Setor</h3>
+
+  <table>
+    <thead>
+      <tr><th>Métrica</th><th>Serra Verde</th><th>Média Setor (A-02)</th><th>Posição</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Taxa de aprovação</td><td>71,4%</td><td>61,4%</td><td><span class="badge badge-green">Acima</span></td></tr>
+      <tr><td>Infrações IBAMA</td><td>2</td><td>3,4</td><td><span class="badge badge-green">Abaixo</span></td></tr>
+      <tr><td>CFEM</td><td>Regular</td><td>78% regulares</td><td><span class="badge badge-green">Regular</span></td></tr>
+      <tr><td>Regional (rigor)</td><td>URA CM</td><td>—</td><td><span class="badge badge-orange">3ª mais rigorosa</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer">
+    Summo Quartile · summoquartile.com · Dados: SEMAD MG, IBAMA, ANM CFEM. Período: 2019-2026.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PÁGINA 3: LEGISLAÇÃO E ESCOPO DOCUMENTAL -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">Summo Quartile — Due Diligence Ambiental</span>
+    <span class="doc-ref">DD-2026-0042-R1 · Fase 1/5</span>
+  </div>
+
+  <h2>3. Legislação Aplicável</h2>
+
+  <p>O processo de licenciamento LAC1 está sujeito às seguintes normas federais e estaduais:</p>
+
+  <div class="leg-card">
+    <div class="name">DN COPAM 217/2017 (alterada pela DN 246/2022)</div>
+    <div class="desc">Classificação por porte e potencial poluidor. Define modalidades de licenciamento em MG. Base principal dos requisitos.</div>
+  </div>
+  <div class="leg-card">
+    <div class="name">Lei 15.190/2025 — LGLA (Lei Geral do Licenciamento Ambiental)</div>
+    <div class="desc">Marco federal. Define LP, LI, LO, LAU, LAC, LAE, LOC. Prazos de análise e validade. Em vigor desde fev/2026.</div>
+  </div>
+  <div class="leg-card">
+    <div class="name">Resolução CONAMA 237/1997</div>
+    <div class="desc">Procedimentos de licenciamento ambiental. Competências, prazos, documentação exigida.</div>
+  </div>
+  <div class="leg-card">
+    <div class="name">Resolução CONAMA 9/1990</div>
+    <div class="desc">EIA/RIMA obrigatório para atividades de lavra e beneficiamento mineral (classes I, III-IX).</div>
+  </div>
+  <div class="leg-card">
+    <div class="name">Resolução CONAMA 10/1990</div>
+    <div class="desc">Licenciamento ambiental para extração mineral classe II.</div>
+  </div>
+  <div class="leg-card">
+    <div class="name">Decreto 9.406/2018</div>
+    <div class="desc">Regulamenta legislação de mineração. Exige atendimento ao licenciamento ambiental.</div>
+  </div>
+
+  <h2>4. Escopo Documental</h2>
+
+  <p>Para a modalidade <strong>LAC1</strong>, foram identificados <strong>100 documentos</strong> aplicáveis e <strong>1.780 requisitos</strong> de conformidade distribuídos da seguinte forma:</p>
+
+  <table>
+    <thead>
+      <tr><th>Documento</th><th>Requisitos</th><th>Categoria</th><th>Criticidade</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>EIA (Estudo de Impacto Ambiental)</td><td class="num-col"><strong>843</strong></td><td><span class="badge badge-teal">Técnico</span></td><td><span class="badge badge-red">Alta</span></td></tr>
+      <tr><td>RADA (Relatório de Avaliação de Desempenho)</td><td class="num-col"><strong>242</strong></td><td><span class="badge badge-teal">Técnico</span></td><td><span class="badge badge-orange">Média</span></td></tr>
+      <tr><td>LAS_RAS (Relatório Ambiental Simplificado)</td><td class="num-col"><strong>156</strong></td><td><span class="badge badge-teal">Técnico</span></td><td><span class="badge badge-orange">Média</span></td></tr>
+      <tr><td>PAFEM (Prog. Afugentamento Fauna)</td><td class="num-col"><strong>134</strong></td><td><span class="badge badge-gray">Ambiental</span></td><td><span class="badge badge-orange">Média</span></td></tr>
+      <tr><td>PRAD (Plano Recuperação Áreas Degradadas)</td><td class="num-col"><strong>128</strong></td><td><span class="badge badge-gray">Ambiental</span></td><td><span class="badge badge-red">Alta</span></td></tr>
+      <tr><td>PEA (Programa Educação Ambiental)</td><td class="num-col"><strong>101</strong></td><td><span class="badge badge-gray">Social</span></td><td><span class="badge badge-green">Baixa</span></td></tr>
+      <tr><td>PCA (Plano Controle Ambiental)</td><td class="num-col"><strong>96</strong></td><td><span class="badge badge-teal">Técnico</span></td><td><span class="badge badge-red">Alta</span></td></tr>
+      <tr><td>Demais documentos (93)</td><td class="num-col"><strong>80</strong></td><td><span class="badge badge-gray">Diversos</span></td><td><span class="badge badge-green">Variada</span></td></tr>
+    </tbody>
+    <tfoot>
+      <tr style="background:var(--light); font-weight:700;">
+        <td>Total</td><td class="num-col">1.780</td><td colspan="2"></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="page-footer">
+    Summo Quartile · summoquartile.com · Requisitos mapeados com base em DN COPAM 217/2017, LGLA, CONAMA 237/97, 9/90, 10/90.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PÁGINA 4: PLANO DE AÇÃO E PRÓXIMOS PASSOS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span class="brand">Summo Quartile — Due Diligence Ambiental</span>
+    <span class="doc-ref">DD-2026-0042-R1 · Fase 1/5</span>
+  </div>
+
+  <h2>5. Plano de Ação — Fase 1</h2>
+
+  <p>Ações imediatas para avançar à Fase 2 (Diagnóstico Documental):</p>
+
+  <table class="action-table">
+    <thead>
+      <tr><th>#</th><th>Ação</th><th>Responsável</th><th>Prazo</th><th>Prioridade</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><strong>Compilar book de documentos do processo</strong><br><span class="text-xs text-muted">Reunir todos os estudos ambientais, licenças, autorizações e documentação técnica produzida para este empreendimento.</span></td>
+        <td>Serra Verde</td>
+        <td>22/04/2026</td>
+        <td class="priority-high">Alta</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><strong>Verificar vigência das licenças existentes</strong><br><span class="text-xs text-muted">Confirmar validade de LP/LI anteriores, outorgas de uso de água, e autorizações de supressão.</span></td>
+        <td>Serra Verde</td>
+        <td>22/04/2026</td>
+        <td class="priority-high">Alta</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><strong>Enviar documentação via plataforma Summo</strong><br><span class="text-xs text-muted">Upload dos PDFs na plataforma para classificação automática e início da avaliação de conformidade.</span></td>
+        <td>Serra Verde</td>
+        <td>22/04/2026</td>
+        <td class="priority-medium">Média</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><strong>Confirmar Termo de Referência aplicável</strong><br><span class="text-xs text-muted">Verificar com o órgão ambiental se há TR específico para este empreendimento além das normas gerais.</span></td>
+        <td>Summo Quartile</td>
+        <td>18/04/2026</td>
+        <td class="priority-medium">Média</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><strong>Verificar histórico de condicionantes</strong><br><span class="text-xs text-muted">Levantar condicionantes de licenças anteriores que possam impactar o novo processo.</span></td>
+        <td>Summo Quartile</td>
+        <td>18/04/2026</td>
+        <td class="priority-low">Baixa</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>6. Próximos Passos</h2>
+
+  <div class="callout next">
+    <strong>Fase 2 — Diagnóstico Documental</strong><br>
+    Após o recebimento da documentação, a Summo Quartile realizará o diagnóstico documental: classificação dos documentos recebidos, identificação de documentos ausentes, e preparação para a avaliação de conformidade.<br><br>
+    <strong>Prazo sugerido para envio da documentação:</strong> até <strong>22 de abril de 2026</strong> (5 dias úteis).<br><br>
+    Caso algum documento não esteja disponível nesta data, ele será registrado como "Não Apresentado" e os requisitos correspondentes serão avaliados como não atendidos. O documento poderá ser enviado posteriormente para reavaliação.
+  </div>
+
+  <h3>Cronograma Estimado</h3>
+
+  <table>
+    <thead>
+      <tr><th>Fase</th><th>Entregável</th><th>Prazo Estimado</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1. Configuração</td><td>Este relatório</td><td>13/04/2026</td><td><span class="badge badge-green">Concluído</span></td></tr>
+      <tr><td>2. Documentos</td><td>Diagnóstico documental</td><td>25/04/2026</td><td><span class="badge badge-gray">Aguardando docs</span></td></tr>
+      <tr><td>3. Avaliação</td><td>Conformidade detalhada</td><td>02/05/2026</td><td><span class="badge badge-gray">Pendente</span></td></tr>
+      <tr><td>4. Criticidade</td><td>Priorização estratégica</td><td>05/05/2026</td><td><span class="badge badge-gray">Pendente</span></td></tr>
+      <tr><td>5. Resultado</td><td>Relatório final + plano de ação</td><td>09/05/2026</td><td><span class="badge badge-gray">Pendente</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>7. Aviso Legal</h2>
+
+  <p class="text-sm text-muted">Este relatório é parte do processo de Due Diligence Ambiental conduzido pela Summo Quartile para a Mineração Serra Verde Ltda. Os dados apresentados foram extraídos de fontes públicas oficiais (SEMAD MG, IBAMA, ANM) e são rastreáveis às URLs de origem. Este documento tem caráter consultivo e não substitui pareceres jurídicos ou técnicos formais do órgão ambiental competente.</p>
+
+  <p class="text-sm text-muted">A Summo Quartile não se responsabiliza por alterações legislativas ou regulatórias posteriores à data de emissão deste relatório. Recomenda-se verificação periódica da vigência das normas aplicáveis.</p>
+
+  <p class="text-sm text-muted"><strong>Validade deste relatório:</strong> 90 dias a partir da data de emissão (13/04/2026). Após este período, recomenda-se atualização do perfil de licenciamento.</p>
+
+  <div class="page-footer" style="page-break-after:auto;">
+    Summo Quartile · summoquartile.com · DD-2026-0042-R1 · Fase 1/5 · Emitido em 13/04/2026 · Confidencial<br>
+    Página 4/4
+  </div>
+</div>
+
+</body>
+</html>

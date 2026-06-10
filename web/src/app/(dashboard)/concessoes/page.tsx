@@ -83,6 +83,7 @@ function ConcessoesContent() {
   const [municipio, setMunicipio] = useState<string[]>(params.getAll("municipio"));
   const [cfemStatus, setCfemStatus] = useState(params.get("cfem_status") ?? "");
   const [estrategicoOnly, setEstrategicoOnly] = useState(params.get("estrategico") === "1");
+  const [uf, setUf] = useState(params.get("uf") ?? "");
 
   // Detail
   const [selectedProcesso, setSelectedProcesso] = useState<string | null>(null);
@@ -105,8 +106,9 @@ function ConcessoesContent() {
       municipio: municipio.length > 0 ? municipio : undefined,
       cfem_status: (cfemStatus || undefined) as ConcessoesFilters["cfem_status"],
       estrategico: estrategicoOnly || undefined,
+      uf: uf || undefined,
     }),
-    [search, regime, categoria, substancia, municipio, cfemStatus, estrategicoOnly]
+    [search, regime, categoria, substancia, municipio, cfemStatus, estrategicoOnly, uf]
   );
 
   // Sync filters to URL (no re-render)
@@ -119,9 +121,10 @@ function ConcessoesContent() {
     municipio.forEach((v) => qs.append("municipio", v));
     if (cfemStatus) qs.set("cfem_status", cfemStatus);
     if (estrategicoOnly) qs.set("estrategico", "1");
+    if (uf) qs.set("uf", uf);
     const q = qs.toString();
     window.history.replaceState(null, "", `${window.location.pathname}${q ? `?${q}` : ""}`);
-  }, [search, regime, categoria, substancia, municipio, cfemStatus, estrategicoOnly]);
+  }, [search, regime, categoria, substancia, municipio, cfemStatus, estrategicoOnly, uf]);
 
   const loadData = useCallback(
     (pg: number) => {
@@ -161,6 +164,7 @@ function ConcessoesContent() {
     setSearch("");
     setSearchInput("");
     setRegime([]);
+    setUf("");
     setCategoria([]);
     setSubstancia([]);
     setMunicipio([]);
@@ -169,7 +173,7 @@ function ConcessoesContent() {
     setPage(0);
   };
 
-  const hasActiveFilters = !!(search || regime.length || categoria.length || substancia.length || municipio.length || cfemStatus || estrategicoOnly);
+  const hasActiveFilters = !!(search || regime.length || categoria.length || substancia.length || municipio.length || cfemStatus || estrategicoOnly || uf);
 
   // Detail panel
   useEffect(() => {
@@ -231,14 +235,35 @@ function ConcessoesContent() {
     <div className="space-y-6">
       <div>
         <h1 className="font-heading text-2xl font-bold tracking-tight lg:text-3xl">
-          Base de Concessões
+          Cadastro Mineiro Nacional
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Concessões minerárias ANM — decretos de lavra, licenciamentos e garimpeira
+          {fmtNumber(stats?.total ?? 0)} processos minerários em {filterOptions?.ufs?.length ?? 0} estados — Todas as fases do ciclo de vida
         </p>
         <p className="mt-0.5 text-xs text-muted-foreground/60">
-          Clique em uma linha para ver detalhes · Filtros combinam com AND · Dados: ANM SIGMINE + CFEM
+          Clique em uma linha para ver detalhes · Filtros combinam com AND · Dados: ANM Cadastro Mineiro (atualização diária)
         </p>
+
+      {/* Pipeline chart */}
+      {filterOptions?.pipeline && Object.keys(filterOptions.pipeline).length > 0 && (
+        <div className="mt-4 grid gap-2 sm:grid-cols-3 lg:grid-cols-5">
+          {Object.entries(filterOptions.pipeline)
+            .sort(([, a], [, b]) => b - a)
+            .slice(0, 5)
+            .map(([key, count]) => (
+              <div
+                key={key}
+                className="rounded-lg border bg-card px-3 py-2 text-center cursor-pointer hover:border-brand-teal/50 transition-colors"
+                onClick={() => { setRegime([key]); setPage(0); }}
+              >
+                <p className="text-lg font-bold tabular-nums">{fmtNumber(count)}</p>
+                <p className="text-[10px] text-muted-foreground truncate">
+                  {filterOptions.regime_labels?.[key] ?? key}
+                </p>
+              </div>
+            ))}
+        </div>
+      )}
       </div>
 
       {error && (
@@ -317,7 +342,23 @@ function ConcessoesContent() {
           </div>
 
           {/* Filter grid */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                Estado (UF)
+              </label>
+              <Select value={uf || "__all__"} onValueChange={(v) => { setUf(v === "__all__" ? "" : v); setPage(0); }}>
+                <SelectTrigger className="h-9 text-xs">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__all__">Todos os estados</SelectItem>
+                  {(filterOptions?.ufs ?? []).map((u) => (
+                    <SelectItem key={u} value={u}>{u}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div>
               <label className="mb-1 block text-xs font-medium text-muted-foreground">
                 Regime

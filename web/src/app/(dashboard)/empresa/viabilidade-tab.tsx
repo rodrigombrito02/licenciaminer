@@ -27,7 +27,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   fetchAtividades,
   fetchRegionais,
-  fetchViabilidade,
+  fetchConsultaViabilidade,
   type ViabilidadeResponse,
 } from "@/lib/api";
 import { fmtBR, fmtPct } from "@/lib/format";
@@ -74,7 +74,7 @@ export function ViabilidadeTab() {
     if (!atividade) return;
     setLoading(true);
     setError(null);
-    fetchViabilidade({
+    fetchConsultaViabilidade({
       atividade,
       classe: classe ? Number(classe) : undefined,
       regional: regional || undefined,

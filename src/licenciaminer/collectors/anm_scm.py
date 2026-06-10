@@ -1,13 +1,31 @@
 """Coletor dos CSVs do Sistema de Cadastro Mineiro (SCM) da ANM.
 
-Baixa os quatro CSVs de regimes de lavra ativa:
-- Portaria_de_Lavra.csv (concessões de lavra)
-- Licenciamento.csv (licenciamento municipal)
-- PLG.csv (permissão de lavra garimpeira)
-- Registro_de_Extracao_Publicado.csv (extração por entes públicos)
+Baixa os 13 CSVs publicados em https://app.anm.gov.br/dadosabertos/SCM/,
+cobrindo todas as fases do ciclo de vida do processo minerário:
 
-Cada CSV contém: Processo, CPF/CNPJ, Titular, Município(s), Substância(s),
-Fase Atual, Situação. Filtro por UF via campo Município(s).
+Fases de pesquisa:
+- Requerimento_de_Pesquisa.csv
+- Alvara_de_Pesquisa.csv
+- Relatorio_de_Pesquisa_Aprovado.csv
+
+Fases de lavra:
+- Requerimento_de_Lavra.csv
+- Portaria_de_Lavra.csv
+
+Licenciamento e PLG:
+- Requerimento_de_Licenciamento.csv
+- Licenciamento.csv
+- Requerimento_de_PLG.csv
+- PLG.csv
+
+Outros:
+- Registro_de_Extracao_Publicado.csv
+- Requerimento_de_Registro_de_Extracao_Protocolizado.csv
+- Guia_de_Utilizacao_Autorizada.csv
+- Cessoes_de_Direitos.csv (transferências de titularidade)
+
+Todos têm o mesmo schema de 10 colunas. Filtro por UF via campo Município(s).
+Atualização diária pela ANM.
 """
 
 import io
@@ -42,10 +60,23 @@ from licenciaminer.processors.normalize import (
 logger = logging.getLogger(__name__)
 
 SCM_FILES: dict[str, str] = {
+    # Fases de pesquisa
+    "requerimento_pesquisa": "Requerimento_de_Pesquisa.csv",
+    "alvara_pesquisa": "Alvara_de_Pesquisa.csv",
+    "relatorio_pesquisa": "Relatorio_de_Pesquisa_Aprovado.csv",
+    # Fases de lavra
+    "requerimento_lavra": "Requerimento_de_Lavra.csv",
     "portaria_lavra": "Portaria_de_Lavra.csv",
+    # Licenciamento e PLG
+    "requerimento_licenciamento": "Requerimento_de_Licenciamento.csv",
     "licenciamento": "Licenciamento.csv",
+    "requerimento_plg": "Requerimento_de_PLG.csv",
     "plg": "PLG.csv",
+    # Outros
     "registro_extracao": "Registro_de_Extracao_Publicado.csv",
+    "requerimento_registro_extracao": "Requerimento_de_Registro_de_Extracao_Protocolizado.csv",
+    "guia_utilizacao": "Guia_de_Utilizacao_Autorizada.csv",
+    "cessao_direitos": "Cessoes_de_Direitos.csv",
 }
 
 # Colunas esperadas nos CSVs do SCM (após normalização)
@@ -120,12 +151,13 @@ def _extract_uf(municipio_str: str) -> str | None:
 
 def collect_scm(
     data_dir: Path,
-    uf_filter: str | None = "MG",
+    uf_filter: str | None = None,
 ) -> Path:
-    """Coleta dados do SCM da ANM (concessões minerárias ativas).
+    """Coleta dados do SCM da ANM (Cadastro Mineiro completo).
 
-    Baixa os 4 CSVs de regimes de lavra, filtra por UF, unifica e salva
-    como parquet.
+    Baixa os 13 CSVs cobrindo todas as fases do ciclo de vida minerário,
+    filtra opcionalmente por UF, unifica e salva como parquet.
+    Sem filtro de UF, coleta ~100-150k registros do Brasil inteiro.
     """
     frames: list[pd.DataFrame] = []
 

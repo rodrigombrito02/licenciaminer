@@ -9,8 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.108.1",
     "@tanstack/react-table": "^8.21.3",
+    "@tanstack/table-core": "^8.21.3",
     "@types/geojson": "^7946.0.16",
+    "@xyflow/react": "^12.10.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",

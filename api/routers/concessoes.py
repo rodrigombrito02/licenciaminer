@@ -13,12 +13,21 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Regimes e labels (espelho de data_loader.REGIME_LABELS)
+# Regimes e labels (13 CSVs do Cadastro Mineiro)
 REGIME_LABELS = {
+    "requerimento_pesquisa": "Requerimento de Pesquisa",
+    "alvara_pesquisa": "Alvará de Pesquisa",
+    "relatorio_pesquisa": "Relatório de Pesquisa Aprovado",
+    "requerimento_lavra": "Requerimento de Lavra",
     "portaria_lavra": "Portaria de Lavra",
+    "requerimento_licenciamento": "Requerimento de Licenciamento",
     "licenciamento": "Licenciamento",
+    "requerimento_plg": "Requerimento de PLG",
     "plg": "Lavra Garimpeira (PLG)",
     "registro_extracao": "Registro de Extração",
+    "requerimento_registro_extracao": "Req. Registro de Extração",
+    "guia_utilizacao": "Guia de Utilização",
+    "cessao_direitos": "Cessão de Direitos",
 }
 
 # Colunas pesadas excluídas do SELECT em listagens
@@ -30,19 +39,26 @@ _SEARCHABLE = ["titular", "processo", "processo_norm", "substancia_principal",
 
 
 def _resolve_view() -> str:
-    """Retorna view disponível: v_concessoes (preferido) ou v_scm (fallback)."""
-    try:
-        r = run_query("SELECT COUNT(*) AS n FROM v_concessoes LIMIT 1")
-        if r and r[0]["n"] > 0:
-            return "v_concessoes"
-    except Exception:
-        pass
+    """Retorna view disponível: v_scm (maior, nacional) ou v_concessoes (enriquecido MG)."""
+    scm_count = 0
+    conc_count = 0
     try:
         r = run_query("SELECT COUNT(*) AS n FROM v_scm LIMIT 1")
-        if r and r[0]["n"] > 0:
-            return "v_scm"
+        scm_count = r[0]["n"] if r else 0
     except Exception:
         pass
+    try:
+        r = run_query("SELECT COUNT(*) AS n FROM v_concessoes LIMIT 1")
+        conc_count = r[0]["n"] if r else 0
+    except Exception:
+        pass
+    # Prefer v_scm when it has more data (national collection)
+    if scm_count > conc_count and scm_count > 0:
+        return "v_scm"
+    if conc_count > 0:
+        return "v_concessoes"
+    if scm_count > 0:
+        return "v_scm"
     raise HTTPException(status_code=503, detail="Dataset de concessões não disponível")
 
 
@@ -91,6 +107,29 @@ def get_filter_options():
     except Exception:
         options["municipios"] = []
 
+    # UFs extraídas do campo municipio_principal
+    try:
+        rows = run_query(
+            f"""
+            SELECT DISTINCT SUBSTRING(municipio_principal, LENGTH(municipio_principal) - 1, 2) AS uf
+            FROM {view}
+            WHERE municipio_principal LIKE '% - __'
+            ORDER BY uf
+            """
+        )
+        options["ufs"] = [r["uf"] for r in rows if r.get("uf")]
+    except Exception:
+        options["ufs"] = []
+
+    # Pipeline: contagem por regime (para funnel chart)
+    try:
+        rows = run_query(
+            f"SELECT regime, COUNT(*) AS n FROM {view} WHERE regime IS NOT NULL GROUP BY regime ORDER BY n DESC"
+        )
+        options["pipeline"] = {r["regime"]: r["n"] for r in rows}
+    except Exception:
+        options["pipeline"] = {}
+
     options["regime_labels"] = REGIME_LABELS
     options["view"] = view
 
@@ -106,11 +145,12 @@ def get_concessoes_stats(
     municipio: list[str] | None = Query(None),
     cfem_status: str | None = Query(None, pattern="^(ativo|inativo)$"),
     estrategico: bool | None = Query(None),
+    uf: str | None = Query(None, max_length=2, description="Filtrar por UF (ex: MG, PA, BA)"),
 ):
     """Retorna KPIs agregados para o filtro atual."""
     view = _resolve_view()
     where, params = _build_where(
-        view, search, regime, categoria, substancia, municipio, cfem_status, estrategico,
+        view, search, regime, categoria, substancia, municipio, cfem_status, estrategico, uf=uf,
     )
 
     stats = {}
@@ -151,13 +191,14 @@ def list_concessoes(
     municipio: list[str] | None = Query(None),
     cfem_status: str | None = Query(None, pattern="^(ativo|inativo)$"),
     estrategico: bool | None = Query(None),
+    uf: str | None = Query(None, max_length=2, description="Filtrar por UF (ex: MG, PA, BA)"),
     limit: int = Query(100, ge=1, le=500),
     offset: int = Query(0, ge=0),
 ):
     """Lista concessões com filtros, paginação e colunas leves."""
     view = _resolve_view()
     where, params = _build_where(
-        view, search, regime, categoria, substancia, municipio, cfem_status, estrategico,
+        view, search, regime, categoria, substancia, municipio, cfem_status, estrategico, uf=uf,
     )
 
     cols = _get_columns(view)
@@ -191,11 +232,12 @@ def export_concessoes_csv(
     municipio: list[str] | None = Query(None),
     cfem_status: str | None = Query(None, pattern="^(ativo|inativo)$"),
     estrategico: bool | None = Query(None),
+    uf: str | None = Query(None, max_length=2, description="Filtrar por UF"),
 ):
     """Exporta concessões filtradas como CSV (max 20.000 linhas)."""
     view = _resolve_view()
     where, params = _build_where(
-        view, search, regime, categoria, substancia, municipio, cfem_status, estrategico,
+        view, search, regime, categoria, substancia, municipio, cfem_status, estrategico, uf=uf,
     )
 
     count_r = run_query(f"SELECT COUNT(*) AS total FROM {view} WHERE {where}", params)
@@ -266,6 +308,7 @@ def _build_where(
     municipio: list[str] | None,
     cfem_status: str | None,
     estrategico: bool | None,
+    uf: str | None = None,
 ) -> tuple[str, list]:
     """Constrói WHERE parametrizado a partir dos filtros."""
     clauses: list[str] = []
@@ -316,6 +359,10 @@ def _build_where(
             clauses.append("estrategico = 'sim'")
         else:
             clauses.append("(estrategico != 'sim' OR estrategico IS NULL)")
+
+    if uf:
+        clauses.append("municipio_principal LIKE ?")
+        params.append(f"% - {uf}")
 
     where_sql = " AND ".join(clauses) if clauses else "1=1"
     return where_sql, params

@@ -33,6 +33,7 @@ def load_requisitos() -> list[dict[str, str]]:
 # Cada tipo de licença no sistema mapeia para os valores encontrados
 # na coluna "licenca" do inventário.
 LICENCA_MAP: dict[str, list[str]] = {
+    # Modalidades MG (DN COPAM 217/2017)
     "LAS": ["LAS"],
     "LAS-RAS": ["LAS", "LAS-RAS"],
     "LAC1": ["LAS", "LAS-RAS", "LP", "LI", "LP+ LI", "LP+ LI+ LO"],
@@ -40,6 +41,11 @@ LICENCA_MAP: dict[str, list[str]] = {
     "LP": ["LP", "LP+ LI", "LP+ LI+ LO"],
     "LI": ["LI", "LI + LO", "LP+ LI", "LP+ LI+ LO"],
     "LO": ["LO", "LI + LO", "LP+ LI+ LO"],
+    # Modalidades Federais (Lei 15.190/2025 — LGLA)
+    "LAU": ["LAU"],
+    "LAC_FED": ["LAC_FED"],
+    "LAE": ["LAE"],
+    "LOC": ["LOC"],
 }
 
 # Tipos de licença disponíveis no sistema
@@ -47,13 +53,19 @@ LICENCA_TIPOS = list(LICENCA_MAP.keys())
 
 # Descrições das licenças
 LICENCA_DESC: dict[str, str] = {
-    "LAS": "Licenciamento Ambiental Simplificado (Classe 1-2)",
-    "LAS-RAS": "LAS com Relatório Ambiental Simplificado (Classe 2-3)",
-    "LAC1": "Licenciamento Ambiental Concomitante 1 (Classe 3-4)",
-    "LAC2": "Licenciamento Ambiental Concomitante 2 (Classe 3-4)",
-    "LP": "Licença Prévia (Classe 5-6, trifásico)",
-    "LI": "Licença de Instalação (Classe 5-6, trifásico)",
-    "LO": "Licença de Operação (Classe 5-6, trifásico)",
+    # MG (DN COPAM 217/2017)
+    "LAS": "Licenciamento Ambiental Simplificado (MG, Classe 1-2)",
+    "LAS-RAS": "LAS com Relatório Ambiental Simplificado (MG, Classe 2-3)",
+    "LAC1": "Licenciamento Ambiental Concomitante 1 (MG, Classe 3-4)",
+    "LAC2": "Licenciamento Ambiental Concomitante 2 (MG, Classe 3-4)",
+    "LP": "Licença Prévia (MG/Federal, Classe 5-6, trifásico)",
+    "LI": "Licença de Instalação (MG/Federal, Classe 5-6, trifásico)",
+    "LO": "Licença de Operação (MG/Federal, Classe 5-6, trifásico)",
+    # Federal (Lei 15.190/2025 — LGLA)
+    "LAU": "Licença Ambiental Única (Federal, baixo/médio impacto)",
+    "LAC_FED": "Licença por Adesão e Compromisso (Federal, baixo potencial poluidor)",
+    "LAE": "Licença Ambiental Especial (Federal, atividades estratégicas)",
+    "LOC": "Licença de Operação Corretiva (Federal, regularização)",
 }
 
 

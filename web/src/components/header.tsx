@@ -4,84 +4,21 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  BarChart3,
-  Building2,
-  Database,
-  Factory,
-  FileSearch,
-  Globe,
-  Home,
-  Map,
-  Menu,
-  Search,
-  ShieldCheck,
-  TrendingUp,
-} from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-
-interface MobileNavItem {
-  href: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  disabled?: boolean;
-}
-
-const MOBILE_NAV_SECTIONS: { label: string; color?: string; standalone?: boolean; items: MobileNavItem[] }[] = [
-  {
-    label: "",
-    standalone: true,
-    items: [
-      { href: "/", label: "Início", icon: Home },
-    ],
-  },
-  {
-    label: "Análise & Pesquisa",
-    color: "text-brand-orange",
-    items: [
-      { href: "/empresa", label: "Consulta Empresa", icon: Building2 },
-      { href: "/explorar", label: "Explorador", icon: Database },
-      { href: "/decisoes", label: "Análise de Decisões", icon: BarChart3 },
-    ],
-  },
-  {
-    label: "Direitos Minerários",
-    color: "text-brand-teal",
-    items: [
-      { href: "/mapa", label: "Mapa Interativo", icon: Map },
-      { href: "/concessoes", label: "Concessões", icon: FileSearch },
-      { href: "/prospeccao", label: "Prospecção Mineral", icon: TrendingUp },
-    ],
-  },
-  {
-    label: "Mercado & Inteligência",
-    color: "text-brand-gold",
-    items: [
-      { href: "/inteligencia-comercial", label: "Inteligência Comercial", icon: Globe },
-      { href: "/monitoramento", label: "Monitoramento", icon: Search, disabled: true },
-    ],
-  },
-  {
-    label: "Conformidade",
-    color: "text-brand-orange",
-    items: [
-      { href: "/due-diligence", label: "Due Diligence", icon: ShieldCheck },
-    ],
-  },
-  {
-    label: "Simulação",
-    color: "text-sidebar-foreground/40",
-    items: [
-      { href: "/mineradora-modelo", label: "Mineradora Modelo", icon: Factory },
-    ],
-  },
-];
+import { NAV_SECTIONS } from "@/lib/nav-config";
+import { UserMenu } from "@/components/user-menu";
 
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+
+  function toggleSection(label: string) {
+    setCollapsed((prev) => ({ ...prev, [label]: !prev[label] }));
+  }
 
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 lg:px-8">
@@ -101,54 +38,92 @@ export function Header() {
               Summo Quartile
             </span>
           </div>
-          <nav className="px-3 py-4 space-y-6">
-            {MOBILE_NAV_SECTIONS.map((section) => (
-              <div key={section.label || "home"}>
-                {!section.standalone && (
-                  <p className={cn(
-                    "px-3 mb-2 text-[10px] font-semibold uppercase tracking-widest",
-                    section.color ?? "text-sidebar-foreground/40"
-                  )}>
-                    {section.label}
-                  </p>
-                )}
-                <ul className="space-y-0.5">
-                  {section.items.map((item) => {
-                    if (item.disabled) {
-                      return (
-                        <li key={item.href}>
-                          <span className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-sidebar-foreground/30 cursor-not-allowed">
-                            <item.icon className="h-4 w-4" />
-                            {item.label}
-                          </span>
-                        </li>
-                      );
-                    }
-                    const isActive =
-                      item.href === "/"
-                        ? pathname === "/"
-                        : pathname.startsWith(item.href);
-                    return (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          onClick={() => setOpen(false)}
-                          className={cn(
-                            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
-                            isActive
-                              ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                              : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
-                          )}
-                        >
-                          <item.icon className="h-4 w-4" />
-                          {item.label}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            ))}
+          <nav className="px-3 py-4 space-y-1 overflow-y-auto max-h-[calc(100vh-64px)]">
+            {NAV_SECTIONS.map((section) => {
+              const active = section.items.some((item) =>
+                item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)
+              );
+              const isOpen = section.standalone || (section.label in collapsed ? !collapsed[section.label] : active);
+
+              return (
+                <div key={section.label || "home"}>
+                  {section.standalone ? (
+                    <ul>
+                      {section.items.map((item) => {
+                        const isActive = pathname === item.href;
+                        return (
+                          <li key={item.href}>
+                            <Link
+                              href={item.href}
+                              onClick={() => setOpen(false)}
+                              className={cn(
+                                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+                                isActive
+                                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+                              )}
+                            >
+                              <item.icon className="h-4 w-4" />
+                              {item.label}
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => toggleSection(section.label)}
+                        className={cn(
+                          "flex w-full items-center justify-between rounded-lg px-3 py-2 text-[11px] font-semibold uppercase tracking-wider",
+                          active
+                            ? (section.color ?? "text-sidebar-foreground/60")
+                            : "text-sidebar-foreground/40"
+                        )}
+                      >
+                        {section.label}
+                        <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", isOpen ? "rotate-0" : "-rotate-90")} />
+                      </button>
+                      <div className={cn("overflow-hidden transition-all", isOpen ? "max-h-96" : "max-h-0")}>
+                        <ul className="space-y-0.5 pb-2">
+                          {section.items.map((item) => {
+                            if (item.disabled) {
+                              return (
+                                <li key={item.href}>
+                                  <span className="flex items-center gap-3 rounded-lg px-3 py-2 pl-6 text-sm text-sidebar-foreground/25 cursor-not-allowed">
+                                    <item.icon className="h-4 w-4" />
+                                    {item.label}
+                                    <span className="ml-auto text-[9px] uppercase tracking-wider">Em breve</span>
+                                  </span>
+                                </li>
+                              );
+                            }
+                            const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+                            return (
+                              <li key={item.href}>
+                                <Link
+                                  href={item.href}
+                                  onClick={() => setOpen(false)}
+                                  className={cn(
+                                    "flex items-center gap-3 rounded-lg px-3 py-2 pl-6 text-sm transition-colors",
+                                    isActive
+                                      ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+                                  )}
+                                >
+                                  <item.icon className="h-4 w-4" />
+                                  {item.label}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })}
           </nav>
         </SheetContent>
       </Sheet>
@@ -156,11 +131,12 @@ export function Header() {
       {/* Breadcrumb / page context */}
       <div className="flex-1" />
 
-      {/* Right actions placeholder */}
-      <div className="flex items-center gap-2">
+      {/* Right actions */}
+      <div className="flex items-center gap-3">
         <span className="hidden sm:inline text-xs text-muted-foreground font-tabular">
           MG &middot; SEMAD + IBAMA + ANM
         </span>
+        <UserMenu />
       </div>
     </header>
   );

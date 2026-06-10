@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Auditoria de Pilhas — Summo Quartile</title>
+<style>
+@page{size:A4;margin:14mm 14mm;}
+:root{--navy:#0A2540;--navy2:#1A2C42;--teal:#156082;--gold:#FFC000;--orange:#FF5F00;--success:#27AE60;--danger:#E74C3C;--light:#F8F9FB;--gray:#6B7280;--gray-light:#9CA3AF;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:#1a1a1a;line-height:1.55;font-size:9.5pt;background:#fff;}
+.pg{padding:8px 14px;max-width:210mm;margin:0 auto;}
+.hero{background:var(--navy);color:#fff;padding:28px 32px;border-radius:14px;margin-bottom:18px;position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;top:0;right:0;width:45%;height:100%;background:radial-gradient(ellipse at 80% 40%,rgba(21,96,130,.18) 0%,transparent 70%);}
+.hero *{position:relative;z-index:1;}
+.ca{display:flex;gap:5px;margin-bottom:14px;}
+.ca span:nth-child(1){width:48px;height:3px;background:var(--gold);border-radius:2px;}
+.ca span:nth-child(2){width:16px;height:3px;background:var(--teal);border-radius:2px;}
+.ca span:nth-child(3){width:8px;height:3px;background:var(--orange);border-radius:2px;}
+h1{font-size:24pt;font-weight:800;line-height:1.05;margin-bottom:6px;}
+.gold{color:var(--gold);}
+.sub{font-size:11pt;color:rgba(255,255,255,.7);margin-bottom:8px;}
+.tag{display:inline-block;padding:5px 16px;border-radius:20px;font-size:8pt;font-weight:700;background:var(--teal);color:#fff;}
+h2{font-size:13pt;font-weight:800;color:var(--navy);margin:14px 0 8px;padding-bottom:5px;border-bottom:2px solid var(--light);}
+h3{font-size:10.5pt;font-weight:700;color:var(--teal);margin:10px 0 4px;}
+p{margin-bottom:7px;}
+.mu{color:var(--gray);}.sm{font-size:8.5pt;}.xs{font-size:7.5pt;}
+strong{color:var(--navy);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.kpi{background:var(--light);border-radius:10px;padding:12px 14px;text-align:center;border-top:3px solid var(--teal);}
+.kpi:nth-child(2){border-top-color:var(--gold);}
+.kpi:nth-child(3){border-top-color:var(--orange);}
+.kpi .n{font-size:18pt;font-weight:800;color:var(--navy);line-height:1.1;}
+.kpi .lb{font-size:7pt;color:var(--gray);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
+.card{border:1px solid #eee;border-radius:10px;padding:14px 16px;background:#fff;}
+ul.tick{list-style:none;padding-left:0;}
+ul.tick li{padding:3px 0 3px 22px;position:relative;font-size:9pt;}
+ul.tick li::before{content:'\2713';position:absolute;left:0;color:var(--success);font-weight:800;}
+.tier{border:1px solid #e5e7eb;border-radius:10px;padding:14px;position:relative;background:#fff;}
+.tier.featured{border-color:var(--teal);border-width:2px;}
+.tier-name{font-size:10pt;font-weight:800;color:var(--navy);}
+.tier-price{font-size:14pt;font-weight:800;color:var(--teal);margin:4px 0;}
+.tier-price .small{font-size:8pt;color:var(--gray);font-weight:500;}
+.tier ul{list-style:none;padding-left:0;margin-top:6px;font-size:8.5pt;}
+.tier li{padding:2px 0 2px 14px;position:relative;}
+.tier li::before{content:'\2022';position:absolute;left:0;color:var(--teal);}
+.foot{margin-top:20px;padding-top:10px;border-top:1px solid #eee;display:flex;justify-content:space-between;font-size:8pt;color:var(--gray);}
+.contact-box{background:linear-gradient(135deg,var(--navy) 0%,var(--teal) 100%);color:#fff;border-radius:10px;padding:14px 18px;margin-top:14px;}
+.contact-box h3{color:#fff;margin:0 0 4px;font-size:11pt;}
+.contact-box p{margin:0;font-size:9pt;opacity:.9;}
+</style>
+</head>
+<body>
+<div class="pg">
+
+<div class="hero">
+  <div class="ca"><span></span><span></span><span></span></div>
+  <h1>Auditoria de <span class="gold">Pilhas</span> de Rejeito e Estéril</h1>
+  <p class="sub">Diagnóstico técnico, plano de ação e governança contínua para ativos críticos</p>
+  <span class="tag">Summo Quartile · Gestão de Riscos e Crises</span>
+</div>
+
+<h2>Por que agora</h2>
+<div class="row2">
+  <div class="card">
+    <h3 style="margin-top:0">Risco regulatório em alta</h3>
+    <p class="sm">Pós-Brumadinho, ANM (Res. 85/2021, 95/2022, 189/2024), NBR 13029:2017, GISTM ICMM e os
+    projetos de lei <strong>PL 2.519/2024 (MG)</strong> e <strong>PL 3.799/2024 (Federal)</strong>
+    elevam significativamente as exigências para pilhas de rejeito e estéril.</p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Gap operacional</h3>
+    <p class="sm">A maior parte das mineradoras tem ciclos de auditoria espaçados,
+    documentação fragmentada e baixa visibilidade da matriz de não-conformidades.
+    O custo de um pedido de informação complementar ou de uma autuação supera em
+    ordens de grandeza o investimento em prevenção.</p>
+  </div>
+</div>
+
+<h2>O que entregamos</h2>
+<div class="row3">
+  <div class="card">
+    <h3 style="margin-top:0">Diagnóstico</h3>
+    <ul class="tick">
+      <li>108 requisitos de aderência mapeados</li>
+      <li>85 documentos avaliados por etapa do ciclo</li>
+      <li>23 normas do arcabouço cobertas</li>
+      <li>Cobertura GISTM ICMM opcional (77 req.)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Entregáveis</h3>
+    <ul class="tick">
+      <li>Relatório executivo navegável (HTML/PDF)</li>
+      <li>Planilha auditável com 4 abas</li>
+      <li>Plano de ação priorizado (PDCA)</li>
+      <li>Apresentação para alta direção</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Diferencial</h3>
+    <ul class="tick">
+      <li>Sócios sêniores com 30+ anos de indústria</li>
+      <li>Plataforma proprietária + 16 fontes públicas</li>
+      <li>Boas práticas ICMM, MAC, ANCOLD, AECOM</li>
+      <li>Linguagem auditor + linguagem C-level</li>
+    </ul>
+  </div>
+</div>
+
+<h2>Escopo coberto</h2>
+<div class="row3">
+  <div class="kpi"><div class="n">3</div><div class="lb">Modos de uso</div></div>
+  <div class="kpi"><div class="n">9</div><div class="lb">Etapas do ciclo de vida</div></div>
+  <div class="kpi"><div class="n">108</div><div class="lb">Requisitos auditáveis</div></div>
+</div>
+<p class="sm mu" style="margin-top:8px;">
+<strong>Modo Auditoria:</strong> ativos em operação · monitoramento, instrumentação, emergência, aproveitamento, transparência ·
+<strong>Modo Licenciamento:</strong> pré-protocolo (LP/LI/LO/LAC/LAS) · projeto, implantação, TR SEMAD ·
+<strong>Modo Fechamento:</strong> descomissionamento e pós-operação · PRAD, monitoramento longo prazo,
+transferência de custódia, drenagem ácida.
+</p>
+
+<h2>Tiers comerciais</h2>
+<div class="row3">
+  <div class="tier">
+    <div class="tier-name">Diagnóstico Pontual</div>
+    <div class="tier-price">R$ 45–65k <span class="small">/ pilha</span></div>
+    <ul>
+      <li>Avaliação única (snapshot)</li>
+      <li>Relatório executivo + planilha</li>
+      <li>Matriz de não-conformidades</li>
+      <li>1 reunião de devolutiva</li>
+    </ul>
+  </div>
+  <div class="tier featured">
+    <div class="tier-name">Auditoria Anual <span class="xs gold">RECOMENDADO</span></div>
+    <div class="tier-price">R$ 95–140k <span class="small">/ pilha · ano</span></div>
+    <ul>
+      <li>2 auditorias formais (semestrais)</li>
+      <li>Visita técnica ao ativo</li>
+      <li>Scorecard atualizado continuamente</li>
+      <li>Reunião trimestral C-level</li>
+      <li>Acesso à plataforma Summo Quartile</li>
+    </ul>
+  </div>
+  <div class="tier">
+    <div class="tier-name">Programa Integrado</div>
+    <div class="tier-price">Sob consulta <span class="small">/ multi-ativo</span></div>
+    <ul>
+      <li>Dashboard executivo multi-pilha</li>
+      <li>Atualizações mensais</li>
+      <li>Suporte regulatório dedicado</li>
+      <li>Overlay GISTM ICMM opcional</li>
+      <li>Resposta a crise inclusa</li>
+    </ul>
+  </div>
+</div>
+
+<div class="contact-box">
+  <h3>Próximo passo: piloto em 1 pilha</h3>
+  <p>Ofereçemos uma <strong>auditoria piloto em 1 ativo</strong> com condição comercial
+  diferenciada para validar metodologia e gerar caso de uso interno. Cronograma típico: 4 a 6 semanas.</p>
+</div>
+
+<div class="foot">
+  <span>Summo Quartile · summoquartile.com</span>
+  <span>Confidencial · documento comercial</span>
+</div>
+
+</div>
+</body>
+</html>

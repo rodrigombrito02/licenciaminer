@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Expansão Multi-Setorial — Summo Quartile — Apresentação Sócios</title>
+<style>
+@page{size:A4;margin:14mm 12mm;}
+:root{
+  --navy:#0A2540;--navy2:#1A2C42;--teal:#156082;--gold:#FFC000;--orange:#FF5F00;
+  --success:#27AE60;--danger:#E74C3C;--warning:#F39C12;--light:#F8F9FB;
+  --gray:#6B7280;--gray-light:#9CA3AF;--purple:#7C3AED;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:#1a1a1a;line-height:1.65;font-size:10.5pt;background:#fff;}
+
+/* Cover */
+.cover{background:var(--navy);color:#fff;padding:60px 56px 50px;min-height:100vh;
+  display:flex;flex-direction:column;justify-content:space-between;page-break-after:always;
+  position:relative;overflow:hidden;}
+.cover::after{content:'';position:absolute;top:0;right:0;width:50%;height:100%;
+  background:radial-gradient(ellipse at 80% 40%,rgba(21,96,130,.25) 0%,transparent 70%);}
+.cover *{position:relative;z-index:1;}
+.ca{display:flex;gap:5px;margin-bottom:32px;}
+.ca span:nth-child(1){width:56px;height:4px;background:var(--gold);border-radius:2px;}
+.ca span:nth-child(2){width:18px;height:4px;background:var(--teal);border-radius:2px;}
+.ca span:nth-child(3){width:9px;height:4px;background:var(--orange);border-radius:2px;}
+.cover h1{font-size:34pt;font-weight:800;line-height:1.06;margin-bottom:18px;}
+.cover h1 .gold{color:var(--gold);}
+.cover .sub{font-size:13pt;color:rgba(255,255,255,.7);margin-bottom:8px;max-width:640px;}
+.cover .brief{margin-top:24px;font-size:10.5pt;color:rgba(255,255,255,.82);max-width:640px;line-height:1.7;}
+.tag{display:inline-block;padding:7px 24px;border-radius:20px;font-size:10pt;font-weight:700;margin-top:28px;}
+.tag-gold{background:var(--gold);color:var(--navy);}
+.cc{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:24px 28px;margin-top:32px;}
+.cg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 28px;}
+.cg .l{font-size:7.5pt;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.4);margin-bottom:3px;}
+.cg .v{font-size:10pt;color:rgba(255,255,255,.9);font-weight:500;}
+.cf{margin-top:28px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);
+  display:flex;justify-content:space-between;align-items:center;font-size:8.5pt;color:rgba(255,255,255,.45);}
+
+/* Page */
+.pg{padding:36px 52px;max-width:210mm;margin:0 auto;page-break-before:always;}
+.ph{display:flex;justify-content:space-between;align-items:center;padding:0 0 12px;
+  border-bottom:2px solid var(--light);margin-bottom:22px;}
+.ph .lt{display:flex;align-items:center;gap:10px;}
+.ph .sq{width:22px;height:22px;border-radius:5px;background:var(--navy);
+  display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:11px;font-weight:900;}
+.ph .lt span{font-size:9pt;font-weight:700;color:var(--navy);}
+.ph .rt{font-size:7.5pt;color:var(--gray-light);}
+
+h2{font-size:16pt;font-weight:800;color:var(--navy);margin:28px 0 12px;padding-bottom:7px;
+  border-bottom:2px solid var(--light);display:flex;align-items:center;gap:10px;}
+h2 .ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;}
+h2 .ic.t{background:rgba(21,96,130,.12);color:var(--teal);}
+h2 .ic.o{background:rgba(255,95,0,.12);color:var(--orange);}
+h2 .ic.g{background:rgba(39,174,96,.12);color:var(--success);}
+h2 .ic.r{background:rgba(231,76,60,.12);color:var(--danger);}
+h2 .ic.gl{background:rgba(255,192,0,.14);color:#B8860B;}
+h2 .ic.p{background:rgba(124,58,237,.12);color:var(--purple);}
+h3{font-size:11.5pt;font-weight:700;color:var(--teal);margin:18px 0 7px;}
+p{margin-bottom:9px;}
+.mu{color:var(--gray);}.sm{font-size:9pt;}.xs{font-size:7.5pt;}
+strong{color:var(--navy);}
+ul{margin:6px 0 10px 22px;}li{margin-bottom:5px;}
+
+/* KPIs */
+.ks{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0;}
+.k{background:var(--light);border-radius:11px;padding:16px;text-align:center;border-top:3px solid var(--teal);}
+.k:nth-child(2){border-top-color:var(--success);}
+.k:nth-child(3){border-top-color:var(--orange);}
+.k:nth-child(4){border-top-color:var(--gold);}
+.k .n{font-size:22pt;font-weight:800;color:var(--navy);line-height:1.1;}
+.k .lb{font-size:7pt;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;}
+.k .sub2{font-size:7pt;color:var(--gray-light);margin-top:1px;}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:9pt;}
+th{background:var(--navy);color:#fff;padding:7px 10px;text-align:left;font-size:7pt;text-transform:uppercase;
+  letter-spacing:.6px;font-weight:600;}
+th:first-child{border-radius:6px 0 0 0;}th:last-child{border-radius:0 6px 0 0;}
+td{padding:6px 10px;border-bottom:1px solid #f0f0f0;vertical-align:top;}
+tr:hover td{background:rgba(21,96,130,.015);}
+.nc{text-align:right;font-variant-numeric:tabular-nums;}
+
+/* Badges */
+.b{display:inline-flex;align-items:center;gap:3px;font-size:7pt;padding:2px 8px;border-radius:10px;font-weight:600;}
+.bg{background:rgba(39,174,96,.12);color:var(--success);}
+.bo{background:rgba(255,95,0,.12);color:var(--orange);}
+.br2{background:rgba(231,76,60,.12);color:var(--danger);}
+.bgy{background:rgba(107,114,128,.12);color:var(--gray);}
+.bt{background:rgba(21,96,130,.12);color:var(--teal);}
+.bp{background:rgba(124,58,237,.1);color:var(--purple);}
+
+/* Callouts */
+.cl{border-radius:11px;padding:15px 18px;margin:14px 0;display:flex;gap:12px;align-items:flex-start;}
+.cl .ci{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:15px;}
+.cl.info{background:rgba(21,96,130,.05);border:1px solid rgba(21,96,130,.14);}
+.cl.info .ci{background:rgba(21,96,130,.12);color:var(--teal);}
+.cl.warn{background:rgba(255,192,0,.06);border:1px solid rgba(255,192,0,.16);}
+.cl.warn .ci{background:rgba(255,192,0,.15);color:#B8860B;}
+.cl.next{background:rgba(39,174,96,.05);border:1px solid rgba(39,174,96,.14);}
+.cl.next .ci{background:rgba(39,174,96,.12);color:var(--success);}
+.cl.danger{background:rgba(231,76,60,.05);border:1px solid rgba(231,76,60,.14);}
+.cl.danger .ci{background:rgba(231,76,60,.12);color:var(--danger);}
+.cl .bd{flex:1;font-size:9.5pt;}.cl .bd strong{display:block;margin-bottom:3px;font-size:10pt;}
+
+/* Bar chart */
+.bar-chart{margin:14px 0;}
+.bar-row{display:flex;align-items:center;gap:10px;padding:4px 0;}
+.bar-row .lbl{width:200px;font-size:8.5pt;color:var(--navy);text-align:right;font-weight:500;}
+.bar-row .bw{flex:1;height:20px;background:var(--light);border-radius:4px;overflow:hidden;}
+.bar-row .bw .fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 8px;
+  font-size:8pt;font-weight:700;color:#fff;white-space:nowrap;}
+.bar-row .val{width:90px;font-size:8.5pt;color:var(--navy);font-weight:600;font-variant-numeric:tabular-nums;}
+
+/* Feature cards */
+.fc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:14px 0;}
+.fc{background:var(--light);border-radius:11px;padding:18px;border-left:4px solid var(--teal);}
+.fc:nth-child(2){border-left-color:var(--orange);}
+.fc:nth-child(3){border-left-color:var(--gold);}
+.fc:nth-child(4){border-left-color:var(--success);}
+.fc h4{font-size:10.5pt;color:var(--navy);margin-bottom:5px;display:flex;align-items:center;gap:8px;}
+.fc h4 .tag{padding:2px 9px;font-size:6.5pt;border-radius:8px;margin:0;}
+.fc p{font-size:8.5pt;color:var(--gray);line-height:1.55;margin-bottom:0;}
+
+/* Heatmap */
+.hm{display:grid;gap:2px;margin:12px 0;font-size:7.5pt;}
+.hm .hc{padding:6px 7px;background:#fff;border:1px solid #eee;text-align:center;color:var(--navy);font-weight:600;}
+.hm .hl{padding:6px 7px;background:var(--navy);color:#fff;text-align:right;font-weight:600;font-size:7pt;}
+.hm .cell{padding:8px 5px;text-align:center;font-weight:700;border-radius:3px;font-size:8pt;}
+.h0{background:#E8F5E9;color:#1B5E20;}.h1{background:#FFF9C4;color:#9E8A00;}
+.h2{background:#FFECB3;color:#8B6914;}.h3{background:#FFCCBC;color:#A64B28;}
+.h4{background:#FFAB91;color:#8B2F0F;}.h5{background:#E57373;color:#fff;}
+
+/* Roadmap */
+.rd{display:flex;gap:8px;margin:16px 0;}
+.rd-s{flex:1;padding:13px;border-radius:10px;background:var(--light);border-top:4px solid var(--teal);text-align:center;}
+.rd-s .n{font-size:11pt;font-weight:800;color:var(--teal);}
+.rd-s .t{font-size:8pt;font-weight:700;color:var(--navy);margin:3px 0 2px;}
+.rd-s .d{font-size:7pt;color:var(--gray);}
+.rd-s:nth-child(1){border-top-color:var(--success);}.rd-s:nth-child(1) .n{color:var(--success);}
+.rd-s:nth-child(4){border-top-color:var(--orange);}.rd-s:nth-child(4) .n{color:var(--orange);}
+.rd-s:nth-child(5){border-top-color:var(--gold);}.rd-s:nth-child(5) .n{color:#B8860B;}
+
+.highlight{background:linear-gradient(transparent 60%,rgba(255,192,0,.35) 60%);padding:0 2px;font-weight:600;}
+
+/* Versus cards */
+.vs{display:grid;grid-template-columns:1fr 40px 1fr;gap:0;margin:14px 0;align-items:stretch;}
+.vs-card{border-radius:10px;padding:16px;font-size:9pt;}
+.vs-card.before{background:rgba(231,76,60,.05);border:1px solid rgba(231,76,60,.15);}
+.vs-card.after{background:rgba(39,174,96,.05);border:1px solid rgba(39,174,96,.15);}
+.vs-mid{display:flex;align-items:center;justify-content:center;font-size:18pt;color:var(--gray-light);}
+.vs-card h5{font-size:9.5pt;font-weight:700;margin-bottom:6px;}
+.vs-card.before h5{color:var(--danger);}
+.vs-card.after h5{color:var(--success);}
+
+/* Portability meter */
+.pm{display:flex;align-items:center;gap:8px;margin:4px 0;}
+.pm .track{flex:1;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.pm .track .fill{height:100%;border-radius:4px;}
+.pm .pct{font-size:9pt;font-weight:700;color:var(--navy);width:40px;text-align:right;}
+
+@media print{.cover{min-height:auto;padding:50px 0;}.pg{padding:18px 8px;}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ COVER ═══════════ -->
+<div class="cover">
+  <div>
+    <div class="ca"><span></span><span></span><span></span></div>
+    <h1>Expansao<br><span class="gold">Multi-Setorial</span></h1>
+    <p class="sub">Da mineracao para energia, infraestrutura e alem — analise estrategica de oportunidades de expansao do Summo Quartile</p>
+    <p class="brief">
+      O sistema construido para mineracao tem <strong style="color:var(--gold);">~80% de reaproveitamento</strong>
+      para outros setores regulados. Esta analise avalia quais setores atacar, em que ordem,
+      com que esforco, e por que <em>agora</em> e a janela certa.
+    </p>
+    <span class="tag tag-gold">Apresentacao para socios — Abril 2026</span>
+  </div>
+  <div>
+    <div class="cc"><div class="cg">
+      <div><div class="l">Plataforma</div><div class="v">Summo Quartile</div></div>
+      <div><div class="l">Vertical atual</div><div class="v">Mineracao (MG + nacional)</div></div>
+      <div><div class="l">Verticais candidatas</div><div class="v">Energia · Infra · Saneamento</div></div>
+      <div><div class="l">Componentes reutilizaveis</div><div class="v">DD 5 fases · IC Shield · SLA-MG · BI</div></div>
+      <div><div class="l">Base tecnica validada</div><div class="v">19 mil processos MG (todos setores)</div></div>
+      <div><div class="l">Data</div><div class="v">16 de abril de 2026</div></div>
+    </div></div>
+    <div class="cf">
+      <span>Summo Quartile — Inteligencia Estrategica para Mineracao</span>
+      <span>Confidencial — Circulacao restrita a socios</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PAG 1 — TESE ═══════════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Expansao Setorial</span></div>
+    <div class="rt">1 / 8 · A tese</div></div>
+
+  <h2><span class="ic t">§</span> Por que expandir agora</h2>
+
+  <p>A infraestrutura tecnica do Summo Quartile foi construida para mineracao, mas os dados que coletamos, os endpoints publicos que mapeamos e a logica do produto (DD, IC Shield, analise de decisoes) <strong>nao dependem de mineracao</strong> — dependem de <em>licenciamento ambiental</em>, que e transversal.</p>
+
+  <div class="ks">
+    <div class="k"><div class="n">R$ 120B</div><div class="lb">M&A Energia<br>renovavel 2025</div><div class="sub2">Fonte: Exame/Bloomberg</div></div>
+    <div class="k"><div class="n">R$ 127B</div><div class="lb">Pipeline Infra<br>concessoes</div><div class="sub2">26 leiloes rodo+ferro</div></div>
+    <div class="k"><div class="n">70%</div><div class="lb">Atrasos LT por<br>licenciamento</div><div class="sub2">Fonte: Eixos Consultoria</div></div>
+    <div class="k"><div class="n">Zero</div><div class="lb">Concorrentes IA<br>em DD ambiental</div><div class="sub2">Gap real confirmado</div></div>
+  </div>
+
+  <h3>A janela competitiva</h3>
+  <table>
+    <thead><tr><th>Fator</th><th>Situacao</th><th>Implicacao</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Lei 15.190/2025</strong> (LGLA)</td><td>Recém-sancionada (ago/2025), 52 vetos derrubados dez/2025. Cria LAU, LAC, LAE, LOC.</td><td>Mercado em transicao regulatoria → quem tiver ferramenta atualizada sai na frente</td></tr>
+      <tr><td><strong>Consultorias tradicionais</strong></td><td>Arcadis (EUR 4.2B), EBP (ex-Ramboll), AECOM — todas usam humanos + Excel</td><td>Nao tem IA. Sao potenciais <em>clientes</em> (white-label) ou alvos de disrupcao</td></tr>
+      <tr><td><strong>Ambisis</strong> (unica plataforma BR)</td><td>106 mil projetos gerenciados. Lancando BI com IA em 2026</td><td>Faz <em>gestao</em> (workflow). Nos fazemos <em>inteligencia</em> (risco preditivo). Complementares</td></tr>
+      <tr><td><strong>FEAM + Google Vertex AI</strong></td><td>IA integrada ao SLA-MG para o orgao</td><td>Ferramenta do orgao, nao do empreendedor. Nao e concorrente</td></tr>
+      <tr><td><strong>Dados publicos</strong></td><td>ANEEL SIGA, ANTT, DNIT, ANA — todos com CSV/API aberta</td><td>Coletores analógos aos que ja temos (ANM, IBAMA, SEMAD)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cl info">
+    <div class="ci">i</div>
+    <div class="bd"><strong>Resumo da tese</strong>
+    Ninguem combina (1) scraping multi-agencia + (2) IA de conformidade + (3) risco preditivo de IC.
+    A Ambisis faz gestao (onde voce ESTA). Nos fazemos inteligencia (o que VEM ANTES). A janela e de 18-36 meses antes que big-4 montem produtos dedicados.</div>
+  </div>
+</div>
+
+<!-- ═══════════ PAG 2 — MATRIZ SETORIAL ═══════════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Expansao Setorial</span></div>
+    <div class="rt">2 / 8 · Matriz de oportunidades</div></div>
+
+  <h2><span class="ic gl">◆</span> Avaliacao comparativa dos setores</h2>
+
+  <table>
+    <thead><tr><th>Setor</th><th>TAM consultoria ambiental</th><th>Ticket DD</th><th>IC como dor?</th><th>Reuso tecnico</th><th>Concorrencia IA</th><th>Score</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Mineracao</strong> (atual)</td><td>R$ 1-2B/ano</td><td>R$ 50-500k</td><td><span class="b bo">Sim</span></td><td>100%</td><td>Quase zero</td><td><span class="b bt">Base</span></td></tr>
+      <tr style="background:rgba(21,96,130,.04);"><td><strong>LT + eolica offshore</strong></td><td>R$ 2-4B/ano</td><td>R$ 200k-5M</td><td><span class="b br2">70% atrasos</span></td><td>90%</td><td>Zero</td><td><span class="b bg">★★★★★</span></td></tr>
+      <tr style="background:rgba(255,95,0,.03);"><td><strong>M&A parques energia</strong></td><td>dentro do acima</td><td>R$ 80k-2M</td><td><span class="b bo">Alto</span></td><td>85%</td><td>Quase zero</td><td><span class="b bg">★★★★★</span></td></tr>
+      <tr><td><strong>Infra linear</strong> (rodo/ferro)</td><td>R$ 1-3B/ano</td><td>R$ 200k-2M</td><td><span class="b br2">Muito</span></td><td>85%</td><td>Zero</td><td><span class="b bo">★★★★</span></td></tr>
+      <tr><td><strong>Petroleo & Gas</strong></td><td>R$ 1-2B/ano</td><td>R$ 500k-3M</td><td><span class="b bo">Sim</span></td><td>70%</td><td>Media</td><td><span class="b bo">★★★★</span></td></tr>
+      <tr><td><strong>Saneamento</strong></td><td>R$ 500M-1B</td><td>R$ 30-80k</td><td><span class="b bgy">Medio</span></td><td>75%</td><td>Baixa</td><td><span class="b bgy">★★★</span></td></tr>
+      <tr><td><strong>Agronegocio industrial</strong></td><td>massivo, capilar</td><td>R$ 8-40k</td><td><span class="b bgy">Medio</span></td><td>60%</td><td>Quase zero</td><td><span class="b bgy">★★★</span></td></tr>
+      <tr><td><strong>Loteamento urbano</strong></td><td>Alto regional</td><td>R$ 20-80k</td><td><span class="b bgy">Medio</span></td><td>50%</td><td>Media</td><td><span class="b bgy">★★</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="cl warn">
+    <div class="ci">⚠</div>
+    <div class="bd"><strong>Energia renovavel ≠ solar pequena</strong>
+    Projetos solares <5 MW sao <em>isentos de licenciamento</em> em SP (CETESB, jan/2025) e simplificados em quase todos os estados. O foco correto sao os <strong>nichos premium</strong>: linhas de transmissao (LT), eolica offshore (103 projetos no IBAMA), e M&A de parques operacionais (R$ 120B em 2025).</div>
+  </div>
+
+  <h3>Numeros do mercado de energia renovavel</h3>
+  <div class="bar-chart">
+    <div class="bar-row"><div class="lbl">M&A energia 2025</div>
+      <div class="bw"><div class="fill" style="width:100%;background:var(--teal);">R$ 120B (76% solar)</div></div><div class="val">Exame/Bloomberg</div></div>
+    <div class="bar-row"><div class="lbl">Solar instalado 2024</div>
+      <div class="bw"><div class="fill" style="width:60%;background:var(--gold);color:var(--navy);">14,4 GW · R$ 54,9B</div></div><div class="val">ABSOLAR</div></div>
+    <div class="bar-row"><div class="lbl">Eolica offshore (IBAMA)</div>
+      <div class="bw"><div class="fill" style="width:42%;background:var(--orange);">103 projetos pendentes</div></div><div class="val">1a LP jun/2025</div></div>
+    <div class="bar-row"><div class="lbl">Eolica onshore 2024</div>
+      <div class="bw"><div class="fill" style="width:14%;background:var(--success);">3,3 GW · 76 parques</div></div><div class="val">ABEEolica</div></div>
+    <div class="bar-row"><div class="lbl">Pipeline infra rodo+ferro</div>
+      <div class="bw"><div class="fill" style="width:53%;background:var(--navy);">R$ 127B · 26 leiloes</div></div><div class="val">BNDES</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ PAG 3 — TOP 3 VERTICAIS ═══════════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Expansao Setorial</span></div>
+    <div class="rt">3 / 8 · Verticais recomendadas</div></div>
+
+  <h2><span class="ic g">★</span> Tres verticais recomendadas (em ordem)</h2>
+
+  <!-- #1 LT -->
+  <div style="background:rgba(21,96,130,.03);border:2px solid rgba(21,96,130,.15);border-radius:12px;padding:18px;margin:14px 0;">
+    <h3 style="margin-top:0;font-size:13pt;color:var(--navy);">🥇 Linhas de Transmissao (LT) + Eolica Offshore</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;">
+      <div>
+        <p class="sm"><strong>Por que #1:</strong></p>
+        <ul class="sm">
+          <li><strong>70% dos atrasos</strong> em LT sao por licenciamento (Eixos Consultoria)</li>
+          <li>Obras lineares cruzam multiplas jurisdicoes → IC frequente e cara</li>
+          <li>Ticket alto: R$ 200k-5M por DD</li>
+          <li>Players concentrados: quem ganha leilao ANEEL volta todo ano</li>
+          <li>103 projetos eolicos offshore pendentes no IBAMA</li>
+          <li><strong>Caso piloto ja existe:</strong> LT do Compactos Usiminas (processo 294511)</li>
+        </ul>
+      </div>
+      <div>
+        <p class="sm"><strong>Players-alvo:</strong></p>
+        <ul class="sm">
+          <li><strong>Casa dos Ventos</strong> — 1/3 dos parques eolicos do Brasil</li>
+          <li><strong>ENGIE, Enel, CPFL, Neoenergia</strong> — operadores</li>
+          <li><strong>Equinor, Petrobras</strong> — offshore (11 projetos Petrobras)</li>
+          <li><strong>Atlas Renewable Energy</strong></li>
+          <li>Fundos: Actis, Brookfield, Patria, BTG Pactual Timberland</li>
+        </ul>
+        <p class="sm"><strong>Regulacao-chave:</strong> CONAMA 462 (eolica), Portaria MMA 289 (LT), Lei 15.190/2025</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- #2 M&A -->
+  <div style="background:rgba(255,95,0,.03);border:2px solid rgba(255,95,0,.12);border-radius:12px;padding:18px;margin:14px 0;">
+    <h3 style="margin-top:0;font-size:13pt;color:var(--navy);">🥈 DD para M&A de Parques Energia</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;">
+      <div>
+        <p class="sm"><strong>Por que #2:</strong></p>
+        <ul class="sm">
+          <li><strong>R$ 120B em transacoes</strong> em 2025 (76% solar)</li>
+          <li>Comprador <em>precisa</em> de DD ambiental em 2-4 semanas, nao 3 meses</li>
+          <li>Passivos ocultos: condicionantes nao cumpridas, TACs, licenca vencida, IC em aberto</li>
+          <li>Investidores ESG (Europa/EUA) pagam premium por DD certificada</li>
+          <li>Nosso angulo: <strong>"DD ambiental automatizada em 48h"</strong></li>
+        </ul>
+      </div>
+      <div>
+        <p class="sm"><strong>Compradores-alvo:</strong></p>
+        <ul class="sm">
+          <li>Fundos de infraestrutura: Patria, Actis, Brookfield</li>
+          <li>Utilities internacionais: Enel, EDP, Iberdrola</li>
+          <li>Consultorias M&A: Mattos Filho, Pinheiro Neto, Veirano</li>
+          <li>Bancos de investimento: BTG, Itau BBA, XP</li>
+        </ul>
+        <p class="sm"><strong>Entregavel:</strong> Relatorio de risco ambiental em formato padrao M&A. ANEEL SIGA + IBAMA + SLA → score instantaneo.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- #3 Infra -->
+  <div style="background:rgba(39,174,96,.03);border:2px solid rgba(39,174,96,.12);border-radius:12px;padding:18px;margin:14px 0;">
+    <h3 style="margin-top:0;font-size:13pt;color:var(--navy);">🥉 Infraestrutura Rodoviaria e Ferroviaria</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;">
+      <div>
+        <p class="sm"><strong>Por que #3:</strong></p>
+        <ul class="sm">
+          <li><strong>R$ 127B em 26 concessoes</strong> a serem leiloadas</li>
+          <li>Marco Ferroviario (Lei 14.273/2021) abrindo autorizacoes</li>
+          <li>Sinergia com mineracao: escoamento de producao (MRS, Rumo, Vale)</li>
+          <li>EIA de obra linear e pesado: arqueologia, comunidades, fragmentacao de habitat ao longo de centenas de km</li>
+        </ul>
+      </div>
+      <div>
+        <p class="sm"><strong>Players-alvo:</strong></p>
+        <ul class="sm">
+          <li><strong>CCR</strong> — maior empresa de mobilidade do Brasil, 230 cidades</li>
+          <li><strong>EcoRodovias</strong> — 2a maior concessionaria</li>
+          <li><strong>Rumo, MRS Logistica</strong> — ferrovias</li>
+          <li><strong>DNIT/ANTT</strong> — licitacoes publicas</li>
+        </ul>
+        <p class="sm"><strong>Dados:</strong> ANTT e DNIT tem portais dados abertos com licencas, GIS, condicionantes.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cl danger">
+    <div class="ci">✕</div>
+    <div class="bd"><strong>Descartado por ora: Saneamento</strong>
+    Lei 15.190/2025 <em>isentou ETEs/ETAs de licenciamento ambiental</em>. Volume cai drasticamente. Rede (dutos) ainda precisa, mas ticket baixo. Nao justifica investimento agora.</div>
+  </div>
+</div>
+
+<!-- ═══════════ PAG 4 — REAPROVEITAMENTO TECNICO ═══════════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Expansao Setorial</span></div>
+    <div class="rt">4 / 8 · Portabilidade tecnica</div></div>
+
+  <h2><span class="ic t">⚙</span> O que reaproveita e o que precisa adaptar</h2>
+
+  <h3>Componentes 100% reutilizaveis (sem mudanca)</h3>
+  <table>
+    <thead><tr><th>Componente</th><th>Mineracao</th><th>Energia/LT</th><th>Infra</th><th>Por que e universal</th></tr></thead>
+    <tbody>
+      <tr><td><strong>DD 5 fases (PDCA)</strong></td><td>✅</td><td>✅</td><td>✅</td><td>Framework de auditoria independe de setor</td></tr>
+      <tr><td><strong>IC Risk Score</strong></td><td>✅</td><td>✅</td><td>✅</td><td>Modelo: statusExterno × snapshots × atividade</td></tr>
+      <tr><td><strong>Coletor SLA-MG</strong></td><td>A-XX</td><td>E-XX, B-XX</td><td>F-XX</td><td>Mesmos endpoints, atividades diferentes</td></tr>
+      <tr><td><strong>Analise de Decisoes</strong></td><td>✅</td><td>✅</td><td>✅</td><td>v_mg_semad cobre todos os setores</td></tr>
+      <tr><td><strong>Monitoramento espacial</strong></td><td>✅</td><td>✅</td><td>✅</td><td>UC/TI/biomas independem de setor</td></tr>
+      <tr><td><strong>BI legislacao</strong></td><td>✅</td><td>✅</td><td>✅</td><td>CONAMA 237, LGLA aplicam a todos</td></tr>
+      <tr><td><strong>Relatorios HTML</strong></td><td>✅</td><td>✅</td><td>✅</td><td>Infra de geracao e generica</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Componentes que precisam adaptacao</h3>
+  <table>
+    <thead><tr><th>Componente</th><th>O que muda</th><th>Esforco</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Inventario de documentos</strong></td><td>Mineracao: DN COPAM 217 (A-01 a A-07). Energia: CONAMA 462, normas ANEEL, condicionantes tipo fauna alada. LT: Portaria MMA 289, faixa de servidao, supressao vegetal</td><td><span class="b bo">2-3 dias/setor</span></td></tr>
+      <tr><td><strong>Requisitos de conformidade</strong></td><td>Os 2.212 requisitos sao especificos de mineracao MG. Para energia: anuencias setoriais (ANEEL, ONS, EPE), monitoramento de mortalidade fauna, ruido, reflexo solar</td><td><span class="b br2">1-2 semanas/setor</span></td></tr>
+      <tr><td><strong>Terminologia UI</strong></td><td>"Mineradora" → "Parque/Usina", "Cava" → "Area de geracao", "CFEM" → "TUST/TUSD"</td><td><span class="b bg">1-2 dias</span></td></tr>
+      <tr><td><strong>Cadastro setorial</strong></td><td>Cadastro Mineiro → ANEEL SIGA (energia) ou ANTT (infra)</td><td><span class="b bo">1-2 dias</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Componentes que precisam ser criados</h3>
+  <table>
+    <thead><tr><th>Novo componente</th><th>Descricao</th><th>Esforco</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Coletor ANEEL SIGA</strong></td><td>CSV diario com todas as usinas, potencia, fase, localizacao. Equivale ao coletor ANM</td><td><span class="b bo">3-4 dias</span></td></tr>
+      <tr><td><strong>Coletor ANTT / DNIT</strong></td><td>Concessoes, licencas ambientais, GIS de trechos rodoviarios/ferroviarios</td><td><span class="b bo">3-4 dias</span></td></tr>
+      <tr><td><strong>Coletor ANA</strong></td><td>Outorgas de uso de agua desde 2001. Crucial para hidro e solar com uso hidrico</td><td><span class="b bt">2-3 dias</span></td></tr>
+      <tr><td><strong>Inventarios regulatorios setoriais</strong></td><td>CONAMA 462, Portaria MMA 289, condicionantes tipicas por modalidade/fase/estado</td><td><span class="b br2">2-3 semanas total</span></td></tr>
+      <tr><td><strong>Modulo fauna alada</strong></td><td>Mortalidade aves/morcegos — item #1 de IC em eolica. Nao existe em mineracao</td><td><span class="b br2">1-2 semanas</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Medidor de portabilidade por vertical</h3>
+  <div class="pm"><div class="lbl sm" style="width:120px;text-align:right;color:var(--navy);font-weight:600;">LT + Eolica</div><div class="track"><div class="fill" style="width:90%;background:var(--success);"></div></div><div class="pct">90%</div></div>
+  <div class="pm"><div class="lbl sm" style="width:120px;text-align:right;color:var(--navy);font-weight:600;">M&A Energia</div><div class="track"><div class="fill" style="width:85%;background:var(--success);"></div></div><div class="pct">85%</div></div>
+  <div class="pm"><div class="lbl sm" style="width:120px;text-align:right;color:var(--navy);font-weight:600;">Infra linear</div><div class="track"><div class="fill" style="width:85%;background:var(--success);"></div></div><div class="pct">85%</div></div>
+  <div class="pm"><div class="lbl sm" style="width:120px;text-align:right;color:var(--navy);font-weight:600;">Saneamento</div><div class="track"><div class="fill" style="width:75%;background:var(--warning);"></div></div><div class="pct">75%</div></div>
+  <div class="pm"><div class="lbl sm" style="width:120px;text-align:right;color:var(--navy);font-weight:600;">Agronegocio</div><div class="track"><div class="fill" style="width:60%;background:var(--orange);"></div></div><div class="pct">60%</div></div>
+</div>
+
+<!-- ═══════════ PAG 5 — DADOS COLETAVEIS ═══════════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Expansao Setorial</span></div>
+    <div class="rt">5 / 8 · Fontes de dados por setor</div></div>
+
+  <h2><span class="ic p">◈</span> Ecossistema de dados — o que existe e como coletar</h2>
+
+  <p>Para cada setor, existem bases publicas estruturadas analogas as que ja coletamos em mineracao (IBAMA, ANM, SEMAD). Abaixo, o mapa completo.</p>
+
+  <table>
+    <thead><tr><th>Fonte</th><th>Agencia</th><th>Setor</th><th>Conteudo</th><th>Acesso</th><th>Equivale a</th></tr></thead>
+    <tbody>
+      <tr style="background:rgba(21,96,130,.03);"><td colspan="6" style="font-weight:700;color:var(--teal);padding:8px 10px;">JA COLETAMOS</td></tr>
+      <tr><td>IBAMA SISLIC</td><td>IBAMA</td><td>Todos (federal)</td><td>Licencas emitidas</td><td>JSON API</td><td>—</td></tr>
+      <tr><td>ANM SIGMINE</td><td>ANM</td><td>Mineracao</td><td>Processos minerarios</td><td>ArcGIS REST</td><td>—</td></tr>
+      <tr><td>MG SEMAD / SLA</td><td>SEMAD</td><td>Todos (MG)</td><td>19 mil processos, todos setores</td><td>REST publico</td><td>—</td></tr>
+      <tr><td>IBAMA Infracoes</td><td>IBAMA</td><td>Todos</td><td>Autos de infracao</td><td>CSV</td><td>—</td></tr>
+      <tr style="background:rgba(255,95,0,.03);"><td colspan="6" style="font-weight:700;color:var(--orange);padding:8px 10px;">A COLETAR — ENERGIA</td></tr>
+      <tr><td><strong>ANEEL SIGA</strong></td><td>ANEEL</td><td>Energia</td><td>Todas as usinas, potencia, fase, localizacao. Atualizado diariamente</td><td><span class="b bg">CSV aberto + Power BI</span></td><td>ANM processos</td></tr>
+      <tr><td>EPE BiodivEPE</td><td>EPE</td><td>Energia</td><td>Risco biodiversidade por localizacao</td><td>Web tool</td><td>Sobreposicao UC/TI</td></tr>
+      <tr><td>EPE SIEnergia</td><td>EPE</td><td>Energia</td><td>Estudos economico-energeticos</td><td>Portal</td><td>Analises setoriais</td></tr>
+      <tr style="background:rgba(39,174,96,.03);"><td colspan="6" style="font-weight:700;color:var(--success);padding:8px 10px;">A COLETAR — INFRAESTRUTURA</td></tr>
+      <tr><td><strong>ANTT Dados Abertos</strong></td><td>ANTT</td><td>Rodovias/ferrovias</td><td>Concessoes, licencas, GIS de ativos</td><td><span class="b bg">Portal aberto</span></td><td>ANM SCM</td></tr>
+      <tr><td><strong>DNIT Dados Abertos</strong></td><td>DNIT</td><td>Rodovias</td><td>Infraestrutura, dados geograficos</td><td><span class="b bg">Portal aberto</span></td><td>ANM spatial</td></tr>
+      <tr style="background:rgba(255,192,0,.03);"><td colspan="6" style="font-weight:700;color:#B8860B;padding:8px 10px;">A COLETAR — TRANSVERSAL</td></tr>
+      <tr><td><strong>ANA Dados Abertos</strong></td><td>ANA</td><td>Todos (agua)</td><td>Outorgas de uso de agua desde 2001</td><td><span class="b bg">Portal aberto</span></td><td>CFEM</td></tr>
+      <tr><td>SNIRH</td><td>ANA</td><td>Todos (agua)</td><td>Sistema Nacional de Recursos Hidricos</td><td>Web portal</td><td>BI legislacao</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cl next">
+    <div class="ci">✓</div>
+    <div class="bd"><strong>Dado critico: o SLA-MG ja cobre todos os setores</strong>
+    Os endpoints <code>/sla/processo/listar</code> e <code>/sla/processo/documentosProcesso/{id}</code> aceitam atividades E-XX (energia), F-XX (transporte), B-XX (infra). Ja validamos isso — o IC Shield funciona para qualquer setor em MG sem nenhuma mudanca tecnica.</div>
+  </div>
+</div>
+
+<!-- ═══════════ PAG 6 — FEATURES DO PRODUTO ═══════════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Expansao Setorial</span></div>
+    <div class="rt">6 / 8 · Produto multi-setorial</div></div>
+
+  <h2><span class="ic o">◈</span> Como o produto se apresenta em cada vertical</h2>
+
+  <div class="fc-grid">
+    <div class="fc">
+      <h4>DD Ambiental 5 Fases <span class="tag" style="background:var(--teal);color:#fff;">Universal</span></h4>
+      <p>Mesmo framework: Escopo → Documentos → Avaliacao → Plano PDCA → Resultado. Muda o inventario documental e a terminologia. Para LT: faixa servidao, supressao, fauna alada. Para M&A: passivos ocultos, condicionantes, TACs.</p>
+    </div>
+    <div class="fc">
+      <h4>IC Shield <span class="tag" style="background:var(--orange);color:#fff;">Universal</span></h4>
+      <p>IC Risk Score calibrado por atividade x classe x regional. O SLA-MG ja tem dados de todos os setores. Para LT, 70% dos atrasos sao IC — a dor e ainda maior que mineracao. Vira o diferencial #1.</p>
+    </div>
+    <div class="fc">
+      <h4>DD Retroativa <span class="tag" style="background:var(--gold);color:var(--navy);">Killer Feature</span></h4>
+      <p>Cliente digita nro do processo → sistema baixa metadados + lista de documentos → popula checklist em 20 segundos. Funciona identico para qualquer setor (mesmo endpoint SLA).</p>
+    </div>
+    <div class="fc">
+      <h4>Relatorio M&A Instantaneo <span class="tag" style="background:var(--success);color:#fff;">Novo</span></h4>
+      <p>Para transacoes de parques: cruza ANEEL SIGA + IBAMA + SLA → gera relatorio de risco ambiental em 48h. Score de passivo, condicionantes pendentes, historico IC, sobreposicoes espaciais. Formato padrao investidor.</p>
+    </div>
+  </div>
+
+  <h3>Pitch "antes vs. depois" — por tipo de cliente</h3>
+
+  <div class="vs">
+    <div class="vs-card before">
+      <h5>Sem Summo Quartile</h5>
+      <ul class="sm">
+        <li>DD ambiental: 2-4 meses, R$ 200k-2M</li>
+        <li>Feita por consultoria com Excel + telefone</li>
+        <li>IC nao e prevista — so descoberta depois do protocolo</li>
+        <li>M&A: DD ambiental atrasa o deal em 6-8 semanas</li>
+        <li>Sem dados historicos de risco por combinacao</li>
+      </ul>
+    </div>
+    <div class="vs-mid">→</div>
+    <div class="vs-card after">
+      <h5>Com Summo Quartile</h5>
+      <ul class="sm">
+        <li>DD ambiental: 48h-2 semanas, custo 60-80% menor</li>
+        <li>IA sobre 19 mil processos reais do SLA-MG</li>
+        <li>IC Shield: previne IC antes do protocolo com score calibrado</li>
+        <li>M&A: relatorio instantaneo com dados cruzados multi-agencia</li>
+        <li>Dataset proprietario como moat competitivo</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PAG 7 — MODELO + ROADMAP ═══════════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Expansao Setorial</span></div>
+    <div class="rt">7 / 8 · Modelo e cronograma</div></div>
+
+  <h2><span class="ic gl">◆</span> Tres modelos possiveis de expansao</h2>
+
+  <table>
+    <thead><tr><th>Modelo</th><th>Descricao</th><th>Quando</th><th>Para quem</th></tr></thead>
+    <tbody>
+      <tr><td><strong>A. Multi-vertical</strong> (mesma marca)</td><td>Summo Quartile com modulos: Mining, Energy, Infra. Usuario escolhe no onboarding</td><td>Curto prazo</td><td>Se quer velocidade e custo baixo de marca</td></tr>
+      <tr><td><strong>B. Spin-off</strong> (marcas separadas)</td><td>Summo Quartile = mineracao. Nova marca = energia. Mesma base tecnica, marcas independentes</td><td>Medio prazo</td><td>Se quer captacao separada, socios verticais, saida M&A independente</td></tr>
+      <tr><td><strong>C. White-label</strong> (plataforma)</td><td>Vende a infraestrutura para consultorias (Brandt, EBP) que rodam em sua marca</td><td>Longo prazo</td><td>Se quer evitar venda direta e escalar via parceiros</td></tr>
+    </tbody>
+  </table>
+
+  <h2><span class="ic t">→</span> Cronograma sugerido</h2>
+
+  <h3>Curto prazo (0-6 meses) — validar mineracao</h3>
+  <div class="rd">
+    <div class="rd-s"><div class="n">Mai</div><div class="t">IC Shield v1</div><div class="d">Coletor SLA + snapshots + score</div></div>
+    <div class="rd-s"><div class="n">Jun</div><div class="t">Piloto mineracao</div><div class="d">2-3 clientes pagantes</div></div>
+    <div class="rd-s"><div class="n">Jul</div><div class="t">Coletor ANEEL</div><div class="d">SIGA = base de energia</div></div>
+    <div class="rd-s"><div class="n">Ago</div><div class="t">Inventario LT</div><div class="d">Docs + requisitos CONAMA 462</div></div>
+    <div class="rd-s"><div class="n">Set-Out</div><div class="t">Piloto LT</div><div class="d">1 caso real (Compactos LT)</div></div>
+  </div>
+
+  <h3>Medio prazo (6-12 meses) — vertical energia</h3>
+  <div class="rd">
+    <div class="rd-s"><div class="n">Nov</div><div class="t">M&A Report v1</div><div class="d">Relatorio instantaneo para transacoes</div></div>
+    <div class="rd-s"><div class="n">Dez</div><div class="t">Fauna alada</div><div class="d">Modulo mortalidade aves/morcegos</div></div>
+    <div class="rd-s"><div class="n">Jan</div><div class="t">Offshore v1</div><div class="d">103 projetos IBAMA mapeados</div></div>
+    <div class="rd-s"><div class="n">Fev-Mar</div><div class="t">3-5 clientes energia</div><div class="d">Validacao comercial</div></div>
+    <div class="rd-s"><div class="n">Abr</div><div class="t">Decisao spin-off</div><div class="d">Marca separada ou modulo?</div></div>
+  </div>
+
+  <h3>Longo prazo (12-24 meses) — plataforma</h3>
+  <div class="rd">
+    <div class="rd-s"><div class="n">2027 S1</div><div class="t">Infra linear</div><div class="d">Coletor ANTT/DNIT + inventario</div></div>
+    <div class="rd-s"><div class="n">2027 S1</div><div class="t">Multi-estado</div><div class="d">CETESB (SP), INEA (RJ), CPRH (PE)</div></div>
+    <div class="rd-s"><div class="n">2027 S2</div><div class="t">White-label</div><div class="d">SDK para consultorias</div></div>
+    <div class="rd-s"><div class="n">2027 S2</div><div class="t">Captacao / M&A</div><div class="d">Se fizer sentido</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ PAG 8 — DECISOES PENDENTES ═══════════ -->
+<div class="pg">
+  <div class="ph"><div class="lt"><div class="sq">SQ</div><span>Summo Quartile · Expansao Setorial</span></div>
+    <div class="rt">8 / 8 · Decisoes e proximos passos</div></div>
+
+  <h2><span class="ic r">?</span> Perguntas para os socios</h2>
+
+  <table>
+    <thead><tr><th>#</th><th>Pergunta</th><th>Impacto na estrategia</th></tr></thead>
+    <tbody>
+      <tr><td class="nc">1</td><td><strong>Mineracao premium ou volume?</strong> Tickets altos (poucos clientes grandes) ou SaaS recorrente (muitos clientes medios)?</td><td>Define modelo A vs B vs C</td></tr>
+      <tr><td class="nc">2</td><td><strong>Tem rede em energia/LT?</strong> Contato em Casa dos Ventos, ENGIE, fundo de infra?</td><td>Porta aberta > logica pura. Se tem, antecipa timeline</td></tr>
+      <tr><td class="nc">3</td><td><strong>Captacao ou bootstrapped?</strong> Investidor quer TAM grande → diversificacao acelera. Bootstrapped → foca mineracao + 1 vertical</td><td>Define velocidade de expansao</td></tr>
+      <tr><td class="nc">4</td><td><strong>Disposicao para especialista setorial?</strong> Co-fundador ou consultor senior do segundo setor para nao virar commodity?</td><td>Define profundidade do produto</td></tr>
+      <tr><td class="nc">5</td><td><strong>Compactos como ponte?</strong> A LT do Compactos (processo 294511) ja e energia/transmissao. Usar como caso piloto real?</td><td>Validacao sem custo adicional</td></tr>
+    </tbody>
+  </table>
+
+  <h2><span class="ic g">→</span> Proximos passos imediatos (independente das respostas)</h2>
+
+  <div class="cl next">
+    <div class="ci">1</div>
+    <div class="bd"><strong>Fechar IC Shield v1 para mineracao</strong>
+    Coletor de producao + snapshots diarios + score calibrado. Esforco: ~11h. Nao bloqueia nada e gera receita imediata.</div>
+  </div>
+
+  <div class="cl info">
+    <div class="ci">2</div>
+    <div class="bd"><strong>Baixar ANEEL SIGA (1 dia)</strong>
+    CSV diario com todas as usinas do Brasil. Monta <code>v_aneel_siga</code> em DuckDB. Zero risco, alto valor informacional. Da visibilidade sobre todo o setor de energia cruzavel com IBAMA + SLA.</div>
+  </div>
+
+  <div class="cl info">
+    <div class="ci">3</div>
+    <div class="bd"><strong>Usar Compactos LT como caso real</strong>
+    Processo 294511 (LT do Projeto Compactos Usiminas) ja esta no SLA-MG. Rodar DD completa nele e usar como demonstracao para a vertical de energia. Custo incremental: ~1 dia.</div>
+  </div>
+
+  <div style="margin-top:32px;padding:20px;background:var(--light);border-radius:12px;text-align:center;">
+    <p style="font-size:12pt;font-weight:800;color:var(--navy);margin-bottom:8px;">Resumo da oportunidade</p>
+    <p style="font-size:10pt;color:var(--gray);max-width:600px;margin:0 auto;">
+      <strong>80% do sistema atual</strong> roda nativo em outros setores. O investimento incremental
+      para abrir a primeira vertical (LT + energia) e de <strong>~4-6 semanas</strong> de desenvolvimento,
+      acessando um mercado de <strong>R$ 120B em transacoes/ano</strong> onde <strong>ninguem</strong>
+      oferece DD ambiental com IA e risco preditivo de IC.
+    </p>
+  </div>
+
+  <div style="margin-top:28px;padding-top:18px;border-top:2px solid var(--light);text-align:center;font-size:7.5pt;color:var(--gray-light);">
+    Summo Quartile · Inteligencia Estrategica para Mineracao · summoquartile.com<br>
+    Documento estrategico · Confidencial — Circulacao restrita a socios · 16 de abril de 2026
+  </div>
+</div>
+
+</body>
+</html>

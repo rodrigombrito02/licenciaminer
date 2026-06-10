@@ -1,13 +1,51 @@
-# Runtime dependencies for Streamlit app only
-# (collectors have heavier deps in pyproject.toml)
-streamlit>=1.55.0
-duckdb>=1.2
-pandas>=2.2
-plotly>=6.6.0
-pyarrow>=18.0
-python-dotenv>=1.0
-folium>=0.15
-streamlit-folium>=0.22
-geopandas>=1.1.3
-shapely>=2.1.2
+# Dependencias para deploy do BACKEND (FastAPI) em Railway/Render.
+# Gerado a partir do .venv local em maio/2026. Mantenha alinhado com pyproject.toml.
+# Exclui streamlit, playwright e dev tools — eles ficam apenas no ambiente local.
+
+# ── Framework Web ──
+fastapi>=0.135.0
+uvicorn[standard]>=0.44.0
+starlette>=1.0.0
+python-multipart>=0.0.26
+pydantic>=2.12.0
+
+# ── Banco e dados ──
+duckdb>=1.5.0
+SQLAlchemy>=2.0.49
+pyarrow>=23.0.0
+pandas>=2.2.0
+numpy>=2.0.0
+openpyxl>=3.1.5
+
+# ── HTTP / async ──
+httpx>=0.28.0
+requests>=2.32.0
+websockets>=14.0
+watchfiles>=1.1.0
+
+# ── Geoespacial (overlay UC/TI/biomas pre-computado) ──
+geopandas>=1.1.0
+shapely>=2.1.0
+pyogrio>=0.12.0
+pyproj>=3.7.0
+
+# ── IA / chat (Anthropic) ──
+anthropic>=0.91.0
+
+# ── PDF / relatorios ──
+PyMuPDF>=1.27.0
 fpdf2>=2.8.7
+Pillow>=11.0
+
+# ── Streamlit (legacy app, mantido para backward compat) ──
+streamlit>=1.55.0
+streamlit-folium>=0.22.0
+folium>=0.15.0
+plotly>=6.6.0
+
+# ── Utilitarios ──
+python-dotenv>=1.0
+PyYAML>=6.0
+Jinja2>=3.1.0
+click>=8.0
+tenacity>=9.0
