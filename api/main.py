@@ -36,20 +36,35 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+async def _background_init():
+    """Init pesado roda em background — nao bloqueia healthcheck."""
+    import asyncio
+    try:
+        logger.info("[bg] Inicializando DuckDB...")
+        await asyncio.to_thread(get_connection)
+        logger.info("[bg] Inicializando SQLite (Plano de Acoes)...")
+        await asyncio.to_thread(init_planos_acao_db)
+        logger.info("[bg] Inicializando SQLite (Viabilidade)...")
+        await asyncio.to_thread(init_viabilidade_db)
+        from api.routers.intelligence import start_briefing_scheduler
+        await asyncio.to_thread(start_briefing_scheduler)
+        logger.info("[bg] API totalmente pronta")
+    except Exception as exc:
+        logger.exception(f"[bg] Falha no init em background: {exc}")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Gerencia ciclo de vida: conexão DuckDB no startup, cleanup no shutdown."""
-    logger.info("Inicializando DuckDB...")
-    get_connection()
-    logger.info("Inicializando SQLite (Plano de Acoes)...")
-    init_planos_acao_db()
-    logger.info("Inicializando SQLite (Viabilidade)...")
-    init_viabilidade_db()
-    from api.routers.intelligence import start_briefing_scheduler
-    start_briefing_scheduler()
-    logger.info("API pronta")
+    """Lifespan rapido — dispara init pesado em background para healthcheck
+    responder imediatamente (necessario em Railway/Render onde o
+    healthcheck e parte do gating de Production)."""
+    import asyncio
+    logger.info("Startup: agendando init em background")
+    task = asyncio.create_task(_background_init())
     yield
-    logger.info("Encerrando...")
+    logger.info("Shutdown: aguardando init terminar se ainda rodando")
+    if not task.done():
+        task.cancel()
     close_connection()
 
 
