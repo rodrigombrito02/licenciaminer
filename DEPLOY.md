@@ -176,3 +176,4 @@ Setup detalhado quando chegar a hora.
 | **Total inicial** | **R$ 0** |
 
 Quando exceder o free credit Railway (uso muito intenso), Pro Plan: US$ 20/mês.
+# Deploy timestamp: forçar Production deploy
