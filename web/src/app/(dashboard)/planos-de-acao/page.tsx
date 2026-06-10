@@ -95,7 +95,7 @@ export default function PlanosDeAcaoPage() {
             <Badge className="bg-brand-gold/20 text-brand-gold border-brand-gold/40 ml-2">Sprint 1</Badge>
           </div>
           <p className="text-sm text-white/70 max-w-2xl">
-            Upload de planos heterogêneos (XLSX/CSV) com mapeamento automático de colunas. Piloto: MUSA.
+            Upload de planos heterogêneos (XLSX/CSV) com mapeamento automático de colunas. Cliente → Projeto → Plano.
           </p>
         </div>
         {clientes.length > 0 && (
@@ -131,7 +131,7 @@ export default function PlanosDeAcaoPage() {
             <Users className="h-12 w-12 text-brand-teal mx-auto" />
             <div>
               <h2 className="font-bold text-lg">Comece criando seu primeiro cliente</h2>
-              <p className="text-sm text-muted-foreground">Ex: MUSA, Vale, CSN — para organizar seus planos</p>
+              <p className="text-sm text-muted-foreground">Nome do cliente para organizar seus planos</p>
             </div>
             <NovoClienteDialog onCreated={recarregar} />
           </CardContent>
@@ -287,7 +287,7 @@ function NovoClienteDialog({ onCreated }: { onCreated: () => void }) {
       <DialogContent>
         <DialogHeader><DialogTitle>Novo Cliente</DialogTitle></DialogHeader>
         <div className="space-y-3">
-          <Input placeholder="Nome (ex: MUSA)" value={nome} onChange={e => setNome(e.target.value)} />
+          <Input placeholder="Nome do cliente" value={nome} onChange={e => setNome(e.target.value)} />
           <Input placeholder="Descrição (opcional)" value={descricao} onChange={e => setDescricao(e.target.value)} />
           <Button onClick={handleSave} disabled={saving || !nome.trim()}>
             {saving && <Loader2 className="h-3 w-3 animate-spin mr-1" />}Criar

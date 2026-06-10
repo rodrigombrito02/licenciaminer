@@ -1,21 +1,8 @@
 import {
-  Activity,
-  AlertOctagon,
   AlertTriangle,
-  BarChart3,
   Briefcase,
   Building2,
-  Calendar,
-  CalendarCheck,
-  CheckCheck,
   Cpu,
-  Database,
-  Factory,
-  FileSearch,
-  FileStack,
-  Flame,
-  FolderOpen,
-  GitBranch,
   Globe,
   Home,
   Layers,
@@ -23,18 +10,11 @@ import {
   Lock,
   Map,
   MessageSquare,
-  Network,
-  Scale,
-  Search,
-  Send,
-  Settings,
-  Shield,
-  ShieldAlert,
   ShieldCheck,
   Target,
   TrendingUp,
-  Users,
   Workflow,
+  FolderOpen,
 } from "lucide-react";
 
 export interface NavItem {
@@ -60,159 +40,118 @@ export interface NavGroup {
 
 export const NAV_GROUPS: NavGroup[] = [
   {
+    key: "produtos",
+    label: "Produtos Comerciais",
+    description: "Caixas com cara externa — vendáveis para clientes",
+  },
+  {
     key: "ferramentas-internas",
     label: "Ferramentas Internas",
-    description: "Cockpit operacional da Summo — gestão de riscos, projetos, planos de ação e comunicações.",
+    description: "Cockpit operacional Summo — apoio aos projetos de cliente",
+  },
+  {
+    key: "gestao",
+    label: "Gestão da Plataforma",
+    description: "Restrito a sócios e administradores",
   },
 ];
 
+/**
+ * Sidebar minimalista — apenas CAPAS de cada módulo.
+ * Sub-funcionalidades ficam dentro de cada capa (com botões grandes ou abas internas).
+ * Quem chega aqui não precisa decorar 30+ rotas — navega pelas capas.
+ */
 export const NAV_SECTIONS: NavSection[] = [
+  // ── Inicio (standalone)
   {
     label: "",
     standalone: true,
     items: [{ href: "/", label: "Início", icon: Home }],
   },
+
+  // ── Produtos Comerciais (4 caixas)
   {
     label: "Summo Ambiental",
     color: "text-brand-teal",
+    group: "produtos",
     items: [
-      { href: "/ambiental", label: "Capa Ambiental", icon: ShieldCheck },
-      { href: "/explorar", label: "Análise de Dados Públicos", icon: Database },
-      { href: "/empresa", label: "Consulta Empresa", icon: Building2 },
-      { href: "/decisoes", label: "Análise de Decisões", icon: BarChart3 },
-      { href: "/viabilidade", label: "Análise Preliminar", icon: Search },
-      { href: "/ambiental/diligencia", label: "Diligência Summo", icon: ShieldCheck },
-      { href: "/due-diligence", label: "  → DD Ambiental", icon: ShieldCheck },
-      { href: "/pilhas", label: "  → Conformidade de Pilhas", icon: Layers },
+      { href: "/ambiental", label: "Capa", icon: ShieldCheck },
     ],
   },
   {
     label: "Direitos e Concessões",
     color: "text-brand-teal",
+    group: "produtos",
     items: [
-      { href: "/concessoes", label: "Concessões", icon: FileSearch },
-      { href: "/mapa", label: "Mapa Geoespacial", icon: Map },
-      { href: "/prospeccao", label: "Prospecção", icon: TrendingUp },
+      { href: "/direitos", label: "Capa", icon: Map },
     ],
   },
   {
     label: "Mineral Intelligence",
     color: "text-brand-gold",
+    group: "produtos",
     items: [
-      { href: "/inteligencia-comercial", label: "Inteligência Comercial", icon: Globe },
-      { href: "/monitoramento", label: "Monitoramento", icon: Search },
+      { href: "/inteligencia-comercial", label: "Capa", icon: TrendingUp },
     ],
   },
   {
     label: "SQ Solutions",
     color: "text-brand-orange",
+    group: "produtos",
     items: [
-      { href: "/seguranca", label: "Segurança", icon: Shield },
-      { href: "/mineradora-modelo", label: "Mineradora Modelo", icon: Factory },
+      { href: "/sq-solutions", label: "Capa", icon: Cpu },
     ],
   },
+
+  // ── Ferramentas Internas (6 ferramentas, 1 item por ferramenta)
   {
-    label: "Plano de Ações",
+    label: "Ferramentas",
     color: "text-brand-orange",
     group: "ferramentas-internas",
     items: [
-      { href: "/planos-de-acao", label: "Cockpit MUSA", icon: ListTodo },
+      { href: "/ferramentas-internas", label: "Visão geral", icon: Workflow },
+      { href: "/planos-de-acao", label: "Plano de Ações", icon: ListTodo },
+      { href: "/projetos", label: "Projetos", icon: FolderOpen },
+      { href: "/riscos", label: "Riscos", icon: AlertTriangle },
+      { href: "/gestao-crises", label: "Crises", icon: AlertTriangle },
+      { href: "/comunicacoes", label: "Comunicações", icon: MessageSquare },
+      { href: "/oportunidades", label: "Oportunidades", icon: Target },
     ],
   },
+
+  // ── Gestão (admin)
   {
-    label: "Projetos",
-    color: "text-brand-orange",
-    group: "ferramentas-internas",
+    label: "Gestão",
+    color: "text-sidebar-foreground/50",
+    group: "gestao",
     items: [
-      { href: "/projetos", label: "PM Suite", icon: FolderOpen },
-    ],
-  },
-  {
-    label: "Riscos Corporativos (ERM)",
-    color: "text-brand-orange",
-    group: "ferramentas-internas",
-    items: [
-      { href: "/riscos-corporativos", label: "Dashboard ERM", icon: Briefcase },
-      { href: "/riscos-corporativos/objetivos", label: "Objetivos (BSC)", icon: Target },
-      { href: "/riscos-corporativos/taxonomia-erm", label: "Taxonomia COSO", icon: FileStack },
-      { href: "/riscos-corporativos/linhas-defesa", label: "3 Linhas de Defesa", icon: Shield },
-      { href: "/riscos-corporativos/snapshots", label: "Snapshots Board", icon: Calendar },
-    ],
-  },
-  {
-    label: "Riscos de Projeto",
-    color: "text-brand-orange",
-    group: "ferramentas-internas",
-    items: [
-      { href: "/gestao-riscos", label: "Dashboard", icon: ShieldAlert },
-      { href: "/gestao-riscos/riscos", label: "Riscos", icon: AlertTriangle },
-      { href: "/gestao-riscos/bowtie", label: "Bowtie", icon: GitBranch },
-      { href: "/gestao-riscos/planos/acoes", label: "Ações de Risco", icon: ListTodo },
-      { href: "/gestao-riscos/planos/controles", label: "Controles", icon: CheckCheck },
-      { href: "/gestao-riscos/kris", label: "KRIs (Indicadores)", icon: Activity },
-      { href: "/gestao-riscos/apetite", label: "Apetite a Risco", icon: Scale },
-      { href: "/gestao-riscos/organograma", label: "Organograma", icon: Network },
-      { href: "/gestao-riscos/cadeia-valor", label: "Cadeia de Valor", icon: Workflow },
-      { href: "/gestao-riscos/mapeamento", label: "Mapeamento", icon: Map },
-      { href: "/gestao-riscos/metodologia", label: "Metodologia", icon: Settings },
-    ],
-  },
-  {
-    label: "Gestão de Crises e Continuidade",
-    color: "text-brand-orange",
-    group: "ferramentas-internas",
-    items: [
-      { href: "/gestao-crises", label: "Dashboard", icon: Flame },
-      { href: "/gestao-crises/cenarios", label: "Cenários", icon: AlertOctagon },
-      { href: "/gestao-crises/comites", label: "Comitês", icon: Users },
-      { href: "/gestao-crises/simulados", label: "Simulados", icon: CalendarCheck },
-      { href: "/gestao-crises/bcp", label: "BCP / Continuidade", icon: FileStack },
-    ],
-  },
-  {
-    label: "Comunicações",
-    color: "text-brand-orange",
-    group: "ferramentas-internas",
-    items: [
-      { href: "/comunicacoes", label: "Dashboard", icon: MessageSquare },
-      { href: "/comunicacoes/stakeholders", label: "Stakeholders", icon: Users },
-      { href: "/comunicacoes/templates", label: "Templates", icon: FileStack },
-      { href: "/comunicacoes/envios", label: "Envios", icon: Send },
-    ],
-  },
-  {
-    label: "Gestão Interna",
-    color: "text-sidebar-foreground/40",
-    items: [
-      { href: "/gestao-interna", label: "Painel Interno", icon: Lock, disabled: true },
+      { href: "/admin", label: "Painel Admin", icon: Briefcase, disabled: true },
+      { href: "/gestao-interna", label: "Gestão Interna", icon: Lock, disabled: true },
     ],
   },
 ];
 
-/** Business unit cards for the landing page */
+/** Cards visíveis na landing/home pra visitante */
 export const BUSINESS_UNITS = [
   {
     title: "Summo Ambiental",
-    description:
-      "Análise e conformidade em licenciamento ambiental. Due diligence, viabilidade e base de dados regulatória.",
+    description: "Análise de dados regulatórios, viabilidade preliminar e Diligência Summo (DD ambiental + pilhas).",
     icon: ShieldCheck,
-    href: "/due-diligence",
+    href: "/ambiental",
     color: "border-brand-teal/30 hover:border-brand-teal/60",
     iconColor: "text-brand-teal",
   },
   {
     title: "Direitos e Concessões Minerárias",
-    description:
-      "Mapeamento geoespacial de concessões, prospecção de oportunidades e análise para investidores.",
+    description: "Mapa interativo, prospecção e análise de concessões minerárias do Brasil.",
     icon: Map,
-    href: "/mapa",
+    href: "/direitos",
     color: "border-brand-teal/30 hover:border-brand-teal/60",
     iconColor: "text-brand-teal",
   },
   {
     title: "Mineral Intelligence",
-    description:
-      "Inteligência de mercado, cotações, comércio exterior e monitoramento de indicadores da mineração brasileira.",
+    description: "Inteligência de mercado mineral: preços, comércio exterior, royalties, produção.",
     icon: TrendingUp,
     href: "/inteligencia-comercial",
     color: "border-brand-gold/30 hover:border-brand-gold/60",
@@ -220,30 +159,28 @@ export const BUSINESS_UNITS = [
   },
   {
     title: "SQ Solutions",
-    description:
-      "Soluções digitais de segurança e saúde no trabalho. IA aplicada à gestão de operações minerárias.",
+    description: "Soluções digitais com IA — Mineradora Modelo demo e segurança operacional.",
     icon: Cpu,
-    href: "/mineradora-modelo",
+    href: "/sq-solutions",
+    color: "border-brand-orange/30 hover:border-brand-orange/60",
+    iconColor: "text-brand-orange",
+  },
+  {
+    title: "Ferramentas Internas",
+    description: "Cockpit operacional Summo — riscos, projetos, planos de ação, comunicações.",
+    icon: Workflow,
+    href: "/ferramentas-internas",
     color: "border-brand-orange/30 hover:border-brand-orange/60",
     iconColor: "text-brand-orange",
   },
   {
     title: "Gestão Interna",
-    description: "Área restrita — gestão operacional e financeira.",
+    description: "Área restrita — gestão operacional e financeira da Summo.",
     icon: Lock,
     href: "#",
     color: "border-border opacity-50",
     iconColor: "text-muted-foreground",
     disabled: true,
-  },
-  {
-    title: "Ferramentas Internas",
-    description:
-      "Cockpit operacional Summo — gestão de riscos, projetos, planos de ação e comunicações com stakeholders.",
-    icon: Workflow,
-    href: "/planos-de-acao",
-    color: "border-brand-orange/30 hover:border-brand-orange/60",
-    iconColor: "text-brand-orange",
   },
 ] as const;
 

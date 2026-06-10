@@ -240,7 +240,7 @@ function ConsultorHome({ nome }: { nome: string; userId: string }) {
         </CardHeader>
         <CardContent>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
-            <ToolLink href="/planos-de-acao" icon={ListTodo} title="Plano de Ações" desc="Tarefas e cockpit MUSA" />
+            <ToolLink href="/planos-de-acao" icon={ListTodo} title="Plano de Ações" desc="Upload e cockpit de planos" />
             <ToolLink href="/projetos" icon={FolderOpen} title="Projetos" desc="PM Suite" />
             <ToolLink href="/gestao-riscos" icon={AlertTriangle} title="Riscos de Projeto" desc="Bowtie + KRIs" />
             <ToolLink href="/riscos-corporativos" icon={Target} title="Riscos Corporativos" desc="ERM COSO" />

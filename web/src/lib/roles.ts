@@ -72,6 +72,8 @@ export const PUBLIC_PATHS: string[] = [
   "/login",
   "/auth",
   "/ambiental",                 // Capa do ambiental com 3 botoes
+  "/direitos",                  // Capa Direitos e Concessoes
+  "/sq-solutions",              // Capa SQ Solutions
   "/explorar",                  // Explorar dados publicos (com limites em visitante_free)
   "/inteligencia-comercial",    // Mercado mineral publico
   "/mapa",                      // Mapa geoespacial publico
@@ -92,8 +94,10 @@ export const PAGO_PATHS: string[] = [
 export const CONSULTOR_PATHS: string[] = [
   "/due-diligence",
   "/pilhas",
+  "/ferramentas-internas",      // Capa geral
   "/planos-de-acao",
   "/projetos",
+  "/riscos",                    // Capa Riscos
   "/riscos-corporativos",
   "/gestao-riscos",
   "/gestao-crises",
