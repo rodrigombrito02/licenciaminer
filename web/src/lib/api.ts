@@ -2037,6 +2037,92 @@ export const paApi = {
   },
 };
 
+/* ══════════════════════════════════════════════════════════════════
+   FUNIL DE OPORTUNIDADES (admin-only)
+   ══════════════════════════════════════════════════════════════════ */
+
+const OP_API = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api")
+  .replace(/\/api$/, "") + "/api/oportunidades";
+
+export interface Oportunidade {
+  id: number;
+  titulo: string;
+  descricao: string | null;
+  etapa: string;
+  processo_anm: string | null;
+  substancia: string | null;
+  fase_anm: string | null;
+  area_ha: number | null;
+  municipio: string | null;
+  uf: string | null;
+  score_agua: number | null;
+  score_energia: number | null;
+  score_logistica: number | null;
+  score_mao_obra: number | null;
+  score_licenciamento: number | null;
+  score_financeiro: number | null;
+  score_stakeholder: number | null;
+  score_geologico: number | null;
+  score_climatico: number | null;
+  score_consolidado: number | null;
+  notas_avaliacao: Record<string, string> | null;
+  responsavel: string | null;
+  valor_estimado: number | null;
+  prazo_etapa: string | null;
+  criado_por: string | null;
+  criado_em: string;
+  atualizado_em: string;
+}
+
+export interface OportunidadeEtapa {
+  codigo: string;
+  label: string;
+}
+
+export const opApi = {
+  etapas: () => fetch(`${OP_API}/etapas`).then(r => r.json() as Promise<OportunidadeEtapa[]>),
+  listar: (filtros?: { etapa?: string; substancia?: string }) => {
+    const qs = new URLSearchParams();
+    if (filtros?.etapa) qs.set("etapa", filtros.etapa);
+    if (filtros?.substancia) qs.set("substancia", filtros.substancia);
+    const url = qs.toString() ? `${OP_API}/?${qs}` : `${OP_API}/`;
+    return fetch(url).then(r => r.json() as Promise<Oportunidade[]>);
+  },
+  criar: (data: Partial<Oportunidade>) =>
+    fetch(`${OP_API}/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() as Promise<Oportunidade>; }),
+  detalhe: (id: number) => fetch(`${OP_API}/${id}`).then(r => r.json() as Promise<Oportunidade>),
+  atualizarAvaliacao: (id: number, data: Partial<Oportunidade>) =>
+    fetch(`${OP_API}/${id}/avaliacao`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }).then(r => r.json() as Promise<Oportunidade>),
+  mudarEtapa: (id: number, etapa: string, nota?: string, por?: string) =>
+    fetch(`${OP_API}/${id}/mudar-etapa`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ etapa, nota, por }),
+    }).then(r => r.json() as Promise<Oportunidade>),
+  deletar: (id: number) => fetch(`${OP_API}/${id}`, { method: "DELETE" }).then(r => r.json()),
+  kpis: () => fetch(`${OP_API}/kpis/resumo`).then(r => r.json() as Promise<{
+    total: number;
+    por_etapa: Record<string, number>;
+    valor_pipeline_estimado: number;
+  }>),
+  gerarRelatorio: async (id: number): Promise<void> => {
+    const res = await fetch(`${OP_API}/${id}/relatorio`, { method: "POST" });
+    if (!res.ok) throw new Error(`Relatorio failed: ${res.status}`);
+    const html = await res.text();
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+  },
+};
+
 /* ── Formatting re-exports (canonical source: lib/format.ts) ── */
 
 export { fmtReais, fmtPct, fmtBR as fmtNumber } from "./format";

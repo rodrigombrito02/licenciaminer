@@ -21,6 +21,7 @@ from api.routers import (
     geospatial,
     intelligence,
     overview,
+    oportunidades,
     pilhas,
     planos_acao,
     prospeccao,
@@ -31,6 +32,7 @@ from api.routers import (
 from api.services.database import close_connection, get_connection
 from licenciaminer.planos_acao.database import init_db as init_planos_acao_db
 from licenciaminer.viabilidade.database import init_db as init_viabilidade_db
+from licenciaminer.oportunidades.database import init_db as init_oportunidades_db
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -46,6 +48,8 @@ async def _background_init():
         await asyncio.to_thread(init_planos_acao_db)
         logger.info("[bg] Inicializando SQLite (Viabilidade)...")
         await asyncio.to_thread(init_viabilidade_db)
+        logger.info("[bg] Inicializando SQLite (Oportunidades)...")
+        await asyncio.to_thread(init_oportunidades_db)
         from api.routers.intelligence import start_briefing_scheduler
         await asyncio.to_thread(start_briefing_scheduler)
         logger.info("[bg] API totalmente pronta")
@@ -120,6 +124,7 @@ app.include_router(chat.router, prefix="/api", tags=["Chat"])
 app.include_router(viabilidade.router, prefix="/api", tags=["Viabilidade"])
 app.include_router(pilhas.router, prefix="/api", tags=["Pilhas"])
 app.include_router(planos_acao.router)  # ja tem prefix /api/planos-acao
+app.include_router(oportunidades.router)  # ja tem prefix /api/oportunidades
 
 
 @app.get("/health")

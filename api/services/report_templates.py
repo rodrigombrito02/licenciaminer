@@ -774,6 +774,162 @@ resposta a emergencia e disclosure publico.</div></div>
 """
 
 
+def render_relatorio_viabilidade_oportunidade(data: dict) -> str:
+    """Relatorio Completo de Viabilidade de Oportunidade (HTML).
+
+    Gera relatorio com identidade Summo a partir de uma Oportunidade do
+    funil — inclui dados ANM, scores dos 9 parametros, score consolidado
+    e recomendacao.
+    """
+    titulo = data.get("titulo") or "Oportunidade sem titulo"
+    descricao = data.get("descricao") or ""
+    processo = data.get("processo_anm") or "-"
+    substancia = data.get("substancia") or "-"
+    fase_anm = data.get("fase_anm") or "-"
+    area_ha = data.get("area_ha")
+    municipio = data.get("municipio") or "-"
+    uf = data.get("uf") or "-"
+    valor = data.get("valor_estimado")
+    consolidado = data.get("score_consolidado")
+    etapa = data.get("etapa", "prospect")
+
+    scores = [
+        ("Disponibilidade de Agua", data.get("score_agua")),
+        ("Energia", data.get("score_energia")),
+        ("Logistica", data.get("score_logistica")),
+        ("Mao de obra", data.get("score_mao_obra")),
+        ("Licenciamento ambiental", data.get("score_licenciamento")),
+        ("Financeiro", data.get("score_financeiro")),
+        ("Stakeholder e ESG", data.get("score_stakeholder")),
+        ("Potencial geologico", data.get("score_geologico")),
+        ("Risco climatico", data.get("score_climatico")),
+    ]
+    notas = data.get("notas_avaliacao") or {}
+
+    score_rows = ""
+    for label, s in scores:
+        if s is None:
+            badge_class = "bgy"
+            label_val = "Nao avaliado"
+            bar_width = 0
+        elif s >= 7:
+            badge_class = "bg"
+            label_val = f"{s:.1f} / 10 — Favoravel"
+            bar_width = s * 10
+        elif s >= 4:
+            badge_class = "bo"
+            label_val = f"{s:.1f} / 10 — Moderado"
+            bar_width = s * 10
+        else:
+            badge_class = "br2"
+            label_val = f"{s:.1f} / 10 — Desafio"
+            bar_width = s * 10
+        nota = notas.get(label, "")
+        bar_html = f'<div style="height:6px;background:#eee;border-radius:3px;overflow:hidden;"><div style="height:100%;width:{bar_width}%;background:var(--teal);"></div></div>'
+        score_rows += f"""
+<tr>
+<td><strong>{label}</strong></td>
+<td><span class="b {badge_class}">{label_val}</span></td>
+<td style="width:120px;">{bar_html}</td>
+<td class="mu sm">{nota}</td>
+</tr>"""
+
+    consolidado_str = f"{consolidado:.1f} / 10" if consolidado is not None else "n/d"
+    angle = (consolidado or 0) * 18  # 0-10 mapeado pra 0-180 graus
+
+    if consolidado is None:
+        recomendacao = "Complete a avaliacao dos parametros para emitir recomendacao."
+        cor_recom = "bgy"
+    elif consolidado >= 7:
+        recomendacao = "Oportunidade FAVORAVEL. Recomendado prosseguir para captacao de investidores e estruturacao."
+        cor_recom = "bg"
+    elif consolidado >= 4:
+        recomendacao = "Oportunidade MODERADA. Aprofundar avaliacao dos parametros desafiadores antes de aprovar."
+        cor_recom = "bo"
+    else:
+        recomendacao = "Oportunidade DESAFIADORA. Recomenda-se reavaliar viabilidade ou descartar."
+        cor_recom = "br2"
+
+    ref = f"VIAB-OP-{datetime.now().strftime('%Y%m%d')}-{data.get('id', '0')}"
+
+    cover = _cover(
+        'Relatorio de<br><span class="gold">Viabilidade</span>',
+        "",
+        titulo,
+        f"Processo ANM {processo} . {substancia} . {municipio}-{uf}",
+        "Funil de Oportunidades Summo", "tag-gold",
+        [("Titulo", titulo),
+         ("Processo ANM", processo),
+         ("Substancia", substancia),
+         ("Fase ANM", fase_anm),
+         ("Area (ha)", str(area_ha) if area_ha else "-"),
+         ("Municipio", f"{municipio}/{uf}"),
+         ("Score Consolidado", consolidado_str),
+         ("Referencia", ref)]
+    )
+
+    body = f"""{cover}
+<div class="pg">{_page_header(f"{ref} . Etapa atual: {etapa.title()}")}
+
+<h2><span class="ic t">&#9432;</span> Sumario Executivo</h2>
+<p>Avaliacao da oportunidade minerária <strong>{titulo}</strong>
+({substancia}, processo ANM {processo}) localizada em
+<strong>{municipio}/{uf}</strong>. Analise consolidada dos 9 parametros
+estrategicos da metodologia Summo de avaliacao de prospects minerais.</p>
+
+{f'<p class="mu">{descricao}</p>' if descricao else ''}
+
+<div class="gw">
+<div class="ga"><div class="ga-bg"></div><div class="ga-m"></div><div class="ga-n" style="--angle:{angle}deg;"></div><div class="ga-v">{consolidado_str}</div></div>
+<div class="gi"><div class="ti">Score Consolidado: {consolidado_str}</div>
+<div class="de">Media dos {sum(1 for _, s in scores if s is not None)} de 9 parametros avaliados.</div></div></div>
+
+<h2><span class="ic gl">&#9776;</span> Avaliacao dos 9 Parametros</h2>
+<table><thead><tr><th>Parametro</th><th>Avaliacao</th><th>Score</th><th>Notas</th></tr></thead>
+<tbody>{score_rows}</tbody></table>
+
+<h2><span class="ic o">&#9888;</span> Dados do Direito Minerario</h2>
+<table>
+<tr><td><strong>Numero do processo ANM</strong></td><td>{processo}</td></tr>
+<tr><td><strong>Substancia mineral</strong></td><td>{substancia}</td></tr>
+<tr><td><strong>Fase atual ANM</strong></td><td>{fase_anm}</td></tr>
+<tr><td><strong>Area total (ha)</strong></td><td>{area_ha if area_ha else "-"}</td></tr>
+<tr><td><strong>Municipio / UF</strong></td><td>{municipio} / {uf}</td></tr>
+<tr><td><strong>Valor estimado de investimento</strong></td><td>{'R$ ' + _fmt_num(valor) if valor else "A definir"}</td></tr>
+<tr><td><strong>Etapa atual no funil</strong></td><td>{etapa.title()}</td></tr>
+</table>
+
+<div class="cl {"next" if cor_recom == "bg" else "warn" if cor_recom == "bo" else "danger" if cor_recom == "br2" else "info"}">
+<div class="ci">&#9432;</div><div class="bd">
+<strong>Recomendacao Summo</strong>{recomendacao}
+</div></div>
+
+<h2><span class="ic t">&#9432;</span> Metodologia Summo</h2>
+<p>A avaliacao de oportunidades minerarias da Summo Quartile considera
+9 parametros estrategicos:</p>
+<ol style="padding-left:22px;font-size:10pt;line-height:1.8;">
+<li><strong>Disponibilidade de agua:</strong> ANA outorgas, bacias, UCs hidricas, conflitos de uso</li>
+<li><strong>Energia:</strong> ANEEL geracao/transmissao, distancia a subestacoes, capacidade local</li>
+<li><strong>Logistica:</strong> DNIT rodovias, ANTT ferrovias, ANTAQ portos, escoamento</li>
+<li><strong>Mao de obra:</strong> IBGE PNAD/Caged, RAIS, universidades, skill local</li>
+<li><strong>Licenciamento ambiental:</strong> probabilidade historica via base SEMAD-MG/IBAMA</li>
+<li><strong>Financeiro:</strong> CFEM, commodities, opex/capex regionais, TIR/Payback</li>
+<li><strong>Stakeholder e ESG:</strong> UCs, TIs, comunidades, biomas sensiveis</li>
+<li><strong>Potencial geologico:</strong> CPRM, reservas, qualidade do deposito</li>
+<li><strong>Risco climatico:</strong> CEMADEN/INMET, eventos extremos previsiveis</li>
+</ol>
+
+<p class="xs mu" style="margin-top:18px;">
+Relatorio gerado pela plataforma Summo Quartile. Validade: 90 dias a partir
+da emissao. Documento confidencial — restrito a equipe e investidores
+autorizados.
+</p>
+{_page_footer("Summo Quartile . " + ref, "1/1")}
+</div>"""
+
+    return _html_wrap(f"{ref} - Viabilidade - {titulo}", body)
+
+
 def render_pilhas_portal_publico(
     dados_pilha: dict | None,
     resultado: dict | None = None,
