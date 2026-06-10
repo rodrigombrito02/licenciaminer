@@ -182,8 +182,8 @@ function VitrineHome({ nome, role }: { nome?: string; role?: string } = {}) {
       <section className="rounded-2xl border bg-card p-8 text-center">
         <h3 className="font-heading text-xl font-bold">Quer aprofundar?</h3>
         <p className="mt-2 text-sm text-muted-foreground max-w-lg mx-auto">
-          A Summo Quartile oferece consultoria estratégica em mineração e metalurgia
-          há 30+ anos. Fale com nossa equipe.
+          A Summo Quartile oferece consultoria estratégica em mineração e metalurgia,
+          com sócios que somam décadas de experiência sênior no setor. Fale com nossa equipe.
         </p>
         <div className="mt-5 flex justify-center gap-3">
           <a

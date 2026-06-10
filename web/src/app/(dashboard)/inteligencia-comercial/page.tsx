@@ -146,7 +146,7 @@ function InteligenciaContent() {
             </h3>
             <p className="text-xs text-muted-foreground mt-1 max-w-md">
               A Summo Quartile aplica essa inteligência em consultoria estratégica
-              para mineradoras, investidores e empresas do setor mineral há 30+ anos.
+              para mineradoras, investidores e empresas do setor mineral.
             </p>
           </div>
           <a
