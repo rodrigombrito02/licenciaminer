@@ -1,27 +1,28 @@
 /**
- * Helper de middleware: refresca a sessao Supabase em cada request e
- * protege rotas autenticadas (/(dashboard)/*).
+ * Middleware Supabase: refresca sessao + protege rotas conforme role.
  *
- * Roteamento:
- *   - Usuario nao autenticado → redireciona para /login
- *   - Usuario autenticado em /login → redireciona para /
- *   - /login e /auth/* sao sempre publicos
+ * Comportamento:
+ *   - Rotas PUBLIC: passa direto, sem checar login
+ *   - Rotas PAGO/CONSULTOR/ADMIN: precisa login (redireciona pra /login)
+ *   - Se logado mas role insuficiente: redireciona pra / (home) com flag
+ *   - Usuario logado em /login: redireciona pra home
  */
 
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  hasMinRole,
+  requiredRoleForPath,
+  type Role,
+  type UserMetadata,
+} from "@/lib/roles";
 
-const PUBLIC_PREFIXES = ["/login", "/auth", "/_next", "/api/auth"];
 const PUBLIC_FILE_EXTS = [".ico", ".png", ".jpg", ".svg", ".webp", ".css", ".js"];
 
-function isPublicPath(pathname: string): boolean {
-  if (PUBLIC_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
-    return true;
-  }
-  if (PUBLIC_FILE_EXTS.some((ext) => pathname.endsWith(ext))) {
-    return true;
-  }
-  return false;
+function isStaticAsset(pathname: string): boolean {
+  if (pathname.startsWith("/_next/")) return true;
+  if (pathname.startsWith("/auth/")) return true;
+  return PUBLIC_FILE_EXTS.some((ext) => pathname.endsWith(ext));
 }
 
 export async function updateSession(request: NextRequest) {
@@ -52,19 +53,40 @@ export async function updateSession(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  // Usuario nao autenticado tentando acessar rota protegida → vai pra /login
-  if (!user && !isPublicPath(pathname)) {
+  // Static assets passam livres
+  if (isStaticAsset(pathname)) return supabaseResponse;
+
+  const required = requiredRoleForPath(pathname);
+
+  // 1. Rota publica — passa sempre (mesmo nao logado)
+  if (required === "public") {
+    // Se ja logado e indo pra /login, redireciona pra home
+    if (user && pathname === "/login") {
+      const url = request.nextUrl.clone();
+      url.pathname = request.nextUrl.searchParams.get("redirect") || "/";
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
+    return supabaseResponse;
+  }
+
+  // 2. Rota protegida e nao logado — vai pra /login
+  if (!user) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("redirect", pathname);
     return NextResponse.redirect(url);
   }
 
-  // Usuario autenticado tentando acessar /login → vai pra home
-  if (user && pathname === "/login") {
+  // 3. Logado — verifica role
+  const meta = (user.user_metadata as UserMetadata) || {};
+  const role: Role = meta.role || "visitante_free";
+
+  if (!hasMinRole(role, required)) {
+    // Role insuficiente — manda pra home com flag
     const url = request.nextUrl.clone();
-    url.pathname = request.nextUrl.searchParams.get("redirect") || "/";
-    url.search = "";
+    url.pathname = "/";
+    url.searchParams.set("acesso_negado", pathname);
     return NextResponse.redirect(url);
   }
 

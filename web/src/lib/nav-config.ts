@@ -76,12 +76,14 @@ export const NAV_SECTIONS: NavSection[] = [
     label: "Summo Ambiental",
     color: "text-brand-teal",
     items: [
-      { href: "/explorar", label: "Base de Dados", icon: Database },
+      { href: "/ambiental", label: "Capa Ambiental", icon: ShieldCheck },
+      { href: "/explorar", label: "Análise de Dados Públicos", icon: Database },
       { href: "/empresa", label: "Consulta Empresa", icon: Building2 },
       { href: "/decisoes", label: "Análise de Decisões", icon: BarChart3 },
-      { href: "/viabilidade", label: "Viabilidade", icon: Search },
-      { href: "/due-diligence", label: "Due Diligence", icon: ShieldCheck },
-      { href: "/pilhas", label: "Conformidade de Pilhas", icon: Layers },
+      { href: "/viabilidade", label: "Análise Preliminar", icon: Search },
+      { href: "/ambiental/diligencia", label: "Diligência Summo", icon: ShieldCheck },
+      { href: "/due-diligence", label: "  → DD Ambiental", icon: ShieldCheck },
+      { href: "/pilhas", label: "  → Conformidade de Pilhas", icon: Layers },
     ],
   },
   {
