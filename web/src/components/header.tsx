@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { NAV_SECTIONS } from "@/lib/nav-config";
+import { UserMenu } from "@/components/user-menu";
 
 export function Header() {
   const pathname = usePathname();
@@ -130,11 +131,12 @@ export function Header() {
       {/* Breadcrumb / page context */}
       <div className="flex-1" />
 
-      {/* Right actions placeholder */}
-      <div className="flex items-center gap-2">
+      {/* Right actions */}
+      <div className="flex items-center gap-3">
         <span className="hidden sm:inline text-xs text-muted-foreground font-tabular">
           MG &middot; SEMAD + IBAMA + ANM
         </span>
+        <UserMenu />
       </div>
     </header>
   );
