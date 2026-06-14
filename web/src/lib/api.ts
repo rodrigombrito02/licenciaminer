@@ -1572,6 +1572,13 @@ export interface ViabilidadeResult {
     rigor_delta: number | null;
     tendencia: number | null;
   };
+  indice_sucesso?: {
+    valor: number | null;
+    faixa: string;
+    rotulo: string;
+    interpretacao: string;
+  };
+  plano_acao?: { fator: string; prioridade: string; acao: string }[];
   fatores: ViabilidadeFator[];
   escopo: {
     licenca_tipo: string;

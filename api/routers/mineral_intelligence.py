@@ -91,6 +91,31 @@ def monitor_cfem(ano: int = Query(2025, ge=2018, le=2026), limit: int = Query(15
     return {"ano": ano, "total_recolhido": (total[0]["t"] if total else None), "ranking": rows}
 
 
+@router.get("/monitor-cfem-trimestral")
+def monitor_cfem_trimestral(substancia: str = Query("FERRO"), trimestres: int = Query(6, ge=2, le=12)):
+    """Produto B — Monitor CFEM trimestral: arrecadação por trimestre + variação período-a-período."""
+    rows = run_query(
+        f"""
+        SELECT CAST(Ano AS INTEGER) AS ano,
+               CAST(FLOOR((CAST("Mês" AS INTEGER)-1)/3) + 1 AS INTEGER) AS trimestre,
+               SUM({_VAL}) AS valor
+        FROM 'data/processed/anm_cfem.parquet'
+        WHERE UPPER("Substância") LIKE ? AND {_VAL} IS NOT NULL
+              AND "Mês" IS NOT NULL
+        GROUP BY 1,2 ORDER BY ano DESC, trimestre DESC LIMIT ?
+        """,
+        [f"%{substancia.upper()}%", trimestres],
+    )
+    rows = list(reversed(rows))  # cronológico
+    serie = []
+    for i, r in enumerate(rows):
+        ant = rows[i - 1]["valor"] if i > 0 and rows[i - 1]["valor"] else None
+        var = round(100 * (r["valor"] - ant) / ant, 1) if ant else None
+        serie.append({"periodo": f"{int(r['ano'])} T{int(r['trimestre'])}",
+                      "valor": r["valor"], "variacao_pct": var})
+    return {"substancia": substancia, "serie": serie}
+
+
 @router.get("/radar-estrategicos")
 def radar_estrategicos(limit: int = Query(40, ge=1, le=200)):
     """Produto D — Radar de Minerais Estratégicos: requerimentos por substância × fase."""

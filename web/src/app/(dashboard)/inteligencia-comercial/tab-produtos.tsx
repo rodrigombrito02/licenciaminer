@@ -139,18 +139,37 @@ function PipelinePreview() {
 
 function MonitorCfemPreview() {
   const [d, setD] = useState<any>(null);
-  useEffect(() => { fetch(`${API}/mi/monitor-cfem?ano=2025&limit=5`).then(r => r.json()).then(setD).catch(() => {}); }, []);
+  const [tri, setTri] = useState<any>(null);
+  useEffect(() => {
+    fetch(`${API}/mi/monitor-cfem?ano=2025&limit=4`).then(r => r.json()).then(setD).catch(() => {});
+    fetch(`${API}/mi/monitor-cfem-trimestral?substancia=FERRO&trimestres=5`).then(r => r.json()).then(setTri).catch(() => {});
+  }, []);
   return (
-    <PreviewCard icon={TrendingUp} titulo="Monitor CFEM 2025" produto="Produto B">
+    <PreviewCard icon={TrendingUp} titulo="Monitor CFEM" produto="Produto B">
       {!d ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /> : (
-        <div className="space-y-1">
-          <p className="text-xs text-muted-foreground">Arrecadação total: <strong className="text-foreground">{fmtBRL(d.total_recolhido)}</strong></p>
-          {d.ranking?.slice(0, 5).map((r: any) => (
+        <div className="space-y-1.5">
+          <p className="text-xs text-muted-foreground">Arrecadação 2025: <strong className="text-foreground">{fmtBRL(d.total_recolhido)}</strong></p>
+          {d.ranking?.slice(0, 4).map((r: any) => (
             <div key={r.substancia} className="flex justify-between text-xs">
               <span className="truncate">{r.substancia}</span>
               <span className="font-medium tabular-nums">{fmtBRL(r.valor_recolhido)}</span>
             </div>
           ))}
+          {tri?.serie && (
+            <div className="border-t pt-1.5 mt-1">
+              <p className="text-[10px] text-muted-foreground mb-1">Ferro · trimestral (variação p/p)</p>
+              <div className="flex items-end gap-1.5 flex-wrap">
+                {tri.serie.map((s: any) => (
+                  <span key={s.periodo} className="text-[10px]">
+                    <span className="text-muted-foreground">{s.periodo}</span>{" "}
+                    <span className={s.variacao_pct == null ? "text-muted-foreground" : s.variacao_pct >= 0 ? "text-green-600" : "text-red-600"}>
+                      {s.variacao_pct == null ? "—" : `${s.variacao_pct >= 0 ? "▲" : "▼"}${Math.abs(s.variacao_pct)}%`}
+                    </span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </PreviewCard>

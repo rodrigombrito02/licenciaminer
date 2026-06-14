@@ -548,6 +548,26 @@ export default function ViabilidadePage() {
                   ))}
                 </tbody>
               </table>
+
+              {/* Plano de ação prescritivo */}
+              {result.plano_acao && result.plano_acao.length > 0 && (
+                <div className="mt-4 rounded-lg border border-brand-teal/30 bg-brand-teal/5 p-3">
+                  <p className="text-sm font-bold text-brand-navy mb-2">Plano de ação — eleve o índice</p>
+                  <ul className="space-y-1.5">
+                    {result.plano_acao.map((p, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs">
+                        <Badge variant="outline" className={`text-[9px] shrink-0 ${riscoBadge(p.prioridade)}`}>
+                          {p.prioridade === "alto" ? "Prioritário" : "Atenção"}
+                        </Badge>
+                        <span><strong>{p.fator}:</strong> {p.acao}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {result.indice_sucesso?.interpretacao && (
+                    <p className="mt-2 text-[11px] text-muted-foreground italic">{result.indice_sucesso.interpretacao}</p>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
 
