@@ -30,6 +30,8 @@ import { StatCard } from "@/components/stat-card";
 import { ModuleHero } from "@/components/module-hero";
 import { BigActionCard } from "@/components/big-action-card";
 import { RoleGate } from "@/components/role-gate";
+import { MktHero, StatBand, MktSection, FeatureCard, CTABand } from "@/components/marketing-ui";
+import { useEffectiveRole } from "@/hooks/use-effective-role";
 import {
   fetchOverviewStats,
   fetchMetaSources,
@@ -57,6 +59,7 @@ function relativeTime(dateStr: string): string {
 }
 
 export default function AmbientalPage() {
+  const roleState = useEffectiveRole();
   const [stats, setStats] = useState<OverviewStats | null>(null);
   const [sources, setSources] = useState<SourceMeta[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -68,6 +71,9 @@ export default function AmbientalPage() {
   }, []);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  // Visitante não logado → landing de marketing (sem fontes/auditoria/KPIs internos)
+  if (roleState.status === "anonymous") return <AmbientalLanding />;
 
   return (
     <div className="space-y-8">
@@ -292,6 +298,55 @@ export default function AmbientalPage() {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+    </div>
+  );
+}
+
+/* ── Landing pública (visitante não logado) ── */
+function AmbientalLanding() {
+  return (
+    <div className="space-y-12">
+      <MktHero
+        eyebrow="SQ Ambiental"
+        icon={ShieldCheck}
+        title={<>Licenciamento ambiental sem <span className="text-brand-gold">surpresa</span>.</>}
+        subtitle="Da análise preliminar do seu segmento à Diligência Summo completa — conformidade ambiental e minerária apoiada em dados públicos auditáveis e na senioridade de quem conhece o setor."
+        cor="teal"
+      />
+
+      <StatBand stats={[
+        { value: "9", label: "bases públicas oficiais integradas" },
+        { value: "5 fases", label: "Due Diligence automatizada" },
+        { value: "ANM + SEMAD", label: "licenciamento minerário + ambiental" },
+        { value: "100%", label: "rastreável à fonte" },
+      ]} />
+
+      <MktSection titulo="Como a SQ Ambiental atua" sub="Três frentes que cobrem o ciclo do licenciamento.">
+        <div className="grid gap-4 md:grid-cols-3">
+          <FeatureCard icon={Search} cor="teal" titulo="Análise preliminar"
+            descricao="Em minutos, o índice de sucesso do seu segmento e o diagnóstico do processo — antes de comprometer recursos."
+            bullets={["Índice de sucesso por atividade/classe", "Fatores de atenção", "Escopo estimado"]} />
+          <FeatureCard icon={ClipboardCheck} cor="gold" titulo="Radar de Condicionantes"
+            descricao="Cada condicionante vira obrigação com prazo e status — ambiental e ANM no mesmo radar."
+            bullets={["Prazos automáticos", "Comprovação de cumprimento", "Alvo do piloto Jaguar"]} />
+          <FeatureCard icon={ShieldCheck} cor="orange" titulo="Diligência Summo"
+            descricao="DD ambiental e conformidade de pilhas com metodologia em 5 fases e identidade Summo."
+            bullets={["Inventário documental", "Scoring de criticidade", "Relatório pronto para o cliente"]} />
+        </div>
+      </MktSection>
+
+      <MktSection titulo="Por que a SQ Ambiental" sub="Rápida, confiável e auditável.">
+        <div className="grid gap-4 md:grid-cols-3">
+          <FeatureCard icon={CheckCircle2} cor="teal" titulo="Dados auditáveis"
+            descricao="Cada registro rastreável à URL da fonte oficial (SEMAD, IBAMA, ANM). Sem caixa-preta." />
+          <FeatureCard icon={Zap} cor="gold" titulo="Análise em minutos"
+            descricao="O que levava semanas — diagnóstico, scoring, recomendações — sai em segundos." />
+          <FeatureCard icon={FileText} cor="orange" titulo="Senioridade que assina"
+            descricao="Relatórios prontos para clientes e órgãos, com o padrão metodológico Summo Quartile." />
+        </div>
+      </MktSection>
+
+      <CTABand titulo="Vai licenciar ou comprar um ativo?" sub="Comece com uma análise preliminar. Fale com a SQ Ambiental." />
     </div>
   );
 }

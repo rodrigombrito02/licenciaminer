@@ -5,56 +5,63 @@ import {
   FileSearch,
   TrendingUp,
   Layers,
-  Compass,
-  ShieldAlert,
-  Crosshair,
-  Route,
+  Search,
   Building2,
+  Route,
+  Crosshair,
   CalendarClock,
+  CheckCircle2,
 } from "lucide-react";
-import { ModuleHero } from "@/components/module-hero";
 import { BigActionCard } from "@/components/big-action-card";
-import { ValueProp } from "@/components/value-prop";
 import { RoleGate } from "@/components/role-gate";
+import { MktHero, StatBand, MktSection, FeatureCard, CTABand } from "@/components/marketing-ui";
 
 export default function DireitosPage() {
   return (
-    <div className="space-y-8">
-      <ModuleHero
+    <div className="space-y-12">
+      <MktHero
+        eyebrow="Ativos Minerários"
         icon={Map}
-        badge="Ativos Minerários"
-        title="Do direito minerário ao ativo operacional"
-        description="A coluna vertebral do sistema: cada direito ANM como um ativo com ciclo de vida — da geologia à lavra. Mapa multi-camadas, prospecção por teses e, em breve, a trilha completa do ativo."
-        variant="teal"
+        title={<>Do direito ANM ao <span className="text-brand-gold">ativo operacional</span>.</>}
+        subtitle="Cada direito minerário tratado como um ativo com ciclo de vida — da geologia à lavra. Mapa multi-camadas, prospecção por teses e a trilha completa do ativo, sobre dados públicos auditáveis."
+        cor="teal"
       />
 
-      <section>
-        <h2 className="font-heading text-lg font-semibold mb-1">O que você quer fazer?</h2>
-        <p className="text-sm text-muted-foreground mb-5">Três caminhos disponíveis.</p>
-        <div className="grid md:grid-cols-3 gap-4">
-          <BigActionCard
+      <StatBand stats={[
+        { value: "303 mil", label: "processos minerários (ANM · Brasil)" },
+        { value: "22 mil", label: "titulares com mais de um direito" },
+        { value: "36 mil", label: "ocorrências minerais (SGB)" },
+        { value: "5 camadas", label: "no mapa (energia, água, logística, geologia)" },
+      ]} />
+
+      <MktSection titulo="O que você faz aqui" sub="Do mapa à oportunidade, três caminhos sobre a base de direitos.">
+        <div className="grid gap-4 md:grid-cols-3">
+          <FeatureCard
             icon={Map}
-            title="Mapa Geoespacial"
-            description="Polígonos minerários do Brasil em mapa interativo com camadas de UCs, TIs, biomas e municípios."
+            cor="teal"
+            titulo="Mapa Geoespacial"
             href="/mapa"
-            color="teal"
+            descricao="Polígonos minerários do Brasil em mapa interativo, cruzados com camadas de contexto."
+            bullets={["Energia, água, logística e geologia", "UCs, TIs, biomas e municípios", "Clique no polígono para abrir a trilha"]}
           />
-          <BigActionCard
+          <FeatureCard
             icon={FileSearch}
-            title="Concessões"
-            description="Lista filtrável de processos ANM por estado, substância, fase e titular. Exportação CSV."
+            cor="teal"
+            titulo="Concessões"
             href="/concessoes"
-            color="teal"
+            descricao="Lista filtrável de processos ANM por estado, substância, fase e titular."
+            bullets={["Filtros combináveis", "Exportação CSV", "Visão por titular"]}
           />
-          <BigActionCard
+          <FeatureCard
             icon={TrendingUp}
-            title="Prospecção"
-            description="Oportunidades — disponibilidades ANM, processos arquivados, áreas com baixa sobreposição ambiental."
+            cor="gold"
+            titulo="Prospecção"
             href="/prospeccao"
-            color="gold"
+            descricao="Oportunidades sobre a base: onde há espaço e baixa restrição."
+            bullets={["Disponibilidades ANM", "Processos arquivados", "Baixa sobreposição ambiental"]}
           />
         </div>
-      </section>
+      </MktSection>
 
       <RoleGate minRole="consultor">
         <section>
@@ -119,30 +126,30 @@ export default function DireitosPage() {
         </section>
       </RoleGate>
 
-      <section>
-        <h2 className="font-heading text-lg font-semibold mb-1">Por que Ativos Minerários Summo</h2>
-        <p className="text-sm text-muted-foreground mb-5">Três diferenciais que tornam a análise mais robusta.</p>
-        <div className="grid md:grid-cols-3 gap-3">
-          <ValueProp
+      <MktSection titulo="Por que Ativos Minerários Summo" sub="Análise espacial pronta, prospecção dirigida e risco antecipado.">
+        <div className="grid gap-4 md:grid-cols-3">
+          <FeatureCard
             icon={Layers}
-            title="Cruzamento espacial automático"
-            description="Cada processo ANM já vem com flag de UC/TI/bioma pré-calculado. Sem precisar abrir QGIS ou ArcGIS."
-            color="teal"
+            cor="teal"
+            titulo="Cruzamento espacial automático"
+            descricao="Cada processo ANM já vem com flag de UC/TI/bioma pré-calculado. Sem precisar abrir QGIS ou ArcGIS."
           />
-          <ValueProp
-            icon={Compass}
-            title="Prospecção dirigida"
-            description="Filtros pra encontrar áreas com bom potencial — substância de alto CFEM, baixa restrição ambiental, distância adequada a logística."
-            color="gold"
+          <FeatureCard
+            icon={Search}
+            cor="gold"
+            titulo="Prospecção dirigida"
+            descricao="Filtros para encontrar áreas com bom potencial — substância de alto CFEM, baixa restrição ambiental, distância adequada à logística."
           />
-          <ValueProp
-            icon={ShieldAlert}
-            title="Riscos pré-mapeados"
-            description="Sobreposição com áreas sensíveis sinalizada antes de você comprometer recursos com avaliação detalhada."
-            color="orange"
+          <FeatureCard
+            icon={CheckCircle2}
+            cor="orange"
+            titulo="Riscos pré-mapeados"
+            descricao="Sobreposição com áreas sensíveis sinalizada antes de você comprometer recursos com avaliação detalhada."
           />
         </div>
-      </section>
+      </MktSection>
+
+      <CTABand titulo="Quer mapear um ativo minerário?" sub="Comece pelo mapa ou fale com um consultor da Summo Quartile." />
     </div>
   );
 }

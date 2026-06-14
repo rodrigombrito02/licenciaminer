@@ -29,6 +29,8 @@ import { Button } from "@/components/ui/button";
 import { useEffectiveRole as useRole } from "@/hooks/use-effective-role";
 import { ROLE_LABEL } from "@/lib/roles";
 import { MinhasAcoes } from "@/components/minhas-acoes";
+import { MktHero, StatBand, MktSection, FeatureCard, CTABand } from "@/components/marketing-ui";
+import { Briefcase } from "lucide-react";
 
 export default function HomePage() {
   const roleState = useRole();
@@ -59,146 +61,62 @@ export default function HomePage() {
 
 function VitrineHome({ nome, role }: { nome?: string; role?: string } = {}) {
   return (
-    <div className="space-y-10">
-      {/* Hero */}
-      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0A2540] via-[#1A2C42] to-[#0A2540] px-8 py-12 lg:px-12 lg:py-16">
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
-        <div className="relative z-10 max-w-2xl">
-          <div className="flex items-center gap-4 mb-6">
-            <Image src="/logo2.png" alt="Summo Quartile" width={48} height={48} className="rounded-xl" />
-            <div>
-              <h1 className="font-heading text-2xl font-bold tracking-tight text-white lg:text-3xl">
-                {nome ? `Bem-vindo, ${nome.split(" ")[0]}` : "Summo Quartile"}
-              </h1>
-              <p className="text-sm font-medium text-brand-gold tracking-wide">
-                Plataforma de Inteligência Mineral
-              </p>
-            </div>
-          </div>
-          <p className="text-sm leading-relaxed text-white/70 max-w-lg">
-            Análise, conformidade e oportunidades em mineração. Da prospecção
-            de oportunidades à due diligence ambiental — tudo apoiado por dados
-            públicos auditáveis e décadas de experiência da consultoria Summo.
-          </p>
-          {role && (
-            <div className="mt-4">
-              <Badge className="bg-brand-gold/20 text-brand-gold border-brand-gold/40">
-                Seu acesso: {ROLE_LABEL[role as keyof typeof ROLE_LABEL] || role}
-              </Badge>
-            </div>
-          )}
-        </div>
-      </section>
+    <div className="space-y-12">
+      <MktHero
+        eyebrow="Inteligência Mineral · Summo Quartile"
+        title={<>Dado público vira <span className="text-brand-gold">decisão</span> na mineração.</>}
+        subtitle="Da prospecção de direitos à due diligence ambiental, da inteligência de mercado à segurança operacional — uma plataforma que integra as frentes da Summo, sustentada por dados auditáveis e décadas de experiência sênior."
+        cor="navy"
+        ctaLabel="Falar com a Summo"
+        secondaryLabel="Ver o mapa mineral"
+        secondaryHref="/mapa"
+      />
 
-      {/* 6 caixas comerciais */}
-      <section id="modulos">
-        <div className="mb-5">
-          <h2 className="font-heading text-lg font-semibold tracking-tight">Módulos da Plataforma</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Seis frentes integradas — clique pra explorar
-          </p>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <ModuleCard
-            title="SQ Ambiental"
-            description="Análise de dados regulatórios, viabilidade preliminar e Diligência Summo (DD ambiental + pilhas)."
-            icon={ShieldCheck}
-            href="/ambiental"
-            colorClass="border-brand-teal/30 hover:border-brand-teal/60"
-            iconColor="text-brand-teal"
-          />
-          <ModuleCard
-            title="Ativos Minerários"
-            description="Mapa multi-camadas, prospecção por teses e ciclo de vida do direito minerário."
-            icon={Map}
-            href="/direitos"
-            colorClass="border-brand-teal/30 hover:border-brand-teal/60"
-            iconColor="text-brand-teal"
-          />
-          <ModuleCard
-            title="Mineral Intelligence"
-            description="Inteligência de mercado mineral: preços, comércio exterior, royalties, produção."
-            icon={TrendingUp}
-            href="/inteligencia-comercial"
-            colorClass="border-brand-gold/30 hover:border-brand-gold/60"
-            iconColor="text-brand-gold"
-          />
-          <ModuleCard
-            title="SQ Soluções"
-            description="Soluções digitais com IA — Mineradora Modelo demo e gestão de segurança operacional."
-            icon={Cpu}
-            href="/sq-solutions"
-            colorClass="border-brand-orange/30 hover:border-brand-orange/60"
-            iconColor="text-brand-orange"
-          />
-          <ModuleCard
-            title="Ferramentas Internas"
-            description="Cockpit operacional Summo — riscos, projetos, planos de ação, comunicações."
-            icon={Workflow}
-            href="/planos-de-acao"
-            colorClass="border-brand-orange/30 hover:border-brand-orange/60"
-            iconColor="text-brand-orange"
-            badge="Login Summo"
-          />
-          <ModuleCard
-            title="Gestão Interna"
-            description="Área restrita — gestão operacional e financeira da Summo."
-            icon={Lock}
-            href="#"
-            colorClass="border-border opacity-60"
-            iconColor="text-muted-foreground"
-            disabled
-          />
-        </div>
-      </section>
+      <StatBand stats={[
+        { value: "303 mil", label: "processos minerários (ANM · Brasil)" },
+        { value: "R$ 3,5 bi", label: "CFEM monitorada (2025)" },
+        { value: "31", label: "grandes projetos no radar (US$ 9,3 bi)" },
+        { value: "36 mil", label: "ocorrências minerais (SGB)" },
+      ]} />
 
-      {/* Highlights */}
-      <section>
-        <h2 className="font-heading text-lg font-semibold tracking-tight">Destaques</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Conteúdo aberto pra explorar a plataforma
-        </p>
-        <div className="mt-5 grid gap-3 md:grid-cols-3">
-          <HighlightCard
-            icon={Map}
-            title="Mapa Mineral do Brasil"
-            description="Concessões ANM SIGMINE interativas, com filtros por substância e fase"
-            href="/mapa"
-          />
-          <HighlightCard
-            icon={TrendingUp}
-            title="Inteligência de Mercado"
-            description="Cotações, preços, comércio exterior e tendências do mercado mineral"
-            href="/inteligencia-comercial"
-          />
-          <HighlightCard
-            icon={ShieldCheck}
-            title="Diligência Summo"
-            description="Como funciona a DD ambiental moderna em 5 fases automatizadas"
-            href="/ambiental"
-          />
+      <MktSection titulo="Cinco frentes, uma Summo" sub="Cada uma resolve uma dor real do setor — e conversam entre si pela mesma base.">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <FeatureCard icon={ShieldCheck} cor="teal" href="/ambiental" titulo="SQ Ambiental"
+            descricao="Conformidade e viabilidade de licenciamento, com a Diligência Summo."
+            bullets={["Radar de condicionantes (ambiental + ANM)", "Índice de sucesso do processo", "Due Diligence em fases"]} />
+          <FeatureCard icon={Map} cor="teal" href="/direitos" titulo="Ativos Minerários"
+            descricao="Do direito ANM ao ativo operacional: mapa, trilha e prospecção por teses."
+            bullets={["Mapa multi-camadas (energia, água, logística, geologia)", "Trilha do ciclo de vida + prazos ANM", "Portfólio por titular (CNPJ)"]} />
+          <FeatureCard icon={TrendingUp} cor="gold" href="/inteligencia-comercial" titulo="Mineral Intelligence"
+            descricao="Inteligência de mercado e produtos de dado que ninguém entrega no grão brasileiro."
+            bullets={["Monitor CFEM e preços", "Radar de minerais estratégicos", "Pipeline de grandes projetos"]} />
+          <FeatureCard icon={Briefcase} cor="navy" href="/sq-consultoria" titulo="SQ Consultoria"
+            descricao="A inteligência sênior aplicada à gestão, com a Régua de Excelência."
+            bullets={["Diagnóstico vs. mineradora modelo", "Riscos, crises e projetos", "Governança corporativa"]} />
+          <FeatureCard icon={Cpu} cor="orange" href="/sq-solutions" titulo="SQ Soluções"
+            descricao="Integradora de Saúde e Segurança (SST) com Customer Success."
+            bullets={["Antifadiga e estresse térmico", "Inspeção robótica", "Segurança homem×máquina"]} />
+          <FeatureCard icon={Search} cor="gold" href="/mapa" titulo="Mapa Mineral do Brasil"
+            descricao="Explore os direitos minerários e cruze com camadas ambientais e de infraestrutura."
+            bullets={["Polígonos ANM clicáveis", "Camadas de UC, TI, energia e logística", "Aberto para explorar"]} />
         </div>
-      </section>
+      </MktSection>
 
-      {/* CTA */}
-      <section className="rounded-2xl border bg-card p-8 text-center">
-        <h3 className="font-heading text-xl font-bold">Quer aprofundar?</h3>
-        <p className="mt-2 text-sm text-muted-foreground max-w-lg mx-auto">
-          A Summo Quartile oferece consultoria estratégica em mineração e metalurgia,
-          com sócios que somam décadas de experiência sênior no setor. Fale com nossa equipe.
-        </p>
-        <div className="mt-5 flex justify-center gap-3">
-          <a
-            href="https://summoquartile.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg bg-brand-orange px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-orange/90 transition-colors"
-          >
-            Quero falar com a Summo
-            <ArrowRight className="h-4 w-4" />
-          </a>
+      <MktSection titulo="Por que a Summo" sub="Não é dado por dado — é dado que vira decisão.">
+        <div className="grid gap-4 md:grid-cols-3">
+          <FeatureCard icon={Layers} cor="teal" titulo="Dados auditáveis"
+            descricao="Cada número rastreável a fontes públicas oficiais (ANM, SEMAD, SGB, BCB, Comex). Sem caixa-preta." />
+          <FeatureCard icon={Briefcase} cor="navy" titulo="Senioridade que assina"
+            descricao="Décadas de experiência no setor mineral por trás de cada análise — não é só software." />
+          <FeatureCard icon={CheckCircle2} cor="gold" titulo="Frentes integradas"
+            descricao="O mesmo ativo que diagnosticamos é o que precificamos e levamos ao investidor." />
         </div>
-      </section>
+      </MktSection>
+
+      <CTABand
+        titulo="Quer aprofundar?"
+        sub="Consultoria estratégica em mineração e metalurgia, com sócios que somam décadas no setor. Fale com a nossa equipe."
+      />
     </div>
   );
 }

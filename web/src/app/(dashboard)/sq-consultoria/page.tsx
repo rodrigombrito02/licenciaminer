@@ -7,29 +7,24 @@ import {
   ShieldAlert,
   Workflow,
   Building2,
-  Target,
-  Users,
-  Award,
   Factory,
   ArrowRight,
   Gauge,
   Route,
 } from "lucide-react";
-import { ModuleHero } from "@/components/module-hero";
-import { BigActionCard } from "@/components/big-action-card";
-import { ValueProp } from "@/components/value-prop";
 import { RoleGate } from "@/components/role-gate";
 import { ConsultoriaCarteira } from "@/components/consultoria-carteira";
+import { MktHero, StatBand, MktSection, FeatureCard, CTABand } from "@/components/marketing-ui";
 
 export default function SQConsultoriaPage() {
   return (
-    <div className="space-y-8">
-      <ModuleHero
+    <div className="space-y-12">
+      <MktHero
+        eyebrow="SQ Consultoria"
         icon={Briefcase}
-        badge="SQ Consultoria"
-        title="Consultoria estratégica para o setor mineral"
-        description="A inteligência sênior da Summo Quartile aplicada à gestão: diagnóstico, riscos e crises, gestão estratégica de projetos e governança corporativa. Tecnologia a serviço da decisão."
-        variant="navy"
+        title={<>Inteligência sênior que vira <span className="text-brand-gold">decisão</span>.</>}
+        subtitle="Inteligência sênior aplicada à gestão do setor mineral: diagnóstico contra a régua de excelência, riscos e crises, gestão estratégica de projetos e governança — metodologia consolidada operada em cockpit digital."
+        cor="navy"
       />
 
       {/* Mineradora Modelo — Régua de Excelência (chamariz da consultoria) */}
@@ -63,46 +58,47 @@ export default function SQConsultoriaPage() {
         </Link>
       </section>
 
-      <section>
-        <h2 className="font-heading text-lg font-semibold mb-1">Nossas frentes</h2>
-        <p className="text-sm text-muted-foreground mb-5">
-          Serviços de consultoria sustentados pelos motores do sistema Summo.
-        </p>
-        <div className="grid md:grid-cols-2 gap-4">
-          <BigActionCard
+      <StatBand stats={[
+        { value: "7 áreas", label: "da cadeia de valor na Régua" },
+        { value: "Diagnóstico", label: "cliente vs. modelo ideal" },
+        { value: "Riscos + Projetos", label: "metodologias consolidadas (ISO 31000)" },
+        { value: "Sênior", label: "experiência que assina a entrega" },
+      ]} />
+
+      <MktSection titulo="Nossas frentes" sub="Serviços de consultoria sustentados pelos motores do sistema Summo.">
+        <div className="grid gap-4 md:grid-cols-2">
+          <FeatureCard
             icon={Stethoscope}
-            title="Diagnóstico & estratégia"
-            description="Cruzamos sua operação contra a Mineradora Modelo (Régua), mapeamos os gaps por área e entregamos o plano de trabalho priorizado."
+            cor="navy"
+            titulo="Diagnóstico & estratégia"
+            descricao="Cruzamos sua operação contra a Mineradora Modelo (Régua), mapeamos os gaps por área e entregamos o plano de trabalho priorizado."
             href="/mineradora-modelo"
-            color="navy"
             badge="Régua"
+            bullets={["Sete áreas da cadeia de valor", "Cliente vs. modelo ideal", "Gap vira plano de trabalho"]}
           />
-          <BigActionCard
+          <FeatureCard
             icon={ShieldAlert}
-            title="Gestão de riscos e crises"
-            description="ERM (ISO 31000), planos de continuidade (BCP) e gestão de crises — metodologia consolidada e cockpit digital."
-            href="/sq-consultoria"
-            color="navy"
-            comingSoon
+            cor="navy"
+            titulo="Gestão de riscos e crises"
+            descricao="ERM, planos de continuidade e gestão de crises — metodologia consolidada operada em cockpit digital."
+            bullets={["Framework ISO 31000", "Planos de continuidade (BCP)", "Cockpit digital rastreável"]}
           />
-          <BigActionCard
+          <FeatureCard
             icon={Workflow}
-            title="Gestão estratégica de projetos"
-            description="Estruturação e acompanhamento de projetos com EAP, cronograma e Kanban integrados ao plano de ação."
-            href="/sq-consultoria"
-            color="navy"
-            comingSoon
+            cor="navy"
+            titulo="Gestão estratégica de projetos"
+            descricao="Estruturação e acompanhamento de projetos integrados ao plano de ação."
+            bullets={["EAP e cronograma", "Kanban de execução", "Ligado ao plano de ação"]}
           />
-          <BigActionCard
+          <FeatureCard
             icon={Building2}
-            title="Governança corporativa"
-            description="Gestão corporativa, comunicação e estruturação de processos para mineradoras de médio porte."
-            href="/sq-consultoria"
-            color="navy"
-            comingSoon
+            cor="navy"
+            titulo="Governança corporativa"
+            descricao="Gestão corporativa, comunicação e estruturação de processos para mineradoras de médio porte."
+            bullets={["Estruturação de processos", "Comunicação corporativa", "Foco em médio porte"]}
           />
         </div>
-      </section>
+      </MktSection>
 
       <RoleGate minRole="consultor">
         <section>
@@ -120,30 +116,30 @@ export default function SQConsultoriaPage() {
         </section>
       </RoleGate>
 
-      <section>
-        <h2 className="font-heading text-lg font-semibold mb-1">Por que SQ Consultoria</h2>
-        <p className="text-sm text-muted-foreground mb-5">Três diferenciais da consultoria Summo.</p>
-        <div className="grid md:grid-cols-3 gap-3">
-          <ValueProp
-            icon={Award}
-            title="Senioridade como selo"
-            description="Profissionais sêniores assinam cada entrega. Reputação e responsabilidade técnica, não só software."
-            color="navy"
+      <MktSection titulo="Por que SQ Consultoria" sub="Três diferenciais da consultoria Summo.">
+        <div className="grid gap-4 md:grid-cols-3">
+          <FeatureCard
+            icon={Briefcase}
+            cor="navy"
+            titulo="Senioridade como selo"
+            descricao="Profissionais sêniores assinam cada entrega. Reputação e responsabilidade técnica, não só software."
           />
-          <ValueProp
+          <FeatureCard
             icon={Workflow}
-            title="Metodologia + tecnologia"
-            description="Frameworks consolidados (ISO 31000, BCP) operados em cockpit digital — rastreável e auditável."
-            color="teal"
+            cor="teal"
+            titulo="Metodologia + tecnologia"
+            descricao="Frameworks consolidados (ISO 31000, BCP) operados em cockpit digital — rastreável e auditável."
           />
-          <ValueProp
-            icon={Users}
-            title="Foco no setor mineral"
-            description="Toda a metodologia é calibrada para a realidade regulatória e operacional da mineração brasileira."
-            color="gold"
+          <FeatureCard
+            icon={Gauge}
+            cor="gold"
+            titulo="Foco no setor mineral"
+            descricao="Toda a metodologia é calibrada para a realidade regulatória e operacional da mineração brasileira."
           />
         </div>
-      </section>
+      </MktSection>
+
+      <CTABand titulo="Vamos elevar a gestão da sua operação?" sub="Fale com um consultor sênior da Summo Quartile." />
     </div>
   );
 }
