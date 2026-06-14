@@ -97,6 +97,47 @@ def minhas_acoes(nome: str = Query(..., description="Nome do membro Summo")) -> 
                 "pct": None,
             })
 
+    # ── Captação (demandas minhas) ──
+    for r in _safe_rows(
+        DATA_DIR / "captacao.db",
+        "SELECT titulo, responsavel, status FROM cap_demandas",
+    ):
+        if _match(r["responsavel"], nome_n, primeiro) and "ganho" not in (r["status"] or "").lower():
+            tarefas.append({
+                "origem": "Captação",
+                "titulo": r["titulo"],
+                "prazo": None,
+                "status": r["status"],
+                "pct": None,
+            })
+
+    # ── SQ Soluções (negócios no pipeline SST) ──
+    for r in _safe_rows(
+        DATA_DIR / "sqsolucoes.db",
+        "SELECT conta, responsavel, fase FROM sol_negocios",
+    ):
+        if _match(r["responsavel"], nome_n, primeiro) and (r["fase"] or "") not in ("descartado",):
+            oportunidades.append({
+                "origem": "SQ Soluções",
+                "titulo": r["conta"],
+                "etapa": r["fase"],
+                "prazo": None,
+            })
+
+    # ── SQ Consultoria (escopos sob minha responsabilidade) ──
+    for r in _safe_rows(
+        DATA_DIR / "consultoria.db",
+        "SELECT titulo, responsavel, status FROM cons_escopos",
+    ):
+        if _match(r["responsavel"], nome_n, primeiro) and "conclu" not in (r["status"] or "").lower():
+            tarefas.append({
+                "origem": "Consultoria",
+                "titulo": r["titulo"],
+                "prazo": None,
+                "status": r["status"],
+                "pct": None,
+            })
+
     # Métricas
     def _atrasada(t: dict) -> bool:
         p = t.get("prazo")

@@ -43,7 +43,8 @@ const TAB_LABELS = {
 } as const;
 
 type TabKey = keyof typeof TAB_LABELS;
-const TAB_KEYS: TabKey[] = ["mercado", "ranking", "producao", "territorio", "produtos", "premium"];
+// Sub-abas dentro de "Dados de Mercado" (Produtos e Premium foram para "Inteligência Summo")
+const DATA_TAB_KEYS: TabKey[] = ["mercado", "ranking", "producao", "territorio"];
 
 export default function InteligenciaComercialPage() {
   return (
@@ -60,6 +61,9 @@ function InteligenciaContent() {
   );
   const [activeMetric, setActiveMetric] = useState<string>(
     params.get("metric") || PRESETS_BY_TAB.mercado[0].id,
+  );
+  const [macro, setMacro] = useState<"dados" | "inteligencia">(
+    params.get("v") === "inteligencia" || params.get("tab") === "produtos" ? "inteligencia" : "dados",
   );
 
   function handleTabChange(tab: string) {
@@ -110,39 +114,58 @@ function InteligenciaContent() {
       {/* Highlights chamativos públicos */}
       <PublicHighlights />
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
-        <TabsList className="flex flex-wrap h-auto gap-1">
-          {TAB_KEYS.map((key) => {
-            const Icon = TAB_ICONS[key];
-            return (
-              <TabsTrigger key={key} value={key} className="gap-1.5 text-xs">
-                <Icon className="h-3.5 w-3.5" />
-                {TAB_LABELS[key]}
-              </TabsTrigger>
-            );
-          })}
-        </TabsList>
+      {/* Macro-navegação: Dados de Mercado · Inteligência Summo */}
+      <div className="flex gap-2 rounded-xl border bg-muted/30 p-1.5 w-full sm:w-fit">
+        <button
+          onClick={() => setMacro("dados")}
+          className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${macro === "dados" ? "bg-white text-brand-navy shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          <Globe className="h-4 w-4" /> Dados de Mercado
+        </button>
+        <button
+          onClick={() => setMacro("inteligencia")}
+          className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${macro === "inteligencia" ? "bg-white text-brand-navy shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          <Sparkles className="h-4 w-4" /> Inteligência Summo
+        </button>
+      </div>
 
-        <TabsContent value="mercado" className="mt-0">
-          <MercadoTab activeMetric={activeMetric} onMetricChange={setActiveMetric} />
-        </TabsContent>
-        <TabsContent value="ranking" className="mt-0">
-          <RankingTab />
-        </TabsContent>
-        <TabsContent value="producao" className="mt-0">
-          <ProducaoTab activeMetric={activeMetric} onMetricChange={setActiveMetric} />
-        </TabsContent>
-        <TabsContent value="territorio" className="mt-0">
-          <TerritorioTab activeMetric={activeMetric} onMetricChange={setActiveMetric} />
-        </TabsContent>
-        <TabsContent value="produtos" className="mt-0">
+      {macro === "dados" ? (
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
+          <TabsList className="flex flex-wrap h-auto gap-1">
+            {DATA_TAB_KEYS.map((key) => {
+              const Icon = TAB_ICONS[key];
+              return (
+                <TabsTrigger key={key} value={key} className="gap-1.5 text-xs">
+                  <Icon className="h-3.5 w-3.5" />
+                  {TAB_LABELS[key]}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+          <TabsContent value="mercado" className="mt-0">
+            <MercadoTab activeMetric={activeMetric} onMetricChange={setActiveMetric} />
+          </TabsContent>
+          <TabsContent value="ranking" className="mt-0">
+            <RankingTab />
+          </TabsContent>
+          <TabsContent value="producao" className="mt-0">
+            <ProducaoTab activeMetric={activeMetric} onMetricChange={setActiveMetric} />
+          </TabsContent>
+          <TabsContent value="territorio" className="mt-0">
+            <TerritorioTab activeMetric={activeMetric} onMetricChange={setActiveMetric} />
+          </TabsContent>
+        </Tabs>
+      ) : (
+        <div className="space-y-8">
           <ProdutosTab />
-        </TabsContent>
-        <TabsContent value="premium" className="mt-0">
-          <PremiumTab />
-        </TabsContent>
-      </Tabs>
+          <div>
+            <h3 className="font-heading text-lg font-semibold mb-1">Premium</h3>
+            <p className="text-sm text-muted-foreground mb-3">Relatórios, alertas e datasets sob assinatura.</p>
+            <PremiumTab />
+          </div>
+        </div>
+      )}
 
       {/* CTA final */}
       <Card className="border-2 border-brand-orange/30 bg-gradient-to-br from-brand-orange/5 to-transparent">

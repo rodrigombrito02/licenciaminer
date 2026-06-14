@@ -6,6 +6,7 @@ import Link from "next/link";
 import {
   ArrowRight,
   ShieldCheck,
+  GraduationCap,
   Layers,
   Map,
   TrendingUp,
@@ -29,6 +30,7 @@ import { Button } from "@/components/ui/button";
 import { useEffectiveRole as useRole } from "@/hooks/use-effective-role";
 import { ROLE_LABEL } from "@/lib/roles";
 import { MinhasAcoes } from "@/components/minhas-acoes";
+import { HomeDestaques } from "@/components/home-destaques";
 import { MktHero, StatBand, MktSection, FeatureCard, CTABand } from "@/components/marketing-ui";
 import { Briefcase } from "lucide-react";
 
@@ -63,11 +65,11 @@ function VitrineHome({ nome, role }: { nome?: string; role?: string } = {}) {
   return (
     <div className="space-y-12">
       <MktHero
-        eyebrow="Inteligência Mineral · Summo Quartile"
-        title={<>Dado público vira <span className="text-brand-gold">decisão</span> na mineração.</>}
-        subtitle="Da prospecção de direitos à due diligence ambiental, da inteligência de mercado à segurança operacional — uma plataforma que integra as frentes da Summo, sustentada por dados auditáveis e décadas de experiência sênior."
+        eyebrow="Summo Quartile · Inteligência Mineral"
+        title={<>A senioridade que o setor mineral <span className="text-brand-gold">confia</span>.</>}
+        subtitle="Consultoria estratégica e inteligência de mercado para mineração — da licença ambiental à gestão do ativo minerário. A profundidade de quem viveu a operação, a serviço das suas decisões."
         cor="navy"
-        ctaLabel="Falar com a Summo"
+        ctaLabel="Falar com um especialista"
         secondaryLabel="Ver o mapa mineral"
         secondaryHref="/mapa"
       />
@@ -79,43 +81,41 @@ function VitrineHome({ nome, role }: { nome?: string; role?: string } = {}) {
         { value: "36 mil", label: "ocorrências minerais (SGB)" },
       ]} />
 
-      <MktSection titulo="Cinco frentes, uma Summo" sub="Cada uma resolve uma dor real do setor — e conversam entre si pela mesma base.">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <FeatureCard icon={ShieldCheck} cor="teal" href="/ambiental" titulo="SQ Ambiental"
-            descricao="Conformidade e viabilidade de licenciamento, com a Diligência Summo."
-            bullets={["Radar de condicionantes (ambiental + ANM)", "Índice de sucesso do processo", "Due Diligence em fases"]} />
-          <FeatureCard icon={Map} cor="teal" href="/direitos" titulo="Ativos Minerários"
-            descricao="Do direito ANM ao ativo operacional: mapa, trilha e prospecção por teses."
-            bullets={["Mapa multi-camadas (energia, água, logística, geologia)", "Trilha do ciclo de vida + prazos ANM", "Portfólio por titular (CNPJ)"]} />
-          <FeatureCard icon={TrendingUp} cor="gold" href="/inteligencia-comercial" titulo="Mineral Intelligence"
-            descricao="Inteligência de mercado e produtos de dado que ninguém entrega no grão brasileiro."
-            bullets={["Monitor CFEM e preços", "Radar de minerais estratégicos", "Pipeline de grandes projetos"]} />
-          <FeatureCard icon={Briefcase} cor="navy" href="/sq-consultoria" titulo="SQ Consultoria"
-            descricao="A inteligência sênior aplicada à gestão, com a Régua de Excelência."
-            bullets={["Diagnóstico vs. mineradora modelo", "Riscos, crises e projetos", "Governança corporativa"]} />
-          <FeatureCard icon={Cpu} cor="orange" href="/sq-solutions" titulo="SQ Soluções"
-            descricao="Integradora de Saúde e Segurança (SST) com Customer Success."
-            bullets={["Antifadiga e estresse térmico", "Inspeção robótica", "Segurança homem×máquina"]} />
-          <FeatureCard icon={Search} cor="gold" href="/mapa" titulo="Mapa Mineral do Brasil"
-            descricao="Explore os direitos minerários e cruze com camadas ambientais e de infraestrutura."
-            bullets={["Polígonos ANM clicáveis", "Camadas de UC, TI, energia e logística", "Aberto para explorar"]} />
+      <MktSection titulo="Nossos serviços" sub="A senioridade Summo aplicada a cada desafio da mineração. Resolvemos o que você precisar.">
+        <div className="grid gap-4 md:grid-cols-2">
+          <FeatureCard icon={Briefcase} cor="navy" href="/sq-consultoria" titulo="Consultoria estratégica"
+            descricao="Diagnóstico, riscos, projetos e governança — a inteligência sênior aplicada à sua operação, com a Régua de Excelência."
+            bullets={["Diagnóstico vs. mineradora modelo", "Gestão de riscos, crises e projetos", "Governança corporativa"]} />
+          <FeatureCard icon={TrendingUp} cor="gold" href="/inteligencia-comercial" titulo="Inteligência de mercado"
+            descricao="Leitura do mercado mineral brasileiro com profundidade que o setor não encontra em outro lugar."
+            bullets={["Monitor CFEM, preços e comércio exterior", "Radar de minerais estratégicos", "Atlas e pipeline de projetos"]} />
+        </div>
+        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <FeatureCard icon={ShieldCheck} cor="teal" href="/ambiental" titulo="Licenciamento & ambiental"
+            descricao="Viabilidade, condicionantes e Diligência Summo para o licenciamento." />
+          <FeatureCard icon={Map} cor="teal" href="/direitos" titulo="Gestão de ativos minerários"
+            descricao="Do direito ANM ao ativo operacional, com diligenciamento de DMs para investidores." />
+          <FeatureCard icon={Cpu} cor="orange" href="/sq-solutions" titulo="Saúde & Segurança (SST)"
+            descricao="Integramos as melhores tecnologias de SST e garantimos a adoção em campo." />
+          <FeatureCard icon={GraduationCap} cor="navy" titulo="Treinamentos corporativos"
+            descricao="Capacitação em mineração com a senioridade Summo." badge="Em breve" />
         </div>
       </MktSection>
 
-      <MktSection titulo="Por que a Summo" sub="Não é dado por dado — é dado que vira decisão.">
+      <MktSection titulo="Por que a Summo" sub="Senioridade de verdade, sustentada por dados auditáveis.">
         <div className="grid gap-4 md:grid-cols-3">
+          <FeatureCard icon={Briefcase} cor="navy" titulo="Quem entende de mineração"
+            descricao="Sócios com décadas de operação e estratégia no setor mineral brasileiro. Você fala com quem viveu o problema." />
           <FeatureCard icon={Layers} cor="teal" titulo="Dados auditáveis"
-            descricao="Cada número rastreável a fontes públicas oficiais (ANM, SEMAD, SGB, BCB, Comex). Sem caixa-preta." />
-          <FeatureCard icon={Briefcase} cor="navy" titulo="Senioridade que assina"
-            descricao="Décadas de experiência no setor mineral por trás de cada análise — não é só software." />
-          <FeatureCard icon={CheckCircle2} cor="gold" titulo="Frentes integradas"
-            descricao="O mesmo ativo que diagnosticamos é o que precificamos e levamos ao investidor." />
+            descricao="Cada análise rastreável a fontes públicas oficiais (ANM, SEMAD, SGB, BCB, Comex). Sem caixa-preta." />
+          <FeatureCard icon={CheckCircle2} cor="gold" titulo="Visão completa do setor"
+            descricao="Do licenciamento à inteligência de mercado, enxergamos o ativo por inteiro — e ajudamos na decisão." />
         </div>
       </MktSection>
 
       <CTABand
-        titulo="Quer aprofundar?"
-        sub="Consultoria estratégica em mineração e metalurgia, com sócios que somam décadas no setor. Fale com a nossa equipe."
+        titulo="Vamos resolver o seu desafio na mineração?"
+        sub="Consultoria estratégica e inteligência de mercado, com sócios que somam décadas no setor. Fale com um especialista da Summo."
       />
     </div>
   );
@@ -138,6 +138,9 @@ function ConsultorHome({ nome }: { nome: string; userId: string }) {
           Seus projetos, tarefas e ferramentas para o dia.
         </p>
       </section>
+
+      {/* Destaques configuráveis por usuário */}
+      <HomeDestaques nome={nome} />
 
       {/* Minhas ações (agregado de todos os módulos) */}
       <MinhasAcoes nome={nome} />
@@ -239,6 +242,9 @@ function AdminHome({ nome }: { nome: string }) {
           Gestão da plataforma, oportunidades estratégicas e cockpit operacional.
         </p>
       </section>
+
+      {/* Destaques configuráveis por usuário */}
+      <HomeDestaques nome={nome} />
 
       {/* Minhas ações (agregado de todos os módulos) */}
       <MinhasAcoes nome={nome} />
