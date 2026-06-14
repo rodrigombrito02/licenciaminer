@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import {
-  Loader2, Target, Building2, Cpu, Activity, Swords, BatteryWarning,
+  Loader2, Target, Building2, Cpu, Activity, Swords, BatteryWarning, FileText,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   solApi, MODALIDADE_LABEL, HEALTH_COLOR,
   type SolMeta, type SolKpis, type Negocio, type ClienteServico, type Frota, type CSRelatorio,
+  type ContratosResp,
 } from "@/lib/sqsolucoes-api";
 
 function brl(v: number | null | undefined): string {
@@ -30,15 +31,16 @@ export function SQSolucoesCockpit() {
   const [negocios, setNegocios] = useState<Negocio[]>([]);
   const [clientes, setClientes] = useState<ClienteServico[]>([]);
   const [frota, setFrota] = useState<Frota | null>(null);
+  const [contratos, setContratos] = useState<ContratosResp | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [m, k, n, c, f] = await Promise.all([
-        solApi.meta(), solApi.kpis(), solApi.negocios(), solApi.clientes(), solApi.frota(),
+      const [m, k, n, c, f, ct] = await Promise.all([
+        solApi.meta(), solApi.kpis(), solApi.negocios(), solApi.clientes(), solApi.frota(), solApi.contratos(),
       ]);
-      setMeta(m); setKpis(k); setNegocios(n); setClientes(c); setFrota(f);
+      setMeta(m); setKpis(k); setNegocios(n); setClientes(c); setFrota(f); setContratos(ct);
     } finally { setLoading(false); }
   }, []);
   useEffect(() => { load(); }, [load]);
@@ -60,6 +62,7 @@ export function SQSolucoesCockpit() {
       <Tabs defaultValue="pipeline">
         <TabsList className="flex flex-wrap h-auto gap-1">
           <TabsTrigger value="pipeline" className="gap-1.5 text-xs"><Target className="h-3.5 w-3.5" />Pipeline SST</TabsTrigger>
+          <TabsTrigger value="contratos" className="gap-1.5 text-xs"><FileText className="h-3.5 w-3.5" />Contratos & MRR</TabsTrigger>
           <TabsTrigger value="clientes" className="gap-1.5 text-xs"><Building2 className="h-3.5 w-3.5" />Clientes & Implantações</TabsTrigger>
           <TabsTrigger value="frota" className="gap-1.5 text-xs"><Cpu className="h-3.5 w-3.5" />Frota</TabsTrigger>
           <TabsTrigger value="parceiros" className="gap-1.5 text-xs"><Activity className="h-3.5 w-3.5" />Parceiros</TabsTrigger>
@@ -86,6 +89,41 @@ export function SQSolucoesCockpit() {
               </div>
             ))}
           </div>
+        </TabsContent>
+
+        {/* Contratos & MRR */}
+        <TabsContent value="contratos" className="pt-4">
+          {contratos && (
+            <>
+              <div className="grid grid-cols-3 gap-3 mb-4">
+                <KPI label="Contratos ativos" value={contratos.total} color="#0A2540" />
+                <KPI label="MRR recorrente" value={brl(contratos.mrr_total)} color="#27AE60" />
+                <KPI label="ARR projetado" value={brl(contratos.arr_projetado)} color="#E67E22" />
+              </div>
+              <div className="space-y-1.5">
+                {contratos.contratos.map((c) => (
+                  <div key={c.id} className="flex items-center gap-3 rounded-lg border p-2.5 text-sm">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium truncate">{c.cliente}</p>
+                      <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
+                        <Badge variant="outline" className="text-[9px]">{contratos.modelos[c.modelo] ?? c.modelo}</Badge>
+                        {c.solucao && <Badge variant="secondary" className="text-[9px]">{c.solucao}</Badge>}
+                        {c.parceiro && <span className="text-[10px] text-muted-foreground">via {c.parceiro}</span>}
+                        {c.responsavel && <span className="text-[10px] text-muted-foreground">· {c.responsavel}</span>}
+                      </div>
+                      {c.notas && <p className="text-[10px] text-muted-foreground mt-0.5 truncate">{c.notas}</p>}
+                    </div>
+                    <div className="text-right shrink-0">
+                      <Badge variant="outline" className={`text-[9px] ${STATUS_DEV[c.status === "encerrado" ? "inativo" : c.status === "pausado" ? "manutencao" : "ativo"] ?? ""}`}>{c.status}</Badge>
+                      <p className="text-[11px] font-medium mt-0.5">{c.mensalidade ? `${brl(c.mensalidade)}/m` : "—"}</p>
+                      {c.vigencia_meses ? <p className="text-[10px] text-muted-foreground">{c.vigencia_meses}m · início {c.inicio ?? "—"}</p> : null}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-2 italic">MRR = soma das mensalidades de contratos ativos. ARR projetado = MRR × 12.</p>
+            </>
+          )}
         </TabsContent>
 
         {/* Clientes & Implantações */}

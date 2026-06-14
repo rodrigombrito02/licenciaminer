@@ -14,8 +14,9 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from licenciaminer.sqsolucoes.database import (
-    ClienteServico, Implantacao, Dispositivo, NegocioSQS,
-    MODALIDADES, FASES_PIPELINE, FASES_PROJETO, TIPOS_DISPOSITIVO, get_session,
+    ClienteServico, Implantacao, Dispositivo, NegocioSQS, ContratoRaaS,
+    MODALIDADES, FASES_PIPELINE, FASES_PROJETO, TIPOS_DISPOSITIVO,
+    MODELOS_CONTRATO, STATUS_CONTRATO, get_session,
 )
 
 # KPIs de Customer Success por caso de uso (o que medir no relatório de impacto)
@@ -236,18 +237,39 @@ def cs_relatorio(implantacao_id: int, db: Session = Depends(get_session)):
     }
 
 
+@router.get("/contratos")
+def listar_contratos(db: Session = Depends(get_session)):
+    rows = db.query(ContratoRaaS).order_by(ContratoRaaS.status, ContratoRaaS.cliente).all()
+    ativos = [c for c in rows if c.status == "ativo"]
+    mrr = sum(c.mensalidade or 0 for c in ativos)
+    return {
+        "total": len(rows),
+        "mrr_total": mrr,
+        "arr_projetado": mrr * 12,
+        "modelos": MODELOS_CONTRATO,
+        "contratos": [
+            {"id": c.id, "cliente": c.cliente, "solucao": c.solucao, "parceiro": c.parceiro,
+             "modelo": c.modelo, "mensalidade": c.mensalidade, "vigencia_meses": c.vigencia_meses,
+             "inicio": c.inicio, "status": c.status, "responsavel": c.responsavel, "notas": c.notas}
+            for c in rows
+        ],
+    }
+
+
 @router.get("/kpis")
 def kpis(db: Session = Depends(get_session)):
     negs = db.query(NegocioSQS).all()
     ativos = [n for n in negs if n.fase not in ("descartado",)]
     ponderado = sum(_neg_out(n)["ponderado"] for n in ativos)
-    mrr = sum(n.mrr or 0 for n in negs if n.fase in ("faturando", "recorrente"))
+    # MRR vem dos contratos recorrentes ativos (RaaS/subscription/in loco)
+    mrr = sum(c.mensalidade or 0 for c in db.query(ContratoRaaS).filter(ContratoRaaS.status == "ativo").all())
     faturando = sum(1 for n in negs if n.fase in ("faturando", "recorrente"))
     return {
         "negocios": len(negs),
         "faturando": faturando,
         "pipeline_ponderado": ponderado,
         "mrr": mrr,
+        "contratos": db.query(func.count(ContratoRaaS.id)).scalar() or 0,
         "clientes": db.query(func.count(ClienteServico.id)).scalar() or 0,
         "dispositivos": db.query(func.count(Dispositivo.id)).scalar() or 0,
     }

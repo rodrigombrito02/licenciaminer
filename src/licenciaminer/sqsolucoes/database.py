@@ -135,6 +135,33 @@ class NegocioSQS(Base):
     atualizado_em: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
 
+MODELOS_CONTRATO = {
+    "raas": "RaaS (Robot as a Service)",
+    "subscription": "Subscription (plataforma)",
+    "comodato": "Comodato + comissão",
+    "in_loco": "Serviço técnico in loco",
+}
+STATUS_CONTRATO = ["ativo", "pausado", "encerrado"]
+
+
+class ContratoRaaS(Base):
+    """Contrato recorrente (RaaS / subscription / in loco) — gestão de MRR."""
+    __tablename__ = "sol_contratos"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    cliente: Mapped[str] = mapped_column(String(200), nullable=False)
+    solucao: Mapped[Optional[str]] = mapped_column(String(160), nullable=True)
+    parceiro: Mapped[Optional[str]] = mapped_column(String(60), nullable=True)
+    modelo: Mapped[str] = mapped_column(String(30), default="raas", nullable=False)
+    mensalidade: Mapped[Optional[float]] = mapped_column(Float, nullable=True)  # MRR R$
+    vigencia_meses: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    inicio: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
+    status: Mapped[str] = mapped_column(String(20), default="ativo", nullable=False)
+    responsavel: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)
+    notas: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    criado_em: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+
+
 def get_session() -> Generator[Session, None, None]:
     db = SessionLocal()
     try:

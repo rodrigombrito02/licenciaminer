@@ -5,8 +5,14 @@ from __future__ import annotations
 import logging
 
 from licenciaminer.sqsolucoes.database import (
-    SessionLocal, ClienteServico, Implantacao, Dispositivo, NegocioSQS,
+    SessionLocal, ClienteServico, Implantacao, Dispositivo, NegocioSQS, ContratoRaaS,
 )
+
+CONTRATOS = [
+    ("Consórcio Monto Mendes Jr", "Eletricista in loco (Petrobras Itaboraí)", None, "in_loco", 19970, 26, "2026-03", "ativo", "Bernardo", "Modalidade 5 · margem R$ 160.102 no contrato"),
+    ("Consórcio Monto Mendes Jr", "Wearables Rombit (comodato + comissão)", "rombit", "comodato", 13638, 24, "2026-03", "ativo", "Bernardo", "1ª NF jun/2026 · comissão 5%"),
+    ("Petrobras Regap (Betim)", "Banda biométrica SlateSafety", "slatesafety", "subscription", 0, 12, "2026-01", "ativo", "Bernardo", "Aluguéis pontuais → converter em subscription contínua"),
+]
 
 logger = logging.getLogger(__name__)
 
@@ -32,11 +38,27 @@ DISPOSITIVOS = [
 ]
 
 
+def _seed_contratos(db) -> int:
+    """Seed idempotente dos contratos recorrentes (RaaS/in loco/subscription)."""
+    if db.query(ContratoRaaS).count() > 0:
+        return 0
+    for cli_, sol, parc, mdl, mens, vig, ini, st, resp, nota in CONTRATOS:
+        db.add(ContratoRaaS(cliente=cli_, solucao=sol, parceiro=parc, modelo=mdl,
+                            mensalidade=mens, vigencia_meses=vig, inicio=ini,
+                            status=st, responsavel=resp, notas=nota))
+    db.commit()
+    return len(CONTRATOS)
+
+
 def seed_sqsolucoes(force: bool = False) -> dict:
     db = SessionLocal()
     try:
+        # Contratos têm seed próprio idempotente (tabela pode ter sido criada
+        # depois que os negócios já foram semeados).
+        n_contratos = _seed_contratos(db)
+
         if db.query(NegocioSQS).count() > 0 and not force:
-            return {"seeded": False}
+            return {"seeded": False, "contratos": n_contratos}
 
         # Cliente-âncora real: Consórcio Monto Mendes Jr (Gaslub)
         cli = ClienteServico(

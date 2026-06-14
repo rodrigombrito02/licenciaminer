@@ -41,7 +41,16 @@ export interface Dispositivo {
 export interface Frota { total: number; por_status: Record<string, number>; dispositivos: Dispositivo[]; }
 export interface SolKpis {
   negocios: number; faturando: number; pipeline_ponderado: number; mrr: number;
-  clientes: number; dispositivos: number;
+  contratos: number; clientes: number; dispositivos: number;
+}
+export interface Contrato {
+  id: number; cliente: string; solucao: string | null; parceiro: string | null;
+  modelo: string; mensalidade: number | null; vigencia_meses: number | null;
+  inicio: string | null; status: string; responsavel: string | null; notas: string | null;
+}
+export interface ContratosResp {
+  total: number; mrr_total: number; arr_projetado: number;
+  modelos: Record<string, string>; contratos: Contrato[];
 }
 
 async function jget<T>(p: string): Promise<T> {
@@ -68,6 +77,7 @@ export const solApi = {
   clientes: () => jget<ClienteServico[]>("/clientes"),
   frota: () => jget<Frota>("/frota"),
   cs: (implantacaoId: number) => jget<CSRelatorio>(`/cs/${implantacaoId}`),
+  contratos: () => jget<ContratosResp>("/contratos"),
 };
 
 export const MODALIDADE_LABEL: Record<string, string> = {

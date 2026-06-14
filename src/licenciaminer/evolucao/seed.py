@@ -324,6 +324,27 @@ def seed_esqueleto(force: bool = False) -> dict:
                 ))
                 criados += 1
 
+        # 4) Entregas já no ar (flip em_breve → no_ar)
+        ENTREGUES = [
+            ("Índice de Sucesso (diagnóstico)", "SQ Ambiental", PAGO, ["/viabilidade"],
+             "Diagnóstico prescritivo do processo (índice + fatores + plano de ação)."),
+            ("Gestão de contrato RaaS", "SQ Soluções", INTERNO, ["/sq-solutions"],
+             "Contratos recorrentes (RaaS/subscription/in loco) com MRR e ARR no cockpit."),
+        ]
+        for titulo, modulo, vis, telas, desc in ENTREGUES:
+            it = db.query(ItemEvolucao).filter(ItemEvolucao.titulo == titulo).first()
+            if it is None:
+                db.add(ItemEvolucao(
+                    tipo="funcionalidade", titulo=titulo, descricao=desc,
+                    modulo=modulo, status="no_ar", visibilidade=vis, telas=telas,
+                    origem="interno", origem_detalhe="Entrega",
+                ))
+                migrados += 1
+            elif it.status != "no_ar":
+                it.status = "no_ar"
+                it.descricao = desc
+                migrados += 1
+
         db.commit()
         logger.info(f"Evolucao: esqueleto v2 ({migrados} migrados, {criados} futuras)")
         return {"migrados": migrados, "futuras": criados}
