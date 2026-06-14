@@ -53,6 +53,9 @@ export function ProdutosTab() {
         </p>
       </div>
 
+      {/* Clipping da semana (isca freemium) */}
+      <ClippingPreview />
+
       {/* Previews ao vivo (dado real) */}
       <div className="grid gap-4 lg:grid-cols-2">
         <PipelinePreview />
@@ -97,6 +100,43 @@ export function ProdutosTab() {
           Quero conversar <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
+    </div>
+  );
+}
+
+function ClippingPreview() {
+  const [d, setD] = useState<any>(null);
+  useEffect(() => { fetch(`${API}/mi/clipping`).then(r => r.json()).then(setD).catch(() => {}); }, []);
+  return (
+    <div className="rounded-xl border-2 border-brand-navy/20 bg-gradient-to-br from-brand-navy/5 to-transparent p-4">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-base">📰</span>
+        <h3 className="font-bold text-sm">{d?.titulo ?? "Clipping Mineral Summo"}</h3>
+        <Badge variant="outline" className="text-[9px]">Produto F · isca</Badge>
+      </div>
+      {!d ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /> : (
+        <div className="space-y-3">
+          <div className="grid gap-2 sm:grid-cols-3">
+            {d.destaques?.map((x: any, i: number) => (
+              <div key={i} className="rounded-lg bg-white border p-2.5">
+                <div className="text-[9px] uppercase tracking-wide text-muted-foreground">{x.tipo}</div>
+                <div className="text-sm font-bold text-brand-navy">
+                  {x.unidade === "R$" ? fmtBRL(x.valor) : x.unidade === "US$" ? `US$ ${(x.valor/1e9).toFixed(1)} bi` : x.valor?.toLocaleString("pt-BR")}
+                </div>
+                <div className="text-[11px] text-muted-foreground leading-tight">{x.texto}</div>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/20 p-2.5">
+            <p className="text-[11px] text-muted-foreground">
+              <strong>Manchetes do setor:</strong> {d.manchetes_status}
+            </p>
+          </div>
+          <p className="text-[10px] text-muted-foreground/70 italic">
+            Cada edição traz 1+ gráfico proprietário SQ (acima, dado real) — o gancho que gera lead. As manchetes externas plugam via N8N/Google Alerts.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

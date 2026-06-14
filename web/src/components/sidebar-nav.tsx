@@ -8,12 +8,22 @@ import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { fetchFreshness } from "@/lib/api";
 import { NAV_GROUPS, NAV_SECTIONS, type NavSection } from "@/lib/nav-config";
+import { useEffectiveRole } from "@/hooks/use-effective-role";
+import { hasMinRole, type Role } from "@/lib/roles";
 
 const COLLAPSE_KEY = "sidebar_collapsed_v2";
 const GROUP_COLLAPSE_KEY = "sidebar_group_collapsed_v2";
 
+// Papel mínimo por grupo de navegação
+const GROUP_MIN_ROLE: Record<string, Role> = {
+  "ferramentas-internas": "consultor",
+  "gestao": "admin",
+};
+
 export function SidebarNav() {
   const pathname = usePathname();
+  const roleState = useEffectiveRole();
+  const role = roleState.status === "authenticated" ? roleState.role : undefined;
   const [freshness, setFreshness] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [groupCollapsed, setGroupCollapsed] = useState<Record<string, boolean>>({});
@@ -72,6 +82,12 @@ export function SidebarNav() {
     return !isSectionActive(section);
   }
 
+  // Filtra seções pelo papel: grupos internos só para consultor/admin
+  const visibleSections = NAV_SECTIONS.filter((s) => {
+    const min = s.group ? GROUP_MIN_ROLE[s.group] : undefined;
+    return !min || hasMinRole(role, min);
+  });
+
   return (
     <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 bg-sidebar text-sidebar-foreground">
       {/* Logo */}
@@ -87,12 +103,12 @@ export function SidebarNav() {
         </div>
       </div>
 
-      {/* Nav sections */}
+      {/* Nav sections (gated por papel) */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-        {NAV_SECTIONS.map((section, idx) => {
+        {visibleSections.map((section, idx) => {
           const isOpen = !isSectionCollapsed(section);
           const active = isSectionActive(section);
-          const prevSection = idx > 0 ? NAV_SECTIONS[idx - 1] : null;
+          const prevSection = idx > 0 ? visibleSections[idx - 1] : null;
           const groupChanged = section.group && section.group !== prevSection?.group;
           const groupMeta = groupChanged
             ? NAV_GROUPS.find((g) => g.key === section.group)

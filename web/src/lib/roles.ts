@@ -71,18 +71,17 @@ export const PUBLIC_PATHS: string[] = [
   "/",                          // Home (3 versoes conforme role; sem login mostra vitrine)
   "/login",
   "/auth",
-  "/ambiental",                 // Capa do ambiental com 3 botoes
-  "/direitos",                  // Capa Direitos e Concessoes
-  "/sq-solutions",              // Capa SQ Solutions
-  "/explorar",                  // Explorar dados publicos (com limites em visitante_free)
-  "/inteligencia-comercial",    // Mercado mineral publico
-  "/mapa",                      // Mapa geoespacial publico
-  "/concessoes",                // Concessoes ANM publico
-  "/prospeccao",                // Prospeccao publica
-  "/seguranca",                 // SQ Solutions
-  "/mineradora-modelo",         // Demo da SQ Solutions
-  "/sq-consultoria",            // Vitrine SQ Consultoria (gestão é interna)
+  "/ambiental",                 // Landing SQ Ambiental
+  "/direitos",                  // Landing Ativos Minerários
+  "/sq-solutions",              // Landing SQ Soluções
+  "/inteligencia-comercial",    // Landing Mineral Intelligence (mercado público)
+  "/mapa",                      // Mapa geoespacial público (anzol)
+  "/seguranca",                 // Demo SQ Soluções
+  "/mineradora-modelo",         // Régua de Excelência (showcase)
+  "/sq-consultoria",            // Landing SQ Consultoria
 ];
+// NOTA: /explorar, /concessoes e /prospeccao saíram do público (dado cru / ferramenta)
+// — agora exigem login (ver PAGO_PATHS e CONSULTOR_PATHS).
 
 /** Rotas que exigem login (qualquer tier). Freemium: conteúdo parcial gateado na página. */
 export const LOGADO_PATHS: string[] = [
@@ -93,12 +92,15 @@ export const LOGADO_PATHS: string[] = [
 export const PAGO_PATHS: string[] = [
   "/empresa",                   // Consulta por CNPJ
   "/decisoes",                  // Analise de decisoes
+  "/explorar",                  // Explorar dados (saiu do público)
+  "/concessoes",                // Lista ANM com titular/CNPJ (saiu do público)
 ];
 
 /** Rotas de uso interno (consultor+) */
 export const CONSULTOR_PATHS: string[] = [
   "/due-diligence",
   "/pilhas",
+  "/prospeccao",                // Ferramenta de prospecção (saiu do público)
   "/ferramentas-internas",      // Capa geral
   "/mapeamentos",               // Prospeccao multi-tese
   "/evolucao",                  // Evolucao do Sistema (plano + sprints)

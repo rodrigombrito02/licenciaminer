@@ -145,6 +145,45 @@ def radar_estrategicos(limit: int = Query(40, ge=1, le=200)):
     }
 
 
+@router.get("/clipping")
+def clipping():
+    """Produto F — Clipping setorial (isca freemium): destaques proprietários do
+    nosso dado + slot de manchetes (conectável via N8N/Google Alerts, sem inventar)."""
+    destaques = []
+
+    # 1. Maior arrecadação CFEM por substância (último ano cheio)
+    cf = run_query(
+        f"""SELECT "Substância" AS s, SUM({_VAL}) AS v FROM 'data/processed/anm_cfem.parquet'
+            WHERE Ano = 2025 AND {_VAL} IS NOT NULL GROUP BY 1 ORDER BY v DESC LIMIT 1""")
+    if cf:
+        destaques.append({"tipo": "CFEM", "texto": f"{cf[0]['s']} liderou a arrecadação de CFEM em 2025",
+                          "valor": cf[0]["v"], "unidade": "R$"})
+
+    # 2. Maior projeto anunciado (pipeline curado)
+    path = _REF / "projetos_destaque.json"
+    if path.exists():
+        projs = json.loads(path.read_text(encoding="utf-8")).get("projetos", [])
+        comusd = [p for p in projs if (p.get("investimento_moeda") or "").upper() == "USD" and p.get("investimento_valor")]
+        if comusd:
+            top = max(comusd, key=lambda p: p["investimento_valor"])
+            destaques.append({"tipo": "Projeto", "texto": f"{top['empresa']} — {top['projeto']}",
+                              "valor": top["investimento_valor"], "unidade": "US$"})
+
+    # 3. Minerais estratégicos em movimento (requerimentos)
+    like = " OR ".join("UPPER(substancia_principal) LIKE ?" for _ in _ESTRATEGICOS)
+    tot = run_query(f"SELECT COUNT(*) AS n FROM v_scm WHERE ({like})", [f"%{m}%" for m in _ESTRATEGICOS])
+    if tot:
+        destaques.append({"tipo": "Estratégicos", "texto": "requerimentos ativos em minerais críticos (lítio, cobre, terras raras…)",
+                          "valor": tot[0]["n"], "unidade": "un"})
+
+    return {
+        "titulo": "Clipping Mineral Summo",
+        "destaques": destaques,
+        "manchetes": [],  # slot — conectar fonte de notícias (N8N / Google Alerts)
+        "manchetes_status": "Conecte uma fonte (N8N ou Google Alerts) para popular as manchetes do setor.",
+    }
+
+
 @router.get("/atlas-ferro")
 def atlas_ferro(limit: int = Query(20, ge=1, le=100)):
     """Produto A — Atlas DR-Grade (proto): municípios produtores de ferro por CFEM recolhido."""
