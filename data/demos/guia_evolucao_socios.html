@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema Summo Quartile — Guia de Evolução & Painel por Frente</title>
+<style>
+  :root{
+    --navy:#0A2540; --navy2:#13283f; --teal:#156082; --teal2:#0E7490;
+    --gold:#FFC000; --orange:#E67E22; --green:#27AE60; --violet:#7B1FA2;
+    --bg:#f6f8fa; --card:#ffffff; --line:#e4e9ef; --muted:#5b6b7b; --text:#11202e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.55;font-size:15px}
+  header{background:linear-gradient(135deg,var(--navy),var(--navy2) 55%,var(--teal2));
+    color:#fff;padding:30px 24px 22px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+  header h1{font-size:24px;font-weight:800;letter-spacing:-.3px}
+  header p{color:#cdd8e3;font-size:14px;margin-top:6px;max-width:780px}
+  .badge{display:inline-block;background:rgba(255,192,0,.18);color:var(--gold);
+    font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:10px;
+    text-transform:uppercase;letter-spacing:.5px}
+  nav{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);
+    box-shadow:0 1px 6px rgba(10,37,64,.05)}
+  nav .wrap{display:flex;gap:4px;overflow-x:auto;padding:8px 18px}
+  .tab{border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:600;
+    padding:9px 13px;border-radius:8px;cursor:pointer;white-space:nowrap;transition:.15s}
+  .tab:hover{background:#eef3f7;color:var(--text)}
+  .tab.active{background:var(--navy);color:#fff}
+  main{padding:26px 0 60px}
+  .panel{display:none;animation:fade .2s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+  h2{font-size:20px;font-weight:800;margin:4px 0 4px;color:var(--navy)}
+  h3{font-size:15px;font-weight:800;margin:20px 0 8px;color:var(--teal2);
+    display:flex;align-items:center;gap:8px}
+  .lead{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+  .card.accent{border-left:4px solid var(--teal)}
+  .grid{display:grid;gap:12px}
+  @media(min-width:720px){.grid.c2{grid-template-columns:1fr 1fr}}
+  .chip{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin:2px 4px 2px 0}
+  .c-feito{background:#e7f7ee;color:#1c7a45}
+  .c-novo{background:#e9f2fb;color:#1c5f9e}
+  .c-aguarda{background:#fff3da;color:#9a6b00}
+  .c-int{background:#f2e9fb;color:#6b21a8}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  ul{margin:6px 0 6px 18px}li{margin:3px 0}
+  .kbox{background:var(--navy);color:#fff;border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .kbox h3{color:var(--gold);margin-top:0}
+  .kbox .lead{color:#cdd8e3}
+  .two{display:grid;gap:14px}@media(min-width:720px){.two{grid-template-columns:1.25fr 1fr}}
+  .awaits{background:#fffaf0;border:1px solid #f0e0bd;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+  .awaits h3{color:#9a6b00;margin-top:0}
+  .value{background:#f0f9f4;border:1px solid #c9ecd6;border-radius:12px;padding:14px 16px}
+  .value h3{color:#1c7a45;margin-top:0}
+  .vs{background:#f7f9fc;border:1px dashed #c4d2e0;border-radius:12px;padding:12px 16px;margin-bottom:12px}
+  .vs .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .vs .a{color:var(--muted);font-size:13px}.vs .b{color:var(--text);font-size:13px;font-weight:600}
+  .vs .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+  .vs .la{color:#b06a00}.vs .lb{color:#1c7a45}
+  .crit{background:linear-gradient(135deg,#fff8e6,#fffdf7);border:1px solid var(--gold);
+    border-radius:12px;padding:13px 16px;margin-top:14px;font-size:13px}
+  .crit b{color:#9a6b00}
+  .foot{color:var(--muted);font-size:12px;text-align:center;padding:24px}
+  .tag{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .person-h{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .avatar{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;font-size:18px;flex-shrink:0}
+  .frentes{display:grid;gap:10px;grid-template-columns:1fr}
+  @media(min-width:720px){.frentes{grid-template-columns:1fr 1fr 1fr}}
+  .frente{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff}
+  .frente .nome{font-weight:800;font-size:14px}
+  .frente .dono{font-size:12px;color:var(--muted);margin-top:2px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <span class="badge">Sistema Summo Quartile · Interno</span>
+    <h1>Guia de Evolução & Painel por Frente</h1>
+    <p>O sistema não é de uma área — é o tecido que integra a Summo, faz cada frente evoluir e gera negócio para todos. Aqui está o que mudou depois do primeiro deploy, a leitura das reuniões da semana, e o que cabe a cada frente. Documento de trabalho — 13/06/2026.</p>
+  </div>
+</header>
+
+<nav>
+  <div class="wrap" id="tabs">
+    <button class="tab active" data-t="resumo">📦 Resumo & Mudanças</button>
+    <button class="tab" data-t="reunioes">🗣️ Reuniões da semana</button>
+    <button class="tab" data-t="giulia">Giulia · Ambiental</button>
+    <button class="tab" data-t="maury">Maury · Ativos</button>
+    <button class="tab" data-t="lima">Lima · Intelligence</button>
+    <button class="tab" data-t="bernardo">Bernardo · Soluções</button>
+    <button class="tab" data-t="leo">Léo · Consultoria</button>
+    <button class="tab" data-t="rodrigo">Rodrigo · Sistema</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ===================== RESUMO ===================== -->
+<section class="panel active" id="resumo">
+  <h2>O que mudou desde o primeiro deploy</h2>
+  <p class="lead">A versão que subiu era um conjunto de páginas. Agora é uma plataforma que <b>integra as frentes da Summo</b> — cada uma com seu dono, todas evoluindo em paralelo, e o sistema servindo de conexão para gerar negócio em todas elas.</p>
+
+  <div class="kbox">
+    <h3>A ideia central</h3>
+    <p class="lead">Uma Summo, várias frentes, um sistema que costura tudo. O mesmo cliente que a <b>Consultoria</b> diagnostica pode comprar <b>Inteligência</b>, instalar uma solução de <b>SST</b>, ter seu ativo mapeado em <b>Ativos Minerários</b> e entrar pela <b>Captação</b>. Nenhuma frente acima da outra — o ganho é a integração.</p>
+  </div>
+
+  <h3>🧭 As frentes e seus donos</h3>
+  <div class="frentes">
+    <div class="frente"><div class="nome">SQ Ambiental</div><div class="dono">Giulia</div></div>
+    <div class="frente"><div class="nome">Ativos Minerários / Captação de DMs</div><div class="dono">Maury (sócio-owner · com Léo e Roberto)</div></div>
+    <div class="frente"><div class="nome">SQ Mineral Intelligence</div><div class="dono">Lima</div></div>
+    <div class="frente"><div class="nome">SQ Soluções (SST)</div><div class="dono">Bernardo</div></div>
+    <div class="frente"><div class="nome">SQ Consultoria + Parcerias</div><div class="dono">Léo (sócio-owner)</div></div>
+    <div class="frente"><div class="nome">Plataforma · Integração · Risco</div><div class="dono">Rodrigo</div></div>
+  </div>
+  <p class="lead" style="margin-top:8px">Financeiro/fluxo de caixa: Roberto (sócio-owner), transversal a todas as frentes.</p>
+
+  <h3>📦 O que cada frente ganhou</h3>
+  <div class="card"><b>🌱 SQ Ambiental</b> &nbsp;<span class="chip c-feito">no ar</span>
+    <ul><li>Radar de Compliance: condicionantes ambientais <b>e</b> ANM lado a lado (prazos, TAH, RFP, exigências).</li>
+    <li>Requerimentos ANM dentro da Diligência Summo; proposta Jaguar; índice de sucesso (em breve).</li></ul></div>
+
+  <div class="card"><b>⛰️ Ativos Minerários / Captação de DMs</b> &nbsp;<span class="chip c-feito">no ar</span><span class="chip c-novo">novo</span>
+    <ul><li>Painel do ativo (trilha do ciclo de vida + prazos ANM + contexto territorial), portfólio por titular (CNPJ), prospecção por teses (Mapeamentos).</li>
+    <li>Mapa multi-camadas (energia, água, logística ferrovia/porto) e radar de eventos ANM (baseline).</li>
+    <li>Serve a demanda dos seniores: <b>captar DMs para operação própria ou para investidores</b>.</li></ul></div>
+
+  <div class="card"><b>📊 SQ Mineral Intelligence</b> &nbsp;<span class="chip c-feito">no ar</span><span class="chip c-aguarda">aguarda Lima</span>
+    <ul><li>Aba "Produtos" com previews de <b>dado real</b> (Pipeline de Projetos, Monitor CFEM, Radar de Estratégicos, Atlas DR-Grade).</li>
+    <li>9 produtos organizados por pergunta do cliente, prontos para o Lima avaliar.</li></ul></div>
+
+  <div class="card"><b>🛡️ SQ Soluções (SST)</b> &nbsp;<span class="chip c-feito">no ar</span><span class="chip c-novo">novo</span><span class="chip c-aguarda">aguarda Bernardo</span>
+    <ul><li>Integradora de SST + Customer Success, vitrine por caso de uso com demos interativas.</li>
+    <li>Cockpit: pipeline comercial, clientes & implantações (Monto-Gaslub), frota, CS, parceiros e concorrentes.</li></ul></div>
+
+  <div class="card"><b>💼 SQ Consultoria + Parcerias</b> &nbsp;<span class="chip c-feito">no ar</span>
+    <ul><li>Carteira de Clientes → Escopos (multi-frente), ligada aos módulos internos.</li>
+    <li>Mineradora Modelo virou a <b>Régua de Excelência</b> que abre o diagnóstico.</li></ul></div>
+
+  <div class="card"><b>🎯 Captação · 🔌 Integração (INT) · 🧩 Plataforma</b> &nbsp;<span class="chip c-feito">no ar</span><span class="chip c-int">no plano</span>
+    <ul><li>Captação: inbox de demandas + funis + conversão (fecha o circuito lead→negócio).</li>
+    <li>Trilha INT (ferramentas/IA do time + conectores de parceiros) no plano, com "como fazer".</li>
+    <li>Plataforma: 5 níveis de acesso, "Olá, [nome]", módulo Evolução com Mapa do Sistema.</li></ul></div>
+
+  <h3>🧭 Como isso responde às reuniões</h3>
+  <table>
+    <tr><th>Decisão</th><th>Como o sistema reflete</th></tr>
+    <tr><td>Cada sócio toca uma frente, de forma integrada</td><td>6 frentes com dono, conectadas pelo cliente, pelo funil e pela captação</td></tr>
+    <tr><td>Mineradora Modelo é o elo IA↔consultoria</td><td>Virou a Régua de Excelência (chamariz do diagnóstico)</td></tr>
+    <tr><td>Produtos do Lima</td><td>9 produtos com previews de dado real, prontos para avaliar</td></tr>
+    <tr><td>SQS = integradora SST + CS, por caso de uso</td><td>SQ Soluções reposicionada com cockpit e demos</td></tr>
+    <tr><td>Captar DMs para operação/investidores (seniores)</td><td>Ativos Minerários + Mapeamentos + portfólio por CNPJ + Captação</td></tr>
+    <tr><td>Integrar ferramentas do time (Bernardo)</td><td>Trilha INT no plano</td></tr>
+  </table>
+
+  <div class="crit"><b>Peço a todos:</b> isto é de vocês. Abram a sua aba, vejam o que mudou na sua frente e <b>critiquem e aprimorem</b> — o que está errado, o que falta, o que venderia melhor. Cada sugestão entra no módulo Evolução com o seu nome.</div>
+</section>
+
+<!-- ===================== REUNIÕES ===================== -->
+<section class="panel" id="reunioes">
+  <h2>Reuniões da semana — leitura atualizada</h2>
+  <p class="lead">Releitura com todo o contexto reunido depois (base "Equipe Claude SQS" do Léo, fichas dos parceiros, plano V8/V11 e nossas conversas). Substitui o resumo anterior.</p>
+
+  <div class="kbox">
+    <h3>A tese que emergiu</h3>
+    <p class="lead">A Summo é uma casa de <b>inteligência sênior</b> com várias frentes que se reforçam. O sistema não cria hierarquia entre elas — ele as <b>integra</b>: tira o trabalho braçal de cada uma, conecta os dados e transforma cada frente numa porta de entrada de negócio para as outras.</p>
+  </div>
+
+  <h3>1. Visão de produto (sócios)</h3>
+  <div class="card"><ul>
+    <li><b>Plataforma integrada, frentes vendáveis</b> — cada frente cresce sozinha e alimenta as demais.</li>
+    <li><b>Cada sócio toca uma frente</b> com apoio do sistema e da IA.</li>
+    <li><b>Mineradora Modelo</b> = como a excelência/IA se aplica à mina → diagnóstico do cliente vs. ideal → consultoria.</li>
+    <li><b>Aprovação local antes do Vercel</b> — refinar tudo no localhost; subir só com o OK.</li>
+  </ul></div>
+
+  <h3>2. SQ Soluções — Mercado & Parcerias (26/05 + contexto)</h3>
+  <div class="card accent"><ul>
+    <li><b>Integradora de SST + Customer Success</b> — intérprete entre fabricantes e operação.</li>
+    <li><b>5 modalidades:</b> comissão · comissão majorada · equity · reseller · serviços in loco (CLT).</li>
+    <li><b>Ataque por caso de uso</b> (antifadiga · inspeção robótica · pré-turno · estresse térmico); Onda 1 = mineração subterrânea.</li>
+    <li><b>6 parceiros</b> (Petrobras-âncora): Rombit · SlateSafety · Kofre · RobotDog · Dersalis · UiFlou.</li>
+    <li><b>Concorrentes:</b> Trackfy, Pronto!, Phygitall, Trek Fire, Fisto. Projeto-âncora: Monto-Gaslub.</li>
+  </ul></div>
+
+  <h3>3. Originação de direitos (seniores / Maury)</h3>
+  <div class="card"><ul>
+    <li>Demanda dos seniores: <b>captar DMs</b> e estruturar <b>operação própria</b> da Summo ou <b>arrumar investidores</b>.</li>
+    <li>Conceito de mapear quem é dono dos direitos (rede) e sinal sucessório (orientação Gilmar).</li>
+  </ul></div>
+
+  <h3>4. Aprendizados que mudam a execução</h3>
+  <div class="card"><ul>
+    <li><b>O que fecha venda é ROI financeiro</b>, não segurança (exceto Petrobras).</li>
+    <li><b>Maturidade Petrobras-âncora</b> (Rombit/SlateSafety/Kofre antes de RobotDog).</li>
+    <li><b>Compliance é bloqueador silencioso</b> de venda industrial.</li>
+    <li><b>"Menos tempo, mais automação"</b> — processos que rodam sem depender de uma pessoa.</li>
+  </ul></div>
+
+  <div class="crit"><b>Crítica bem-vinda:</b> se algo aqui não bate com o que foi dito, me corrijam — esta leitura é a base do que o sistema entrega.</div>
+</section>
+
+<!-- ===================== GIULIA · AMBIENTAL ===================== -->
+<section class="panel" id="giulia">
+  <div class="person-h"><div class="avatar" style="background:var(--teal)">G</div>
+    <div><h2 style="margin:0">Giulia</h2><span class="tag">Frente: SQ Ambiental</span></div></div>
+  <p class="lead">Você toca a frente ambiental — a mais perto de receita recorrente com clientes como a Jaguar. O sistema tira o trabalho braçal (extração, prazos, documentos) para você focar no que é sênior: a análise e a relação com o cliente.</p>
+
+  <div class="vs"><div class="lbl la">Antes (v0)</div>
+    <div class="row"><div><div class="lbl la">v0 · antes da reunião</div><div class="a">SQ Ambiental tinha análise de dados públicos, viabilidade preliminar e Due Diligence — mas as condicionantes eram manuais e a ANM ficava fora do radar.</div></div>
+    <div><div class="lbl lb">Agora</div><div class="b">Radar de Compliance com condicionantes ambientais E ANM no mesmo lugar; requerimentos ANM dentro da Diligência; proposta Jaguar pronta.</div></div></div>
+  </div>
+
+  <div class="two">
+    <div>
+      <h3>Onde você atua (caminhos)</h3>
+      <div class="card"><ul>
+        <li><b>SQ Ambiental → Radar de Condicionantes</b>: upload da licença → extração das condicionantes → tarefas com prazo (validado no caso Partecal).</li>
+        <li><b>Diligência Summo</b>: DD em fases + requerimentos ANM.</li>
+        <li><b>Viabilidade / Índice de Sucesso</b>: diagnóstico prescritivo do processo (em evolução).</li>
+        <li><b>Matriz free/pago</b>: o que o visitante vê x o que é premium.</li>
+      </ul></div>
+      <h3>Da reunião → ao sistema</h3>
+      <div class="card">Definimos o Radar de Condicionantes como MVP (alvo Jaguar 19/06 e 22/06) e a inclusão da ANM no ambiental — ambos já no ar para você refinar.</div>
+    </div>
+    <div>
+      <div class="awaits"><h3>⏳ O sistema aguarda de você</h3><ul>
+        <li><b>Validar o Radar de Condicionantes</b> com um caso real (Jaguar/Partecal): a extração está fiel? Falta algum tipo de condicionante?</li>
+        <li>Definir o conteúdo e o tom da frente ambiental (o que entra grátis como anzol, o que é pago).</li>
+        <li>Apontar o que falta para fechar a proposta Jaguar.</li>
+      </ul></div>
+      <div class="value"><h3>✅ Valor para você (e para a Summo)</h3><ul>
+        <li>Condicionantes viram tarefas com prazo automaticamente — menos planilha, mais acompanhamento.</li>
+        <li>ANM + ambiental no mesmo radar = uma conversa mais completa com o cliente.</li>
+        <li>É a frente com gancho de recorrência mais claro hoje.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="crit">Giulia, <b>critique e aprimore</b>: abra o Radar de Condicionantes, rode um caso e me diga o que melhoraria. Sua leitura define o produto ambiental.</div>
+</section>
+
+<!-- ===================== MAURY · ATIVOS ===================== -->
+<section class="panel" id="maury">
+  <div class="person-h"><div class="avatar" style="background:var(--teal2)">M</div>
+    <div><h2 style="margin:0">Maury <span style="font-size:12px;color:var(--muted)">· sócio-owner (com Léo e Roberto)</span></h2><span class="tag">Frente: Ativos Minerários / Captação de DMs</span></div></div>
+  <p class="lead">Você conduz a originação de direitos — a demanda dos seniores de <b>captar DMs</b> para uma operação própria da Summo ou para investidores. O sistema escala isso: varre a base, ranqueia por tese e mostra quem é o dono.</p>
+
+  <div class="vs"><div class="row">
+    <div><div class="lbl la">v0 · antes da reunião</div><div class="a">"Direitos e Concessões" era consulta estática: mapa + lista de processos + uma prospecção genérica.</div></div>
+    <div><div class="lbl lb">Agora</div><div class="b">"Ativos Minerários": trilha do ativo, portfólio por titular (CNPJ), Mapeamentos por tese, camadas de logística e radar de eventos ANM.</div></div>
+  </div></div>
+
+  <div class="two">
+    <div>
+      <h3>Onde você atua (caminhos)</h3>
+      <div class="card"><ul>
+        <li><b>Mapeamentos</b>: crie teses (ex.: pequenos DMs / modelo Gilmar) → o sistema varre e ranqueia → promove ao Funil.</li>
+        <li><b>Ativos Minerários → Mapa</b>: clique no polígono → painel do ativo (trilha, prazos, contexto água/energia/logística).</li>
+        <li><b>Portfólio por titular</b>: digite um CNPJ → todos os direitos daquele dono (22 mil titulares têm mais de um).</li>
+        <li><b>Funil</b>: estruturação técnica antes da captação do investidor.</li>
+      </ul></div>
+      <h3>Da reunião → ao sistema</h3>
+      <div class="card">Sua demanda de captar DMs e mapear donos (rede / sinal sucessório) virou o portfólio por CNPJ + a prospecção por tese — a base para originar em escala.</div>
+    </div>
+    <div>
+      <div class="awaits"><h3>⏳ O sistema aguarda de você</h3><ul>
+        <li><b>Validar as teses de prospecção</b> (com Gilmar) e o critério de <b>sinal sucessório / score de êxito</b>.</li>
+        <li>Rodar a tese piloto e dizer se os DMs ranqueados fazem sentido.</li>
+        <li>Apontar quais sinais (na trilha ou no portfólio) indicam a hora de abordar um titular.</li>
+      </ul></div>
+      <div class="value"><h3>✅ Valor para você (e para a Summo)</h3><ul>
+        <li>Originação em escala: a base inteira varrida por tese em vez de garimpo manual.</li>
+        <li>Quem concentra direitos já mapeado por CNPJ — alvo claro para abordar.</li>
+        <li>Contexto territorial por ativo, pronto para montar a tese de investimento.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="crit">Maury, <b>critique e aprimore</b>: as teses e o sinal sucessório precisam da sua régua sênior. Rode uma tese e me diga o que ajustar para virar originação de verdade.</div>
+</section>
+
+<!-- ===================== LIMA · INTELLIGENCE ===================== -->
+<section class="panel" id="lima">
+  <div class="person-h"><div class="avatar" style="background:var(--gold);color:var(--navy)">L</div>
+    <div><h2 style="margin:0">Lima</h2><span class="tag">Frente: SQ Mineral Intelligence</span></div></div>
+  <p class="lead">Você é o dono técnico da inteligência de mercado. O sistema já compilou o dado pesado — você foca na análise e em decidir o que vira produto.</p>
+
+  <div class="vs"><div class="row">
+    <div><div class="lbl la">v0 · antes da reunião</div><div class="a">Inteligência comercial mostrava mercado, preços e ranking de CFEM — útil, mas sem produtos estruturados nem entregável claro.</div></div>
+    <div><div class="lbl lb">Agora</div><div class="b">Aba "Produtos" com 9 produtos por pergunta do cliente e previews de dado real de cada um — dá para ver o entregável antes de existir.</div></div>
+  </div></div>
+
+  <div class="two">
+    <div>
+      <h3>Onde você atua (caminhos)</h3>
+      <div class="card"><ul>
+        <li><b>Mineral Intelligence → aba Produtos</b>: Pipeline de Projetos (31 proj · US$ 9,3 bi), Monitor CFEM (R$ 3,57 bi/2025), Radar de Estratégicos (18.400 requerimentos), Atlas DR-Grade (ferro por município).</li>
+        <li><b>Evolução → Produtos & Ideias</b>: os 9 produtos, cada um com aprovar/reprovar + feedback.</li>
+        <li>Ângulo <b>CBAM / aço verde</b> (Atlas DR-Grade, Green Iron Brief) — onde a sua visão é insubstituível.</li>
+      </ul></div>
+      <h3>Da reunião → ao sistema</h3>
+      <div class="card">Você falou em ~5 produtos; destrinchando, viraram 9 (7 + Consolidação/M&A + Logística Mineral). Todos com amostra de dado real para validar com o mercado.</div>
+    </div>
+    <div>
+      <div class="awaits"><h3>⏳ O sistema aguarda de você</h3><ul>
+        <li><b>Aprovar ou reprovar os 9 produtos</b>, com feedback por escrito (Evolução → Produtos & Ideias).</li>
+        <li>Dizer o que cada um precisa para virar entregável (specs DR-grade, fontes, comprador) e qual entra primeiro.</li>
+        <li>Apontar onde o Pessotti precisa entrar (CBAM / aço verde).</li>
+      </ul></div>
+      <div class="value"><h3>✅ Valor para você (e para a Summo)</h3><ul>
+        <li>O dado pesado já compilado — você analisa, não coleta.</li>
+        <li>Previews que mostram o produto antes de existir — fácil validar e vender.</li>
+        <li>Anzol (pipeline/clipping) que gera lead para os produtos pagos.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="crit">Lima, <b>critique e aprimore</b>: os 9 produtos estão lá esperando o seu "aprova/reprova" e o seu feedback — é o que decide o roadmap da inteligência.</div>
+</section>
+
+<!-- ===================== BERNARDO · SOLUÇÕES ===================== -->
+<section class="panel" id="bernardo">
+  <div class="person-h"><div class="avatar" style="background:var(--orange)">B</div>
+    <div><h2 style="margin:0">Bernardo</h2><span class="tag">Frente: SQ Soluções (SST) · + integração das ferramentas</span></div></div>
+  <p class="lead">Você toca a frente de SST por inteiro — comercial, implantação, operação e Customer Success — e a integração das ferramentas do time. O sistema centraliza a sua operação num lugar só.</p>
+
+  <div class="vs"><div class="row">
+    <div><div class="lbl la">v0 · antes da reunião</div><div class="a">"SQ Solutions" era genérico: uma demo de mineradora modelo + segurança ocupacional, sem identidade nem operação.</div></div>
+    <div><div class="lbl lb">Agora</div><div class="b">Integradora de SST + Customer Success, por caso de uso, com cockpit real: pipeline, clientes/implantações, frota, CS, parceiros e concorrentes.</div></div>
+  </div></div>
+
+  <div class="two">
+    <div>
+      <h3>Onde você atua (caminhos)</h3>
+      <div class="card"><ul>
+        <li><b>SQ Soluções → vitrine</b>: 5 casos de uso com demos interativas (mostram a solução ao cliente).</li>
+        <li><b>Cockpit → Pipeline SST</b>: 8 contas, 5 modalidades, pipeline ponderado e MRR (aposenta ClickUp/Excel).</li>
+        <li><b>Clientes & implantações</b>: projeto Monto-Gaslub (diagnóstico→instalação→comissionamento→operação).</li>
+        <li><b>Frota</b>: inventário de devices por unidade. <b>CS</b>: adoção + relatório de impacto.</li>
+        <li><b>Plano → trilha INT</b>: 9 cards com "como fazer" (GitHub, N8N, Bluedot→atas, conectores…).</li>
+      </ul></div>
+      <h3>Da reunião → ao sistema</h3>
+      <div class="card">As decisões (caso de uso, pipeline P1-A5, CS como pilar, integração) viraram o cockpit e a trilha INT — prontos para você operar.</div>
+    </div>
+    <div>
+      <div class="awaits"><h3>⏳ O sistema aguarda de você</h3><ul>
+        <li><b>Migrar o funil e os projetos</b> do ClickUp/Excel para o cockpit.</li>
+        <li>Assumir a <b>trilha INT</b> e configurar as <b>integrações de plataformas</b> (NTOPUS/Kofre, Rombit, SlateSafety…) — começam mock, viram ao vivo.</li>
+        <li>Preencher baseline/atual dos <b>KPIs de CS</b> a cada ciclo.</li>
+        <li>Dizer se as demos por caso de uso vendem bem — o que melhorar.</li>
+      </ul></div>
+      <div class="value"><h3>✅ Valor para você (e para a Summo)</h3><ul>
+        <li>Uma fonte única da operação — fim do retrabalho entre ferramentas.</li>
+        <li>Pipeline com cálculo automático; projetos com custo/receita/margem (modelo Monto-Gaslub).</li>
+        <li>Relatório de impacto pronto para renovar contratos (o motor do CS).</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="crit">Bernardo, <b>critique e aprimore</b>: o cockpit foi desenhado a partir da spec do Léo — me diga o que falta para você largar o Excel e operar 100% aqui.</div>
+</section>
+
+<!-- ===================== LÉO · CONSULTORIA ===================== -->
+<section class="panel" id="leo">
+  <div class="person-h"><div class="avatar" style="background:var(--navy)">Lé</div>
+    <div><h2 style="margin:0">Léo <span style="font-size:12px;color:var(--muted)">· sócio-owner</span></h2><span class="tag">Frente: SQ Consultoria + Parcerias + Governança</span></div></div>
+  <p class="lead">Você conduz a consultoria (o core histórico), as parcerias da SQ Soluções e a governança. Filtro permanente: "menos tempo, mais automação".</p>
+
+  <div class="vs"><div class="row">
+    <div><div class="lbl la">v0 · antes da reunião</div><div class="a">SQ Consultoria era um placeholder; as parcerias viviam em planilhas/áudios dispersos.</div></div>
+    <div><div class="lbl lb">Agora</div><div class="b">Carteira de Clientes → Escopos (multi-frente) + a Régua de Excelência como chamariz do diagnóstico; parcerias e modalidades estruturadas no módulo de Soluções.</div></div>
+  </div></div>
+
+  <div class="two">
+    <div>
+      <h3>Onde você atua (caminhos)</h3>
+      <div class="card"><ul>
+        <li><b>SQ Consultoria → Carteira de Clientes</b>: cadastro único de cliente com N escopos, ligados aos módulos internos.</li>
+        <li><b>Régua de Excelência</b> (ex-Mineradora Modelo): o ideal por área da mina que abre o diagnóstico.</li>
+        <li><b>SQ Soluções → Parceiros/Concorrentes</b>: 6 parceiros, 5 modalidades, inteligência competitiva.</li>
+        <li><b>Plano (Evolução)</b>: import do Plano Estratégico SQS (V8/V11) a decidir.</li>
+      </ul></div>
+      <h3>Da reunião → ao sistema</h3>
+      <div class="card">Sua estruturação de parcerias (modalidades, contratos) e do GTM por caso de uso está refletida no módulo de Soluções; a Consultoria ganhou a Carteira + Régua.</div>
+    </div>
+    <div>
+      <div class="awaits"><h3>⏳ O sistema aguarda de você</h3><ul>
+        <li><b>Validar os recortes de frente</b> e a leitura das reuniões deste guia.</li>
+        <li>Decidir o <b>import do Plano Estratégico SQS</b> para dentro do plano.</li>
+        <li>Definir, com Rodrigo, <b>quando subir para o Vercel</b>.</li>
+        <li>Dizer se a Régua/diagnóstico vende a consultoria do jeito certo.</li>
+      </ul></div>
+      <div class="value"><h3>✅ Valor para você (e para a Summo)</h3><ul>
+        <li>Operação centralizada e automatizável — menos dependência da sua atenção diária.</li>
+        <li>Consultoria com um chamariz claro (a Régua) que conecta com Inteligência e Soluções.</li>
+        <li>Parcerias e concorrentes num lugar só, prontos para a reunião estratégica.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="crit">Léo, <b>critique e aprimore</b>: a Régua é a aposta comercial da consultoria — me diga se ela abre a conversa certa com um cliente sênior, e o que cortar do "blablabla".</div>
+</section>
+
+<!-- ===================== RODRIGO · SISTEMA ===================== -->
+<section class="panel" id="rodrigo">
+  <div class="person-h"><div class="avatar" style="background:var(--violet)">R</div>
+    <div><h2 style="margin:0">Rodrigo</h2><span class="tag">Frente: Plataforma · Integração · Risco estratégico</span></div></div>
+  <p class="lead">Você conduz a construção do sistema (refina tudo no local antes do deploy) e a matriz de risco estratégico — a camada que costura as frentes e protege a casa.</p>
+
+  <div class="vs"><div class="row">
+    <div><div class="lbl la">v0 · antes da reunião</div><div class="a">Módulos soltos, sem plano vivo no sistema nem visão de quem vê o quê.</div></div>
+    <div><div class="lbl lb">Agora</div><div class="b">Plano vivo no módulo Evolução, Mapa do Sistema (acesso por nível), trilha INT de integração e ondas entregues e auditáveis.</div></div>
+  </div></div>
+
+  <div class="two">
+    <div>
+      <h3>Onde você atua (caminhos)</h3>
+      <div class="card"><ul>
+        <li><b>Evolução → Mapa do Sistema</b>: matriz funcionalidade × 5 níveis de acesso.</li>
+        <li><b>Evolução → Sprints/Sugestões</b>: prioriza ondas, aprova melhorias, vê origem de cada card.</li>
+        <li><b>Matriz de risco estratégico</b>: ligar os módulos de risco (corporativo/projeto) à visão estratégica.</li>
+        <li>Decisão de publicação (Vercel) e rotação de chaves (Supabase).</li>
+      </ul></div>
+      <h3>Da reunião → ao sistema</h3>
+      <div class="card">A matriz de risco (P5-A3) ficou como sua pendência, e a regra de aprovar tudo no local antes do Vercel — exatamente como temos trabalhado.</div>
+    </div>
+    <div>
+      <div class="awaits"><h3>⏳ O sistema aguarda de você</h3><ul>
+        <li>Aprovar este guia e os recortes por frente.</li>
+        <li>Conduzir o <b>workshop da matriz de risco</b> (a ferramenta que você desenvolveu).</li>
+        <li>Dar o <b>OK do deploy</b> (sem bugs bloqueantes; build deploy-safe).</li>
+      </ul></div>
+      <div class="value"><h3>✅ Valor para você (e para a Summo)</h3><ul>
+        <li>Plano vivo e auditável: todo avanço vira card com origem e visibilidade.</li>
+        <li>Visão única de acesso por nível — base para abrir o sistema com segurança.</li>
+        <li>Camada de integração que faz as frentes conversarem.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="crit">Rodrigo, <b>critique e aprimore</b>: você é o dono da régua de qualidade — defina a ordem das próximas ondas e o que precisa estar redondo antes de subir.</div>
+</section>
+
+</main>
+<div class="foot">Sistema Summo Quartile · Guia interno de evolução · 13/06/2026 · ambiente local (pré-deploy) · <b>todas as frentes, uma Summo</b></div>
+
+<script>
+  const tabs=document.querySelectorAll('.tab');
+  const panels=document.querySelectorAll('.panel');
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    panels.forEach(p=>p.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.t).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }));
+</script>
+</body>
+</html>

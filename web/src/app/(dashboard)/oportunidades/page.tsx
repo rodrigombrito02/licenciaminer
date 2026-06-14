@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/select";
 import { ModuleHero } from "@/components/module-hero";
 import { opApi, type Oportunidade, type OportunidadeEtapa } from "@/lib/api";
+import { trilhaResumoFromFase } from "@/lib/ativos-api";
 
 const ETAPA_COLORS: Record<string, string> = {
   prospect: "bg-blue-100 text-blue-800 border-blue-200",
@@ -178,6 +179,35 @@ function KPICard({ label, value, color }: { label: string; value: number | strin
   );
 }
 
+/** Mini-trilha read-only no card do Funil — liga o pipeline comercial ao
+ *  ciclo de vida regulatório do ativo (opção B). */
+function MiniTrilha({ fase }: { fase: string | null }) {
+  const t = trilhaResumoFromFase(fase);
+  if (t.especial) {
+    return (
+      <div className="flex items-center gap-1" title={`Regime: ${t.especial}`}>
+        <span className="text-[9px] text-violet-600">⬡ {t.especial}</span>
+      </div>
+    );
+  }
+  if (!t.ordem) return null;
+  return (
+    <div className="flex items-center gap-1" title={`Trilha do ativo: ${t.label} (${t.ordem}/${t.total})`}>
+      <div className="flex gap-0.5">
+        {Array.from({ length: t.total }).map((_, i) => (
+          <span
+            key={i}
+            className={`h-1.5 w-1.5 rounded-full ${
+              i + 1 < t.ordem! ? "bg-success/60" : i + 1 === t.ordem! ? "bg-brand-teal" : "bg-muted-foreground/20"
+            }`}
+          />
+        ))}
+      </div>
+      <span className="text-[9px] text-muted-foreground truncate">{t.label}</span>
+    </div>
+  );
+}
+
 function OportunidadeCard({
   op,
   etapas,
@@ -245,6 +275,7 @@ function OportunidadeCard({
         {op.processo_anm && (
           <p className="text-[10px] font-mono text-muted-foreground">ANM {op.processo_anm}</p>
         )}
+        {op.processo_anm && <MiniTrilha fase={op.fase_anm} />}
         <div className="flex items-center justify-between pt-1">
           <Badge variant="outline" className={`text-[10px] ${scoreColor}`}>
             Score: {score != null ? score.toFixed(1) : "n/d"}

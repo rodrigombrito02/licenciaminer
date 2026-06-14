@@ -9,6 +9,7 @@ import {
   Layers,
   Palette,
   AlertTriangle,
+  ArrowRight,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +25,9 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { MultiSelect } from "@/components/multi-select";
 import { StatCard } from "@/components/stat-card";
+import { AtivoPanel } from "@/components/ativo-panel";
+import { ETAPA_COLORS, ETAPA_LEGEND } from "@/lib/ativos-api";
+import { useEffectiveRole } from "@/hooks/use-effective-role";
 import {
   fetchGeoConcessoes,
   fetchGeoStats,
@@ -47,14 +51,52 @@ const MiningMap = dynamic(
   }
 );
 
-type ColorBy = "categoria" | "regime" | "fase" | "cfem";
+type ColorBy = "categoria" | "regime" | "fase" | "cfem" | "etapa";
+
+// Limite default de polígonos — mantém o mapa rápido (de 50k para <=1000).
+const MAP_LIMIT = 1000;
+
+// Filtro default no primeiro acesso: classes minerais relevantes (exclui
+// Construção Civil e não-categorizados). Soma ~1.200 → exibe 1.000, rápido.
+const DEFAULT_CATEGORIAS = [
+  "Metálicos Ferrosos",
+  "Metálicos Não-Ferrosos",
+  "Metálicos Preciosos",
+  "Metálicos Estratégicos",
+  "Rochas Ornamentais",
+  "Industrial",
+  "Gemas e Pedras Preciosas",
+];
 
 const COLOR_BY_LABELS: Record<ColorBy, string> = {
   categoria: "Categoria Mineral",
   regime: "Regime",
   fase: "Fase ANM",
+  etapa: "Etapa da Trilha",
   cfem: "Status CFEM",
 };
+
+/** Anzol: CTA de captação no mapa público, só para visitante anônimo. */
+function AnzolBanner() {
+  const roleState = useEffectiveRole();
+  if (roleState.status !== "anonymous") return null;
+  return (
+    <div className="rounded-xl border border-brand-gold/40 bg-gradient-to-r from-brand-gold/10 to-brand-teal/5 p-4 flex items-center justify-between gap-4 flex-wrap">
+      <div className="min-w-0">
+        <p className="font-semibold text-sm">Você está vendo o mapa público.</p>
+        <p className="text-xs text-muted-foreground">
+          Clique em qualquer polígono e crie uma conta para ver a <strong>trilha do ativo</strong>, os <strong>prazos legais</strong> e o <strong>portfólio do titular</strong>.
+        </p>
+      </div>
+      <a
+        href="/login"
+        className="inline-flex items-center gap-1.5 rounded-lg bg-brand-navy px-4 py-2 text-sm font-medium text-white hover:bg-brand-navy/90 transition-colors shrink-0"
+      >
+        Criar conta grátis <ArrowRight className="h-4 w-4" />
+      </a>
+    </div>
+  );
+}
 
 export default function MapaPage() {
   return (
@@ -72,10 +114,18 @@ function MapaContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Filters — restore from URL
-  const [regime, setRegime] = useState<string[]>(params.getAll("regime"));
-  const [categoria, setCategoria] = useState<string[]>(params.getAll("categoria"));
-  const [substancia, setSubstancia] = useState<string[]>(params.getAll("substancia"));
+  // Filters — restore from URL; no primeiro acesso (sem nenhum filtro na URL)
+  // aplica o filtro mineral padrão para carregar rápido.
+  const urlRegime = params.getAll("regime");
+  const urlCategoria = params.getAll("categoria");
+  const urlSubstancia = params.getAll("substancia");
+  const semFiltrosNaUrl =
+    !urlRegime.length && !urlCategoria.length && !urlSubstancia.length;
+  const [regime, setRegime] = useState<string[]>(urlRegime);
+  const [categoria, setCategoria] = useState<string[]>(
+    urlCategoria.length ? urlCategoria : semFiltrosNaUrl ? DEFAULT_CATEGORIAS : []
+  );
+  const [substancia, setSubstancia] = useState<string[]>(urlSubstancia);
   const [colorBy, setColorBy] = useState<ColorBy>(
     (params.get("colorBy") as ColorBy) || "categoria"
   );
@@ -83,8 +133,21 @@ function MapaContent() {
   // Restriction layers — restore from URL
   const [showUCs, setShowUCs] = useState(params.get("ucs") === "1");
   const [showTIs, setShowTIs] = useState(params.get("tis") === "1");
+  const [showBiomas, setShowBiomas] = useState(params.get("biomas") === "1");
+  const [showEnergia, setShowEnergia] = useState(params.get("energia") === "1");
+  const [showSubestacoes, setShowSubestacoes] = useState(params.get("subest") === "1");
+  const [showAgua, setShowAgua] = useState(params.get("agua") === "1");
+  const [showFerrovias, setShowFerrovias] = useState(params.get("ferrovias") === "1");
+  const [showPortos, setShowPortos] = useState(params.get("portos") === "1");
   const [ucsGeojson, setUcsGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
   const [tisGeojson, setTisGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [biomasGeojson, setBiomasGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [energiaGeojson, setEnergiaGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [subestacoesGeojson, setSubestacoesGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [aguaGeojson, setAguaGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [ferroviasGeojson, setFerroviasGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [portosGeojson, setPortosGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [ativoProcesso, setAtivoProcesso] = useState<string | null>(null);
 
   // Sync filters to URL (no re-render)
   useEffect(() => {
@@ -95,6 +158,10 @@ function MapaContent() {
     if (colorBy !== "categoria") qs.set("colorBy", colorBy);
     if (showUCs) qs.set("ucs", "1");
     if (showTIs) qs.set("tis", "1");
+    if (showBiomas) qs.set("biomas", "1");
+    if (showEnergia) qs.set("energia", "1");
+    if (showSubestacoes) qs.set("subest", "1");
+    if (showAgua) qs.set("agua", "1");
     const q = qs.toString();
     window.history.replaceState(null, "", `${window.location.pathname}${q ? `?${q}` : ""}`);
   }, [regime, categoria, substancia, colorBy, showUCs, showTIs]);
@@ -113,6 +180,7 @@ function MapaContent() {
       regime: regime.length > 0 ? regime : undefined,
       categoria: categoria.length > 0 ? categoria : undefined,
       substancia: substancia.length > 0 ? substancia : undefined,
+      limit: MAP_LIMIT,
     };
 
     Promise.all([
@@ -147,6 +215,42 @@ function MapaContent() {
     }
   }, [showTIs, tisGeojson]);
 
+  useEffect(() => {
+    if (showBiomas && !biomasGeojson) {
+      fetchGeoLayer("biomas").then(setBiomasGeojson).catch((e) => { console.error("Biomas layer:", e); });
+    }
+  }, [showBiomas, biomasGeojson]);
+
+  useEffect(() => {
+    if (showEnergia && !energiaGeojson) {
+      fetchGeoLayer("energia").then(setEnergiaGeojson).catch((e) => { console.error("Energia layer:", e); });
+    }
+  }, [showEnergia, energiaGeojson]);
+
+  useEffect(() => {
+    if (showSubestacoes && !subestacoesGeojson) {
+      fetchGeoLayer("subestacoes").then(setSubestacoesGeojson).catch((e) => { console.error("Subestacoes:", e); });
+    }
+  }, [showSubestacoes, subestacoesGeojson]);
+
+  useEffect(() => {
+    if (showAgua && !aguaGeojson) {
+      fetchGeoLayer("agua").then(setAguaGeojson).catch((e) => { console.error("Agua:", e); });
+    }
+  }, [showAgua, aguaGeojson]);
+
+  useEffect(() => {
+    if (showFerrovias && !ferroviasGeojson) {
+      fetchGeoLayer("ferrovias").then(setFerroviasGeojson).catch((e) => { console.error("Ferrovias:", e); });
+    }
+  }, [showFerrovias, ferroviasGeojson]);
+
+  useEffect(() => {
+    if (showPortos && !portosGeojson) {
+      fetchGeoLayer("portos").then(setPortosGeojson).catch((e) => { console.error("Portos:", e); });
+    }
+  }, [showPortos, portosGeojson]);
+
   const colorPalettes = filterOptions?.color_palettes ?? {
     categoria: {},
     regime: {},
@@ -157,11 +261,13 @@ function MapaContent() {
   const legendPalette =
     colorBy === "cfem"
       ? { Ativo: "#27AE60", Inativo: "#E74C3C" }
-      : colorBy === "fase"
-        ? colorPalettes.fase
-        : colorBy === "regime"
-          ? colorPalettes.regime
-          : colorPalettes.categoria;
+      : colorBy === "etapa"
+        ? Object.fromEntries(Object.keys(ETAPA_LEGEND).map((k) => [ETAPA_LEGEND[k], ETAPA_COLORS[k]]))
+        : colorBy === "fase"
+          ? colorPalettes.fase
+          : colorBy === "regime"
+            ? colorPalettes.regime
+            : colorPalettes.categoria;
 
   return (
     <div className="space-y-4">
@@ -170,9 +276,11 @@ function MapaContent() {
           Mapa Geoespacial
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Concessões minerárias com sobreposição de UCs e Terras Indígenas
+          Concessões minerárias com camadas de UCs, Terras Indígenas e Biomas
         </p>
       </div>
+
+      <AnzolBanner />
 
       {/* KPIs */}
       {stats ? (
@@ -294,28 +402,112 @@ function MapaContent() {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-heading">Camadas</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="show-ucs"
-                  checked={showUCs}
-                  onCheckedChange={(v) => setShowUCs(!!v)}
-                />
-                <label htmlFor="show-ucs" className="text-xs cursor-pointer flex items-center gap-1.5">
-                  <span className="inline-block h-2.5 w-2.5 rounded-sm bg-success" />
-                  Unidades de Conservação
-                </label>
+            <CardContent className="space-y-3">
+              {/* Grupo Ambiental */}
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Ambiental</p>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Checkbox id="show-ucs" checked={showUCs} onCheckedChange={(v) => setShowUCs(!!v)} />
+                    <label htmlFor="show-ucs" className="text-xs cursor-pointer flex items-center gap-1.5">
+                      <span className="inline-block h-2.5 w-2.5 rounded-sm bg-success" />
+                      Unidades de Conservação
+                    </label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox id="show-tis" checked={showTIs} onCheckedChange={(v) => setShowTIs(!!v)} />
+                    <label htmlFor="show-tis" className="text-xs cursor-pointer flex items-center gap-1.5">
+                      <span className="inline-block h-2.5 w-2.5 rounded-sm bg-danger" />
+                      Terras Indígenas
+                    </label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox id="show-biomas" checked={showBiomas} onCheckedChange={(v) => setShowBiomas(!!v)} />
+                    <label htmlFor="show-biomas" className="text-xs cursor-pointer flex items-center gap-1.5">
+                      <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: "#D4A017" }} />
+                      Biomas
+                    </label>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="show-tis"
-                  checked={showTIs}
-                  onCheckedChange={(v) => setShowTIs(!!v)}
-                />
-                <label htmlFor="show-tis" className="text-xs cursor-pointer flex items-center gap-1.5">
-                  <span className="inline-block h-2.5 w-2.5 rounded-sm bg-danger" />
-                  Terras Indígenas
-                </label>
+
+              {/* Disponibilidade de Energia (transmissão + distribuição) */}
+              <div className="border-t pt-2">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Disponibilidade de Energia</p>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Checkbox id="show-energia" checked={showEnergia} onCheckedChange={(v) => setShowEnergia(!!v)} />
+                    <label htmlFor="show-energia" className="text-xs cursor-pointer flex items-center gap-1.5">
+                      <span className="inline-block h-0.5 w-3" style={{ background: "#F39C12" }} />
+                      Linhas de Transmissão
+                      <span className="text-[9px] text-muted-foreground">ANEEL</span>
+                    </label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox id="show-subest" checked={showSubestacoes} onCheckedChange={(v) => setShowSubestacoes(!!v)} />
+                    <label htmlFor="show-subest" className="text-xs cursor-pointer flex items-center gap-1.5">
+                      <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: "#E67E22" }} />
+                      Subestações
+                      <span className="text-[9px] text-muted-foreground">distribuição</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Recursos Hídricos */}
+              <div className="border-t pt-2">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Recursos Hídricos</p>
+                <div className="flex items-center gap-2">
+                  <Checkbox id="show-agua" checked={showAgua} onCheckedChange={(v) => setShowAgua(!!v)} />
+                  <label htmlFor="show-agua" className="text-xs cursor-pointer flex items-center gap-1.5">
+                    <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: "#0097A7" }} />
+                    Estações Fluviométricas
+                    <span className="text-[9px] text-muted-foreground">ANA</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Logística multimodal */}
+              <div className="border-t pt-2">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Logística</p>
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <Checkbox id="show-ferrovias" checked={showFerrovias} onCheckedChange={(v) => setShowFerrovias(!!v)} />
+                    <label htmlFor="show-ferrovias" className="text-xs cursor-pointer flex items-center gap-1.5">
+                      <span className="inline-block h-0.5 w-3" style={{ background: "#7B1FA2" }} />
+                      Ferrovias
+                      <span className="text-[9px] text-muted-foreground">MInfra</span>
+                    </label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox id="show-portos" checked={showPortos} onCheckedChange={(v) => setShowPortos(!!v)} />
+                    <label htmlFor="show-portos" className="text-xs cursor-pointer flex items-center gap-1.5">
+                      <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: "#1565C0" }} />
+                      Portos
+                      <span className="text-[9px] text-muted-foreground">MInfra</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Próximas dimensões */}
+              <div className="border-t pt-2">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Próximas camadas</p>
+                <div className="space-y-1.5 opacity-60">
+                  {[
+                    { l: "Geologia", f: "CPRM", c: "#795548" },
+                    { l: "Pluviometria", f: "INMET", c: "#0288D1" },
+                  ].map((x) => (
+                    <div key={x.l} className="flex items-center gap-2">
+                      <span className="inline-block h-2.5 w-2.5 rounded-sm shrink-0" style={{ background: x.c }} />
+                      <span className="text-xs flex-1">{x.l}</span>
+                      <span className="text-[9px] text-muted-foreground">{x.f}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-1.5 italic">
+                  Mesma base alimenta os scores do Funil de Oportunidades.
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -369,13 +561,32 @@ function MapaContent() {
                 colorPalettes={colorPalettes}
                 showUCs={showUCs}
                 showTIs={showTIs}
+                showBiomas={showBiomas}
+                showEnergia={showEnergia}
+                showSubestacoes={showSubestacoes}
+                showAgua={showAgua}
                 ucsGeojson={ucsGeojson}
                 tisGeojson={tisGeojson}
+                biomasGeojson={biomasGeojson}
+                energiaGeojson={energiaGeojson}
+                subestacoesGeojson={subestacoesGeojson}
+                aguaGeojson={aguaGeojson}
+                showFerrovias={showFerrovias}
+                showPortos={showPortos}
+                ferroviasGeojson={ferroviasGeojson}
+                portosGeojson={portosGeojson}
+                onOpenAtivo={setAtivoProcesso}
               />
             )}
           </div>
         </Card>
       </div>
+
+      <AtivoPanel
+        processo={ativoProcesso}
+        open={ativoProcesso !== null}
+        onClose={() => setAtivoProcesso(null)}
+      />
     </div>
   );
 }

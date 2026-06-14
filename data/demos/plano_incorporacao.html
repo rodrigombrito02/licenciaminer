@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Plano de Incorporação — Síntese das 3 Reuniões</title>
+<style>
+:root {
+  --navy: #0A2540;
+  --navy2: #1A2C42;
+  --teal: #156082;
+  --gold: #FFC000;
+  --orange: #FF5F00;
+  --success: #27AE60;
+  --warning: #F39C12;
+  --danger: #E74C3C;
+  --light: #F8F9FB;
+  --gray: #6B7280;
+  --gray-light: #9CA3AF;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #1a1a1a; line-height: 1.65;
+  background: var(--light);
+}
+
+nav.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy); color: #fff;
+  padding: 10px 32px;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  flex-wrap: wrap;
+}
+nav.topnav .logo { font-weight: 800; font-size: 14px; letter-spacing: .5px; }
+nav.topnav .logo span { color: var(--gold); }
+nav.topnav a {
+  color: rgba(255,255,255,.7); text-decoration: none;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .8px; padding: 6px 10px; border-radius: 6px;
+}
+nav.topnav a:hover { color: #fff; background: rgba(255,255,255,.08); }
+nav.topnav a.active { color: var(--gold); }
+
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 60%, var(--teal) 130%);
+  color: #fff; padding: 56px 32px 64px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.06) 1px, transparent 0);
+  background-size: 32px 32px; opacity: .4;
+}
+.hero > * { position: relative; z-index: 1; }
+.hero .accent { display: inline-flex; gap: 5px; margin-bottom: 18px; }
+.hero .accent span:nth-child(1) { width: 56px; height: 4px; background: var(--gold); border-radius: 2px; }
+.hero .accent span:nth-child(2) { width: 18px; height: 4px; background: var(--teal); border-radius: 2px; }
+.hero .accent span:nth-child(3) { width: 9px; height: 4px; background: var(--orange); border-radius: 2px; }
+.hero h1 { font-size: 40px; font-weight: 800; line-height: 1.1; margin-bottom: 10px; }
+.hero h1 .gold { color: var(--gold); }
+.hero .sub { font-size: 16px; color: rgba(255,255,255,.78); margin-bottom: 6px; max-width: 760px; margin-left: auto; margin-right: auto; }
+.hero .when { font-size: 11px; color: rgba(255,255,255,.45); text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; }
+.hero .stats { display: flex; justify-content: center; gap: 36px; margin-top: 34px; flex-wrap: wrap; }
+.hero .stat .n { font-size: 28px; font-weight: 800; color: var(--gold); line-height: 1; }
+.hero .stat .l { font-size: 10px; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+section.block { padding: 56px 32px; max-width: 1200px; margin: 0 auto; }
+section.block.alt {
+  background: #fff; max-width: none;
+  padding-left: max(32px, calc(50% - 600px));
+  padding-right: max(32px, calc(50% - 600px));
+}
+
+h2.title {
+  font-size: 26px; font-weight: 800; color: var(--navy);
+  margin-bottom: 4px; display: flex; align-items: center; gap: 12px;
+}
+h2.title .lead { width: 36px; height: 4px; background: var(--gold); border-radius: 2px; }
+.subtitle { font-size: 13.5px; color: var(--gray); margin-bottom: 28px; }
+
+/* Bloco/dono */
+.bloco {
+  background: #fff; border-radius: 14px; margin-bottom: 24px;
+  overflow: hidden; border: 1px solid #e5e7eb;
+}
+.bloco-head {
+  padding: 22px 26px; display: flex; align-items: center; gap: 18px;
+  background: linear-gradient(135deg, var(--navy), var(--teal));
+  color: #fff;
+}
+.bloco-head.gold { background: linear-gradient(135deg, var(--gold), #B8860B); color: var(--navy); }
+.bloco-head.orange { background: linear-gradient(135deg, var(--orange), #B0410E); }
+.bloco-head.green { background: linear-gradient(135deg, var(--success), #1E7E44); }
+.bloco-head.teal { background: linear-gradient(135deg, var(--teal), #0E4660); }
+.bloco-head.gray { background: linear-gradient(135deg, var(--gray), #4B5563); }
+.bloco-head .codigo {
+  width: 52px; height: 52px; border-radius: 12px;
+  background: rgba(255,255,255,.2); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 800; flex-shrink: 0;
+}
+.bloco-head.gold .codigo { background: rgba(10,37,64,.15); }
+.bloco-head .info { flex: 1; min-width: 0; }
+.bloco-head .info .t { font-size: 18px; font-weight: 800; line-height: 1.2; }
+.bloco-head .info .s { font-size: 12px; opacity: .85; margin-top: 3px; }
+.bloco-head .dono {
+  background: rgba(255,255,255,.18);
+  padding: 6px 12px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; white-space: nowrap;
+}
+.bloco-head.gold .dono { background: rgba(10,37,64,.18); }
+
+.bloco-body { padding: 22px 26px; }
+.bloco-body h5 { font-size: 13px; color: var(--navy); margin: 14px 0 8px; text-transform: uppercase; letter-spacing: .5px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.bloco-body h5:first-child { margin-top: 0; }
+.bloco-body h5 .ico { font-size: 14px; }
+.bloco-body ul { list-style: none; }
+.bloco-body ul li {
+  font-size: 13px; color: #374151; padding: 4px 0 4px 20px;
+  position: relative; line-height: 1.6;
+}
+.bloco-body ul li::before { content: '✓'; position: absolute; left: 0; color: var(--success); font-weight: 800; }
+.bloco-body ul.q li::before { content: '?'; color: var(--warning); }
+.bloco-body ul.dep li::before { content: '→'; color: var(--teal); }
+.bloco-body ul.dod li::before { content: '◆'; color: var(--gold); }
+
+.kv {
+  display: grid; grid-template-columns: 140px 1fr;
+  gap: 6px 14px; margin-top: 8px;
+  font-size: 12px;
+}
+.kv dt { color: var(--gray); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; font-size: 10.5px; padding-top: 1px; }
+.kv dd { color: #374151; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
+.tag {
+  background: rgba(21,96,130,.08); color: var(--teal);
+  font-size: 10.5px; padding: 3px 9px; border-radius: 6px; font-weight: 600;
+}
+.tag.gold { background: rgba(255,192,0,.15); color: #B8860B; }
+.tag.orange { background: rgba(255,95,0,.1); color: var(--orange); }
+.tag.green { background: rgba(39,174,96,.1); color: var(--success); }
+.tag.danger { background: rgba(231,76,60,.1); color: var(--danger); }
+
+.gov-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.gov {
+  background: #fff; border-radius: 10px; padding: 18px;
+  border: 1px solid #e5e7eb; border-top: 4px solid var(--gold);
+}
+.gov .nome { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 2px; }
+.gov .papel { font-size: 10.5px; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-weight: 700; }
+.gov ul { list-style: none; }
+.gov ul li {
+  font-size: 12.5px; color: #374151; padding: 4px 0 4px 16px;
+  position: relative; line-height: 1.55;
+}
+.gov ul li::before { content: '▸'; position: absolute; left: 0; color: var(--teal); font-weight: 800; }
+
+.callout {
+  background: rgba(21,96,130,.05);
+  border-left: 4px solid var(--teal);
+  border-radius: 6px; padding: 14px 18px;
+  font-size: 13px; color: var(--navy);
+  margin: 16px 0; line-height: 1.7;
+}
+.callout.gold { background: rgba(255,192,0,.07); border-left-color: var(--gold); }
+.callout.orange { background: rgba(255,95,0,.05); border-left-color: var(--orange); }
+.callout.success { background: rgba(39,174,96,.05); border-left-color: var(--success); }
+.callout.danger { background: rgba(231,76,60,.05); border-left-color: var(--danger); }
+.callout strong { display: block; margin-bottom: 4px; font-size: 14px; color: var(--navy); }
+
+/* Timeline marcos */
+.timeline { position: relative; padding-left: 32px; margin-top: 18px; }
+.timeline::before {
+  content: ''; position: absolute;
+  left: 8px; top: 8px; bottom: 8px; width: 3px;
+  background: linear-gradient(to bottom, var(--danger), var(--gold), var(--success));
+  border-radius: 2px;
+}
+.tl-item {
+  position: relative; margin-bottom: 16px;
+  background: #fff; border-radius: 10px;
+  padding: 14px 20px; border: 1px solid #e5e7eb;
+}
+.tl-item::before {
+  content: ''; position: absolute;
+  left: -32px; top: 18px; width: 18px; height: 18px;
+  border: 3px solid #fff; border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 0 2px var(--gold);
+}
+.tl-item.urgent::before { background: var(--danger); box-shadow: 0 0 0 2px var(--danger); }
+.tl-item.later::before { background: var(--gray-light); box-shadow: 0 0 0 2px var(--gray-light); }
+.tl-item .when { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 4px; }
+.tl-item.urgent .when { color: var(--danger); }
+.tl-item.later .when { color: var(--gray-light); }
+.tl-item h5 { font-size: 14px; color: var(--navy); margin-bottom: 3px; }
+.tl-item p { font-size: 12.5px; color: var(--gray); line-height: 1.6; }
+.tl-item .owner { font-size: 11px; color: var(--teal); font-weight: 700; margin-top: 4px; display: inline-block; }
+
+.filtros-box {
+  background: rgba(10,37,64,.04); border: 1px dashed rgba(10,37,64,.18);
+  border-radius: 8px; padding: 14px 18px; margin: 12px 0;
+  font-size: 12.5px; color: var(--navy); line-height: 1.7;
+}
+.filtros-box strong { color: var(--orange); }
+
+footer {
+  background: var(--navy); color: rgba(255,255,255,.6);
+  padding: 28px; text-align: center; font-size: 11px; line-height: 1.8;
+}
+footer strong { color: var(--gold); }
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 28px; }
+  nav.topnav { padding: 10px 16px; gap: 6px; }
+  nav.topnav a { padding: 5px 8px; font-size: 10px; }
+  section.block { padding: 40px 18px; }
+  .bloco-head { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .kv { grid-template-columns: 1fr; gap: 2px; }
+}
+@media print {
+  nav.topnav { position: static; }
+  section.block { page-break-inside: avoid; }
+  .bloco { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="logo">SUMMO <span>QUARTILE</span></div>
+  <a href="#capa" class="active">Capa</a>
+  <a href="#modelo">Modelo de execução</a>
+  <a href="#blocos">7 blocos</a>
+  <a href="#marcos">Marcos</a>
+  <a href="#dependencias">Dependências</a>
+  <a href="#proximos">Próximos passos</a>
+</nav>
+
+<!-- ═══════════ CAPA ═══════════ -->
+<section id="capa" class="hero">
+  <div class="accent"><span></span><span></span><span></span></div>
+  <p class="when">Síntese das 3 Reuniões · Plano executável</p>
+  <h1>Plano de <span class="gold">Incorporação</span></h1>
+  <p class="sub">Organização das ideias em <strong>7 blocos com donos</strong>, prioridades claras e marcos com data. Modelo de execução decidido na 3ª reunião: cada bloco tem um responsável que coordena, e os marcos são públicos.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="n">7</div><div class="l">Blocos de trabalho</div></div>
+    <div class="stat"><div class="n">6</div><div class="l">Sócios com bloco</div></div>
+    <div class="stat"><div class="n">2</div><div class="l">Marcos urgentes (19/06, 22/06)</div></div>
+    <div class="stat"><div class="n">10</div><div class="l">DMs alvo (direitos)</div></div>
+    <div class="stat"><div class="n">5</div><div class="l">Produtos do Lima</div></div>
+  </div>
+</section>
+
+<!-- ═══════════ MODELO DE EXECUÇÃO ═══════════ -->
+<section id="modelo" class="block">
+  <h2 class="title"><span class="lead"></span>Modelo de execução decidido</h2>
+  <p class="subtitle">"Pensar em um bloco de ações e definir os responsáveis." — Leo. Cada bloco tem dono. Cada dono coordena e reporta.</p>
+
+  <div class="callout gold">
+    <strong>Princípio organizacional</strong>
+    Estamos saindo do modo "todo mundo discute tudo" para o modo "cada bloco tem dono". O dono não faz sozinho — ele coordena, garante andamento, reporta. Os marcos viram públicos. As dependências viram explícitas.
+  </div>
+
+  <div class="gov-grid">
+    <div class="gov">
+      <div class="nome">Bernardo</div>
+      <div class="papel">Integração técnica de IA</div>
+      <ul>
+        <li>Gerenciar integração N8N + GitHub + Python + Claude</li>
+        <li>Investigar custo de tokens: por que conta X gasta mais que conta Y?</li>
+        <li>Padronizar setup técnico do time</li>
+        <li>Templates + paleta + identidade visual</li>
+      </ul>
+    </div>
+    <div class="gov">
+      <div class="nome">Giulia + Maury</div>
+      <div class="papel">SQ/ESP Ambiental + Jaguar</div>
+      <ul>
+        <li>Definir oferta Jaguar até 19/06</li>
+        <li>Apresentação interna 22/06</li>
+        <li>Pensar em paralelo: como replicar Jaguar pro mercado</li>
+      </ul>
+    </div>
+    <div class="gov">
+      <div class="nome">Lima</div>
+      <div class="papel">Mineral Intelligence — 5 produtos</div>
+      <ul>
+        <li>Detalhar os 5 produtos: formato, rentabilização, clientes</li>
+        <li>Apresentar semana que vem</li>
+        <li>Foco específico em PF DR Brasil</li>
+      </ul>
+    </div>
+    <div class="gov">
+      <div class="nome">Maury + Blackwall (Mateus)</div>
+      <div class="papel">Direitos e Concessões</div>
+      <ul>
+        <li>Discutir ideia com Mateus da Blackwall</li>
+        <li>Construir sistema de varredura de DMs</li>
+        <li>Meta: identificar 10 DMs com potencial</li>
+      </ul>
+    </div>
+    <div class="gov">
+      <div class="nome">Roberto + time</div>
+      <div class="papel">Mineradora Modelo (2 frentes)</div>
+      <ul>
+        <li>Frente A: indicadores mínimos pra gestão (BSC adaptado)</li>
+        <li>Frente B: concepção/execução de novo projeto</li>
+        <li>Estratégia de lançamento como produto comercial</li>
+      </ul>
+    </div>
+    <div class="gov">
+      <div class="nome">Leo + Lima + Rodrigo</div>
+      <div class="papel">SQS Gestão Financeira</div>
+      <ul>
+        <li>Estruturar fluxo de caixa por projeto × parceiro</li>
+        <li>Conversa com Ana sobre parcela mensal</li>
+        <li>Integrar FC do Leo ao sistema</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 7 BLOCOS ═══════════ -->
+<section id="blocos" class="block alt">
+  <h2 class="title"><span class="lead"></span>Os 7 blocos detalhados</h2>
+  <p class="subtitle">Para cada bloco: objetivo, escopo, "definition of done", dependências, prazo.</p>
+
+  <!-- BLOCO 1 -->
+  <div class="bloco">
+    <div class="bloco-head gray">
+      <div class="codigo">B1</div>
+      <div class="info">
+        <div class="t">Integração técnica de IA</div>
+        <div class="s">Resolver isso logo — é prioridade. Base que destrava todos os outros blocos.</div>
+      </div>
+      <div class="dono">Dono: Bernardo</div>
+    </div>
+    <div class="bloco-body">
+      <h5><span class="ico">🎯</span>Objetivo</h5>
+      <p style="font-size:13px;color:#374151;">Padronizar e otimizar uso de IA no time: ferramentas, custos, contextos compartilhados.</p>
+
+      <h5><span class="ico">📋</span>Escopo</h5>
+      <ul>
+        <li>Ferramentas do curso: <strong>N8N</strong> (licença existente), <strong>GitHub</strong>, <strong>Python</strong>, <strong>Claude</strong></li>
+        <li>Investigar discrepância de gastos: por que uma conta gasta mais que outra?</li>
+        <li>Setup do GitHub pra todos os sócios (passo-a-passo detalhado já está no documento de reunião)</li>
+        <li>Repositório comum de contextos/skills do Claude</li>
+        <li>Paleta + templates + identidade visual aplicáveis (cruza com B7)</li>
+      </ul>
+
+      <h5><span class="ico">🎯</span>Definition of Done</h5>
+      <ul class="dod">
+        <li>Todos os 5 sócios conseguem clonar repo, rodar local e abrir PR</li>
+        <li>Documento de "boas práticas de custo" publicado</li>
+        <li>N8N com primeiro fluxo automatizado real (escolher caso)</li>
+        <li>Pasta <code>contextos/</code> no repo com primeiro contexto padronizado</li>
+      </ul>
+
+      <h5><span class="ico">⏱</span>Prazo sugerido</h5>
+      <ul>
+        <li>Setup GitHub do time: <strong>esta semana</strong></li>
+        <li>Análise custo de tokens: <strong>próximas 2 semanas</strong></li>
+        <li>N8N com 1º fluxo: <strong>próximo mês</strong></li>
+      </ul>
+
+      <div class="tag-row">
+        <span class="tag danger">desbloqueador</span>
+        <span class="tag">cruza com B7</span>
+        <span class="tag green">prioridade técnica imediata</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 2 -->
+  <div class="bloco">
+    <div class="bloco-head teal">
+      <div class="codigo">B2</div>
+      <div class="info">
+        <div class="t">SQ/ESP Ambiental — Produto Jaguar</div>
+        <div class="s">Prioridade #1. Jaguar primeiro. Replicação ao mercado pensada em paralelo.</div>
+      </div>
+      <div class="dono">Donos: Giulia + Maury</div>
+    </div>
+    <div class="bloco-body">
+      <h5><span class="ico">🎯</span>Objetivo</h5>
+      <p style="font-size:13px;color:#374151;">Fechar oferta concreta para Jaguar (serviço? sistema? algo pronto?) e construir o modelo replicável pro mercado.</p>
+
+      <h5><span class="ico">📋</span>Escopo — frente Jaguar</h5>
+      <ul>
+        <li>Definir <strong>o que vamos oferecer</strong>: serviço, sistema (SaaS), ou pacote misto</li>
+        <li>Escopo, custos, valor</li>
+        <li>Acompanhamento antes e depois do protocolo</li>
+        <li>Decidir branding: SQ Ambiental ou ESP Ambiental</li>
+      </ul>
+
+      <h5><span class="ico">📋</span>Escopo — frente Mercado (paralela)</h5>
+      <ul>
+        <li>Como replicar a Jaguar para outros clientes?</li>
+        <li>Modelo de venda: acesso ao sistema, mensalidade, mentoria de implantação</li>
+        <li>Estruturação de modelo de negócios (Leo: "isso é a continuidade")</li>
+      </ul>
+
+      <h5><span class="ico">🎯</span>Definition of Done</h5>
+      <ul class="dod">
+        <li>Proposta Jaguar pronta <strong>19/06</strong></li>
+        <li>Apresentação interna <strong>22/06</strong></li>
+        <li>1-pager do modelo replicável definido</li>
+        <li>Branding decidido e aplicado no sistema</li>
+      </ul>
+
+      <div class="tag-row">
+        <span class="tag danger">deadline 19/06</span>
+        <span class="tag orange">interno 22/06</span>
+        <span class="tag gold">cliente: Jaguar Mais</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 3 -->
+  <div class="bloco">
+    <div class="bloco-head gold">
+      <div class="codigo">B3</div>
+      <div class="info">
+        <div class="t">Mineral Intelligence — 5 produtos do Lima</div>
+        <div class="s">Prioridade: partir dos 5 já existentes. Foco específico: PF DR Brasil.</div>
+      </div>
+      <div class="dono">Dono: Lima (+ Maury + Leo)</div>
+    </div>
+    <div class="bloco-body">
+      <h5><span class="ico">🎯</span>Objetivo</h5>
+      <p style="font-size:13px;color:#374151;">Dos 5 produtos do Lima: definir formato, forma de rentabilizar, clientes-alvo. Depois disso, os demais itens (clipping, CRU, dashboards) vêm na sequência.</p>
+
+      <h5><span class="ico">📋</span>Foco específico — PF DR Brasil</h5>
+      <ul>
+        <li><strong>Produção de PF (Pellet Feed) DR — Direct Reduction</strong></li>
+        <li>Foco geográfico: Brasil</li>
+        <li>Potencial de produção mapeado por mineradora</li>
+        <li>Caso âncora: <strong>JMendes</strong> quer fazer DR — projeto da Mitsubishi</li>
+        <li>Entregas: Excel + PPT + análises de probabilidade</li>
+        <li>Insumo: trabalho anterior já feito</li>
+      </ul>
+
+      <h5><span class="ico">📋</span>Referências de mercado (concorrentes ou canais)</h5>
+      <ul>
+        <li><strong>CRU</strong> — referência principal</li>
+        <li><strong>Wood Mackenzie</strong></li>
+        <li><strong>Fast Markets</strong></li>
+        <li>Podem ser concorrentes ou canais de venda — nossa análise leva o nome SQ</li>
+      </ul>
+
+      <h5><span class="ico">📋</span>Sub-frente CBAM (complexa)</h5>
+      <ul class="dep">
+        <li>Produtores de PF DR vão ganhar margem pelo CBAM (redução de emissão)</li>
+        <li>Mais complexo — precisa de capacidade técnica</li>
+        <li>Conversa específica com <strong>Pessotti</strong></li>
+      </ul>
+
+      <h5><span class="ico">🎯</span>Definition of Done</h5>
+      <ul class="dod">
+        <li>Apresentação dos 5 produtos <strong>semana que vem</strong></li>
+        <li>Modelo de drew-down (camadas) definido pro Mineral Intelligence</li>
+        <li>Reunião específica com <strong>Lapida</strong> agendada</li>
+        <li>Posição quanto a CRU/Wood Mackenzie: parceiro ou canal?</li>
+      </ul>
+
+      <div class="tag-row">
+        <span class="tag gold">freemium possível</span>
+        <span class="tag">5 produtos prontos</span>
+        <span class="tag orange">PF DR Brasil</span>
+        <span class="tag">cliente: JMendes/Mitsubishi</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 4 -->
+  <div class="bloco">
+    <div class="bloco-head orange">
+      <div class="codigo">B4</div>
+      <div class="info">
+        <div class="t">Direitos e Concessões Minerárias</div>
+        <div class="s">Projeto à parte. Esforço de inteligência grande. Conversa com Mateus/Blackwall.</div>
+      </div>
+      <div class="dono">Donos: Maury + Blackwall (Mateus)</div>
+    </div>
+    <div class="bloco-body">
+      <h5><span class="ico">🎯</span>Objetivo</h5>
+      <p style="font-size:13px;color:#374151;">Sistema que percorre <strong>TODOS os DMs do Brasil</strong> aplicando filtros configuráveis. Critérios de avaliação detalhada vêm depois, sobre as oportunidades já filtradas.</p>
+
+      <h5><span class="ico">📋</span>Funis de busca configuráveis</h5>
+      <p style="font-size:12.5px;color:var(--gray);">"Permitir criar na ferramenta os tipos de análise" — cada funil tem critérios diferentes.</p>
+      <div class="filtros-box">
+        <strong>Exemplo 1 — funil "Investidor japonês":</strong> critérios próprios<br>
+        <strong>Exemplo 2 — funil "Projeto interno Summo":</strong> outros critérios<br>
+        <strong>Exemplo 3 — funil "Gilmar para PF":</strong> Estado <code>MG</code> · Minério <code>Fe</code> · CFEM <code>inativo</code> · Área <code>&lt;100ha</code> · Titular <code>PF</code>
+      </div>
+
+      <h5><span class="ico">📋</span>Sequência de aplicação dos critérios</h5>
+      <ul>
+        <li><strong>Etapa 1 (varredura ampla):</strong> filtros de seleção primária (acima) + cruzamento com formações geológicas (CPRM, IBGE — buscar fonte mais confiável)</li>
+        <li><strong>Etapa 2 (avaliação fina):</strong> critérios posteriores aplicados sobre o subconjunto:
+          <ul style="margin-top:6px;">
+            <li style="padding-left:30px;">— Financeiro</li>
+            <li style="padding-left:30px;">— Stakeholder + ESG</li>
+            <li style="padding-left:30px;">— Risco climático</li>
+          </ul>
+        </li>
+        <li><strong>Etapa 3 (análise humana):</strong> parte dos critérios analisamos em pessoa — é nosso trabalho de consultoria</li>
+      </ul>
+
+      <div class="callout orange">
+        <strong>Princípio importante (Leo)</strong>
+        "Não fechar demais o leque, pra não perder." Filtros amplos primeiro, peneira fina depois. E parte continua sendo análise humana — não terceirizar tudo pra máquina.
+      </div>
+
+      <h5><span class="ico">🎯</span>Definition of Done</h5>
+      <ul class="dod">
+        <li>Conversa com Mateus/Blackwall realizada</li>
+        <li>Sistema percorre todos os DMs do estado de MG com filtros configuráveis</li>
+        <li>Camada CPRM (formações geológicas) integrada como camada cruzável</li>
+        <li>Interface pra criar funil novo na ferramenta</li>
+        <li>Meta: identificar <strong>10 DMs prioritários</strong> e acionar comercial</li>
+      </ul>
+
+      <div class="tag-row">
+        <span class="tag orange">projeto a parte</span>
+        <span class="tag">parceiro: Blackwall</span>
+        <span class="tag green">meta: 10 DMs</span>
+        <span class="tag">fonte: CPRM + IBGE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 5 -->
+  <div class="bloco">
+    <div class="bloco-head orange">
+      <div class="codigo">B5</div>
+      <div class="info">
+        <div class="t">Mineradora Modelo — 2 frentes separadas</div>
+        <div class="s">"Chamariz" para outras áreas. Separar layout do motor pra atender 2 fins distintos.</div>
+      </div>
+      <div class="dono">Donos: Roberto + Maury + time consultoria</div>
+    </div>
+    <div class="bloco-body">
+
+      <h5><span class="ico">🅰</span>Frente A — Indicadores mínimos (gestão)</h5>
+      <p style="font-size:13px;color:#374151;">Conjunto de indicadores que toda mineração deveria ter, organizados por área: geologia, operação, processo, rejeitos, qualidade, ESG.</p>
+      <ul>
+        <li>Mostra o mínimo + oferece ferramenta de gestão sobre eles</li>
+        <li>Conexão direta com a frente <strong>consultoria SQ</strong> (Roberto)</li>
+        <li>Modelo conceitual: <strong>BSC adaptado</strong> (Leo) — dimensões:
+          <ul style="margin-top:6px;">
+            <li style="padding-left:30px;">— Planejamento do projeto</li>
+            <li style="padding-left:30px;">— Custo</li>
+            <li style="padding-left:30px;">— Prazo</li>
+            <li style="padding-left:30px;">— ESG (foco em segurança e comunidade)</li>
+            <li style="padding-left:30px;">— Qualidade da entrega (quantidade × qualidade × custo operacional previsto)</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h5><span class="ico">🅱</span>Frente B — Concepção e execução de projeto novo</h5>
+      <p style="font-size:13px;color:#374151;">Em um novo projeto, como iniciar já com as melhores práticas? Passo-a-passo de estudos até concepção e execução.</p>
+      <ul>
+        <li>Adaptação por tipo de minério: Serra Azul ≠ Alegria (separação magnética vs flotação)</li>
+        <li>Ouro: oxidado = gravimetria; sulfetado = lixiviação</li>
+        <li>Indicadores teremos — mas o processo varia</li>
+        <li>Conexão com <strong>Funil de Oportunidades</strong> e captação de investidor</li>
+      </ul>
+
+      <h5><span class="ico">📋</span>Estratégia de produto (Roberto)</h5>
+      <ul>
+        <li>Como vender essa consultoria?</li>
+        <li>Modelos de venda (hora, módulo, mensalidade)?</li>
+        <li>Estratégia de lançamento de produto + propaganda</li>
+      </ul>
+
+      <h5><span class="ico">🎯</span>Definition of Done</h5>
+      <ul class="dod">
+        <li>Layout "motor" da Mineradora Modelo separado conceitualmente em 2 fluxos</li>
+        <li>BSC adaptado documentado com indicadores por dimensão</li>
+        <li>Passo-a-passo de concepção de projeto novo documentado</li>
+        <li>Modelo de venda definido para frente consultoria</li>
+      </ul>
+
+      <div class="tag-row">
+        <span class="tag orange">chamariz</span>
+        <span class="tag">2 frentes técnicas</span>
+        <span class="tag gold">BSC adaptado</span>
+        <span class="tag">cruza com Funil Oportunidades</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 6 -->
+  <div class="bloco">
+    <div class="bloco-head green">
+      <div class="codigo">B6</div>
+      <div class="info">
+        <div class="t">SQS — Gestão Financeira & Mercado</div>
+        <div class="s">"SQS-1: Separar a mineradora modelo. Prioridade: mercado."</div>
+      </div>
+      <div class="dono">Donos: Leo + Lima + Rodrigo</div>
+    </div>
+    <div class="bloco-body">
+      <h5><span class="ico">📋</span>Escopo</h5>
+      <ul>
+        <li>Separar conceitualmente "Mineradora Modelo" (B5) da operação SQS</li>
+        <li>SQS: prioridade é mercado — gestão de projetos ativos + captação</li>
+        <li>Projetos ativos: Boaventura, EPCs Gaslub (6, 7, 8, 10, 11, 13, 15)</li>
+        <li>Gestão por cliente × parceria (segregar receita/despesa)</li>
+        <li>Conversa com Ana sobre parcela mensal</li>
+        <li>Alocação de custos cloud em orçamentos de projeto</li>
+      </ul>
+
+      <h5><span class="ico">🎯</span>Definition of Done</h5>
+      <ul class="dod">
+        <li>Dashboard FC por projeto × parceiro funcionando</li>
+        <li>"Parcela mensal" da Ana mapeada e integrada</li>
+        <li>Lista de projetos ativos no sistema, com responsável visível</li>
+      </ul>
+
+      <div class="tag-row">
+        <span class="tag green">prioridade: mercado</span>
+        <span class="tag">cruza com B1 (custos N8N)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 7 -->
+  <div class="bloco">
+    <div class="bloco-head">
+      <div class="codigo">B7</div>
+      <div class="info">
+        <div class="t">Site, Marketing & Marketplace</div>
+        <div class="s">Atrair tráfego. Capturar lead via login. Marketplace de produtos.</div>
+      </div>
+      <div class="dono">Donos: Leo + Bernardo</div>
+    </div>
+    <div class="bloco-body">
+      <h5><span class="ico">📋</span>Escopo</h5>
+      <ul>
+        <li>Integrar plataforma ao site atual (sem redirecionamentos)</li>
+        <li>Rotas: <code>/sq-ambiental</code>, <code>/inteligencia-comercial</code>, etc.</li>
+        <li>Acesso por login com liberação por produto adquirido (marketplace)</li>
+        <li>Atualizar Soluções e Parcerias do site</li>
+        <li>Internacionalização EN</li>
+        <li>Clipping semanal automatizado (Brasil Mineral, Notícias de Mineração)</li>
+        <li>LinkedIn separado pra SQS e SQ Consultoria</li>
+        <li>Paleta + templates do Bernardo aplicáveis às páginas</li>
+      </ul>
+
+      <h5><span class="ico">🎯</span>Definition of Done</h5>
+      <ul class="dod">
+        <li>Site comercial e plataforma integrados</li>
+        <li>Marketplace por login funcionando</li>
+        <li>1ª edição do clipping enviada</li>
+        <li>Conteúdo EN nas páginas principais</li>
+      </ul>
+
+      <div class="tag-row">
+        <span class="tag">cruza com B1</span>
+        <span class="tag">depende: identidade visual</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ MARCOS ═══════════ -->
+<section id="marcos" class="block">
+  <h2 class="title"><span class="lead"></span>Marcos consolidados</h2>
+  <p class="subtitle">Datas concretas que aparecem em todos os blocos. Reportar progresso nessas datas.</p>
+
+  <div class="timeline">
+    <div class="tl-item urgent">
+      <div class="when">Esta semana</div>
+      <h5>Setup GitHub dos sócios + rebrand ambiental</h5>
+      <p>Bernardo coordena setup. Rodrigo aplica branding (SQ Ambiental vs ESP Ambiental — decidir).</p>
+      <span class="owner">Donos: Bernardo + Rodrigo</span>
+    </div>
+
+    <div class="tl-item urgent">
+      <div class="when">Semana que vem</div>
+      <h5>Lima apresenta os 5 produtos de Mineral Intelligence</h5>
+      <p>Formato, rentabilização, clientes. Inclui visão de PF DR Brasil e referência CRU/Wood Mackenzie/Fast Markets.</p>
+      <span class="owner">Dono: Lima</span>
+    </div>
+
+    <div class="tl-item urgent">
+      <div class="when">19/06/2026 — sexta</div>
+      <h5>Proposta Jaguar Mais finalizada</h5>
+      <p>Escopo, custos, valor. Decidir formato (serviço × sistema × pacote).</p>
+      <span class="owner">Donos: Giulia + Maury</span>
+    </div>
+
+    <div class="tl-item urgent">
+      <div class="when">22/06/2026 — segunda</div>
+      <h5>Apresentação interna Jaguar</h5>
+      <p>Time todo revisa antes da apresentação ao cliente.</p>
+      <span class="owner">Todos</span>
+    </div>
+
+    <div class="tl-item">
+      <div class="when">Próximas 2-3 semanas</div>
+      <h5>Conversa com Mateus/Blackwall + reunião Lapida</h5>
+      <p>Direitos: alinhar parceria. Mineral Intelligence: avançar com Lapida em específico.</p>
+      <span class="owner">Donos: Maury + Lima</span>
+    </div>
+
+    <div class="tl-item">
+      <div class="when">Próximas 2-3 semanas</div>
+      <h5>Bugs técnicos corrigidos</h5>
+      <p>EAP quebra texto · Kanban atribuição · Matriz de risco no dashboard.</p>
+      <span class="owner">Dono: Rodrigo</span>
+    </div>
+
+    <div class="tl-item">
+      <div class="when">Próximo mês</div>
+      <h5>Sistema varre TODOS DMs de MG com filtros</h5>
+      <p>Estado · minério · CFEM inativo · &lt;100ha · PF. Interface pra criar funil novo.</p>
+      <span class="owner">Donos: Rodrigo + Maury</span>
+    </div>
+
+    <div class="tl-item">
+      <div class="when">Próximo mês</div>
+      <h5>Mineradora Modelo separada em 2 frentes</h5>
+      <p>Layout do motor decoplado: gestão (BSC adaptado) × concepção de projeto novo.</p>
+      <span class="owner">Donos: Roberto + Maury</span>
+    </div>
+
+    <div class="tl-item later">
+      <div class="when">Backlog (após Jaguar fechar)</div>
+      <h5>Replicação da Jaguar para mercado</h5>
+      <p>Modelo de venda do SaaS Ambiental, estratégia comercial, prospecção ativa.</p>
+      <span class="owner">Donos: Giulia + Leo</span>
+    </div>
+
+    <div class="tl-item later">
+      <div class="when">Backlog</div>
+      <h5>CBAM com Pessotti</h5>
+      <p>Frente complexa — precisa de capacidade técnica. Conversa específica.</p>
+      <span class="owner">Donos: Lima + Pessotti</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ DEPENDÊNCIAS ═══════════ -->
+<section id="dependencias" class="block alt">
+  <h2 class="title"><span class="lead"></span>Dependências entre blocos</h2>
+  <p class="subtitle">O que precisa ficar pronto antes pra outro andar.</p>
+
+  <div class="callout">
+    <strong>B1 (Integração técnica) → desbloqueia todos os outros</strong>
+    Sem GitHub setado, sócios não contribuem. Sem N8N rodando, automação não escala. Sem padronização de contextos, time duplica esforço. Por isso B1 é "resolver logo".
+  </div>
+
+  <div class="callout gold">
+    <strong>B2 (Jaguar) → puxa modelo replicável (Leo)</strong>
+    "Pensa na Jaguar e já pensa lá pra frente." Enquanto Giulia + Maury fecham a proposta, Leo já trabalha em paralelo no modelo de replicação. Não esperar Jaguar fechar pra começar.
+  </div>
+
+  <div class="callout orange">
+    <strong>B4 (Direitos) ← depende de B1 (CPRM + IBGE no sistema)</strong>
+    A varredura de DMs precisa cruzar com formações geológicas. Precisamos primeiro integrar a fonte mais confiável. Maury + Rodrigo definem.
+  </div>
+
+  <div class="callout success">
+    <strong>B5 (Mineradora Modelo) → alimenta Funil de Oportunidades</strong>
+    Frente B (concepção de projeto novo) é parte da etapa de estruturação no Funil. Quando refinarmos B5, o Funil ganha contexto mais rico.
+  </div>
+
+  <div class="callout">
+    <strong>B7 (Site) ← depende de B1 (Bernardo entregar paleta + templates)</strong>
+    Não dá pra publicar páginas sem identidade visual definida. Bernardo entrega isso dentro de B1.
+  </div>
+</section>
+
+<!-- ═══════════ PRÓXIMOS PASSOS ═══════════ -->
+<section id="proximos" class="block">
+  <h2 class="title"><span class="lead"></span>Próximos passos imediatos (esta semana)</h2>
+  <p class="subtitle">Ações concretas com dono e prazo, derivadas da reunião.</p>
+
+  <div class="gov-grid">
+    <div class="gov">
+      <div class="nome">1. Setup GitHub dos sócios</div>
+      <div class="papel">Bernardo · esta semana</div>
+      <ul>
+        <li>Cada sócio faz fork (link já no documento)</li>
+        <li>Bernardo apoia 1:1 onde travar</li>
+        <li>Rodrigo disponível como suporte técnico</li>
+      </ul>
+    </div>
+    <div class="gov">
+      <div class="nome">2. Decidir rebrand ambiental</div>
+      <div class="papel">Sócios · esta semana</div>
+      <ul>
+        <li>SQ Ambiental ou ESP Ambiental?</li>
+        <li>Decisão dispara aplicação no sistema</li>
+        <li>Rodrigo aplica em &lt; 1 dia depois da decisão</li>
+      </ul>
+    </div>
+    <div class="gov">
+      <div class="nome">3. Lima esboça os 5 produtos</div>
+      <div class="papel">Lima · semana que vem</div>
+      <ul>
+        <li>Por produto: formato, rentabilização, clientes</li>
+        <li>Marcar apresentação interna</li>
+        <li>Incluir foco PF DR Brasil + JMendes/Mitsubishi</li>
+      </ul>
+    </div>
+    <div class="gov">
+      <div class="nome">4. Giulia + Maury rascunham Jaguar</div>
+      <div class="papel">Giulia + Maury · até 19/06</div>
+      <ul>
+        <li>Definir: serviço, sistema ou pacote</li>
+        <li>Escopo, custo, valor</li>
+        <li>Compartilhar 3 dias antes pro time revisar</li>
+      </ul>
+    </div>
+    <div class="gov">
+      <div class="nome">5. Maury agenda Mateus/Blackwall</div>
+      <div class="papel">Maury · próximas 2 semanas</div>
+      <ul>
+        <li>Discutir B4 (Direitos)</li>
+        <li>Levar mockup do funil de varredura</li>
+        <li>Posicionar parceria</li>
+      </ul>
+    </div>
+    <div class="gov">
+      <div class="nome">6. Leo + Lima marcam Lapida</div>
+      <div class="papel">Leo + Lima · próximas 3 semanas</div>
+      <ul>
+        <li>Avançar um passo a frente</li>
+        <li>Tema: Mineral Intelligence</li>
+        <li>Possível parceria ou cliente piloto</li>
+      </ul>
+    </div>
+    <div class="gov">
+      <div class="nome">7. Rodrigo corrige bugs reportados</div>
+      <div class="papel">Rodrigo · próximas 2 semanas</div>
+      <ul>
+        <li>EAP — quebra de texto</li>
+        <li>Kanban — atribuição</li>
+        <li>Matriz de risco upload no dashboard</li>
+      </ul>
+    </div>
+    <div class="gov">
+      <div class="nome">8. Roberto separa Mineradora Modelo</div>
+      <div class="papel">Roberto + Maury · próximo mês</div>
+      <ul>
+        <li>Frente A (gestão) vs Frente B (projeto novo)</li>
+        <li>BSC adaptado documentado</li>
+        <li>Estratégia de venda da consultoria</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout success" style="margin-top: 30px;">
+    <strong>Quando se reunir de novo?</strong>
+    Sugestão: <strong>reunião de 30 min na semana que vem</strong> — cada dono dá status de 2 min do seu bloco. Próxima reunião maior <strong>23/06</strong> (dia seguinte à apresentação interna de Jaguar), pra consolidar aprendizado e definir frente 2.
+  </div>
+
+  <div class="callout gold">
+    <strong>Princípio operacional</strong>
+    Cada bloco tem dono. Cada marco tem data. Dependências são explícitas. Quando dúvida: pergunta primeiro ao dono do bloco, não ao grupo. Isso é o que destrava a execução paralela.
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <p>
+    <strong>Sistema Summo Quartile</strong> · Plano de incorporação consolidado<br>
+    Síntese das 3 reuniões · Documento de trabalho · Atualizar conforme execução
+  </p>
+</footer>
+
+<script>
+const sections = ['capa','modelo','blocos','marcos','dependencias','proximos'];
+const navLinks = document.querySelectorAll('nav.topnav a');
+window.addEventListener('scroll', () => {
+  let current = sections[0];
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 100) current = id;
+  }
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+navLinks.forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const id = a.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+
+</body>
+</html>

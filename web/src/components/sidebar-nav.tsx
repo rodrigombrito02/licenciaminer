@@ -97,28 +97,41 @@ export function SidebarNav() {
           const groupMeta = groupChanged
             ? NAV_GROUPS.find((g) => g.key === section.group)
             : null;
-          const groupHidden = section.group ? isGroupCollapsed(section.group) : false;
+          const groupConf = section.group
+            ? NAV_GROUPS.find((g) => g.key === section.group)
+            : null;
+          // Grupos sao accordion por padrao; Produtos Comerciais fica sempre exposto.
+          const groupCollapsible = groupConf?.collapsible ?? true;
+          const groupHidden =
+            groupCollapsible && section.group ? isGroupCollapsed(section.group) : false;
 
           return (
-            <div key={section.label || "home"}>
-              {/* Group separator (renders once per group) */}
-              {groupMeta && (
-                <button
-                  onClick={() => toggleGroup(groupMeta.key)}
-                  className="mt-5 mb-1 flex w-full items-center justify-between rounded-md px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-sidebar-foreground/50 hover:bg-sidebar-accent/30 hover:text-sidebar-foreground/80 transition-colors border-t border-sidebar-border pt-3"
-                  title={groupMeta.description}
-                >
-                  <span>{groupMeta.label}</span>
-                  <ChevronDown
-                    className={cn(
-                      "h-3 w-3 transition-transform duration-200",
-                      isGroupCollapsed(groupMeta.key) ? "-rotate-90" : "rotate-0"
-                    )}
-                  />
-                </button>
-              )}
+            <div key={idx}>
+              {/* Cabecalho do grupo (renders once per group) */}
+              {groupMeta &&
+                (groupCollapsible ? (
+                  <button
+                    onClick={() => toggleGroup(groupMeta.key)}
+                    className="mt-5 mb-1 flex w-full items-center justify-between rounded-md px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-sidebar-foreground/50 hover:bg-sidebar-accent/30 hover:text-sidebar-foreground/80 transition-colors border-t border-sidebar-border pt-3"
+                    title={groupMeta.description}
+                  >
+                    <span>{groupMeta.label}</span>
+                    <ChevronDown
+                      className={cn(
+                        "h-3 w-3 transition-transform duration-200",
+                        isGroupCollapsed(groupMeta.key) ? "-rotate-90" : "rotate-0"
+                      )}
+                    />
+                  </button>
+                ) : (
+                  <div
+                    className="mt-5 mb-1 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-sidebar-foreground/50 border-t border-sidebar-border pt-3"
+                    title={groupMeta.description}
+                  >
+                    {groupMeta.label}
+                  </div>
+                ))}
 
-              {/* Hide group sections when group collapsed */}
               {groupHidden ? null : section.standalone ? (
                 /* Standalone item — link direto, sem header */
                 <ul>

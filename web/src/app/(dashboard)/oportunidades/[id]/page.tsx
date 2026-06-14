@@ -8,6 +8,7 @@ import {
   Loader2,
   Save,
   Target,
+  Sparkles,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -63,6 +64,25 @@ export default function OportunidadeDetailPage({ params }: { params: Promise<{ i
       await carregar();
     } finally {
       setSaving(false);
+    }
+  }
+
+  const [enriquecendo, setEnriquecendo] = useState(false);
+  async function enriquecer() {
+    setEnriquecendo(true);
+    try {
+      const d = await opApi.enriquecer(opId);
+      setScores({
+        score_agua: d.score_agua, score_energia: d.score_energia, score_logistica: d.score_logistica,
+        score_mao_obra: d.score_mao_obra, score_licenciamento: d.score_licenciamento,
+        score_financeiro: d.score_financeiro, score_stakeholder: d.score_stakeholder,
+        score_geologico: d.score_geologico, score_climatico: d.score_climatico,
+      });
+      setNotas(d.notas_avaliacao || {});
+    } catch (e) {
+      alert("Erro ao enriquecer: " + (e instanceof Error ? e.message : String(e)));
+    } finally {
+      setEnriquecendo(false);
     }
   }
 
@@ -139,8 +159,16 @@ export default function OportunidadeDetailPage({ params }: { params: Promise<{ i
       {/* 9 parâmetros */}
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-heading">Avaliação dos 9 parâmetros</CardTitle>
-          <p className="text-xs text-muted-foreground">Pontuação de 0 a 10 para cada parâmetro. Anote justificativas em cada um.</p>
+          <div className="flex items-start justify-between gap-3 flex-wrap">
+            <div>
+              <CardTitle className="text-base font-heading">Avaliação dos 9 parâmetros</CardTitle>
+              <p className="text-xs text-muted-foreground">Pontuação de 0 a 10. O enriquecimento automático pré-preenche com base nas fontes públicas — você calibra.</p>
+            </div>
+            <Button size="sm" variant="outline" onClick={enriquecer} disabled={enriquecendo} className="shrink-0">
+              {enriquecendo ? <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> : <Sparkles className="h-3.5 w-3.5 mr-1 text-brand-gold" />}
+              Enriquecer automaticamente
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {PARAMETROS.map((p) => {

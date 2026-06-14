@@ -21,12 +21,14 @@ import {
   Users,
   Target,
   CheckCircle2,
+  LayoutGrid,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useRole } from "@/hooks/use-role";
+import { useEffectiveRole as useRole } from "@/hooks/use-effective-role";
 import { ROLE_LABEL } from "@/lib/roles";
+import { MinhasAcoes } from "@/components/minhas-acoes";
 
 export default function HomePage() {
   const roleState = useRole();
@@ -98,7 +100,7 @@ function VitrineHome({ nome, role }: { nome?: string; role?: string } = {}) {
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <ModuleCard
-            title="Summo Ambiental"
+            title="SQ Ambiental"
             description="Análise de dados regulatórios, viabilidade preliminar e Diligência Summo (DD ambiental + pilhas)."
             icon={ShieldCheck}
             href="/ambiental"
@@ -106,10 +108,10 @@ function VitrineHome({ nome, role }: { nome?: string; role?: string } = {}) {
             iconColor="text-brand-teal"
           />
           <ModuleCard
-            title="Direitos e Concessões"
-            description="Mapa interativo, prospecção e análise de concessões minerárias do Brasil."
+            title="Ativos Minerários"
+            description="Mapa multi-camadas, prospecção por teses e ciclo de vida do direito minerário."
             icon={Map}
-            href="/mapa"
+            href="/direitos"
             colorClass="border-brand-teal/30 hover:border-brand-teal/60"
             iconColor="text-brand-teal"
           />
@@ -122,10 +124,10 @@ function VitrineHome({ nome, role }: { nome?: string; role?: string } = {}) {
             iconColor="text-brand-gold"
           />
           <ModuleCard
-            title="SQ Solutions"
+            title="SQ Soluções"
             description="Soluções digitais com IA — Mineradora Modelo demo e gestão de segurança operacional."
             icon={Cpu}
-            href="/mineradora-modelo"
+            href="/sq-solutions"
             colorClass="border-brand-orange/30 hover:border-brand-orange/60"
             iconColor="text-brand-orange"
           />
@@ -206,9 +208,6 @@ function VitrineHome({ nome, role }: { nome?: string; role?: string } = {}) {
    ══════════════════════════════════════════════════════════════════ */
 
 function ConsultorHome({ nome }: { nome: string; userId: string }) {
-  // Placeholder pra contagens; em sprint posterior buscamos os reais
-  const [counts] = useState({ planos: 0, tarefasHoje: 0, atrasadas: 0 });
-
   return (
     <div className="space-y-6">
       {/* Hero consultor */}
@@ -222,13 +221,22 @@ function ConsultorHome({ nome }: { nome: string; userId: string }) {
         </p>
       </section>
 
-      {/* KPIs pessoais */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <KPICard label="Planos ativos" value={counts.planos} color="#156082" />
-        <KPICard label="Tarefas hoje" value={counts.tarefasHoje} color="#27AE60" />
-        <KPICard label="Atrasadas" value={counts.atrasadas} color="#E74C3C" />
-        <KPICard label="Próximos 7 dias" value={0} color="#F39C12" />
-      </div>
+      {/* Minhas ações (agregado de todos os módulos) */}
+      <MinhasAcoes nome={nome} />
+
+      {/* Atalhos + produtos (compartilhado com o admin) */}
+      <ConsultorCockpit />
+    </div>
+  );
+}
+
+/** Atalhos do consultor (ferramentas + produtos + estrutura do sistema).
+ *  Sem hero e sem "Minhas ações" — reaproveitado por ConsultorHome e AdminHome. */
+function ConsultorCockpit() {
+  return (
+    <>
+      {/* Estrutura do sistema — visível a consultor e admin */}
+      <EstruturaSistemaCard />
 
       {/* Atalhos ferramentas */}
       <Card>
@@ -260,17 +268,40 @@ function ConsultorHome({ nome }: { nome: string; userId: string }) {
         </CardHeader>
         <CardContent>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
-            <ToolLink href="/ambiental" icon={ShieldCheck} title="Summo Ambiental" desc="DD, viabilidade, pilhas" />
-            <ToolLink href="/mapa" icon={Map} title="Direitos & Concessões" desc="Mapa e prospecção" />
+            <ToolLink href="/ambiental" icon={ShieldCheck} title="SQ Ambiental" desc="DD, viabilidade, pilhas" />
+            <ToolLink href="/direitos" icon={Map} title="Ativos Minerários" desc="Mapa e prospecção" />
             <ToolLink href="/inteligencia-comercial" icon={TrendingUp} title="Mineral Intelligence" desc="Mercado mineral" />
           </div>
         </CardContent>
       </Card>
+    </>
+  );
+}
 
-      <p className="text-xs text-muted-foreground text-center pt-2">
-        Personalização avançada (suas tarefas, alertas e Kanban) chega na próxima sprint.
-      </p>
-    </div>
+/** Banner que leva à visão geral da Evolução do Sistema (estrutura/roadmap). */
+function EstruturaSistemaCard() {
+  return (
+    <Link href="/evolucao" className="block group">
+      <Card className="border-2 border-brand-navy/25 bg-gradient-to-br from-brand-navy/5 to-brand-teal/5 transition-all hover:border-brand-navy/50 hover:shadow-md">
+        <CardContent className="flex items-center gap-4 p-5">
+          <div className="rounded-xl bg-brand-navy/10 p-3 shrink-0">
+            <LayoutGrid className="h-6 w-6 text-brand-navy" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="font-heading text-base font-bold group-hover:text-brand-navy transition-colors">
+                Estrutura do Sistema
+              </h3>
+              <Badge variant="outline" className="text-[9px]">Interno</Badge>
+            </div>
+            <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">
+              Visão geral da evolução: módulos, funcionalidades no ar e em breve, sprints e o mapa de visibilidade por nível de acesso.
+            </p>
+          </div>
+          <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition-all group-hover:text-brand-navy group-hover:translate-x-0.5" />
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
 
@@ -290,6 +321,9 @@ function AdminHome({ nome }: { nome: string }) {
           Gestão da plataforma, oportunidades estratégicas e cockpit operacional.
         </p>
       </section>
+
+      {/* Minhas ações (agregado de todos os módulos) */}
+      <MinhasAcoes nome={nome} />
 
       {/* Acoes admin */}
       <div className="grid md:grid-cols-3 gap-3">
@@ -319,8 +353,8 @@ function AdminHome({ nome }: { nome: string }) {
         />
       </div>
 
-      {/* Atalhos consultor */}
-      <ConsultorHome nome={nome} userId="" />
+      {/* Atalhos consultor (sem hero/Minhas ações duplicados) */}
+      <ConsultorCockpit />
     </div>
   );
 }

@@ -6,7 +6,7 @@
  *
  *   <ModuleHero
  *     icon={ShieldCheck}
- *     badge="Summo Ambiental"
+ *     badge="SQ Ambiental"
  *     title="Análise e conformidade ambiental para mineração"
  *     description="Dados públicos auditáveis..."
  *   />

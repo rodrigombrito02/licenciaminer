@@ -14,7 +14,7 @@ import {
 import { ModuleHero } from "@/components/module-hero";
 import { BigActionCard } from "@/components/big-action-card";
 import { ValueProp } from "@/components/value-prop";
-import { useRole } from "@/hooks/use-role";
+import { useEffectiveRole as useRole } from "@/hooks/use-effective-role";
 
 export default function FerramentasInternasPage() {
   const state = useRole();

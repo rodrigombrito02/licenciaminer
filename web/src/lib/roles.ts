@@ -81,11 +81,16 @@ export const PUBLIC_PATHS: string[] = [
   "/prospeccao",                // Prospeccao publica
   "/seguranca",                 // SQ Solutions
   "/mineradora-modelo",         // Demo da SQ Solutions
+  "/sq-consultoria",            // Vitrine SQ Consultoria (gestão é interna)
+];
+
+/** Rotas que exigem login (qualquer tier). Freemium: conteúdo parcial gateado na página. */
+export const LOGADO_PATHS: string[] = [
+  "/viabilidade",               // Análise preliminar — índice grátis (isca), diagnóstico pago
 ];
 
 /** Rotas que precisam de pelo menos visitante_pago */
 export const PAGO_PATHS: string[] = [
-  "/viabilidade",               // Analise preliminar de licenciamento
   "/empresa",                   // Consulta por CNPJ
   "/decisoes",                  // Analise de decisoes
 ];
@@ -95,6 +100,9 @@ export const CONSULTOR_PATHS: string[] = [
   "/due-diligence",
   "/pilhas",
   "/ferramentas-internas",      // Capa geral
+  "/mapeamentos",               // Prospeccao multi-tese
+  "/evolucao",                  // Evolucao do Sistema (plano + sprints)
+  "/condicionantes",            // Radar de Condicionantes (SQ Ambiental)
   "/planos-de-acao",
   "/projetos",
   "/riscos",                    // Capa Riscos
@@ -102,11 +110,12 @@ export const CONSULTOR_PATHS: string[] = [
   "/gestao-riscos",
   "/gestao-crises",
   "/comunicacoes",
+  "/oportunidades",             // Funil = trilha de ativos (liberado p/ consultor)
+  "/captacao",                  // Inbox de demandas + funis por frente
 ];
 
 /** Rotas restritas a admin/socios */
 export const ADMIN_PATHS: string[] = [
-  "/oportunidades",
   "/admin",
   "/gestao-interna",
 ];
@@ -121,6 +130,9 @@ export function requiredRoleForPath(pathname: string): Role | "public" {
   }
   for (const p of PAGO_PATHS) {
     if (pathname === p || pathname.startsWith(p + "/")) return "visitante_pago";
+  }
+  for (const p of LOGADO_PATHS) {
+    if (pathname === p || pathname.startsWith(p + "/")) return "visitante_free";
   }
   // Tudo o mais e tratado como publico (Home/vitrine)
   return "public";

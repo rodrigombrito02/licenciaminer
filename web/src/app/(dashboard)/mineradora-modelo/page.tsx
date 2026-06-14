@@ -387,10 +387,10 @@ function PageHeader() {
       </div>
       <div>
         <h1 className="font-heading text-2xl font-bold tracking-tight lg:text-3xl">
-          Mineradora Modelo
+          Mineradora Modelo · Régua de Excelência
         </h1>
         <p className="text-xs text-muted-foreground">
-          IA na cadeia de valor da mineração — demonstração comercial SQ Solutions
+          O padrão de classe mundial por área da mina — base do diagnóstico SQ Consultoria
         </p>
       </div>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useCallback, useState } from "react";
+import { useRef, useCallback, useState, useMemo } from "react";
 import Map, {
   Source,
   Layer,
@@ -13,10 +13,11 @@ import Map, {
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Badge } from "@/components/ui/badge";
 import { fmtHa } from "@/lib/format";
+import { trilhaResumoFromFase, ETAPA_COLORS } from "@/lib/ativos-api";
 
 interface MiningMapProps {
   geojson: GeoJSON.FeatureCollection | null;
-  colorBy: "categoria" | "regime" | "fase" | "cfem";
+  colorBy: "categoria" | "regime" | "fase" | "cfem" | "etapa";
   colorPalettes: {
     categoria: Record<string, string>;
     regime: Record<string, string>;
@@ -24,8 +25,22 @@ interface MiningMapProps {
   };
   showUCs: boolean;
   showTIs: boolean;
+  showBiomas: boolean;
+  showEnergia: boolean;
+  showSubestacoes: boolean;
+  showAgua: boolean;
   ucsGeojson: GeoJSON.FeatureCollection | null;
   tisGeojson: GeoJSON.FeatureCollection | null;
+  biomasGeojson: GeoJSON.FeatureCollection | null;
+  energiaGeojson: GeoJSON.FeatureCollection | null;
+  subestacoesGeojson: GeoJSON.FeatureCollection | null;
+  aguaGeojson: GeoJSON.FeatureCollection | null;
+  showFerrovias?: boolean;
+  showPortos?: boolean;
+  ferroviasGeojson?: GeoJSON.FeatureCollection | null;
+  portosGeojson?: GeoJSON.FeatureCollection | null;
+  /** Abre o painel do ativo (trilha + portfólio) para um processo. */
+  onOpenAtivo?: (processo: string) => void;
 }
 
 interface PopupInfo {
@@ -42,34 +57,72 @@ const CFEM_COLORS: Record<string, string> = {
   false: "#E74C3C",
 };
 
+/** Código de etapa (chave da paleta) a partir da fase ANM de uma feature. */
+function etapaCodigo(fase: unknown): string {
+  const r = trilhaResumoFromFase(typeof fase === "string" ? fase : null);
+  if (r.ordem) return String(r.ordem);
+  if (r.especial) return "especial";
+  return "outro";
+}
+
 export function MiningMap({
   geojson,
   colorBy,
   colorPalettes,
   showUCs,
   showTIs,
+  showBiomas,
+  showEnergia,
+  showSubestacoes,
+  showAgua,
   ucsGeojson,
   tisGeojson,
+  biomasGeojson,
+  energiaGeojson,
+  subestacoesGeojson,
+  aguaGeojson,
+  showFerrovias,
+  showPortos,
+  ferroviasGeojson,
+  portosGeojson,
+  onOpenAtivo,
 }: MiningMapProps) {
   const mapRef = useRef<MapRef>(null);
   const [popup, setPopup] = useState<PopupInfo | null>(null);
+
+  // Para "etapa", derivamos a geojson adicionando _etapa em cada feature
+  // (a partir da FASE) — assim o color-match opera sobre uma propriedade estável.
+  const sourceData = useMemo(() => {
+    if (!geojson || colorBy !== "etapa") return geojson;
+    return {
+      ...geojson,
+      features: geojson.features.map((f) => ({
+        ...f,
+        properties: { ...f.properties, _etapa: etapaCodigo(f.properties?.FASE) },
+      })),
+    } as GeoJSON.FeatureCollection;
+  }, [geojson, colorBy]);
 
   const getColorExpression = useCallback((): string | unknown[] => {
     const palette =
       colorBy === "cfem"
         ? CFEM_COLORS
-        : colorBy === "fase"
-          ? colorPalettes.fase
-          : colorBy === "regime"
-            ? colorPalettes.regime
-            : colorPalettes.categoria;
+        : colorBy === "etapa"
+          ? ETAPA_COLORS
+          : colorBy === "fase"
+            ? colorPalettes.fase
+            : colorBy === "regime"
+              ? colorPalettes.regime
+              : colorPalettes.categoria;
 
     const propName =
       colorBy === "cfem"
         ? "ativo_cfem"
-        : colorBy === "fase"
-          ? "FASE"
-          : colorBy;
+        : colorBy === "etapa"
+          ? "_etapa"
+          : colorBy === "fase"
+            ? "FASE"
+            : colorBy;
 
     const entries = Object.entries(palette);
     if (entries.length === 0) return "#95A5A6";
@@ -122,6 +175,34 @@ export function MiningMap({
       <NavigationControl position="top-right" />
 
       {/* UCs layer */}
+      {/* Biomas layer (fundo — renderizado primeiro) */}
+      {showBiomas && biomasGeojson && (
+        <Source id="biomas" type="geojson" data={biomasGeojson}>
+          <Layer
+            id="biomas-fill"
+            type="fill"
+            paint={{
+              "fill-color": [
+                "match", ["get", "Bioma"],
+                "Amazônia", "#2E7D32",
+                "Caatinga", "#C2864A",
+                "Cerrado", "#D4A017",
+                "Mata Atlântica", "#388E3C",
+                "Pampa", "#7CB342",
+                "Pantanal", "#0097A7",
+                "#9E9E9E",
+              ],
+              "fill-opacity": 0.10,
+            }}
+          />
+          <Layer
+            id="biomas-outline"
+            type="line"
+            paint={{ "line-color": "#5D4037", "line-width": 0.8, "line-opacity": 0.4 }}
+          />
+        </Source>
+      )}
+
       {showUCs && ucsGeojson && (
         <Source id="ucs" type="geojson" data={ucsGeojson}>
           <Layer
@@ -167,9 +248,64 @@ export function MiningMap({
         </Source>
       )}
 
+      {/* Energia — linhas de transmissão (ANEEL/SIGEL) */}
+      {showEnergia && energiaGeojson && (
+        <Source id="energia" type="geojson" data={energiaGeojson}>
+          <Layer
+            id="energia-line"
+            type="line"
+            paint={{
+              "line-color": "#F39C12",
+              "line-width": 1.5,
+              "line-opacity": 0.8,
+              "line-dasharray": [3, 1.5],
+            }}
+          />
+        </Source>
+      )}
+
+      {/* Subestações (energia — pontos) */}
+      {showSubestacoes && subestacoesGeojson && (
+        <Source id="subestacoes" type="geojson" data={subestacoesGeojson}>
+          <Layer id="subestacoes-pt" type="circle" paint={{
+            "circle-radius": 4, "circle-color": "#E67E22",
+            "circle-stroke-color": "#fff", "circle-stroke-width": 1, "circle-opacity": 0.85,
+          }} />
+        </Source>
+      )}
+
+      {/* Água — estações fluviométricas (pontos) */}
+      {showAgua && aguaGeojson && (
+        <Source id="agua" type="geojson" data={aguaGeojson}>
+          <Layer id="agua-pt" type="circle" paint={{
+            "circle-radius": 3, "circle-color": "#0097A7",
+            "circle-stroke-color": "#fff", "circle-stroke-width": 0.5, "circle-opacity": 0.8,
+          }} />
+        </Source>
+      )}
+
+      {/* Ferrovias (MInfra) — linhas */}
+      {showFerrovias && ferroviasGeojson && (
+        <Source id="ferrovias" type="geojson" data={ferroviasGeojson}>
+          <Layer id="ferrovias-line" type="line" paint={{
+            "line-color": "#7B1FA2", "line-width": 1.4, "line-opacity": 0.85,
+          }} />
+        </Source>
+      )}
+
+      {/* Portos (MInfra) — pontos */}
+      {showPortos && portosGeojson && (
+        <Source id="portos" type="geojson" data={portosGeojson}>
+          <Layer id="portos-pt" type="circle" paint={{
+            "circle-radius": 4, "circle-color": "#1565C0",
+            "circle-stroke-color": "#fff", "circle-stroke-width": 1, "circle-opacity": 0.9,
+          }} />
+        </Source>
+      )}
+
       {/* Concessões layer */}
-      {geojson && (
-        <Source id="concessoes" type="geojson" data={geojson}>
+      {sourceData && (
+        <Source id="concessoes" type="geojson" data={sourceData}>
           <Layer
             id="concessoes-fill"
             type="fill"
@@ -225,6 +361,15 @@ export function MiningMap({
               <p className="tabular-nums">
                 Área: {fmtHa(Number(popup.properties.AREA_HA))}
               </p>
+            )}
+            {onOpenAtivo && popup.properties.processo_norm != null && (
+              <button
+                type="button"
+                onClick={() => onOpenAtivo(str(popup.properties.processo_norm))}
+                className="mt-1 w-full rounded-md bg-brand-navy px-2 py-1.5 text-[11px] font-medium text-white hover:bg-brand-navy/90 transition-colors"
+              >
+                Abrir trilha do ativo →
+              </button>
             )}
             <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1">
               {popup.properties.processo_norm != null && (

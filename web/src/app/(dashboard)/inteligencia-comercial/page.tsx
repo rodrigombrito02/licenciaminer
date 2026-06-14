@@ -10,6 +10,7 @@ import {
   Trophy,
   Crown,
   ArrowRight,
+  Sparkles,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +21,7 @@ import { ProducaoTab } from "./tab-producao";
 import { TerritorioTab } from "./tab-territorio";
 import { RankingTab } from "./tab-ranking";
 import { PremiumTab } from "./tab-premium";
+import { ProdutosTab } from "./tab-produtos";
 import { PRESETS_BY_TAB } from "./chart-helpers";
 
 const TAB_ICONS = {
@@ -27,6 +29,7 @@ const TAB_ICONS = {
   ranking: Trophy,
   producao: Coins,
   territorio: MapPin,
+  produtos: Sparkles,
   premium: Crown,
 } as const;
 
@@ -35,11 +38,12 @@ const TAB_LABELS = {
   ranking: "Ranking",
   producao: "Produção & Receita",
   territorio: "Território",
+  produtos: "Produtos",
   premium: "Premium",
 } as const;
 
 type TabKey = keyof typeof TAB_LABELS;
-const TAB_KEYS: TabKey[] = ["mercado", "ranking", "producao", "territorio", "premium"];
+const TAB_KEYS: TabKey[] = ["mercado", "ranking", "producao", "territorio", "produtos", "premium"];
 
 export default function InteligenciaComercialPage() {
   return (
@@ -131,6 +135,9 @@ function InteligenciaContent() {
         </TabsContent>
         <TabsContent value="territorio" className="mt-0">
           <TerritorioTab activeMetric={activeMetric} onMetricChange={setActiveMetric} />
+        </TabsContent>
+        <TabsContent value="produtos" className="mt-0">
+          <ProdutosTab />
         </TabsContent>
         <TabsContent value="premium" className="mt-0">
           <PremiumTab />

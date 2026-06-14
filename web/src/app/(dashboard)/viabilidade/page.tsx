@@ -43,7 +43,8 @@ import {
   type ViabilidadeAnaliseSalva,
 } from "@/lib/api";
 import { useEffect } from "react";
-import { Building2, FileText, History, Save, Trash2 } from "lucide-react";
+import { Building2, FileText, History, Save, Trash2, Lock } from "lucide-react";
+import { RoleGate } from "@/components/role-gate";
 
 const ATIVIDADES = [
   { code: "A-01", label: "Pesquisa Mineral" },
@@ -448,11 +449,16 @@ export default function ViabilidadePage() {
                 </div>
                 <div>
                   <h3 className="font-heading text-lg font-bold">
-                    Probabilidade de Aprovacao: {result.perfil.probabilidade ?? "—"}%
+                    Índice de Sucesso do Segmento: {result.perfil.probabilidade ?? "—"}%
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Baseado em {fmtNumber(result.perfil.n_decisoes)} decisoes com perfil identico.
-                    Media geral: {result.perfil.media_geral}%.
+                    Taxa histórica de deferimento de processos com este perfil
+                    ({fmtNumber(result.perfil.n_decisoes)} decisões; média geral {result.perfil.media_geral}%).
+                  </p>
+                  <p className="text-xs text-foreground/70 mt-1.5 leading-relaxed">
+                    <strong>Não é uma probabilidade aleatória.</strong> É a régua do segmento —
+                    o resultado do <em>seu</em> processo depende da qualidade da instrução.
+                    Use o diagnóstico abaixo para se mover para o quartil superior.
                   </p>
                 </div>
               </div>
@@ -466,7 +472,7 @@ export default function ViabilidadePage() {
                 <p className={`text-2xl font-extrabold ${result.perfil.probabilidade && result.perfil.probabilidade < 65 ? "text-danger" : "text-success"}`}>
                   {result.perfil.probabilidade ?? "—"}%
                 </p>
-                <p className="text-xs text-muted-foreground">Probabilidade</p>
+                <p className="text-xs text-muted-foreground">Índice de Sucesso</p>
               </CardContent>
             </Card>
             <Card className={result.perfil.rigor_delta !== null && result.perfil.rigor_delta < -3 ? "border-danger/30" : "border-success/30"}>
@@ -487,13 +493,37 @@ export default function ViabilidadePage() {
             </Card>
           </div>
 
-          {/* Fatores */}
+          {/* Diagnóstico + Escopo + Recomendação — freemium: pago (3.4) */}
+          <RoleGate
+            minRole="visitante_pago"
+            fallback={
+              <Card className="border-2 border-brand-gold/40 bg-brand-gold/5">
+                <CardContent className="p-6 text-center space-y-2">
+                  <Lock className="h-8 w-8 text-brand-gold mx-auto" />
+                  <h3 className="font-heading font-bold">Diagnóstico completo é Premium</h3>
+                  <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                    Você está vendo o <strong>índice de sucesso do segmento</strong> (grátis).
+                    O <strong>diagnóstico prescritivo</strong> — o que fortalece seu processo,
+                    o escopo estimado e a recomendação — fazem parte do plano Premium.
+                  </p>
+                  <Button className="bg-brand-gold text-brand-navy hover:bg-brand-gold/90 mt-1">
+                    Conhecer o Premium
+                  </Button>
+                </CardContent>
+              </Card>
+            }
+          >
+          {/* Fatores — diagnóstico prescritivo */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-heading text-base">
                 <AlertTriangle className="h-4 w-4 text-brand-orange" />
-                Fatores de Atencao
+                Diagnóstico do processo
               </CardTitle>
+              <p className="text-xs text-muted-foreground">
+                O que separa os processos deferidos dos indeferidos neste segmento.
+                Aja sobre os fatores de maior risco para elevar seu índice.
+              </p>
             </CardHeader>
             <CardContent>
               <table className="w-full text-sm">
@@ -570,6 +600,7 @@ export default function ViabilidadePage() {
               </p>
             </CardContent>
           </Card>
+          </RoleGate>
 
           {/* CTAs */}
           <div className="grid gap-4 sm:grid-cols-2">

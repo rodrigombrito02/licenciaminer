@@ -60,3 +60,6 @@ Thumbs.db
 # Node
 node_modules/
 web/.next/
+
+# Snapshots derivados do radar ANM (regeneráveis)
+data/anm_snapshots/
