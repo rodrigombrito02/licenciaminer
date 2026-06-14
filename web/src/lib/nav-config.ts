@@ -6,6 +6,7 @@ import {
   Crosshair,
   GitBranch,
   Globe,
+  GraduationCap,
   Home,
   Layers,
   ListTodo,
@@ -106,6 +107,12 @@ export const NAV_SECTIONS: NavSection[] = [
     standalone: true,
     group: "produtos",
     items: [{ href: "/sq-solutions", label: "SQ Soluções", icon: Cpu }],
+  },
+  {
+    label: "",
+    standalone: true,
+    group: "produtos",
+    items: [{ href: "/treinamentos", label: "Treinamentos", icon: GraduationCap, disabled: true }],
   },
 
   // ── Ferramentas Internas (lista direta, sem sub-accordion)

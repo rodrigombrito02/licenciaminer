@@ -17,6 +17,7 @@ const PRODUTOS = [
   { href: "/inteligencia-comercial", label: "Mineral Intelligence" },
   { href: "/sq-consultoria", label: "SQ Consultoria" },
   { href: "/sq-solutions", label: "SQ Soluções" },
+  { href: "/treinamentos", label: "Treinamentos" },
   { href: "/mapa", label: "Mapa" },
 ];
 

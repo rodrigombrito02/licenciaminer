@@ -79,6 +79,7 @@ export const PUBLIC_PATHS: string[] = [
   "/seguranca",                 // Demo SQ Soluções
   "/mineradora-modelo",         // Régua de Excelência (showcase)
   "/sq-consultoria",            // Landing SQ Consultoria
+  "/treinamentos",              // Landing Treinamentos (em breve)
 ];
 // NOTA: /explorar, /concessoes e /prospeccao saíram do público (dado cru / ferramenta)
 // — agora exigem login (ver PAGO_PATHS e CONSULTOR_PATHS).

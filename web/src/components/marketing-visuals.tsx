@@ -1,9 +1,15 @@
 "use client";
 
 /**
- * Visuais ilustrativos para os heros das landings (mockups "preview" do produto,
- * em card claro sobre o hero escuro). Sem dado real sensível — ilustrativo.
+ * Visuais para os heros das landings (card claro sobre o hero escuro).
+ * Mineral Intelligence e Ativos usam DADO REAL (endpoints públicos /api/mi);
+ * Ambiental e Consultoria são previews de conceito (dado real exigiria expor
+ * informação interna/de cliente).
  */
+
+import { useEffect, useState } from "react";
+
+const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
 
 /* ── SQ Ambiental: Radar de Condicionantes ── */
 export function AmbientalVisual() {
@@ -27,23 +33,28 @@ export function AmbientalVisual() {
   );
 }
 
-/* ── Ativos Minerários: mapa + trilha ── */
+/* ── Ativos Minerários: minerais estratégicos (DADO REAL · SCM/ANM) ── */
 export function AtivosVisual() {
-  const etapas = ["Pesquisa", "RFP", "Lavra", "Operação"];
+  const [bars, setBars] = useState<{ l: string; v: number }[] | null>(null);
+  useEffect(() => {
+    fetch(`${API}/mi/radar-estrategicos`).then((r) => r.json()).then((d) => {
+      const top = (d.por_substancia ?? []).slice(0, 5)
+        .map((x: { substancia: string; n: number }) => ({ l: cap(x.substancia), v: x.n }));
+      setBars(top);
+    }).catch(() => setBars([]));
+  }, []);
+  const max = Math.max(1, ...(bars ?? []).map((b) => b.v));
   return (
-    <Frame titulo="Trilha do Ativo" tag="do mapa à operação">
-      <svg viewBox="0 0 240 90" className="w-full rounded bg-slate-100" style={{ height: 80 }}>
-        {[[30,30],[70,55],[120,35],[170,60],[200,30]].map(([x,y],i)=>(
-          <polygon key={i} points={`${x},${y} ${x+18},${y-6} ${x+22},${y+10} ${x+4},${y+16}`}
-            fill={["#0E7490","#156082","#22C55E","#F59E0B","#0E7490"][i]} opacity="0.75" />
-        ))}
-      </svg>
-      <div className="mt-2 flex items-center gap-1">
-        {etapas.map((e, i) => (
-          <div key={e} className="flex items-center gap-1">
-            <span className={`h-1.5 w-1.5 rounded-full ${i <= 2 ? "bg-emerald-500" : "bg-slate-300"}`} />
-            <span className="text-[9px] text-slate-600">{e}</span>
-            {i < etapas.length - 1 && <span className="text-slate-300 text-[9px]">›</span>}
+    <Frame titulo="Requerimentos por substância" tag="minerais estratégicos · ANM">
+      <div className="space-y-1.5 min-h-[120px]">
+        {bars === null ? <Spin /> : bars.map((b) => (
+          <div key={b.l}>
+            <div className="flex justify-between text-[10px] text-slate-600">
+              <span className="truncate">{b.l}</span><span className="font-semibold tabular-nums">{b.v.toLocaleString("pt-BR")}</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-slate-200 overflow-hidden">
+              <div className="h-full rounded-full bg-brand-teal" style={{ width: `${(b.v / max) * 100}%` }} />
+            </div>
           </div>
         ))}
       </div>
@@ -75,24 +86,40 @@ export function ConsultoriaVisual() {
   );
 }
 
-/* ── SQ Mineral Intelligence: gráfico CFEM ── */
+/* ── SQ Mineral Intelligence: Monitor CFEM (DADO REAL · ANM) ── */
 export function IntelligenceVisual() {
-  const bars = [
-    { l: "Ferro", v: 100 }, { l: "Ouro", v: 42 }, { l: "Fosfato", v: 28 },
-    { l: "Calcário", v: 20 }, { l: "Bauxita", v: 16 },
-  ];
+  const [bars, setBars] = useState<{ l: string; v: number }[] | null>(null);
+  useEffect(() => {
+    fetch(`${API}/mi/monitor-cfem?ano=2025&limit=5`).then((r) => r.json()).then((d) => {
+      const top = (d.ranking ?? []).slice(0, 5)
+        .map((x: { substancia: string; valor_recolhido: number }) => ({ l: cap(x.substancia), v: x.valor_recolhido || 0 }));
+      setBars(top);
+    }).catch(() => setBars([]));
+  }, []);
+  const max = Math.max(1, ...(bars ?? []).map((b) => b.v));
   return (
-    <Frame titulo="Monitor CFEM" tag="arrecadação 2025">
-      <div className="flex items-end gap-2 h-24 px-1">
-        {bars.map((b) => (
-          <div key={b.l} className="flex flex-1 flex-col items-center gap-1">
-            <div className="w-full rounded-t bg-gradient-to-t from-brand-teal to-brand-gold" style={{ height: `${b.v}%` }} />
-            <span className="text-[9px] text-slate-600">{b.l}</span>
-          </div>
-        ))}
-      </div>
+    <Frame titulo="Monitor CFEM" tag="arrecadação 2025 · ANM">
+      {bars === null ? <div className="h-24 flex items-center justify-center"><Spin /></div> : (
+        <div className="flex items-end gap-2 h-24 px-1">
+          {bars.map((b) => (
+            <div key={b.l} className="flex flex-1 flex-col items-center gap-1">
+              <div className="w-full rounded-t bg-gradient-to-t from-brand-teal to-brand-gold" style={{ height: `${Math.max(6, (b.v / max) * 100)}%` }} title={`R$ ${(b.v/1e6).toFixed(0)} mi`} />
+              <span className="text-[8px] text-slate-600 truncate w-full text-center">{b.l}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </Frame>
   );
+}
+
+function Spin() {
+  return <div className="h-4 w-4 rounded-full border-2 border-brand-teal border-t-transparent animate-spin mx-auto" />;
+}
+function cap(s: string): string {
+  if (!s) return "—";
+  const t = s.toLowerCase().replace("minério de ", "").replace("minerio de ", "");
+  return t.charAt(0).toUpperCase() + t.slice(1);
 }
 
 function Frame({ titulo, tag, children }: { titulo: string; tag: string; children: React.ReactNode }) {
