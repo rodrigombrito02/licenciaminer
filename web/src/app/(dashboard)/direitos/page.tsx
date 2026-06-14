@@ -15,6 +15,7 @@ import {
 import { BigActionCard } from "@/components/big-action-card";
 import { RoleGate } from "@/components/role-gate";
 import { MktHero, StatBand, MktSection, FeatureCard, CTABand } from "@/components/marketing-ui";
+import { AtivosVisual } from "@/components/marketing-visuals";
 
 export default function DireitosPage() {
   return (
@@ -25,6 +26,7 @@ export default function DireitosPage() {
         title={<>Do direito ANM ao <span className="text-brand-gold">ativo operacional</span>.</>}
         subtitle="Cada direito minerário tratado como um ativo com ciclo de vida — da geologia à lavra. Mapa multi-camadas, prospecção por teses e a trilha completa do ativo, sobre dados públicos auditáveis."
         cor="teal"
+        visual={<AtivosVisual />}
       />
 
       <StatBand stats={[

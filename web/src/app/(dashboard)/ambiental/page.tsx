@@ -31,6 +31,7 @@ import { ModuleHero } from "@/components/module-hero";
 import { BigActionCard } from "@/components/big-action-card";
 import { RoleGate } from "@/components/role-gate";
 import { MktHero, StatBand, MktSection, FeatureCard, CTABand } from "@/components/marketing-ui";
+import { AmbientalVisual } from "@/components/marketing-visuals";
 import { useEffectiveRole } from "@/hooks/use-effective-role";
 import {
   fetchOverviewStats,
@@ -312,6 +313,7 @@ function AmbientalLanding() {
         title={<>Licenciamento ambiental sem <span className="text-brand-gold">surpresa</span>.</>}
         subtitle="Da análise preliminar do seu segmento à Diligência Summo completa — conformidade ambiental e minerária apoiada em dados públicos auditáveis e na senioridade de quem conhece o setor."
         cor="teal"
+        visual={<AmbientalVisual />}
       />
 
       <StatBand stats={[

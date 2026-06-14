@@ -22,6 +22,7 @@ import { TerritorioTab } from "./tab-territorio";
 import { RankingTab } from "./tab-ranking";
 import { PremiumTab } from "./tab-premium";
 import { ProdutosTab } from "./tab-produtos";
+import { IntelligenceVisual } from "@/components/marketing-visuals";
 import { PRESETS_BY_TAB } from "./chart-helpers";
 
 const TAB_ICONS = {
@@ -88,23 +89,26 @@ function InteligenciaContent() {
       {/* Hero chamativo */}
       <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0A2540] via-[#1A2C42] to-[#3a2a0a] px-7 py-8 lg:py-10">
         <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
-        <div className="relative z-10 max-w-3xl">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="rounded-lg bg-brand-gold/30 p-2">
-              <Globe className="h-6 w-6 text-brand-gold" />
+        <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-center">
+          <div className="lg:flex-1 max-w-2xl">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="rounded-lg bg-brand-gold/30 p-2">
+                <Globe className="h-6 w-6 text-brand-gold" />
+              </div>
+              <Badge className="bg-brand-gold/20 text-brand-gold border-brand-gold/40">
+                Mineral Intelligence
+              </Badge>
             </div>
-            <Badge className="bg-brand-gold/20 text-brand-gold border-brand-gold/40">
-              Mineral Intelligence
-            </Badge>
+            <h1 className="font-heading text-2xl lg:text-3xl font-bold text-white mb-2">
+              Inteligência do mercado mineral brasileiro
+            </h1>
+            <p className="text-sm leading-relaxed text-white/70 max-w-2xl">
+              Mercado, produção, território e regulatório. Dados públicos auditáveis
+              (ANM, BCB, Comex, IBAMA) curados pela Summo, com análises que orientam
+              decisões estratégicas em mineração.
+            </p>
           </div>
-          <h1 className="font-heading text-2xl lg:text-3xl font-bold text-white mb-2">
-            Inteligência do mercado mineral brasileiro
-          </h1>
-          <p className="text-sm leading-relaxed text-white/70 max-w-2xl">
-            Mercado, produção, território e regulatório. Dados públicos auditáveis
-            (ANM, BCB, Comex, IBAMA) curados pela Summo, com análises que orientam
-            decisões estratégicas em mineração.
-          </p>
+          <div className="lg:w-[38%] lg:shrink-0"><IntelligenceVisual /></div>
         </div>
       </section>
 

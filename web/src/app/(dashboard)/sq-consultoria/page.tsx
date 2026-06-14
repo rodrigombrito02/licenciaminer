@@ -15,6 +15,7 @@ import {
 import { RoleGate } from "@/components/role-gate";
 import { ConsultoriaCarteira } from "@/components/consultoria-carteira";
 import { MktHero, StatBand, MktSection, FeatureCard, CTABand } from "@/components/marketing-ui";
+import { ConsultoriaVisual } from "@/components/marketing-visuals";
 
 export default function SQConsultoriaPage() {
   return (
@@ -25,6 +26,7 @@ export default function SQConsultoriaPage() {
         title={<>Inteligência sênior que vira <span className="text-brand-gold">decisão</span>.</>}
         subtitle="Inteligência sênior aplicada à gestão do setor mineral: diagnóstico contra a régua de excelência, riscos e crises, gestão estratégica de projetos e governança — metodologia consolidada operada em cockpit digital."
         cor="navy"
+        visual={<ConsultoriaVisual />}
       />
 
       {/* Mineradora Modelo — Régua de Excelência (chamariz da consultoria) */}

@@ -20,33 +20,36 @@ const GRAD: Record<Cor, string> = {
 /** Hero forte de landing. */
 export function MktHero({
   eyebrow, title, subtitle, cor = "navy", ctaLabel = "Falar com a Summo", ctaHref = "/login",
-  secondaryLabel, secondaryHref, icon: Icon,
+  secondaryLabel, secondaryHref, icon: Icon, visual,
 }: {
   eyebrow?: string; title: React.ReactNode; subtitle?: string; cor?: Cor;
   ctaLabel?: string; ctaHref?: string; secondaryLabel?: string; secondaryHref?: string;
-  icon?: ComponentType<{ className?: string }>;
+  icon?: ComponentType<{ className?: string }>; visual?: React.ReactNode;
 }) {
   return (
-    <section className={`relative overflow-hidden rounded-3xl bg-gradient-to-br ${GRAD[cor]} px-7 py-12 lg:px-12 lg:py-16`}>
+    <section className={`relative overflow-hidden rounded-3xl bg-gradient-to-br ${GRAD[cor]} px-7 py-12 lg:px-12 lg:py-14`}>
       <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "30px 30px" }} />
-      <div className="relative z-10 max-w-3xl">
-        {eyebrow && (
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-brand-gold">
-            {Icon && <Icon className="h-3.5 w-3.5" />} {eyebrow}
-          </div>
-        )}
-        <h1 className="font-heading text-3xl font-bold leading-tight tracking-tight text-white lg:text-[2.7rem]">{title}</h1>
-        {subtitle && <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/75">{subtitle}</p>}
-        <div className="mt-7 flex flex-wrap items-center gap-3">
-          <Link href={ctaHref} className="inline-flex items-center gap-2 rounded-xl bg-brand-gold px-6 py-3 text-sm font-semibold text-brand-navy hover:bg-brand-gold/90 transition-colors">
-            {ctaLabel} <ArrowRight className="h-4 w-4" />
-          </Link>
-          {secondaryLabel && secondaryHref && (
-            <Link href={secondaryHref} className="inline-flex items-center gap-2 rounded-xl border border-white/25 px-6 py-3 text-sm font-medium text-white hover:bg-white/10 transition-colors">
-              {secondaryLabel}
-            </Link>
+      <div className={`relative z-10 flex flex-col gap-8 ${visual ? "lg:flex-row lg:items-center" : ""}`}>
+        <div className={visual ? "lg:flex-1 max-w-2xl" : "max-w-3xl"}>
+          {eyebrow && (
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-brand-gold">
+              {Icon && <Icon className="h-3.5 w-3.5" />} {eyebrow}
+            </div>
           )}
+          <h1 className="font-heading text-3xl font-bold leading-tight tracking-tight text-white lg:text-[2.5rem]">{title}</h1>
+          {subtitle && <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/75">{subtitle}</p>}
+          <div className="mt-7 flex flex-wrap items-center gap-3">
+            <Link href={ctaHref} className="inline-flex items-center gap-2 rounded-xl bg-brand-gold px-6 py-3 text-sm font-semibold text-brand-navy hover:bg-brand-gold/90 transition-colors">
+              {ctaLabel} <ArrowRight className="h-4 w-4" />
+            </Link>
+            {secondaryLabel && secondaryHref && (
+              <Link href={secondaryHref} className="inline-flex items-center gap-2 rounded-xl border border-white/25 px-6 py-3 text-sm font-medium text-white hover:bg-white/10 transition-colors">
+                {secondaryLabel}
+              </Link>
+            )}
+          </div>
         </div>
+        {visual && <div className="lg:w-[42%] lg:shrink-0">{visual}</div>}
       </div>
     </section>
   );
