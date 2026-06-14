@@ -139,6 +139,7 @@ function MapaContent() {
   const [showAgua, setShowAgua] = useState(params.get("agua") === "1");
   const [showFerrovias, setShowFerrovias] = useState(params.get("ferrovias") === "1");
   const [showPortos, setShowPortos] = useState(params.get("portos") === "1");
+  const [showGeologia, setShowGeologia] = useState(params.get("geologia") === "1");
   const [ucsGeojson, setUcsGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
   const [tisGeojson, setTisGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
   const [biomasGeojson, setBiomasGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
@@ -147,6 +148,7 @@ function MapaContent() {
   const [aguaGeojson, setAguaGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
   const [ferroviasGeojson, setFerroviasGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
   const [portosGeojson, setPortosGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [geologiaGeojson, setGeologiaGeojson] = useState<GeoJSON.FeatureCollection | null>(null);
   const [ativoProcesso, setAtivoProcesso] = useState<string | null>(null);
 
   // Sync filters to URL (no re-render)
@@ -250,6 +252,12 @@ function MapaContent() {
       fetchGeoLayer("portos").then(setPortosGeojson).catch((e) => { console.error("Portos:", e); });
     }
   }, [showPortos, portosGeojson]);
+
+  useEffect(() => {
+    if (showGeologia && !geologiaGeojson) {
+      fetchGeoLayer("geologia").then(setGeologiaGeojson).catch((e) => { console.error("Geologia:", e); });
+    }
+  }, [showGeologia, geologiaGeojson]);
 
   const colorPalettes = filterOptions?.color_palettes ?? {
     categoria: {},
@@ -490,12 +498,24 @@ function MapaContent() {
                 </div>
               </div>
 
+              {/* Geologia */}
+              <div className="border-t pt-2">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Geologia</p>
+                <div className="flex items-center gap-2">
+                  <Checkbox id="show-geologia" checked={showGeologia} onCheckedChange={(v) => setShowGeologia(!!v)} />
+                  <label htmlFor="show-geologia" className="text-xs cursor-pointer flex items-center gap-1.5">
+                    <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: "#795548" }} />
+                    Ocorrências minerais
+                    <span className="text-[9px] text-muted-foreground">SGB · 36k</span>
+                  </label>
+                </div>
+              </div>
+
               {/* Próximas dimensões */}
               <div className="border-t pt-2">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Próximas camadas</p>
                 <div className="space-y-1.5 opacity-60">
                   {[
-                    { l: "Geologia", f: "CPRM", c: "#795548" },
                     { l: "Pluviometria", f: "INMET", c: "#0288D1" },
                   ].map((x) => (
                     <div key={x.l} className="flex items-center gap-2">
@@ -575,6 +595,8 @@ function MapaContent() {
                 showPortos={showPortos}
                 ferroviasGeojson={ferroviasGeojson}
                 portosGeojson={portosGeojson}
+                showGeologia={showGeologia}
+                geologiaGeojson={geologiaGeojson}
                 onOpenAtivo={setAtivoProcesso}
               />
             )}

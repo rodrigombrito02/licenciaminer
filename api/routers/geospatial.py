@@ -95,6 +95,7 @@ def _load_restriction_layer(name: str):
         "agua": REFERENCE_DIR / "ana_estacoes_fluviometricas_mg.parquet",  # estações fluviométricas ANA
         "ferrovias": REFERENCE_DIR / "ferrovias_br.parquet",  # ferrovias (MInfra/INDE)
         "portos": REFERENCE_DIR / "portos_br.parquet",  # portos (MInfra/INDE)
+        "geologia": REFERENCE_DIR / "geosgb_ocorrencias.parquet",  # ocorrências minerais (SGB/ex-CPRM)
     }
     # Biomas sao poligonos continentais — simplificar mais forte para a web.
     tolerancias = {"biomas": 0.05}
@@ -289,7 +290,7 @@ def get_geo_filter_options():
 @router.get("/geo/layers/{layer_name}")
 def get_restriction_layer(layer_name: str):
     """Retorna GeoJSON de camada geo (UCs, TIs ou Biomas)."""
-    if layer_name not in ("ucs", "tis", "biomas", "energia", "subestacoes", "agua", "ferrovias", "portos"):
+    if layer_name not in ("ucs", "tis", "biomas", "energia", "subestacoes", "agua", "ferrovias", "portos", "geologia"):
         raise HTTPException(status_code=404, detail="Camada não encontrada.")
 
     gdf = _load_restriction_layer(layer_name)

@@ -49,6 +49,7 @@ def _base(nome: str) -> gpd.GeoDataFrame | None:
         "ferrovias": "ferrovias_br.parquet",
         "portos": "portos_br.parquet",
         "ocorrencias": "cprm_ocorrencias_mg.parquet",
+        "geologia": "geosgb_ocorrencias.parquet",
     }
     f = arquivos.get(nome)
     if not f or not (REF / f).exists():
@@ -288,15 +289,33 @@ def enriquecer(
     except Exception as e:
         out["stakeholder"] = _p(0, f"erro: {e}", "estimativa")
 
-    # 8. Geológico — substância estratégica + contexto
+    # 8. Geológico — ocorrência mineral conhecida mais próxima (SGB/ex-CPRM)
     try:
-        estrat = (categoria or "").startswith("Metálicos")
-        if estrat:
+        geo = _base("geologia")
+        km = _dist_km(ponto, geo)
+        if km is not None and ponto is not None:
+            # status da ocorrência mais próxima (Mina/Garimpo = sinal forte)
+            status = None
+            try:
+                idx = geo.geometry.distance(ponto).idxmin()
+                status = geo.loc[idx].get("STATUS_ECONOMICO")
+            except Exception:
+                status = None
+            forte = str(status) in ("Mina", "Garimpo")
+            if km < 5:
+                sc = 5 if forte else 4
+            elif km < 15:
+                sc = 4 if forte else 3
+            elif km < 40:
+                sc = 3
+            else:
+                sc = 2
+            alvo = f" ({status})" if status else ""
+            out["geologico"] = _p(sc, f"{km:.0f} km da ocorrência mineral SGB mais próxima{alvo}{suf}", conf_dist)
+        elif (categoria or "").startswith("Metálicos"):
             out["geologico"] = _p(4, f"Substância de classe metálica ({categoria})", "media")
-        elif categoria:
-            out["geologico"] = _p(3, f"Categoria: {categoria}", "media")
         else:
-            out["geologico"] = _p(3, "A caracterizar (sondagem/CPRM)", "estimativa")
+            out["geologico"] = _p(3, "A caracterizar (sondagem/SGB)", "estimativa")
     except Exception as e:
         out["geologico"] = _p(0, f"erro: {e}", "estimativa")
 

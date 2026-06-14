@@ -39,6 +39,8 @@ interface MiningMapProps {
   showPortos?: boolean;
   ferroviasGeojson?: GeoJSON.FeatureCollection | null;
   portosGeojson?: GeoJSON.FeatureCollection | null;
+  showGeologia?: boolean;
+  geologiaGeojson?: GeoJSON.FeatureCollection | null;
   /** Abre o painel do ativo (trilha + portfólio) para um processo. */
   onOpenAtivo?: (processo: string) => void;
 }
@@ -85,6 +87,8 @@ export function MiningMap({
   showPortos,
   ferroviasGeojson,
   portosGeojson,
+  showGeologia,
+  geologiaGeojson,
   onOpenAtivo,
 }: MiningMapProps) {
   const mapRef = useRef<MapRef>(null);
@@ -299,6 +303,15 @@ export function MiningMap({
           <Layer id="portos-pt" type="circle" paint={{
             "circle-radius": 4, "circle-color": "#1565C0",
             "circle-stroke-color": "#fff", "circle-stroke-width": 1, "circle-opacity": 0.9,
+          }} />
+        </Source>
+      )}
+
+      {/* Geologia — ocorrências minerais (SGB) */}
+      {showGeologia && geologiaGeojson && (
+        <Source id="geologia" type="geojson" data={geologiaGeojson}>
+          <Layer id="geologia-pt" type="circle" paint={{
+            "circle-radius": 2.5, "circle-color": "#795548", "circle-opacity": 0.6,
           }} />
         </Source>
       )}

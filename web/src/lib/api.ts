@@ -912,7 +912,7 @@ export function fetchGeoFilters() {
 }
 
 export function fetchGeoLayer(
-  layer: "ucs" | "tis" | "biomas" | "energia" | "subestacoes" | "agua" | "ferrovias" | "portos",
+  layer: "ucs" | "tis" | "biomas" | "energia" | "subestacoes" | "agua" | "ferrovias" | "portos" | "geologia",
 ) {
   return apiFetch<GeoJSON.FeatureCollection>(`/geo/layers/${layer}`);
 }
