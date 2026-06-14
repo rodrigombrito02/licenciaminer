@@ -7,9 +7,7 @@
 
 import type { ComponentType } from "react";
 import Link from "next/link";
-import { ArrowRight, Phone, Check } from "lucide-react";
-
-const TEL_HREF = "tel:+5531997552100";
+import { ArrowRight, Check } from "lucide-react";
 
 type Cor = "navy" | "teal" | "gold" | "orange";
 const GRAD: Record<Cor, string> = {
@@ -129,9 +127,6 @@ export function CTABand({
         <Link href="/login" className="inline-flex items-center gap-2 rounded-xl bg-brand-gold px-6 py-3 text-sm font-semibold text-brand-navy hover:bg-brand-gold/90 transition-colors">
           Falar com a Summo <ArrowRight className="h-4 w-4" />
         </Link>
-        <a href={TEL_HREF} className="inline-flex items-center gap-2 rounded-xl border border-white/30 px-6 py-3 text-sm font-medium hover:bg-white/10 transition-colors">
-          <Phone className="h-4 w-4" /> (31) 99755-2100
-        </a>
       </div>
     </section>
   );

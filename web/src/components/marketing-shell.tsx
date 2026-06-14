@@ -9,7 +9,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, Phone, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 
 const PRODUTOS = [
   { href: "/ambiental", label: "SQ Ambiental" },
@@ -19,9 +19,6 @@ const PRODUTOS = [
   { href: "/sq-solutions", label: "SQ Soluções" },
   { href: "/mapa", label: "Mapa" },
 ];
-
-const TEL = "(31) 99755-2100";
-const TEL_HREF = "tel:+5531997552100";
 
 export function MarketingShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -48,9 +45,6 @@ export function MarketingShell({ children }: { children: React.ReactNode }) {
           </nav>
 
           <div className="hidden items-center gap-2 lg:flex">
-            <a href={TEL_HREF} className="flex items-center gap-1.5 text-sm font-medium text-brand-navy">
-              <Phone className="h-3.5 w-3.5" /> {TEL}
-            </a>
             <Link href="/login" className="rounded-lg bg-brand-navy px-4 py-2 text-sm font-semibold text-white hover:bg-brand-navy/90 transition-colors">
               Entrar
             </Link>
@@ -71,11 +65,8 @@ export function MarketingShell({ children }: { children: React.ReactNode }) {
                   {p.label}
                 </Link>
               ))}
-              <div className="mt-2 flex items-center gap-2 border-t border-border/60 pt-3">
-                <a href={TEL_HREF} className="flex flex-1 items-center gap-1.5 text-sm font-medium text-brand-navy">
-                  <Phone className="h-4 w-4" /> {TEL}
-                </a>
-                <Link href="/login" className="rounded-lg bg-brand-navy px-4 py-2 text-sm font-semibold text-white">Entrar</Link>
+              <div className="mt-2 border-t border-border/60 pt-3">
+                <Link href="/login" className="block rounded-lg bg-brand-navy px-4 py-2 text-center text-sm font-semibold text-white">Entrar</Link>
               </div>
             </div>
           </div>
@@ -94,9 +85,6 @@ export function MarketingShell({ children }: { children: React.ReactNode }) {
               <p className="mt-1 text-sm text-white/70">Fale com um consultor sênior da Summo Quartile.</p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <a href={TEL_HREF} className="flex items-center gap-2 rounded-lg border border-white/30 px-4 py-2.5 text-sm font-medium hover:bg-white/10 transition-colors">
-                <Phone className="h-4 w-4" /> {TEL}
-              </a>
               <Link href="/login" className="flex items-center gap-1.5 rounded-lg bg-brand-gold px-5 py-2.5 text-sm font-semibold text-brand-navy hover:bg-brand-gold/90 transition-colors">
                 Falar com a Summo <ArrowRight className="h-4 w-4" />
               </Link>
