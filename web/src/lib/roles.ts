@@ -71,30 +71,41 @@ export const PUBLIC_PATHS: string[] = [
   "/",                          // Home (3 versoes conforme role; sem login mostra vitrine)
   "/login",
   "/auth",
-  "/ambiental",                 // Capa do ambiental com 3 botoes
-  "/direitos",                  // Capa Direitos e Concessoes
-  "/sq-solutions",              // Capa SQ Solutions
-  "/explorar",                  // Explorar dados publicos (com limites em visitante_free)
-  "/inteligencia-comercial",    // Mercado mineral publico
-  "/mapa",                      // Mapa geoespacial publico
-  "/concessoes",                // Concessoes ANM publico
-  "/prospeccao",                // Prospeccao publica
-  "/seguranca",                 // SQ Solutions
-  "/mineradora-modelo",         // Demo da SQ Solutions
+  "/ambiental",                 // Landing SQ Ambiental
+  "/direitos",                  // Landing Ativos Minerários
+  "/sq-solutions",              // Landing SQ Soluções
+  "/inteligencia-comercial",    // Landing Mineral Intelligence (mercado público)
+  "/mapa",                      // Mapa geoespacial público (anzol)
+  "/seguranca",                 // Demo SQ Soluções
+  "/mineradora-modelo",         // Régua de Excelência (showcase)
+  "/sq-consultoria",            // Landing SQ Consultoria
+  "/treinamentos",              // Landing Treinamentos (em breve)
+];
+// NOTA: /explorar, /concessoes e /prospeccao saíram do público (dado cru / ferramenta)
+// — agora exigem login (ver PAGO_PATHS e CONSULTOR_PATHS).
+
+/** Rotas que exigem login (qualquer tier). Freemium: conteúdo parcial gateado na página. */
+export const LOGADO_PATHS: string[] = [
+  "/viabilidade",               // Análise preliminar — índice grátis (isca), diagnóstico pago
 ];
 
 /** Rotas que precisam de pelo menos visitante_pago */
 export const PAGO_PATHS: string[] = [
-  "/viabilidade",               // Analise preliminar de licenciamento
   "/empresa",                   // Consulta por CNPJ
   "/decisoes",                  // Analise de decisoes
+  "/explorar",                  // Explorar dados (saiu do público)
+  "/concessoes",                // Lista ANM com titular/CNPJ (saiu do público)
 ];
 
 /** Rotas de uso interno (consultor+) */
 export const CONSULTOR_PATHS: string[] = [
   "/due-diligence",
   "/pilhas",
+  "/prospeccao",                // Ferramenta de prospecção (saiu do público)
   "/ferramentas-internas",      // Capa geral
+  "/mapeamentos",               // Prospeccao multi-tese
+  "/evolucao",                  // Evolucao do Sistema (plano + sprints)
+  "/condicionantes",            // Radar de Condicionantes (SQ Ambiental)
   "/planos-de-acao",
   "/projetos",
   "/riscos",                    // Capa Riscos
@@ -102,11 +113,12 @@ export const CONSULTOR_PATHS: string[] = [
   "/gestao-riscos",
   "/gestao-crises",
   "/comunicacoes",
+  "/oportunidades",             // Funil = trilha de ativos (liberado p/ consultor)
+  "/captacao",                  // Inbox de demandas + funis por frente
 ];
 
 /** Rotas restritas a admin/socios */
 export const ADMIN_PATHS: string[] = [
-  "/oportunidades",
   "/admin",
   "/gestao-interna",
 ];
@@ -121,6 +133,9 @@ export function requiredRoleForPath(pathname: string): Role | "public" {
   }
   for (const p of PAGO_PATHS) {
     if (pathname === p || pathname.startsWith(p + "/")) return "visitante_pago";
+  }
+  for (const p of LOGADO_PATHS) {
+    if (pathname === p || pathname.startsWith(p + "/")) return "visitante_free";
   }
   // Tudo o mais e tratado como publico (Home/vitrine)
   return "public";

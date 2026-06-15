@@ -13,7 +13,7 @@
  */
 
 import type { ReactNode } from "react";
-import { useRole } from "@/hooks/use-role";
+import { useEffectiveRole } from "@/hooks/use-effective-role";
 import { hasAnyRole, hasMinRole, type Role } from "@/lib/roles";
 
 interface RoleGateProps {
@@ -35,7 +35,7 @@ export function RoleGate({
   anonymous,
   children,
 }: RoleGateProps) {
-  const state = useRole();
+  const state = useEffectiveRole();
 
   if (state.status === "loading") return null;
 

@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Crown, FileText, Bell, Database, ArrowRight, Lock } from "lucide-react";
-import { useRole } from "@/hooks/use-role";
+import { useEffectiveRole as useRole } from "@/hooks/use-effective-role";
 
 export function PremiumTab() {
   const roleState = useRole();

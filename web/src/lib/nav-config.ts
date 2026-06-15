@@ -3,7 +3,10 @@ import {
   Briefcase,
   Building2,
   Cpu,
+  Crosshair,
+  GitBranch,
   Globe,
+  GraduationCap,
   Home,
   Layers,
   ListTodo,
@@ -36,6 +39,8 @@ export interface NavGroup {
   key: string;
   label: string;
   description?: string;
+  /** Se true (default), o grupo é um accordion colapsável. Produtos = false (sempre expostos). */
+  collapsible?: boolean;
 }
 
 export const NAV_GROUPS: NavGroup[] = [
@@ -43,16 +48,19 @@ export const NAV_GROUPS: NavGroup[] = [
     key: "produtos",
     label: "Produtos Comerciais",
     description: "Caixas com cara externa — vendáveis para clientes",
+    collapsible: false,
   },
   {
     key: "ferramentas-internas",
     label: "Ferramentas Internas",
     description: "Cockpit operacional Summo — apoio aos projetos de cliente",
+    collapsible: true,
   },
   {
     key: "gestao",
     label: "Gestão da Plataforma",
     description: "Restrito a sócios e administradores",
+    collapsible: true,
   },
 ];
 
@@ -74,13 +82,13 @@ export const NAV_SECTIONS: NavSection[] = [
     label: "",
     standalone: true,
     group: "produtos",
-    items: [{ href: "/ambiental", label: "Summo Ambiental", icon: ShieldCheck }],
+    items: [{ href: "/ambiental", label: "SQ Ambiental", icon: ShieldCheck }],
   },
   {
     label: "",
     standalone: true,
     group: "produtos",
-    items: [{ href: "/direitos", label: "Direitos e Concessões", icon: Map }],
+    items: [{ href: "/direitos", label: "Ativos Minerários", icon: Map }],
   },
   {
     label: "",
@@ -92,32 +100,47 @@ export const NAV_SECTIONS: NavSection[] = [
     label: "",
     standalone: true,
     group: "produtos",
-    items: [{ href: "/sq-solutions", label: "SQ Solutions", icon: Cpu }],
+    items: [{ href: "/sq-consultoria", label: "SQ Consultoria", icon: Briefcase }],
+  },
+  {
+    label: "",
+    standalone: true,
+    group: "produtos",
+    items: [{ href: "/sq-solutions", label: "SQ Soluções", icon: Cpu }],
+  },
+  {
+    label: "",
+    standalone: true,
+    group: "produtos",
+    items: [{ href: "/treinamentos", label: "Treinamentos", icon: GraduationCap, disabled: true }],
   },
 
-  // ── Ferramentas Internas (6 ferramentas, 1 item por ferramenta)
+  // ── Ferramentas Internas (lista direta, sem sub-accordion)
   {
-    label: "Ferramentas",
-    color: "text-brand-orange",
+    label: "",
+    standalone: true,
     group: "ferramentas-internas",
     items: [
       { href: "/ferramentas-internas", label: "Visão geral", icon: Workflow },
+      { href: "/mapeamentos", label: "Mapeamentos", icon: Crosshair },
       { href: "/planos-de-acao", label: "Plano de Ações", icon: ListTodo },
       { href: "/projetos", label: "Projetos", icon: FolderOpen },
       { href: "/riscos", label: "Riscos", icon: AlertTriangle },
       { href: "/gestao-crises", label: "Crises", icon: AlertTriangle },
       { href: "/comunicacoes", label: "Comunicações", icon: MessageSquare },
-      { href: "/oportunidades", label: "Oportunidades", icon: Target },
+      { href: "/oportunidades", label: "Funil / Oportunidades", icon: Target },
+      { href: "/captacao", label: "Captação", icon: TrendingUp },
     ],
   },
 
-  // ── Gestão (admin)
+  // ── Gestão (admin) — lista direta
   {
-    label: "Gestão",
-    color: "text-sidebar-foreground/50",
+    label: "",
+    standalone: true,
     group: "gestao",
     items: [
       { href: "/admin", label: "Painel Admin", icon: Briefcase },
+      { href: "/evolucao", label: "Evolução do Sistema", icon: GitBranch },
       { href: "/gestao-interna", label: "Gestão Interna", icon: Lock, disabled: true },
     ],
   },
@@ -126,7 +149,7 @@ export const NAV_SECTIONS: NavSection[] = [
 /** Cards visíveis na landing/home pra visitante */
 export const BUSINESS_UNITS = [
   {
-    title: "Summo Ambiental",
+    title: "SQ Ambiental",
     description: "Análise de dados regulatórios, viabilidade preliminar e Diligência Summo (DD ambiental + pilhas).",
     icon: ShieldCheck,
     href: "/ambiental",
@@ -134,8 +157,8 @@ export const BUSINESS_UNITS = [
     iconColor: "text-brand-teal",
   },
   {
-    title: "Direitos e Concessões Minerárias",
-    description: "Mapa interativo, prospecção e análise de concessões minerárias do Brasil.",
+    title: "Ativos Minerários",
+    description: "Mapa multi-camadas, prospecção por teses e ciclo de vida do direito — da geologia à operação.",
     icon: Map,
     href: "/direitos",
     color: "border-brand-teal/30 hover:border-brand-teal/60",
@@ -150,8 +173,16 @@ export const BUSINESS_UNITS = [
     iconColor: "text-brand-gold",
   },
   {
-    title: "SQ Solutions",
-    description: "Soluções digitais com IA — Mineradora Modelo demo e segurança operacional.",
+    title: "SQ Consultoria",
+    description: "Diagnóstico, gestão de riscos e crises, gestão estratégica de projetos e corporativa.",
+    icon: Briefcase,
+    href: "/sq-consultoria",
+    color: "border-brand-navy/30 hover:border-brand-navy/60",
+    iconColor: "text-brand-navy",
+  },
+  {
+    title: "SQ Soluções",
+    description: "Soluções digitais com IA, parcerias tecnológicas e projetos de segurança operacional.",
     icon: Cpu,
     href: "/sq-solutions",
     color: "border-brand-orange/30 hover:border-brand-orange/60",

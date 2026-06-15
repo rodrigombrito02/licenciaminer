@@ -11,8 +11,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.routers import (
+    ativos,
     chat,
     concessoes,
+    mineral_intelligence,
     copam,
     decisions,
     due_diligence,
@@ -22,6 +24,14 @@ from api.routers import (
     intelligence,
     overview,
     admin,
+    captacao,
+    consultoria,
+    sqsolucoes,
+    condicionantes,
+    evolucao,
+    mapeamentos,
+    membros,
+    minhas_acoes,
     oportunidades,
     pilhas,
     planos_acao,
@@ -30,12 +40,31 @@ from api.routers import (
     reports,
     simulator,
     viabilidade,
+    # Modulos de Riscos/Projetos/Crises/Comunicacoes (prefixo sem /api — registrar com prefix="/api")
+    corporativo,
+    riscos,
+    crises,
+    comunicacoes,
+    monitoramento,
+    pmsuite,
+    procurement,
+    quality,
 )
 from api.services.database import close_connection, get_connection
 from licenciaminer.planos_acao.database import init_db as init_planos_acao_db
 from licenciaminer.viabilidade.database import init_db as init_viabilidade_db
 from licenciaminer.oportunidades.database import init_db as init_oportunidades_db
 from licenciaminer.riscos_v2.database import init_db as init_riscos_v2_db
+from licenciaminer.mapeamentos.database import init_db as init_mapeamentos_db
+from licenciaminer.evolucao.database import init_db as init_evolucao_db
+from licenciaminer.evolucao.seed import seed_plano, seed_produtos_mi, seed_mapa_sprints, seed_esqueleto, seed_int
+from licenciaminer.riscos.database import init_db as init_riscos_db
+from licenciaminer.condicionantes.database import init_db as init_condicionantes_db
+from licenciaminer.captacao.database import init_db as init_captacao_db
+from licenciaminer.consultoria.database import init_db as init_consultoria_db
+from licenciaminer.sqsolucoes.database import init_db as init_sqsolucoes_db
+from licenciaminer.sqsolucoes.seed import seed_sqsolucoes
+from licenciaminer.condicionantes.seed import seed_condicionantes, seed_anm
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -55,6 +84,33 @@ async def _background_init():
         await asyncio.to_thread(init_oportunidades_db)
         logger.info("[bg] Inicializando SQLite (Riscos v2)...")
         await asyncio.to_thread(init_riscos_v2_db)
+        logger.info("[bg] Inicializando SQLite (Mapeamentos)...")
+        await asyncio.to_thread(init_mapeamentos_db)
+        logger.info("[bg] Inicializando SQLite (Evolucao do Sistema)...")
+        await asyncio.to_thread(init_evolucao_db)
+        await asyncio.to_thread(seed_plano)
+        await asyncio.to_thread(seed_produtos_mi)
+        await asyncio.to_thread(seed_mapa_sprints)
+        await asyncio.to_thread(seed_esqueleto)
+        await asyncio.to_thread(seed_int)
+        logger.info("[bg] Inicializando SQLite (Riscos/Projetos/Crises)...")
+        try:
+            # riscos.db ja vem com as tabelas populadas; init e best-effort
+            # (o init_db do modulo tem um import legado que pode falhar).
+            await asyncio.to_thread(init_riscos_db)
+        except Exception as exc:
+            logger.warning("[bg] init_riscos_db pulado (tabelas ja existem): %s", exc)
+        logger.info("[bg] Inicializando SQLite (Radar de Condicionantes)...")
+        await asyncio.to_thread(init_condicionantes_db)
+        await asyncio.to_thread(seed_condicionantes)
+        await asyncio.to_thread(seed_anm)
+        logger.info("[bg] Inicializando SQLite (Captação)...")
+        await asyncio.to_thread(init_captacao_db)
+        logger.info("[bg] Inicializando SQLite (SQ Consultoria)...")
+        await asyncio.to_thread(init_consultoria_db)
+        logger.info("[bg] Inicializando SQLite (SQ Soluções)...")
+        await asyncio.to_thread(init_sqsolucoes_db)
+        await asyncio.to_thread(seed_sqsolucoes)
         from api.routers.admin import init_db_admin
         logger.info("[bg] Inicializando SQLite (Admin events)...")
         await asyncio.to_thread(init_db_admin)
@@ -121,6 +177,8 @@ app.include_router(decisions.router, prefix="/api", tags=["Decisões"])
 app.include_router(empresa.router, prefix="/api", tags=["Empresa"])
 app.include_router(explorer.router, prefix="/api", tags=["Explorador"])
 app.include_router(concessoes.router, prefix="/api", tags=["Concessões"])
+app.include_router(ativos.router, prefix="/api", tags=["Ativos Minerários"])
+app.include_router(mineral_intelligence.router, tags=["Mineral Intelligence"])  # ja tem prefix /api/mi
 app.include_router(geospatial.router, prefix="/api", tags=["Geoespacial"])
 app.include_router(prospeccao.router, prefix="/api", tags=["Prospecção"])
 app.include_router(intelligence.router, prefix="/api", tags=["Inteligência Comercial"])
@@ -134,6 +192,23 @@ app.include_router(pilhas.router, prefix="/api", tags=["Pilhas"])
 app.include_router(planos_acao.router)  # ja tem prefix /api/planos-acao
 app.include_router(oportunidades.router)  # ja tem prefix /api/oportunidades
 app.include_router(riscos_v2.router)  # ja tem prefix /api/riscos-v2
+# Modulos de Riscos/Projetos/Crises/Comunicacoes — prefixo proprio sem /api
+app.include_router(corporativo.router, prefix="/api", tags=["Risco Corporativo"])
+app.include_router(riscos.router, prefix="/api", tags=["Riscos de Projeto"])
+app.include_router(crises.router, prefix="/api", tags=["Crises"])
+app.include_router(comunicacoes.router, prefix="/api", tags=["Comunicações"])
+app.include_router(monitoramento.router, prefix="/api", tags=["Monitoramento"])
+app.include_router(pmsuite.router, prefix="/api", tags=["PM Suite"])
+app.include_router(procurement.router, prefix="/api", tags=["Aquisições"])
+app.include_router(quality.router, prefix="/api", tags=["Qualidade"])
+app.include_router(mapeamentos.router)  # ja tem prefix /api/mapeamentos
+app.include_router(evolucao.router)  # ja tem prefix /api/evolucao
+app.include_router(condicionantes.router)  # ja tem prefix /api/condicionantes
+app.include_router(captacao.router)  # ja tem prefix /api/captacao
+app.include_router(consultoria.router)  # ja tem prefix /api/consultoria
+app.include_router(sqsolucoes.router)  # ja tem prefix /api/sqsolucoes
+app.include_router(minhas_acoes.router)  # ja tem prefix /api/minhas-acoes
+app.include_router(membros.router)  # ja tem prefix /api/membros
 app.include_router(admin.router)  # ja tem prefix /api/admin
 
 

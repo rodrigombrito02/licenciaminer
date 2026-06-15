@@ -8,12 +8,22 @@ import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { fetchFreshness } from "@/lib/api";
 import { NAV_GROUPS, NAV_SECTIONS, type NavSection } from "@/lib/nav-config";
+import { useEffectiveRole } from "@/hooks/use-effective-role";
+import { hasMinRole, type Role } from "@/lib/roles";
 
 const COLLAPSE_KEY = "sidebar_collapsed_v2";
 const GROUP_COLLAPSE_KEY = "sidebar_group_collapsed_v2";
 
+// Papel mínimo por grupo de navegação
+const GROUP_MIN_ROLE: Record<string, Role> = {
+  "ferramentas-internas": "consultor",
+  "gestao": "admin",
+};
+
 export function SidebarNav() {
   const pathname = usePathname();
+  const roleState = useEffectiveRole();
+  const role = roleState.status === "authenticated" ? roleState.role : undefined;
   const [freshness, setFreshness] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [groupCollapsed, setGroupCollapsed] = useState<Record<string, boolean>>({});
@@ -72,6 +82,12 @@ export function SidebarNav() {
     return !isSectionActive(section);
   }
 
+  // Filtra seções pelo papel: grupos internos só para consultor/admin
+  const visibleSections = NAV_SECTIONS.filter((s) => {
+    const min = s.group ? GROUP_MIN_ROLE[s.group] : undefined;
+    return !min || hasMinRole(role, min);
+  });
+
   return (
     <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 bg-sidebar text-sidebar-foreground">
       {/* Logo */}
@@ -87,38 +103,51 @@ export function SidebarNav() {
         </div>
       </div>
 
-      {/* Nav sections */}
+      {/* Nav sections (gated por papel) */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-        {NAV_SECTIONS.map((section, idx) => {
+        {visibleSections.map((section, idx) => {
           const isOpen = !isSectionCollapsed(section);
           const active = isSectionActive(section);
-          const prevSection = idx > 0 ? NAV_SECTIONS[idx - 1] : null;
+          const prevSection = idx > 0 ? visibleSections[idx - 1] : null;
           const groupChanged = section.group && section.group !== prevSection?.group;
           const groupMeta = groupChanged
             ? NAV_GROUPS.find((g) => g.key === section.group)
             : null;
-          const groupHidden = section.group ? isGroupCollapsed(section.group) : false;
+          const groupConf = section.group
+            ? NAV_GROUPS.find((g) => g.key === section.group)
+            : null;
+          // Grupos sao accordion por padrao; Produtos Comerciais fica sempre exposto.
+          const groupCollapsible = groupConf?.collapsible ?? true;
+          const groupHidden =
+            groupCollapsible && section.group ? isGroupCollapsed(section.group) : false;
 
           return (
-            <div key={section.label || "home"}>
-              {/* Group separator (renders once per group) */}
-              {groupMeta && (
-                <button
-                  onClick={() => toggleGroup(groupMeta.key)}
-                  className="mt-5 mb-1 flex w-full items-center justify-between rounded-md px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-sidebar-foreground/50 hover:bg-sidebar-accent/30 hover:text-sidebar-foreground/80 transition-colors border-t border-sidebar-border pt-3"
-                  title={groupMeta.description}
-                >
-                  <span>{groupMeta.label}</span>
-                  <ChevronDown
-                    className={cn(
-                      "h-3 w-3 transition-transform duration-200",
-                      isGroupCollapsed(groupMeta.key) ? "-rotate-90" : "rotate-0"
-                    )}
-                  />
-                </button>
-              )}
+            <div key={idx}>
+              {/* Cabecalho do grupo (renders once per group) */}
+              {groupMeta &&
+                (groupCollapsible ? (
+                  <button
+                    onClick={() => toggleGroup(groupMeta.key)}
+                    className="mt-5 mb-1 flex w-full items-center justify-between rounded-md px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-sidebar-foreground/50 hover:bg-sidebar-accent/30 hover:text-sidebar-foreground/80 transition-colors border-t border-sidebar-border pt-3"
+                    title={groupMeta.description}
+                  >
+                    <span>{groupMeta.label}</span>
+                    <ChevronDown
+                      className={cn(
+                        "h-3 w-3 transition-transform duration-200",
+                        isGroupCollapsed(groupMeta.key) ? "-rotate-90" : "rotate-0"
+                      )}
+                    />
+                  </button>
+                ) : (
+                  <div
+                    className="mt-5 mb-1 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-sidebar-foreground/50 border-t border-sidebar-border pt-3"
+                    title={groupMeta.description}
+                  >
+                    {groupMeta.label}
+                  </div>
+                ))}
 
-              {/* Hide group sections when group collapsed */}
               {groupHidden ? null : section.standalone ? (
                 /* Standalone item — link direto, sem header */
                 <ul>

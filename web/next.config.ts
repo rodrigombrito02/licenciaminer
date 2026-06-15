@@ -9,10 +9,8 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // ESLint warnings tambem nao quebram build
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // Nota: no Next 16 o `next build` não roda ESLint por padrão (use `next lint`),
+  // por isso a chave `eslint` foi removida daqui (era ignorada e gerava aviso).
 };
 
 export default nextConfig;

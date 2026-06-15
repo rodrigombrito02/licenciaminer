@@ -17,7 +17,7 @@ export default function DiligenciaPage() {
       {/* Header */}
       <div>
         <Link href="/ambiental" className="text-xs text-brand-teal hover:underline inline-flex items-center gap-1 mb-3">
-          <ArrowLeft className="h-3 w-3" /> Voltar para Summo Ambiental
+          <ArrowLeft className="h-3 w-3" /> Voltar para SQ Ambiental
         </Link>
         <h1 className="font-heading text-2xl font-bold flex items-center gap-2">
           <ShieldCheck className="h-6 w-6 text-brand-orange" />

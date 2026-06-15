@@ -15,6 +15,8 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from api.services.database import safe_query
+from licenciaminer.enriquecimento.service import enriquecer
 from licenciaminer.oportunidades.database import (
     ETAPAS,
     MudancaEtapa,
@@ -130,12 +132,12 @@ def _to_out(o: Oportunidade) -> OportunidadeOut:
 def get_etapas():
     """Lista as 8 etapas do funil."""
     labels = {
-        "prospect": "Prospect",
+        "prospect": "Prospecção",
         "avaliacao": "Avaliação",
-        "relatorio": "Relatório",
-        "investidores": "Investidores",
+        "estruturacao": "Estruturação Técnica",
+        "relatorio": "Relatório de Viabilidade",
+        "investidores": "Captação de Investidor",
         "aprovacao": "Aprovação",
-        "estruturacao": "Estruturação",
         "implantacao": "Implantação",
         "operacao": "Operação",
     }
@@ -193,6 +195,67 @@ def atualizar_avaliacao(
         raise HTTPException(404, "Oportunidade nao encontrada")
     for k, v in payload.model_dump(exclude_none=True).items():
         setattr(o, k, v)
+    db.commit()
+    db.refresh(o)
+    return _to_out(o)
+
+
+# Mapeia chave do motor -> campo do funil
+_MAP_PARAM = {
+    "agua": "score_agua", "energia": "score_energia", "logistica": "score_logistica",
+    "mao_obra": "score_mao_obra", "licenciamento": "score_licenciamento",
+    "financeiro": "score_financeiro", "stakeholder": "score_stakeholder",
+    "geologico": "score_geologico", "climatico": "score_climatico",
+}
+
+
+@router.post("/{oportunidade_id}/enriquecer", response_model=OportunidadeOut)
+def enriquecer_oportunidade(oportunidade_id: int, db: Session = Depends(get_session)):
+    """Pré-preenche os 9 parâmetros a partir das bases públicas locais.
+
+    O consultor calibra depois. Escala do motor (1-5) é convertida para a do
+    funil (1-10). Evidências e confiança ficam em notas_avaliacao.
+    """
+    o = db.query(Oportunidade).filter(Oportunidade.id == oportunidade_id).first()
+    if not o:
+        raise HTTPException(404, "Oportunidade nao encontrada")
+
+    # Contexto do direito (categoria, valor, sobreposição) da base local
+    categoria = valor_rel = None
+    tem_uc = tem_ti = None
+    if o.processo_anm:
+        ctx = safe_query(
+            "SELECT categoria, valor_relativo FROM v_concessoes "
+            "WHERE processo = ? OR processo_norm = ? LIMIT 1",
+            [o.processo_anm, o.processo_anm],
+        )
+        if ctx:
+            categoria = ctx[0].get("categoria")
+            valor_rel = ctx[0].get("valor_relativo")
+        sp = safe_query(
+            "SELECT s.tem_uc AS tem_uc, s.tem_ti AS tem_ti "
+            "FROM v_concessoes c JOIN v_spatial s ON s.PROCESSO = c.processo "
+            "WHERE c.processo = ? OR c.processo_norm = ? LIMIT 1",
+            [o.processo_anm, o.processo_anm],
+        )
+        if sp:
+            tem_uc = sp[0].get("tem_uc")
+            tem_ti = sp[0].get("tem_ti")
+
+    resultado = enriquecer(
+        processo=o.processo_anm, municipio=o.municipio, uf=o.uf,
+        substancia=o.substancia, categoria=categoria, valor_relativo=valor_rel,
+        tem_uc=tem_uc, tem_ti=tem_ti,
+    )
+
+    notas = dict(o.notas_avaliacao or {})
+    for chave, campo in _MAP_PARAM.items():
+        info = resultado.get(chave) or {}
+        sc = info.get("score") or 0
+        if sc > 0:
+            setattr(o, campo, round(sc * 2))  # 1-5 -> 2-10
+        notas[chave] = f"[{info.get('confianca','')}] {info.get('evidencia','')}"
+    o.notas_avaliacao = notas
     db.commit()
     db.refresh(o)
     return _to_out(o)

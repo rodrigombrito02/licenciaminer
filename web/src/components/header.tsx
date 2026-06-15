@@ -10,6 +10,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/s
 import { Button } from "@/components/ui/button";
 import { NAV_SECTIONS } from "@/lib/nav-config";
 import { UserMenu } from "@/components/user-menu";
+import { ViewAsSwitcher } from "@/components/view-as-switcher";
 
 export function Header() {
   const pathname = usePathname();
@@ -39,14 +40,14 @@ export function Header() {
             </span>
           </div>
           <nav className="px-3 py-4 space-y-1 overflow-y-auto max-h-[calc(100vh-64px)]">
-            {NAV_SECTIONS.map((section) => {
+            {NAV_SECTIONS.map((section, idx) => {
               const active = section.items.some((item) =>
                 item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)
               );
               const isOpen = section.standalone || (section.label in collapsed ? !collapsed[section.label] : active);
 
               return (
-                <div key={section.label || "home"}>
+                <div key={idx}>
                   {section.standalone ? (
                     <ul>
                       {section.items.map((item) => {
@@ -133,9 +134,7 @@ export function Header() {
 
       {/* Right actions */}
       <div className="flex items-center gap-3">
-        <span className="hidden sm:inline text-xs text-muted-foreground font-tabular">
-          MG &middot; SEMAD + IBAMA + ANM
-        </span>
+        <ViewAsSwitcher />
         <UserMenu />
       </div>
     </header>

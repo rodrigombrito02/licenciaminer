@@ -10,6 +10,7 @@ import {
   Trophy,
   Crown,
   ArrowRight,
+  Sparkles,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +21,8 @@ import { ProducaoTab } from "./tab-producao";
 import { TerritorioTab } from "./tab-territorio";
 import { RankingTab } from "./tab-ranking";
 import { PremiumTab } from "./tab-premium";
+import { ProdutosTab } from "./tab-produtos";
+import { IntelligenceVisual } from "@/components/marketing-visuals";
 import { PRESETS_BY_TAB } from "./chart-helpers";
 
 const TAB_ICONS = {
@@ -27,6 +30,7 @@ const TAB_ICONS = {
   ranking: Trophy,
   producao: Coins,
   territorio: MapPin,
+  produtos: Sparkles,
   premium: Crown,
 } as const;
 
@@ -35,11 +39,13 @@ const TAB_LABELS = {
   ranking: "Ranking",
   producao: "Produção & Receita",
   territorio: "Território",
+  produtos: "Produtos",
   premium: "Premium",
 } as const;
 
 type TabKey = keyof typeof TAB_LABELS;
-const TAB_KEYS: TabKey[] = ["mercado", "ranking", "producao", "territorio", "premium"];
+// Sub-abas dentro de "Dados de Mercado" (Produtos e Premium foram para "Inteligência Summo")
+const DATA_TAB_KEYS: TabKey[] = ["mercado", "ranking", "producao", "territorio"];
 
 export default function InteligenciaComercialPage() {
   return (
@@ -56,6 +62,9 @@ function InteligenciaContent() {
   );
   const [activeMetric, setActiveMetric] = useState<string>(
     params.get("metric") || PRESETS_BY_TAB.mercado[0].id,
+  );
+  const [macro, setMacro] = useState<"dados" | "inteligencia">(
+    params.get("v") === "inteligencia" || params.get("tab") === "produtos" ? "inteligencia" : "dados",
   );
 
   function handleTabChange(tab: string) {
@@ -80,23 +89,26 @@ function InteligenciaContent() {
       {/* Hero chamativo */}
       <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0A2540] via-[#1A2C42] to-[#3a2a0a] px-7 py-8 lg:py-10">
         <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
-        <div className="relative z-10 max-w-3xl">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="rounded-lg bg-brand-gold/30 p-2">
-              <Globe className="h-6 w-6 text-brand-gold" />
+        <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-center">
+          <div className="lg:flex-1 max-w-2xl">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="rounded-lg bg-brand-gold/30 p-2">
+                <Globe className="h-6 w-6 text-brand-gold" />
+              </div>
+              <Badge className="bg-brand-gold/20 text-brand-gold border-brand-gold/40">
+                Mineral Intelligence
+              </Badge>
             </div>
-            <Badge className="bg-brand-gold/20 text-brand-gold border-brand-gold/40">
-              Mineral Intelligence
-            </Badge>
+            <h1 className="font-heading text-2xl lg:text-3xl font-bold text-white mb-2">
+              Inteligência do mercado mineral brasileiro
+            </h1>
+            <p className="text-sm leading-relaxed text-white/70 max-w-2xl">
+              Mercado, produção, território e regulatório. Dados públicos auditáveis
+              (ANM, BCB, Comex, IBAMA) curados pela Summo, com análises que orientam
+              decisões estratégicas em mineração.
+            </p>
           </div>
-          <h1 className="font-heading text-2xl lg:text-3xl font-bold text-white mb-2">
-            Inteligência do mercado mineral brasileiro
-          </h1>
-          <p className="text-sm leading-relaxed text-white/70 max-w-2xl">
-            Mercado, produção, território e regulatório. Dados públicos auditáveis
-            (ANM, BCB, Comex, IBAMA) curados pela Summo, com análises que orientam
-            decisões estratégicas em mineração.
-          </p>
+          <div className="lg:w-[38%] lg:shrink-0"><IntelligenceVisual /></div>
         </div>
       </section>
 
@@ -106,36 +118,58 @@ function InteligenciaContent() {
       {/* Highlights chamativos públicos */}
       <PublicHighlights />
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
-        <TabsList className="flex flex-wrap h-auto gap-1">
-          {TAB_KEYS.map((key) => {
-            const Icon = TAB_ICONS[key];
-            return (
-              <TabsTrigger key={key} value={key} className="gap-1.5 text-xs">
-                <Icon className="h-3.5 w-3.5" />
-                {TAB_LABELS[key]}
-              </TabsTrigger>
-            );
-          })}
-        </TabsList>
+      {/* Macro-navegação: Dados de Mercado · Inteligência Summo */}
+      <div className="flex gap-2 rounded-xl border bg-muted/30 p-1.5 w-full sm:w-fit">
+        <button
+          onClick={() => setMacro("dados")}
+          className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${macro === "dados" ? "bg-white text-brand-navy shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          <Globe className="h-4 w-4" /> Dados de Mercado
+        </button>
+        <button
+          onClick={() => setMacro("inteligencia")}
+          className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${macro === "inteligencia" ? "bg-white text-brand-navy shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          <Sparkles className="h-4 w-4" /> Inteligência Summo
+        </button>
+      </div>
 
-        <TabsContent value="mercado" className="mt-0">
-          <MercadoTab activeMetric={activeMetric} onMetricChange={setActiveMetric} />
-        </TabsContent>
-        <TabsContent value="ranking" className="mt-0">
-          <RankingTab />
-        </TabsContent>
-        <TabsContent value="producao" className="mt-0">
-          <ProducaoTab activeMetric={activeMetric} onMetricChange={setActiveMetric} />
-        </TabsContent>
-        <TabsContent value="territorio" className="mt-0">
-          <TerritorioTab activeMetric={activeMetric} onMetricChange={setActiveMetric} />
-        </TabsContent>
-        <TabsContent value="premium" className="mt-0">
-          <PremiumTab />
-        </TabsContent>
-      </Tabs>
+      {macro === "dados" ? (
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
+          <TabsList className="flex flex-wrap h-auto gap-1">
+            {DATA_TAB_KEYS.map((key) => {
+              const Icon = TAB_ICONS[key];
+              return (
+                <TabsTrigger key={key} value={key} className="gap-1.5 text-xs">
+                  <Icon className="h-3.5 w-3.5" />
+                  {TAB_LABELS[key]}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+          <TabsContent value="mercado" className="mt-0">
+            <MercadoTab activeMetric={activeMetric} onMetricChange={setActiveMetric} />
+          </TabsContent>
+          <TabsContent value="ranking" className="mt-0">
+            <RankingTab />
+          </TabsContent>
+          <TabsContent value="producao" className="mt-0">
+            <ProducaoTab activeMetric={activeMetric} onMetricChange={setActiveMetric} />
+          </TabsContent>
+          <TabsContent value="territorio" className="mt-0">
+            <TerritorioTab activeMetric={activeMetric} onMetricChange={setActiveMetric} />
+          </TabsContent>
+        </Tabs>
+      ) : (
+        <div className="space-y-8">
+          <ProdutosTab />
+          <div>
+            <h3 className="font-heading text-lg font-semibold mb-1">Premium</h3>
+            <p className="text-sm text-muted-foreground mb-3">Relatórios, alertas e datasets sob assinatura.</p>
+            <PremiumTab />
+          </div>
+        </div>
+      )}
 
       {/* CTA final */}
       <Card className="border-2 border-brand-orange/30 bg-gradient-to-br from-brand-orange/5 to-transparent">

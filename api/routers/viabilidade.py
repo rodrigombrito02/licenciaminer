@@ -190,6 +190,32 @@ def get_viability_profile(
             "infracoes": infracoes[0]["n"] if infracoes else 0,
         }
 
+    # 6. Índice de Sucesso (diagnóstico prescritivo — substitui "probabilidade")
+    idx = prob.get("probabilidade")
+    if idx is None:
+        faixa, interpretacao = "indeterminado", "Sem histórico suficiente do segmento para calcular o índice."
+    elif idx >= 75:
+        faixa, interpretacao = "alto", "Segmento com histórico favorável — foco em executar o protocolo sem falhas."
+    elif idx >= 60:
+        faixa, interpretacao = "medio", "Viável, mas com fatores de atenção — o plano de ação reduz o risco."
+    else:
+        faixa, interpretacao = "baixo", "Segmento desafiador — tratar os fatores críticos antes de protocolar."
+    indice_sucesso = {"valor": idx, "faixa": faixa, "rotulo": "Índice de Sucesso", "interpretacao": interpretacao}
+
+    # 7. Plano de ação — ação prescritiva por fator de risco
+    ACOES = {
+        "Probabilidade histórica": "Reforçar o estudo do segmento e antecipar as exigências recorrentes da regional.",
+        "EIA/RIMA obrigatório": "Iniciar o EIA/RIMA desde já — é o caminho crítico do cronograma.",
+        "Classe de impacto": "Estruturar o licenciamento (trifásico se aplicável) com folga de prazo.",
+        "Rigor da regional": "Mapear o padrão de exigências desta regional e pré-responder no protocolo.",
+        "Tendência (3 anos)": "Atenção à piora recente do deferimento — revisar premissas de prazo e completude.",
+    }
+    plano_acao = [
+        {"fator": f["fator"], "prioridade": f["risco"], "acao": ACOES.get(f["fator"], "Tratar este fator no plano.")}
+        for f in fatores if f["risco"] in ("alto", "moderado")
+    ]
+    plano_acao.sort(key=lambda x: 0 if x["prioridade"] == "alto" else 1)
+
     return {
         "perfil": {
             "probabilidade": prob.get("probabilidade"),
@@ -198,6 +224,8 @@ def get_viability_profile(
             "rigor_delta": rigor_delta,
             "tendencia": tendencia,
         },
+        "indice_sucesso": indice_sucesso,
+        "plano_acao": plano_acao,
         "fatores": fatores,
         "escopo": {
             "licenca_tipo": licenca_tipo,

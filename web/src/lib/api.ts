@@ -911,7 +911,9 @@ export function fetchGeoFilters() {
   return apiFetch<GeoFilterOptions>("/geo/concessoes/filters");
 }
 
-export function fetchGeoLayer(layer: "ucs" | "tis") {
+export function fetchGeoLayer(
+  layer: "ucs" | "tis" | "biomas" | "energia" | "subestacoes" | "agua" | "ferrovias" | "portos" | "geologia",
+) {
   return apiFetch<GeoJSON.FeatureCollection>(`/geo/layers/${layer}`);
 }
 
@@ -1570,6 +1572,13 @@ export interface ViabilidadeResult {
     rigor_delta: number | null;
     tendencia: number | null;
   };
+  indice_sucesso?: {
+    valor: number | null;
+    faixa: string;
+    rotulo: string;
+    interpretacao: string;
+  };
+  plano_acao?: { fator: string; prioridade: string; acao: string }[];
   fatores: ViabilidadeFator[];
   escopo: {
     licenca_tipo: string;
@@ -2003,6 +2012,12 @@ export const paApi = {
   },
   detalhePlano: (id: number) => fetch(`${PA_API}/planos/${id}`).then(r => r.json() as Promise<PaPlano>),
   tarefasDoPlano: (id: number) => fetch(`${PA_API}/planos/${id}/tarefas`).then(r => r.json() as Promise<PaTarefa[]>),
+  atualizarStatusTarefa: (tarefaId: number, status: string) =>
+    fetch(`${PA_API}/tarefas/${tarefaId}/status`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() as Promise<PaTarefa>; }),
   deletarPlano: (id: number) => fetch(`${PA_API}/planos/${id}`, { method: "DELETE" }).then(r => r.json()),
 
   uploadPreview: async (file: File): Promise<PaUploadPreview> => {
@@ -2101,6 +2116,9 @@ export const opApi = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     }).then(r => r.json() as Promise<Oportunidade>),
+  enriquecer: (id: number) =>
+    fetch(`${OP_API}/${id}/enriquecer`, { method: "POST" })
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() as Promise<Oportunidade>; }),
   mudarEtapa: (id: number, etapa: string, nota?: string, por?: string) =>
     fetch(`${OP_API}/${id}/mudar-etapa`, {
       method: "POST",
@@ -2121,6 +2139,125 @@ export const opApi = {
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   },
+};
+
+/* ══════════════════════════════════════════════════════════════════
+   MAPEAMENTOS — prospecção multi-tese de direitos (interno, dados locais)
+   ══════════════════════════════════════════════════════════════════ */
+
+const MAP_API = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api")
+  .replace(/\/api$/, "") + "/api/mapeamentos";
+
+export interface MapCriterios {
+  categorias?: string[];
+  substancias?: string[];
+  fases?: string[];
+  area_min?: number | null;
+  area_max?: number | null;
+  cfem_status?: "inativo" | "ativo" | "qualquer";
+  titular_tipo?: "pf" | "pj" | "espolio" | "qualquer";
+  apenas_estrategico?: boolean;
+  sem_sobreposicao?: boolean;
+}
+
+export type MapPesos = Record<string, number>;
+
+export interface Mapeamento {
+  id: number;
+  nome: string;
+  descricao: string | null;
+  objetivo: string;
+  criterios: MapCriterios | null;
+  pesos: MapPesos | null;
+  lider_responsavel: string | null;
+  criado_por: string | null;
+  acl: Record<string, string[]> | null;
+  n_resultados: number;
+  ultima_varredura_em: string | null;
+  criado_em: string | null;
+  atualizado_em: string | null;
+  resultados?: MapResultado[];
+}
+
+export interface MapResultado {
+  id: number;
+  mapeamento_id: number;
+  processo: string | null;
+  titular: string | null;
+  cpf_cnpj: string | null;
+  substancia: string | null;
+  categoria: string | null;
+  municipio: string | null;
+  uf: string | null;
+  fase: string | null;
+  area_ha: number | null;
+  ativo_cfem: boolean | null;
+  cfem_total: number | null;
+  ult_evento: string | null;
+  score: number | null;
+  potencial?: string;
+  motivos: string[] | null;
+  status: string;
+  nota: string | null;
+  promovido_oportunidade_id: number | null;
+}
+
+export interface MapTemplate {
+  objetivo: string;
+  nome: string;
+  descricao: string;
+  criterios: MapCriterios;
+  pesos: MapPesos;
+}
+
+const mapJson = (r: Response) => {
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+};
+
+export const mapApi = {
+  templates: () =>
+    fetch(`${MAP_API}/templates`).then(mapJson) as Promise<{
+      templates: MapTemplate[];
+      pesos_default: MapPesos;
+    }>,
+  listar: () => fetch(`${MAP_API}`).then(mapJson) as Promise<Mapeamento[]>,
+  obter: (id: number) => fetch(`${MAP_API}/${id}`).then(mapJson) as Promise<Mapeamento>,
+  criar: (data: Partial<Mapeamento>) =>
+    fetch(`${MAP_API}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }).then(mapJson) as Promise<Mapeamento>,
+  atualizar: (id: number, data: Partial<Mapeamento>) =>
+    fetch(`${MAP_API}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }).then(mapJson) as Promise<Mapeamento>,
+  deletar: (id: number) => fetch(`${MAP_API}/${id}`, { method: "DELETE" }),
+  preview: (criterios: MapCriterios, pesos: MapPesos, limit = 50) =>
+    fetch(`${MAP_API}/preview`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ criterios, pesos, limit }),
+    }).then(mapJson) as Promise<{ total: number; resultados: MapResultado[] }>,
+  varredura: (id: number) =>
+    fetch(`${MAP_API}/${id}/varredura`, { method: "POST" }).then(mapJson) as Promise<{
+      map_id: number;
+      n_resultados: number;
+      ultima_varredura_em: string;
+    }>,
+  atualizarResultado: (resId: number, data: { status?: string; nota?: string }) =>
+    fetch(`${MAP_API}/resultados/${resId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }).then(mapJson) as Promise<MapResultado>,
+  promover: (resId: number) =>
+    fetch(`${MAP_API}/resultados/${resId}/promover`, { method: "POST" }).then(
+      mapJson,
+    ) as Promise<{ resultado: MapResultado; oportunidade_id: number }>,
 };
 
 /* ── Formatting re-exports (canonical source: lib/format.ts) ── */

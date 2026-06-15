@@ -15,6 +15,7 @@ import {
   Zap,
   CheckCircle2,
   FileText,
+  ClipboardCheck,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -28,6 +29,10 @@ import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/stat-card";
 import { ModuleHero } from "@/components/module-hero";
 import { BigActionCard } from "@/components/big-action-card";
+import { RoleGate } from "@/components/role-gate";
+import { MktHero, StatBand, MktSection, FeatureCard, CTABand } from "@/components/marketing-ui";
+import { AmbientalVisual } from "@/components/marketing-visuals";
+import { useEffectiveRole } from "@/hooks/use-effective-role";
 import {
   fetchOverviewStats,
   fetchMetaSources,
@@ -55,6 +60,7 @@ function relativeTime(dateStr: string): string {
 }
 
 export default function AmbientalPage() {
+  const roleState = useEffectiveRole();
   const [stats, setStats] = useState<OverviewStats | null>(null);
   const [sources, setSources] = useState<SourceMeta[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -67,11 +73,14 @@ export default function AmbientalPage() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
+  // Visitante não logado → landing de marketing (sem fontes/auditoria/KPIs internos)
+  if (roleState.status === "anonymous") return <AmbientalLanding />;
+
   return (
     <div className="space-y-8">
       <ModuleHero
         icon={ShieldCheck}
-        badge="Summo Ambiental"
+        badge="SQ Ambiental"
         title="Análise e conformidade ambiental para mineração"
         description="Dados públicos auditáveis e décadas de experiência Summo em licenciamento minerário. Da análise preliminar à Diligência completa, em minutos."
         variant="teal"
@@ -94,7 +103,7 @@ export default function AmbientalPage() {
           <BigActionCard
             icon={Search}
             title="Análise Preliminar de Licenciamento"
-            description="Avaliação de viabilidade em minutos: probabilidade de aprovação, fatores de atenção, escopo estimado."
+            description="Avaliação em minutos: índice de sucesso do segmento, diagnóstico do processo e escopo estimado."
             href="/viabilidade"
             color="gold"
           />
@@ -108,9 +117,29 @@ export default function AmbientalPage() {
         </div>
       </section>
 
-      {/* Value props — por que escolher Summo Ambiental */}
+      <RoleGate minRole="consultor">
+        <section>
+          <div className="flex items-center gap-2 mb-1">
+            <h2 className="font-heading text-lg font-semibold">Ferramentas internas</h2>
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-brand-teal bg-brand-teal/10 px-2 py-0.5 rounded">Consultor Summo</span>
+          </div>
+          <p className="text-sm text-muted-foreground mb-5">Gestão do ciclo de vida das licenças.</p>
+          <div className="grid md:grid-cols-3 gap-4">
+            <BigActionCard
+              icon={ClipboardCheck}
+              title="Radar de Condicionantes"
+              description="Cada condicionante vira uma obrigação com prazo e status. Suba a licença, acompanhe o que vence, comprove o cumprimento. Alvo do piloto Jaguar."
+              href="/condicionantes"
+              color="teal"
+              badge="Novo"
+            />
+          </div>
+        </section>
+      </RoleGate>
+
+      {/* Value props — por que escolher SQ Ambiental */}
       <section>
-        <h2 className="font-heading text-lg font-semibold mb-1">Por que Summo Ambiental</h2>
+        <h2 className="font-heading text-lg font-semibold mb-1">Por que SQ Ambiental</h2>
         <p className="text-sm text-muted-foreground mb-5">
           Três diferenciais que tornam nossas análises mais rápidas e confiáveis.
         </p>
@@ -253,7 +282,7 @@ export default function AmbientalPage() {
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-4">
             <div className="space-y-2 text-sm text-muted-foreground leading-relaxed">
-              <p>O módulo Summo Ambiental consolida dados de múltiplas fontes públicas oficiais para oferecer inteligência regulatória.</p>
+              <p>O módulo SQ Ambiental consolida dados de múltiplas fontes públicas oficiais para oferecer inteligência regulatória.</p>
               <p>
                 <strong>Decisões SEMAD:</strong> Extraídas do portal de licenciamento ambiental de Minas Gerais. Incluem deferimento, indeferimento e arquivamento classificadas por atividade (DN COPAM 217/2017), classe de impacto (1-6) e regional.
               </p>
@@ -270,6 +299,56 @@ export default function AmbientalPage() {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+    </div>
+  );
+}
+
+/* ── Landing pública (visitante não logado) ── */
+function AmbientalLanding() {
+  return (
+    <div className="space-y-12">
+      <MktHero
+        eyebrow="SQ Ambiental"
+        icon={ShieldCheck}
+        title={<>Licenciamento ambiental sem <span className="text-brand-gold">surpresa</span>.</>}
+        subtitle="Da análise preliminar do seu segmento à Diligência Summo completa — conformidade ambiental e minerária apoiada em dados públicos auditáveis e na senioridade de quem conhece o setor."
+        cor="teal"
+        visual={<AmbientalVisual />}
+      />
+
+      <StatBand stats={[
+        { value: "9", label: "bases públicas oficiais integradas" },
+        { value: "5 fases", label: "Due Diligence automatizada" },
+        { value: "ANM + SEMAD", label: "licenciamento minerário + ambiental" },
+        { value: "100%", label: "rastreável à fonte" },
+      ]} />
+
+      <MktSection titulo="Como a SQ Ambiental atua" sub="Três frentes que cobrem o ciclo do licenciamento.">
+        <div className="grid gap-4 md:grid-cols-3">
+          <FeatureCard icon={Search} cor="teal" titulo="Análise preliminar"
+            descricao="Em minutos, o índice de sucesso do seu segmento e o diagnóstico do processo — antes de comprometer recursos."
+            bullets={["Índice de sucesso por atividade/classe", "Fatores de atenção", "Escopo estimado"]} />
+          <FeatureCard icon={ClipboardCheck} cor="gold" titulo="Radar de Condicionantes"
+            descricao="Cada condicionante vira obrigação com prazo e status — ambiental e ANM no mesmo radar."
+            bullets={["Prazos automáticos", "Comprovação de cumprimento", "Alvo do piloto Jaguar"]} />
+          <FeatureCard icon={ShieldCheck} cor="orange" titulo="Diligência Summo"
+            descricao="DD ambiental e conformidade de pilhas com metodologia em 5 fases e identidade Summo."
+            bullets={["Inventário documental", "Scoring de criticidade", "Relatório pronto para o cliente"]} />
+        </div>
+      </MktSection>
+
+      <MktSection titulo="Por que a SQ Ambiental" sub="Rápida, confiável e auditável.">
+        <div className="grid gap-4 md:grid-cols-3">
+          <FeatureCard icon={CheckCircle2} cor="teal" titulo="Dados auditáveis"
+            descricao="Cada registro rastreável à URL da fonte oficial (SEMAD, IBAMA, ANM). Sem caixa-preta." />
+          <FeatureCard icon={Zap} cor="gold" titulo="Análise em minutos"
+            descricao="O que levava semanas — diagnóstico, scoring, recomendações — sai em segundos." />
+          <FeatureCard icon={FileText} cor="orange" titulo="Senioridade que assina"
+            descricao="Relatórios prontos para clientes e órgãos, com o padrão metodológico Summo Quartile." />
+        </div>
+      </MktSection>
+
+      <CTABand titulo="Vai licenciar ou comprar um ativo?" sub="Comece com uma análise preliminar. Fale com a SQ Ambiental." />
     </div>
   );
 }

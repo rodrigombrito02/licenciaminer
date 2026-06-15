@@ -86,23 +86,23 @@ function NodeRow({
   return (
     <>
       <div
-        className="flex items-center gap-1 py-1 border-b hover:bg-muted/30"
+        className="flex items-start gap-1 py-1.5 border-b hover:bg-muted/30"
         style={{ paddingLeft: depth * 16 + 4 }}
       >
         {hasChildren ? (
-          <button onClick={() => onToggle(node.codigo)} className="text-muted-foreground hover:text-brand-teal">
+          <button onClick={() => onToggle(node.codigo)} className="text-muted-foreground hover:text-brand-teal mt-0.5 flex-shrink-0">
             {isOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
           </button>
         ) : (
-          <span className="w-3" />
+          <span className="w-3 flex-shrink-0" />
         )}
-        <span className="font-mono text-[10px] text-muted-foreground w-12 flex-shrink-0">{node.codigo}</span>
-        <span className="flex-1 truncate">{t?.descricao || "—"}</span>
+        <span className="font-mono text-[10px] text-muted-foreground w-12 flex-shrink-0 mt-0.5">{node.codigo}</span>
+        <span className="flex-1 min-w-0 whitespace-normal break-words leading-snug">{t?.descricao || "—"}</span>
         {t?.status && (
-          <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{t.status}</span>
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground flex-shrink-0 whitespace-nowrap mt-0.5">{t.status}</span>
         )}
         {t?.pct_concluido != null && (
-          <span className="text-[10px] tabular-nums w-10 text-right text-muted-foreground">
+          <span className="text-[10px] tabular-nums w-10 text-right text-muted-foreground flex-shrink-0 mt-0.5">
             {t.pct_concluido}%
           </span>
         )}

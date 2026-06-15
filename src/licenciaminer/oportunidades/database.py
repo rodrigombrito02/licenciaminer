@@ -46,13 +46,16 @@ class Base(DeclarativeBase):
 
 
 # Etapas do funil — usadas em Oportunidade.etapa
+# Ordem: a Estruturacao Tecnica vem ANTES da Captacao de Investidor — o estudo
+# de caso (rota de processo, recuperacao, riscos) embasa o relatorio levado ao
+# investidor. Correcao decidida em reuniao de socios.
 ETAPAS = [
     "prospect",
     "avaliacao",
+    "estruturacao",
     "relatorio",
     "investidores",
     "aprovacao",
-    "estruturacao",
     "implantacao",
     "operacao",
 ]

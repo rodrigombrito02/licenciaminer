@@ -46,6 +46,10 @@ LICENCA_MAP: dict[str, list[str]] = {
     "LAC_FED": ["LAC_FED"],
     "LAE": ["LAE"],
     "LOC": ["LOC"],
+    # Requerimentos ANM (Código de Mineração) — Diligência Regulatória
+    "ANM_PESQUISA": ["ANM - Requerimento de Pesquisa"],
+    "ANM_RFP": ["ANM - Relatório Final de Pesquisa"],
+    "ANM_LAVRA": ["ANM - Requerimento de Lavra"],
 }
 
 # Tipos de licença disponíveis no sistema
@@ -66,6 +70,10 @@ LICENCA_DESC: dict[str, str] = {
     "LAC_FED": "Licença por Adesão e Compromisso (Federal, baixo potencial poluidor)",
     "LAE": "Licença Ambiental Especial (Federal, atividades estratégicas)",
     "LOC": "Licença de Operação Corretiva (Federal, regularização)",
+    # Requerimentos ANM
+    "ANM_PESQUISA": "ANM — Requerimento de Pesquisa (Código de Mineração)",
+    "ANM_RFP": "ANM — Relatório Final de Pesquisa",
+    "ANM_LAVRA": "ANM — Requerimento de Lavra / Concessão",
 }
 
 

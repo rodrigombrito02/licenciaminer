@@ -288,6 +288,31 @@ def listar_tarefas(plano_id: int, db: Session = Depends(get_session)):
     ]
 
 
+class TarefaStatusIn(BaseModel):
+    status: str
+
+
+@router.patch("/tarefas/{tarefa_id}/status", response_model=TarefaOut)
+def atualizar_status_tarefa(
+    tarefa_id: int, payload: TarefaStatusIn, db: Session = Depends(get_session)
+):
+    """Atualiza o status de uma tarefa (usado pelo Kanban interativo)."""
+    t = db.query(TarefaPA).filter(TarefaPA.id == tarefa_id).first()
+    if not t:
+        raise HTTPException(404, "Tarefa não encontrada")
+    t.status = payload.status
+    db.commit()
+    db.refresh(t)
+    return TarefaOut(
+        id=t.id, plano_id=t.plano_id, ordem=t.ordem,
+        descricao=t.descricao, data_inicio=t.data_inicio, data_fim=t.data_fim,
+        responsavel_pessoa=t.responsavel_pessoa, area_responsavel=t.area_responsavel,
+        status=t.status, classificacao=t.classificacao,
+        eap_codigo=t.eap_codigo, eap_nivel=t.eap_nivel, parent_eap=t.parent_eap,
+        pct_concluido=t.pct_concluido, raw_extra=t.raw_extra,
+    )
+
+
 @router.delete("/planos/{plano_id}")
 def deletar_plano(plano_id: int, db: Session = Depends(get_session)):
     p = db.query(Plano).filter(Plano.id == plano_id).first()

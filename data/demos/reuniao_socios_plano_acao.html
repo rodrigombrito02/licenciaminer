@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Reunião de Sócios — Plano de Ação Pós-Apresentação</title>
+<style>
+:root {
+  --navy: #0A2540;
+  --navy2: #1A2C42;
+  --teal: #156082;
+  --gold: #FFC000;
+  --orange: #FF5F00;
+  --success: #27AE60;
+  --warning: #F39C12;
+  --danger: #E74C3C;
+  --light: #F8F9FB;
+  --gray: #6B7280;
+  --gray-light: #9CA3AF;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #1a1a1a; line-height: 1.65;
+  background: var(--light);
+}
+
+nav.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy); color: #fff;
+  padding: 10px 32px;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  flex-wrap: wrap;
+}
+nav.topnav .logo { font-weight: 800; font-size: 14px; letter-spacing: .5px; }
+nav.topnav .logo span { color: var(--gold); }
+nav.topnav a {
+  color: rgba(255,255,255,.7); text-decoration: none;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .8px; padding: 6px 10px; border-radius: 6px;
+  transition: all .2s;
+}
+nav.topnav a:hover { color: #fff; background: rgba(255,255,255,.08); }
+nav.topnav a.active { color: var(--gold); }
+
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 60%, var(--teal) 130%);
+  color: #fff; padding: 56px 32px 64px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.06) 1px, transparent 0);
+  background-size: 32px 32px; opacity: .4;
+}
+.hero > * { position: relative; z-index: 1; }
+.hero .accent { display: inline-flex; gap: 5px; margin-bottom: 18px; }
+.hero .accent span:nth-child(1) { width: 56px; height: 4px; background: var(--gold); border-radius: 2px; }
+.hero .accent span:nth-child(2) { width: 18px; height: 4px; background: var(--teal); border-radius: 2px; }
+.hero .accent span:nth-child(3) { width: 9px; height: 4px; background: var(--orange); border-radius: 2px; }
+.hero h1 { font-size: 38px; font-weight: 800; line-height: 1.15; margin-bottom: 10px; }
+.hero h1 .gold { color: var(--gold); }
+.hero .sub { font-size: 16px; color: rgba(255,255,255,.75); margin-bottom: 6px; max-width: 760px; margin-left: auto; margin-right: auto; }
+.hero .when { font-size: 11px; color: rgba(255,255,255,.45); text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; }
+
+section.block { padding: 56px 32px; max-width: 1200px; margin: 0 auto; }
+section.block.alt {
+  background: #fff; max-width: none;
+  padding-left: max(32px, calc(50% - 600px));
+  padding-right: max(32px, calc(50% - 600px));
+}
+
+h2.title {
+  font-size: 26px; font-weight: 800; color: var(--navy);
+  margin-bottom: 4px; display: flex; align-items: center; gap: 12px;
+}
+h2.title .lead { width: 36px; height: 4px; background: var(--gold); border-radius: 2px; }
+.subtitle { font-size: 13.5px; color: var(--gray); margin-bottom: 30px; }
+
+h3.section-h {
+  font-size: 18px; color: var(--navy); margin: 28px 0 12px;
+  padding-bottom: 6px; border-bottom: 2px solid rgba(21,96,130,.15);
+}
+
+/* Cards de sócio */
+.socios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+.socio-card {
+  background: #fff; border-radius: 12px;
+  padding: 20px 22px; border: 1px solid #e5e7eb;
+  border-top: 4px solid var(--teal);
+}
+.socio-card.leo { border-top-color: var(--gold); }
+.socio-card.maury { border-top-color: var(--orange); }
+.socio-card.giulia { border-top-color: var(--success); }
+.socio-card.lima { border-top-color: var(--navy); }
+.socio-card.bernardo { border-top-color: var(--teal); }
+.socio-card .nome { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+.socio-card .papel { font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-weight: 600; }
+.socio-card ul { list-style: none; }
+.socio-card ul li {
+  font-size: 12.5px; color: #374151; padding: 4px 0 4px 16px;
+  position: relative; line-height: 1.55;
+}
+.socio-card ul li::before {
+  content: '▸'; position: absolute; left: 0;
+  color: var(--teal); font-weight: 800;
+}
+.socio-card .quote {
+  background: rgba(21,96,130,.05); border-left: 3px solid var(--teal);
+  padding: 8px 12px; margin: 12px 0 6px; border-radius: 4px;
+  font-size: 12px; color: var(--navy); font-style: italic;
+}
+
+/* Princípios */
+.principios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 22px; }
+.principio {
+  background: #fff; border-radius: 10px; padding: 18px;
+  border: 1px solid #e5e7eb;
+}
+.principio .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--gold); color: var(--navy);
+  font-weight: 800; font-size: 13px; margin-bottom: 8px;
+}
+.principio h4 { font-size: 14px; color: var(--navy); margin-bottom: 6px; }
+.principio p { font-size: 12.5px; color: var(--gray); line-height: 1.65; }
+
+/* Módulo do sistema */
+.modulo-block {
+  background: #fff; border-radius: 14px; margin-bottom: 22px;
+  overflow: hidden; border: 1px solid #e5e7eb;
+}
+.modulo-header {
+  background: linear-gradient(135deg, var(--navy), var(--teal));
+  color: #fff; padding: 18px 24px;
+  display: flex; align-items: center; gap: 14px;
+}
+.modulo-header.gold { background: linear-gradient(135deg, var(--gold), #B8860B); color: var(--navy); }
+.modulo-header.orange { background: linear-gradient(135deg, var(--orange), #B0410E); }
+.modulo-header.teal { background: linear-gradient(135deg, var(--teal), #0E4660); }
+.modulo-header.gray { background: linear-gradient(135deg, var(--gray), #4B5563); }
+.modulo-header .ico {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: rgba(255,255,255,.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.modulo-header.gold .ico { background: rgba(10,37,64,.15); }
+.modulo-header .t { font-size: 17px; font-weight: 800; line-height: 1.2; }
+.modulo-header .s { font-size: 11px; opacity: .8; margin-top: 2px; }
+.modulo-body { padding: 22px 24px; }
+.modulo-body h5 { font-size: 13px; color: var(--navy); margin: 12px 0 8px; text-transform: uppercase; letter-spacing: .5px; font-weight: 700; }
+.modulo-body h5:first-child { margin-top: 0; }
+.modulo-body ul { list-style: none; }
+.modulo-body ul li {
+  font-size: 13px; color: #374151; padding: 4px 0 4px 18px;
+  position: relative; line-height: 1.6;
+}
+.modulo-body ul li::before {
+  content: '✓'; position: absolute; left: 0;
+  color: var(--success); font-weight: 800;
+}
+.modulo-body ul.todo li::before { content: '○'; color: var(--gold); }
+.modulo-body ul.risk li::before { content: '!'; color: var(--orange); }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.tag {
+  background: rgba(21,96,130,.08); color: var(--teal);
+  font-size: 10.5px; padding: 3px 9px; border-radius: 6px; font-weight: 600;
+}
+.tag.gold { background: rgba(255,192,0,.15); color: #B8860B; }
+.tag.orange { background: rgba(255,95,0,.1); color: var(--orange); }
+.tag.green { background: rgba(39,174,96,.1); color: var(--success); }
+.tag.danger { background: rgba(231,76,60,.1); color: var(--danger); }
+
+/* Oportunidades */
+.opp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
+.opp {
+  background: #fff; border-radius: 10px; padding: 18px 20px;
+  border-left: 4px solid var(--gold);
+}
+.opp .meta { display: flex; gap: 8px; font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: .8px; font-weight: 700; margin-bottom: 6px; }
+.opp .meta .pri { background: var(--gold); color: var(--navy); padding: 2px 7px; border-radius: 8px; }
+.opp .meta .pri.alta { background: var(--danger); color: #fff; }
+.opp .meta .pri.media { background: var(--warning); color: #fff; }
+.opp h5 { font-size: 14px; color: var(--navy); margin-bottom: 6px; }
+.opp p { font-size: 12.5px; color: var(--gray); line-height: 1.65; }
+.opp .quem { margin-top: 8px; font-size: 11px; color: var(--teal); font-weight: 700; }
+
+/* Callouts */
+.callout {
+  background: rgba(21,96,130,.05);
+  border-left: 4px solid var(--teal);
+  border-radius: 6px; padding: 14px 18px;
+  font-size: 13px; color: var(--navy);
+  margin: 16px 0; line-height: 1.7;
+}
+.callout.gold { background: rgba(255,192,0,.07); border-left-color: var(--gold); }
+.callout.orange { background: rgba(255,95,0,.05); border-left-color: var(--orange); }
+.callout.success { background: rgba(39,174,96,.05); border-left-color: var(--success); }
+.callout.danger { background: rgba(231,76,60,.05); border-left-color: var(--danger); }
+.callout strong { display: block; margin-bottom: 4px; font-size: 14px; color: var(--navy); }
+.callout code { background: rgba(10,37,64,.08); padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+
+/* Setup repo */
+.setup-step {
+  background: #fff; border-radius: 10px; padding: 18px 22px;
+  margin-bottom: 14px; border: 1px solid #e5e7eb;
+  display: flex; gap: 18px; align-items: flex-start;
+}
+.setup-step .n {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--navy); color: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 16px; flex-shrink: 0;
+}
+.setup-step .body h5 { font-size: 14.5px; color: var(--navy); margin-bottom: 6px; }
+.setup-step .body p { font-size: 12.5px; color: var(--gray); line-height: 1.65; margin-bottom: 8px; }
+.setup-step pre {
+  background: #0a1929; color: #e5e7eb;
+  padding: 12px 14px; border-radius: 6px;
+  font-size: 11.5px; line-height: 1.55;
+  overflow-x: auto; font-family: 'Courier New', Consolas, monospace;
+  margin: 8px 0;
+}
+.setup-step pre .c { color: #6b7280; }
+.setup-step pre .k { color: var(--gold); }
+
+/* Timeline */
+.timeline { position: relative; padding-left: 32px; margin-top: 18px; }
+.timeline::before {
+  content: ''; position: absolute;
+  left: 8px; top: 8px; bottom: 8px; width: 3px;
+  background: linear-gradient(to bottom, var(--danger), var(--gold), var(--success));
+  border-radius: 2px;
+}
+.tl-item {
+  position: relative; margin-bottom: 16px;
+  background: #fff; border-radius: 10px;
+  padding: 14px 20px; border: 1px solid #e5e7eb;
+}
+.tl-item::before {
+  content: ''; position: absolute;
+  left: -32px; top: 18px; width: 18px; height: 18px;
+  border: 3px solid #fff; border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 0 2px var(--gold);
+}
+.tl-item.urgent::before { background: var(--danger); box-shadow: 0 0 0 2px var(--danger); }
+.tl-item.med::before { background: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
+.tl-item.later::before { background: var(--gray-light); box-shadow: 0 0 0 2px var(--gray-light); }
+.tl-item .when { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 4px; }
+.tl-item.urgent .when { color: var(--danger); }
+.tl-item.later .when { color: var(--gray-light); }
+.tl-item h5 { font-size: 14px; color: var(--navy); margin-bottom: 3px; }
+.tl-item p { font-size: 12.5px; color: var(--gray); line-height: 1.6; }
+
+/* KPIs */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0; }
+.stat-mini {
+  background: #fff; padding: 16px 18px; border-radius: 10px;
+  border-top: 3px solid var(--teal);
+}
+.stat-mini.gold { border-top-color: var(--gold); }
+.stat-mini.orange { border-top-color: var(--orange); }
+.stat-mini.green { border-top-color: var(--success); }
+.stat-mini.navy { border-top-color: var(--navy); }
+.stat-mini .n { font-size: 24px; font-weight: 800; color: var(--navy); line-height: 1; }
+.stat-mini .l { font-size: 10.5px; color: var(--gray); text-transform: uppercase; letter-spacing: .8px; margin-top: 6px; }
+
+footer {
+  background: var(--navy); color: rgba(255,255,255,.6);
+  padding: 28px; text-align: center; font-size: 11px; line-height: 1.8;
+}
+footer strong { color: var(--gold); }
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 28px; }
+  nav.topnav { padding: 10px 16px; gap: 6px; }
+  nav.topnav a { padding: 5px 8px; font-size: 10px; }
+  section.block { padding: 40px 18px; }
+  .setup-step { flex-direction: column; gap: 10px; }
+}
+@media print {
+  nav.topnav { position: static; }
+  section.block { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="logo">SUMMO <span>QUARTILE</span></div>
+  <a href="#capa" class="active">Capa</a>
+  <a href="#uso">Como cada um usa</a>
+  <a href="#principios">Princípios</a>
+  <a href="#modulos">Plano por módulo</a>
+  <a href="#riscos">Riscos & Bugs</a>
+  <a href="#oportunidades">Oportunidades</a>
+  <a href="#time">Integração do time</a>
+  <a href="#repo">Como contribuir</a>
+  <a href="#cronograma">Cronograma</a>
+</nav>
+
+<!-- ═══════════ CAPA ═══════════ -->
+<section id="capa" class="hero">
+  <div class="accent"><span></span><span></span><span></span></div>
+  <p class="when">Reunião de Sócios · Pós-apresentação do Sistema</p>
+  <h1>Plano de <span class="gold">Ação e Melhorias</span></h1>
+  <p class="sub">Síntese consolidada das conversas entre Rodrigo, Leo, Maury, Giulia, Lima e Bernardo + notas da reunião da manhã de 10/06. Foco: <strong>gerar negócios</strong>, aumentar capacidade de execução, integrar a IA ao dia a dia.</p>
+  <p class="when">Marcos imediatos · Proposta Jaguar 19/06 · Apresentação interna 22/06</p>
+</section>
+
+<!-- ═══════════ DIAGNÓSTICO POR SÓCIO ═══════════ -->
+<section id="uso" class="block">
+  <h2 class="title"><span class="lead"></span>Como cada sócio está usando</h2>
+  <p class="subtitle">Onde estamos ganhando produtividade · onde ainda não destravou geração de negócio.</p>
+
+  <div class="socios-grid">
+    <div class="socio-card leo">
+      <div class="nome">Leo</div>
+      <div class="papel">Estrutura da SQS · Mercado · Time</div>
+      <ul>
+        <li>Bluedot grava reuniões — resumo 99% fiel; só corrige nomes próprios</li>
+        <li>Usa o Claude Code pra desenvolver ideias (não sistemas)</li>
+        <li>Estruturou a SQS: plano de trabalho, distribuição de tarefas, mercado</li>
+        <li>Gerou FC Financeiro com o Lima</li>
+        <li>Gerou políticas de diversidade, compliance, LGPD em 1h</li>
+        <li>Programa de sincronia do Gmail</li>
+      </ul>
+      <div class="quote">"Não está ajudando ainda a <strong>gerar negócios diretamente</strong>. Produtividade ok. Foco agora é captar."</div>
+    </div>
+
+    <div class="socio-card maury">
+      <div class="nome">Maury</div>
+      <div class="papel">Produtividade · Contexto · Aprofundamento técnico</div>
+      <ul>
+        <li>Mandou shape file de direitos minerários — IA identificou cursos d'água próximos</li>
+        <li>Pediu Q7,10 depois: cruzamento com disponibilidade hídrica</li>
+        <li>"Tem que saber pedir" — quando você raciocina o contexto, ele entrega muito</li>
+        <li>"Ele é muito alemão, faz estritamente o que pede" — contexto bem feito é tudo</li>
+        <li>Pensou na narrativa de Herculano: mineradora já usa IA própria, vai precisar de outro ângulo</li>
+      </ul>
+      <div class="quote">"Preguiça é relativa. Negócio está no contexto."</div>
+    </div>
+
+    <div class="socio-card giulia">
+      <div class="nome">Giulia</div>
+      <div class="papel">Ambiental · Análise técnica · UX para cliente</div>
+      <ul>
+        <li>Análise de recursos hídricos pro Maury — partiu do shape file de DM</li>
+        <li>IA identificou tudo redondo; ela só acrescentou ajustes</li>
+        <li>Tem usado IA do Canva para apresentações (preferiu ao Claude pra esse fim)</li>
+        <li>Reunião com a <strong>Jaguar dia 01</strong> — vai apresentar Summo Ambiental como sistema</li>
+      </ul>
+      <div class="quote">"Pelo tom da conversa com a Jaguar, é mais fácil oferecer como <strong>sistema</strong> do que como serviço. Tem sistemas que já fazem o acompanhamento; nosso diferencial é o SaaS + aprendizado inicial."</div>
+    </div>
+
+    <div class="socio-card lima">
+      <div class="nome">Lima</div>
+      <div class="papel">Financeiro · Produtos · Auditoria</div>
+      <ul>
+        <li>Criou 5 produtos da parte financeira</li>
+        <li>Ajudou o Roberto em controles financeiros</li>
+        <li>Mexia com auditoria — rede ampla de contatos cruzados</li>
+      </ul>
+      <div class="quote">"Começa com o Claude, mas tem que terminar com ele. Fica meio preso. Tem que mexer no LinkedIn separando as duas empresas."</div>
+    </div>
+
+    <div class="socio-card bernardo">
+      <div class="nome">Bernardo</div>
+      <div class="papel">Identidade visual · Templates · Paleta</div>
+      <ul>
+        <li>Vai estruturar templates, paleta e identidade visual pro time</li>
+        <li>Habilitar uso de templates no fluxo de apresentação</li>
+      </ul>
+      <div class="quote">"Vou ver como funciona e passar infos de template, cores, paleta."</div>
+    </div>
+  </div>
+
+  <div class="callout danger">
+    <strong>O grande gap diagnosticado pela reunião</strong>
+    Produtividade ok. <strong>Geração de novos negócios ainda não.</strong> Estamos sendo reativos. O foco precisa virar para: usar a IA pra mapear quem precisa do nosso produto, gerar opiniões SQ proprietárias, identificar oportunidades fechadas em direitos minerários, e abordar ativamente. <em>(Leo: "Aumentar a capacidade de execução — esse deve ser o foco.")</em>
+  </div>
+</section>
+
+<!-- ═══════════ PRINCÍPIOS ═══════════ -->
+<section id="principios" class="block alt">
+  <h2 class="title"><span class="lead"></span>Princípios consolidados na reunião</h2>
+  <p class="subtitle">O que orienta as próximas decisões.</p>
+
+  <div class="principios-grid">
+    <div class="principio">
+      <div class="num">1</div>
+      <h4>Ativos, não reativos</h4>
+      <p>Não esperar cliente bater. Mapear quem precisa, abordar com produto pronto. Site precisa atrair, mas a captação vem de busca ativa.</p>
+    </div>
+    <div class="principio">
+      <div class="num">2</div>
+      <h4>Contexto é tudo</h4>
+      <p>Resultado do Claude depende de quem pergunta saber o que quer. Bons resultados = bons contextos. Treinar o time a pedir bem.</p>
+    </div>
+    <div class="principio">
+      <div class="num">3</div>
+      <h4>IA para nós antes de para fora</h4>
+      <p>Usar a IA pra identificar oportunidades internas (rede, DMs parados, indústrias-alvo) antes de empacotar como produto externo. Isso multiplica capacidade.</p>
+    </div>
+    <div class="principio">
+      <div class="num">4</div>
+      <h4>Sistema (SaaS) ≥ serviço puro</h4>
+      <p>Em muitos casos, oferecer o sistema vale mais que o acompanhamento humano. Aprendizado inicial é parte do produto, não etapa avulsa.</p>
+    </div>
+    <div class="principio">
+      <div class="num">5</div>
+      <h4>Pilotar com poucos antes de escalar</h4>
+      <p>Em vez de produtizar tudo, pegar 1 indústria, 10 DMs, 1 caso de ouro — pacificar processos prioritários antes de abrir frente 2.</p>
+    </div>
+    <div class="principio">
+      <div class="num">6</div>
+      <h4>Cuidar com a preguiça</h4>
+      <p>Lado perigoso: jogamos para a IA o que deveríamos pensar. Equilíbrio: usar pra escalar raciocínio próprio, não para terceirizar pensamento.</p>
+    </div>
+    <div class="principio">
+      <div class="num">7</div>
+      <h4>Rede como produto</h4>
+      <p>Modelo "6 graus de separação" funciona na mineração. Mapear conexões via LinkedIn + universidade + histórico de trabalho é insight de captação.</p>
+    </div>
+    <div class="principio">
+      <div class="num">8</div>
+      <h4>Renomear linha ambiental — "SQ Ambiental" ou "ESP Ambiental"</h4>
+      <p>Decidir até a próxima reunião entre <strong>SQ Ambiental</strong> e <strong>ESP Ambiental</strong>. Padronizar em todo o sistema, site e materiais. <em>Termo aberto na reunião.</em></p>
+    </div>
+    <div class="principio">
+      <div class="num">9</div>
+      <h4>Compartilhamento de contextos entre sócios</h4>
+      <p>Contextos do Claude hoje ficam isolados por usuário; o CloudWorks (chat compartilhado) não usa skills/contextos salvos como Claude Code. Precisa repositório comum pra evitar retrabalho e gasto duplicado de tokens.</p>
+    </div>
+    <div class="principio">
+      <div class="num">10</div>
+      <h4>Freemium nos produtos</h4>
+      <p>Estratégia <strong>freemium</strong> em Mineral Intelligence e Análise Preliminar: camada gratuita captura o lead via login; versão completa é paga com entregáveis claros.</p>
+    </div>
+    <div class="principio">
+      <div class="num">11</div>
+      <h4>HTML "self-standing" como entrega ao cliente</h4>
+      <p>Apresentações em HTML autocontido (sem link público), arquivos pequenos (~50k), distribuição controlada. Proteção de PI por curadoria de quem recebe.</p>
+    </div>
+    <div class="principio">
+      <div class="num">12</div>
+      <h4>Revisão sistemática das saídas da IA</h4>
+      <p>"Pensa em inglês e traduz" — revisar nomes próprios, termos técnicos, números e traduções PT-BR. Padronizar prompts por cliente (ex.: regras AS Steel — sem "consultês").</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ MÓDULOS DO SISTEMA ═══════════ -->
+<section id="modulos" class="block">
+  <h2 class="title"><span class="lead"></span>Plano de ação por módulo do sistema</h2>
+  <p class="subtitle">O que foi discutido sobre cada caixa · prioridades · ajustes técnicos.</p>
+
+  <!-- SITE / ATRAÇÃO -->
+  <div class="modulo-block">
+    <div class="modulo-header">
+      <div class="ico">🌐</div>
+      <div>
+        <div class="t">Site público + atração de tráfego</div>
+        <div class="s">Integrar sistema ao site · ser ativo na captação</div>
+      </div>
+    </div>
+    <div class="modulo-body">
+      <h5>O que foi discutido</h5>
+      <ul>
+        <li>Site precisa virar porta de entrada — atrair quem está pesquisando o assunto</li>
+        <li>Leo: "Temos que ser ativos, não reativos"</li>
+        <li>Estratégia depende do que vamos colocar pra atrair (definir conteúdo de isca)</li>
+      </ul>
+      <h5>Próximas ações</h5>
+      <ul class="todo">
+        <li>Integrar plataforma <code>summoquartile.vercel.app</code> ao site comercial atual (<strong>sem redirecionamentos</strong> — site único Vercel com rotas <code>/inteligencia-comercial</code>, <code>/sq-ambiental</code>)</li>
+        <li>Definir conteúdos públicos de atração: rankings CFEM, Top mineradoras, heatmap aprovação ambiental, calculadora de licenciamento</li>
+        <li>Acesso privado por login com liberação por produto adquirido (estilo <strong>marketplace</strong>)</li>
+        <li>Atualizar conteúdo de "Soluções" e "Parcerias" (site bom visualmente, desatualizado)</li>
+        <li>Internacionalização: transformar conteúdos para <strong>inglês</strong> em alguns casos</li>
+        <li>Bernardo: paleta + templates aplicáveis às páginas públicas</li>
+        <li>Lima: separar LinkedIn das duas empresas (SQS e SQ Consultoria) — debate em aberto</li>
+        <li>Análise da pasta de propostas do Drive: alta taxa de perda identificada → estudo de conversão</li>
+        <li>Clipping semanal automatizado (Brasil Mineral, Notícias de Mineração) com resumos curtos + links oficiais (compliance)</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag">prioridade alta</span>
+        <span class="tag gold">marketplace com login</span>
+        <span class="tag">EN obrigatório</span>
+        <span class="tag">responsáveis: Leo + Bernardo + Rodrigo</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SQ AMBIENTAL -->
+  <div class="modulo-block">
+    <div class="modulo-header teal">
+      <div class="ico">🛡️</div>
+      <div>
+        <div class="t">SQ Ambiental <small style="opacity:.7">(rebrand do Summo Ambiental)</small></div>
+        <div class="s">Foco imediato · Jaguar dia 01 · oferecer como SaaS + aprendizado inicial</div>
+      </div>
+    </div>
+    <div class="modulo-body">
+      <h5>Discussão da reunião</h5>
+      <ul>
+        <li>Giulia: caso Jaguar — oferecer como sistema, não serviço de acompanhamento</li>
+        <li>Maury: caso Herculano — empresa grande já usa IA própria; precisa achar quem ainda <strong>não</strong> está usando</li>
+        <li>Estratégia "ensinar a usar + cobrar fee de implantação" para empresas que não têm o produto montado</li>
+        <li>Acompanhamento durante: pré-protocolo, mentoria de uso, suporte por e-mail</li>
+      </ul>
+      <h5>Próximas ações</h5>
+      <ul class="todo">
+        <li><strong>Até 19/06/2026</strong>: definir escopo, custos e valor da proposta Jaguar</li>
+        <li><strong>22/06/2026</strong>: apresentação interna do material com o time</li>
+        <li>Renomear linha ambiental (decidir: "SQ Ambiental" ou "ESP Ambiental") em todo o sistema</li>
+        <li>Estruturar oferta SaaS + acompanhamento de licenças <strong>antes e depois do protocolo</strong></li>
+        <li>Modelo: prestar serviço inicialmente como aprendizado pra desenvolver o sistema com propriedade</li>
+        <li>Mapear empresas de porte intermediário (alvo Maury) — quem ainda não tem IA própria mas tem pegada ambiental crítica</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag danger">deadline proposta: 19/06</span>
+        <span class="tag orange">apresentação interna: 22/06</span>
+        <span class="tag gold">cliente-alvo: Jaguar Mais</span>
+        <span class="tag">responsáveis: Giulia + Maury</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIREITOS E CONCESSÕES -->
+  <div class="modulo-block">
+    <div class="modulo-header teal">
+      <div class="ico">🗺️</div>
+      <div>
+        <div class="t">Direitos e Concessões Minerárias</div>
+        <div class="s">Mapeamento de DMs pequenos parados · captação via Gilmar · parceria Blackwall</div>
+      </div>
+    </div>
+    <div class="modulo-body">
+      <h5>Discussão da reunião</h5>
+      <ul>
+        <li>Maury + Gilmar: existem MUITOS DMs pequenos parados que empresas grandes não pegam, mas funcionam para PF</li>
+        <li>Fluxo de prospecção automatizado: <strong>7-10 parâmetros de atratividade</strong> (água, energia, logística, e mais) + filtros de concessões</li>
+        <li>Mapa geoespacial como "<strong>anzol público parcial</strong>" — núcleo proprietário fica interno; cuidado pra não expor parâmetros em parcerias</li>
+        <li>Modelo "6 graus" — toda conexão na mineração brasileira é mapeável (universidade, projeto anterior, parceria, setor)</li>
+        <li>Parceria <strong>Blackwall Online</strong>: equipe externa avançada em IA pra ganhar velocidade, preservando conhecimento de mercado interno</li>
+        <li>Modelo de negócio: receita recorrente, maturação 2-3 anos, planos semestrais/anuidades, motivadores pra uso frequente</li>
+        <li>Posicionamento vs <strong>Jazida</strong>: NÃO competir frontalmente — usar Jazida como insumo, diferenciar-se por análise interna proprietária</li>
+      </ul>
+      <h5>Próximas ações</h5>
+      <ul class="todo">
+        <li>Detalhar critérios e pesos dos 7-10 parâmetros de atratividade</li>
+        <li>Especificar mapeamento "DM parado → dono → contato → rede" como funcionalidade</li>
+        <li>Investigar fontes públicas de relacionamento (LinkedIn, currículo Lattes, sócios via CNPJ, processos antigos)</li>
+        <li>Criar protótipo CUMO: tabela com Pessoa A, Pessoa B, vínculo (universidade/projeto/sócio), nível de proximidade</li>
+        <li>Meta inicial: identificar <strong>10 DMs com potencial</strong> e acionar comercial/relacionamento</li>
+        <li>Conversar com Blackwall Online sobre parceria estratégica neste eixo</li>
+        <li>Política de proteção de PI e compartilhamento seguro em parcerias de IA</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag orange">conceito CUMO</span>
+        <span class="tag">parceiro: Blackwall Online</span>
+        <span class="tag green">meta: 10 DMs</span>
+        <span class="tag danger">não competir com Jazida</span>
+        <span class="tag">responsável: Maury</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MINERAL INTELLIGENCE -->
+  <div class="modulo-block">
+    <div class="modulo-header gold">
+      <div class="ico">📈</div>
+      <div>
+        <div class="t">Mineral Intelligence</div>
+        <div class="s">Emitir opinião SQ proprietária · parceria CRU · 5 produtos do Lima</div>
+      </div>
+    </div>
+    <div class="modulo-body">
+      <h5>Discussão da reunião</h5>
+      <ul>
+        <li>Repositório com dados integrados: mercado, municípios, substâncias, produção, preços, comércio por país/UF</li>
+        <li>Estratégia <strong>freemium</strong>: análise preliminar gratuita (captura lead via login) + versão completa paga</li>
+        <li>Funcionalidade: <strong>upload de Termo de Referência (TR)</strong> → geração automática de requisitos</li>
+        <li>Maury: bases pagas (McKinsey, <strong>CRU/CRIU, Wood Mackenzie</strong>) + bases públicas + emitir opinião SQ proprietária</li>
+        <li>Lima já tem 5 produtos prontos — Mineral Intelligence seria o 6º</li>
+        <li>Leo: gap = dados pagos. Não pago sem justificativa de venda — parceria pode resolver</li>
+        <li>Coleta de campo: dificuldade com dados precisos em pequenas operações → viagens (ex.: <strong>Carajás/Pará</strong>) para ranking e validação</li>
+        <li>Clipping: assinar Brasil Mineral, Notícias de Mineração + robô automatizado; riscos legais → fornecer <strong>resumos curtos + links oficiais</strong></li>
+        <li>Posicionamento vs Jazida: usar como insumo, não competir; diferencial = opinião SQ + identificação proprietária</li>
+      </ul>
+      <h5>Próximas ações</h5>
+      <ul class="todo">
+        <li>Mapear contatos CRU/CRIU + Wood Mackenzie para conversa de parceria (Leo)</li>
+        <li>Definir escopo da "partícula paga" + modelo de preços + limites da camada gratuita</li>
+        <li>Implementar upload de TR e geração automática de requisitos no sistema</li>
+        <li>Lima: documentar os 5 produtos existentes + esboçar 6º (Mineral Intelligence opinião SQ)</li>
+        <li>Adicionar fontes (Brasil Mineral, Notícias Mineração) + sistema de clipping no backend</li>
+        <li>Estruturar "Opinião SQ" como template de relatório premium (similar Pilhas/Oportunidades)</li>
+        <li>Planejar coleta de campo Carajás/Pará para validação de dados de pequenos projetos</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag gold">freemium</span>
+        <span class="tag">parceiros: CRU/CRIU, Wood Mackenzie</span>
+        <span class="tag orange">upload TR → requisitos</span>
+        <span class="tag">responsável: Lima</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SQ SOLUTIONS / MINERADORA MODELO -->
+  <div class="modulo-block">
+    <div class="modulo-header orange">
+      <div class="ico">🤖</div>
+      <div>
+        <div class="t">SQ Solutions — Mineradora Modelo</div>
+        <div class="s">Caso ouro aluvião como piloto · deixar de ser fictício · formato customizável</div>
+      </div>
+    </div>
+    <div class="modulo-body">
+      <h5>Discussão da reunião</h5>
+      <ul>
+        <li>"Mineração Padrão"/Mineradora Modelo: benchmarks e indicadores por área (planejamento, operação, processamento, ESG)</li>
+        <li>Painel "<strong>estado atual vs. desejado</strong>" + <strong>roadmap de 6-18 meses</strong> com indicadores mensuráveis por frente</li>
+        <li>Modelo comercial: cobrança por <strong>horas/módulos</strong>; consultoria para implementar</li>
+        <li>Parcerias tecnológicas específicas (ex.: <strong>Vulcan</strong> e outros) pra evitar obsolescência</li>
+        <li>Atenção: NÃO rotular telemetria consolidada como "inovação"</li>
+        <li>Maury tem demanda real: ouro aluvial em rio + lavra regenerativa (recuperação 10-15%, ROM, retorno rejeito/estéril)</li>
+        <li>Lavra regenerativa: remoção orgânico/estéril; em áreas agrícolas a limpeza é simplificada</li>
+        <li>Captação de investimento: começar "no escuro", levantar teores na operação; ticket inicial US$ 1-2 milhões (às vezes a fundo perdido, com participação ~40% como retorno)</li>
+        <li>Ouro aluvial: respeito APP/mata ciliar; discussão sobre mercúrio (operação sem mercúrio no Brasil)</li>
+        <li>Esse formato pode virar parte do relatório de captação de investidor (Funil de Oportunidades)</li>
+      </ul>
+      <h5>Próximas ações</h5>
+      <ul class="todo">
+        <li>Adicionar fluxo: "Caracterizar empreendimento" (rota processo, logística, tipo de minério, geologia)</li>
+        <li>Gerar saída estruturada: benchmark + recuperação esperada + tipo de pilha + riscos + oportunidades + roadmap 6-18m</li>
+        <li>Cadastro de estudo de caso permitindo migrar de fictício para real</li>
+        <li>Integrar com Funil de Oportunidades — estudo de caso vira parte do Relatório de Viabilidade</li>
+        <li>Mapear parceiros tecnológicos prioritários (Vulcan + outros) e critérios de due diligence</li>
+        <li>Caso piloto: Maury aplicar no ouro aluvial antes de comercializar</li>
+      </ul>
+      <div class="callout orange" style="margin-top:14px;">
+        <strong>Insight cruzado importante</strong>
+        Esse formato de estudo de caso (Mineradora Modelo) é parte da etapa de <strong>estruturação ANTES da captação do investidor</strong>. Precisa entrar como etapa formal do Funil de Oportunidades, não como produto isolado.
+      </div>
+    </div>
+  </div>
+
+  <!-- SQS - GESTÃO INTERNA -->
+  <div class="modulo-block">
+    <div class="modulo-header gray">
+      <div class="ico">💼</div>
+      <div>
+        <div class="t">SQS / Gestão Interna</div>
+        <div class="s">Fluxo de caixa por projeto · separação clientes × parceiros · integração com Leo</div>
+      </div>
+    </div>
+    <div class="modulo-body">
+      <h5>Discussão da reunião</h5>
+      <ul>
+        <li>Projetos ativos: Complexo Boaventura (vários editais) + <strong>EPCs Gaslub: EPC 6, 7, 8, 10, 11, 13, 15</strong></li>
+        <li>Gestão por "<strong>cliente</strong>" e "<strong>parceria</strong>" para segregar receitas/despesas</li>
+        <li>Cada projeto pode ter múltiplos parceiros (ex: Monte-Mendes Jr. é parceiro Rombit)</li>
+        <li>Visão gerencial: receitas e gastos por projeto, não por conta bancária</li>
+        <li>Entender a "<strong>parcela mensal</strong>" no fluxo de caixa com a <strong>Ana</strong></li>
+        <li>Custos de cloud/API alocados em orçamentos de projeto (ex.: ESDIC)</li>
+        <li>N8N (licença já existente) pra reduzir tokens — definir responsável e backlog de automações</li>
+        <li>Integrar com FC Financeiro que o Leo já fez; sistema deve avisar quando pedir desembolso na hora certa</li>
+      </ul>
+      <h5>Próximas ações</h5>
+      <ul class="todo">
+        <li>Estruturar entidades: Projeto → Cliente / Projeto → Parceiros (N:N) / Projeto → Receitas / Projeto → Gastos</li>
+        <li>Dashboard "Fluxo de caixa por projeto" — receitas previstas/realizadas vs gastos previstos/realizados</li>
+        <li>Alertas de cobrança quando milestone bate</li>
+        <li>Conversa com Ana para mapear "parcela mensal" no FC</li>
+        <li>Definir responsável pela iniciativa N8N e listar processos pra automatizar</li>
+        <li>Brainstorm orientado por IA sobre automações N8N</li>
+        <li>Migrar gestão SQS pro sistema (Rodrigo no Claude)</li>
+        <li>Integrar templates do FC do Leo como base</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag">novo módulo</span>
+        <span class="tag gold">restrito a sócios</span>
+        <span class="tag">responsáveis: Rodrigo + Leo + Lima</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNIL DE OPORTUNIDADES -->
+  <div class="modulo-block">
+    <div class="modulo-header gold">
+      <div class="ico">🎯</div>
+      <div>
+        <div class="t">Funil de Oportunidades</div>
+        <div class="s">Ajustar etapas · incluir estruturação antes da captação · usar Mineradora Modelo</div>
+      </div>
+    </div>
+    <div class="modulo-body">
+      <h5>Discussão da reunião</h5>
+      <ul>
+        <li>Etapa de estruturação precisa vir ANTES da captação do investidor — padrão precisa ser corrigido</li>
+        <li>Relatório final pode incorporar o formato de estudo de caso da Mineradora Modelo</li>
+        <li>Aplicação direta: caso ouro aluvião do Maury</li>
+      </ul>
+      <h5>Próximas ações</h5>
+      <ul class="todo">
+        <li>Revisar as 8 etapas do funil: garantir que "Estruturação técnica" venha antes de "Apresentação a investidor"</li>
+        <li>Permitir que o Relatório de Viabilidade puxe seções da Mineradora Modelo (rota de processo, recuperação, pilhas)</li>
+        <li>Validar com Maury usando o caso ouro aluvial como teste real</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- DASHBOARDS DINÂMICOS -->
+  <div class="modulo-block">
+    <div class="modulo-header gray">
+      <div class="ico">📊</div>
+      <div>
+        <div class="t">Dashboards & Gestão de Ações Centralizada</div>
+        <div class="s">Migrar de estático para dinâmico · login mostra tarefas do usuário</div>
+      </div>
+    </div>
+    <div class="modulo-body">
+      <h5>Discussão da reunião</h5>
+      <ul>
+        <li>Nova ferramenta de dashboards via upload de planilhas — sugestão: trocar por <strong>consultas dinâmicas</strong> ("quais ações estão em aberto?") em vez de dashboards estáticos</li>
+        <li>Centralizar a gestão de planos de ação na plataforma</li>
+        <li>Ao fazer login, cada usuário vê <strong>suas tarefas e status dos projetos</strong> (ex.: Regap)</li>
+        <li>Operar e gerenciar planos dentro da ferramenta — fim de planilha solta</li>
+      </ul>
+      <h5>Próximas ações</h5>
+      <ul class="todo">
+        <li>Decidir adoção de dashboards dinâmicos vs estáticos + nomear líder da implementação</li>
+        <li>Implementar tela inicial pós-login: "Minhas tarefas" + "Status dos meus projetos"</li>
+        <li>Definir lógica de "projetos ativos" para visualização</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ GOVERNANÇA E RISCOS ═══════════ -->
+<section id="riscos" class="block alt">
+  <h2 class="title"><span class="lead"></span>Governança, riscos e bugs identificados</h2>
+  <p class="subtitle">O que precisa de processo · o que precisa de correção técnica.</p>
+
+  <h3 class="section-h">⚠️ Riscos e cuidados de governança</h3>
+  <div class="opp-grid">
+    <div class="opp" style="border-left-color:var(--danger);">
+      <div class="meta"><span class="pri alta">crítico</span><span>Governança IA</span></div>
+      <h5>Preguiça cognitiva</h5>
+      <p>Risco de jogar pra IA o que a gente deveria pensar. Diretriz interna pra equilibrar uso (escalar raciocínio, não terceirizá-lo).</p>
+    </div>
+    <div class="opp" style="border-left-color:var(--danger);">
+      <div class="meta"><span class="pri alta">crítico</span><span>Continuidade</span></div>
+      <h5>Dependência de tokens/créditos</h5>
+      <p>Quando os créditos acabam, atividades travam. Definir fluxo de fallback, orçamentos e plano de contingência.</p>
+    </div>
+    <div class="opp" style="border-left-color:var(--warning);">
+      <div class="meta"><span class="pri media">qualidade</span><span>Revisão</span></div>
+      <h5>"Pensa em inglês e traduz"</h5>
+      <p>Revisar nomes próprios, termos técnicos e traduções PT-BR. Estabelecer procedimento padrão de validação de saídas.</p>
+    </div>
+    <div class="opp" style="border-left-color:var(--warning);">
+      <div class="meta"><span class="pri media">segurança</span><span>Acesso</span></div>
+      <h5>Senha única na plataforma</h5>
+      <p>Hoje há senha única. Implementar acessos individuais + permissões + auditoria.</p>
+    </div>
+    <div class="opp" style="border-left-color:var(--warning);">
+      <div class="meta"><span class="pri media">colaboração</span><span>Contextos</span></div>
+      <h5>Contextos isolados por usuário</h5>
+      <p>Cada sócio tem seu Claude isolado. Padronizar repositório comum de skills/contextos para evitar retrabalho e gasto duplicado de tokens.</p>
+    </div>
+    <div class="opp" style="border-left-color:var(--warning);">
+      <div class="meta"><span class="pri media">PI</span><span>Parcerias</span></div>
+      <h5>Proteção de Propriedade Intelectual</h5>
+      <p>Em parcerias de IA (Blackwall Online), proteger núcleo proprietário. Cuidado com clipping de fontes pagas — fornecer resumos curtos + links oficiais.</p>
+    </div>
+  </div>
+
+  <h3 class="section-h">🐛 Bugs técnicos reportados</h3>
+  <div class="modulo-block">
+    <div class="modulo-body" style="padding:18px 24px;">
+      <ul class="risk">
+        <li><strong>EAP — quebra de texto</strong>: corrigir bug de quebra na visualização da EAP</li>
+        <li><strong>Kanban — atribuição</strong>: problema de atribuição de responsável no Kanban</li>
+        <li><strong>Matriz de risco no dashboard</strong>: testar upload de matriz de risco no dashboard</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag danger">prioridade técnica</span>
+        <span class="tag">responsável: Rodrigo</span>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="section-h">📋 Governança a estabelecer</h3>
+  <div class="principios-grid">
+    <div class="principio">
+      <div class="num">G1</div>
+      <h4>Validação sistemática de saídas IA</h4>
+      <p>Procedimento padronizado: nomes, termos, números, planilhas, traduções. Quem assina? Quem revisa?</p>
+    </div>
+    <div class="principio">
+      <div class="num">G2</div>
+      <h4>Versionamento de diretrizes</h4>
+      <p>Diretrizes/políticas (diversidade, compliance, LGPD, SST, MA) com aprovação, versionamento, responsáveis e auditoria.</p>
+    </div>
+    <div class="principio">
+      <div class="num">G3</div>
+      <h4>Matriz de priorização de 5 produtos</h4>
+      <p>Critérios objetivos: <strong>impacto · viabilidade · tempo · demanda</strong>. Validar os 3 iniciais antes de seguir.</p>
+    </div>
+    <div class="principio">
+      <div class="num">G4</div>
+      <h4>Modelo comercial padrão</h4>
+      <p>Definir hora vs mensalidade vs por módulo + SLAs da consultoria + proposta padrão.</p>
+    </div>
+    <div class="principio">
+      <div class="num">G5</div>
+      <h4>Cronograma de coletas de campo</h4>
+      <p>Carajás/Pará e outras regiões para validação de dados de pequenos projetos. Responsáveis e datas.</p>
+    </div>
+    <div class="principio">
+      <div class="num">G6</div>
+      <h4>Protocolo de recursos hídricos</h4>
+      <p>Dados mínimos a pedir: Q7/Q10, captações existentes, direitos no entorno, volume disponível, outorga preventiva.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ITENS PONTUAIS E AGENDA ═══════════ -->
+<section class="block">
+  <h2 class="title"><span class="lead"></span>Itens pontuais e agenda</h2>
+  <p class="subtitle">Demandas específicas mencionadas na reunião.</p>
+
+  <div class="opp-grid">
+    <div class="opp">
+      <div class="meta"><span class="pri media">agenda</span><span>Avaliação</span></div>
+      <h5>MSC (CPI) — "100 libras"</h5>
+      <p>Avaliar viabilidade da solução. Explorar pra achar falhas antes de adoção.</p>
+      <div class="quem">Time técnico</div>
+    </div>
+    <div class="opp">
+      <div class="meta"><span class="pri">agenda</span><span>Cliente</span></div>
+      <h5>Pedro — suplementos</h5>
+      <p>Reunião agendada das 13h às 14h.</p>
+      <div class="quem">Conforme agenda</div>
+    </div>
+    <div class="opp">
+      <div class="meta"><span class="pri media">cliente</span><span>Demanda</span></div>
+      <h5>Felipo Urtubi</h5>
+      <p>Entender demandas a partir do e-mail de 9/6/2026.</p>
+      <div class="quem">Responsável a definir</div>
+    </div>
+    <div class="opp">
+      <div class="meta"><span class="pri">cliente</span><span>AS Steel</span></div>
+      <h5>Padronização de prompt AS Steel</h5>
+      <p>Regras de estilo (sem "consultês", técnico e explicativo) — preferências documentadas no contexto.</p>
+      <div class="quem">Leo</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ OPORTUNIDADES DE NEGÓCIO ═══════════ -->
+<section id="oportunidades" class="block alt">
+  <h2 class="title"><span class="lead"></span>Oportunidades de negócio identificadas</h2>
+  <p class="subtitle">Próximas conversas e pilotos saídos da reunião.</p>
+
+  <div class="opp-grid">
+    <div class="opp">
+      <div class="meta"><span class="pri alta">prioridade alta</span><span>SQ/ESP Ambiental</span></div>
+      <h5>Jaguar Mais — oferta SaaS + acompanhamento</h5>
+      <p>SaaS de acompanhamento de licenças (antes e depois do protocolo). Prestar serviço inicial como aprendizado pra desenvolver sistema com propriedade.</p>
+      <div class="quem">Giulia + Maury · proposta 19/06 · interno 22/06</div>
+    </div>
+    <div class="opp">
+      <div class="meta"><span class="pri alta">prioridade alta</span><span>SQ Solutions</span></div>
+      <h5>Pelotização — replicar Sojitz/BHP/Mitsubishi</h5>
+      <p>Mapear outras empresas com perfil similar e abordar. Usar IA pra identificar candidatas com base no que deu certo.</p>
+      <div class="quem">Leo</div>
+    </div>
+    <div class="opp">
+      <div class="meta"><span class="pri media">prioridade média</span><span>Direitos</span></div>
+      <h5>DMs pequenos parados — projeto Gilmar</h5>
+      <p>Mapear DMs parados + dono + contato. Validar com 5-10 casos reais antes de produtizar.</p>
+      <div class="quem">Maury + Gilmar</div>
+    </div>
+    <div class="opp">
+      <div class="meta"><span class="pri media">prioridade média</span><span>SQ Solutions</span></div>
+      <h5>Ouro aluvião — caso piloto</h5>
+      <p>Cliente do Maury com mineração de ouro aluvião + lavra regenerativa. Validar Mineradora Modelo no real.</p>
+      <div class="quem">Maury · amanhã</div>
+    </div>
+    <div class="opp">
+      <div class="meta"><span class="pri">prioridade média</span><span>Mineral Intelligence</span></div>
+      <h5>Parceria com CRU</h5>
+      <p>Acessar dados pagos via parceria, complementar com opinião SQ. Cara da CRU precisa ser mapeado.</p>
+      <div class="quem">Leo</div>
+    </div>
+    <div class="opp">
+      <div class="meta"><span class="pri">backlog</span><span>SQS</span></div>
+      <h5>RaaS — Robot as a Service</h5>
+      <p>3 robôs Petrobras (do mais sensacional ao mais básico). Petrobras já se posicionou: "não temos gente para isso". Modelo de operação como serviço pode destravar.</p>
+      <div class="quem">Leo + Bernardo</div>
+    </div>
+    <div class="opp">
+      <div class="meta"><span class="pri">backlog</span><span>Mineral Intelligence</span></div>
+      <h5>Lima visitando projetos</h5>
+      <p>Gerar informação proprietária que o mercado não tem. Insumo pra Opinião SQ.</p>
+      <div class="quem">Lima</div>
+    </div>
+    <div class="opp">
+      <div class="meta"><span class="pri">backlog</span><span>Direitos</span></div>
+      <h5>Conceito CUMO — mapeamento de rede</h5>
+      <p>Sistema que descobre relacionamentos entre pessoas via LinkedIn, universidade, projetos anteriores. Insumo pra abordagem de DMs e parcerias.</p>
+      <div class="quem">Rodrigo + Maury</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ INTEGRAÇÃO DO TIME ═══════════ -->
+<section id="time" class="block">
+  <h2 class="title"><span class="lead"></span>Integração do time — desafio transversal</h2>
+  <p class="subtitle">Como fazer o aprendizado de um virar aprendizado de todos.</p>
+
+  <div class="callout gold">
+    <strong>Frase-chave da reunião (Leo)</strong>
+    "Como integrar os trabalhos entre todo o time? Ele criou um programa de sincronia do meu gmail — esse tipo de coisa, alguém tem que pegar e fazer. Compartilhar as atividades e os aprendizados."
+  </div>
+
+  <h3 class="section-h">Como propomos integrar</h3>
+
+  <div class="principios-grid">
+    <div class="principio">
+      <div class="num">1</div>
+      <h4>Repositório compartilhado de contextos</h4>
+      <p>Cada sócio mantém uma pasta <code>contextos/[nome]/</code> no repositório com seus prompts, padrões de pergunta e templates que funcionam. Quando um descobre algo que vale, outros aproveitam.</p>
+    </div>
+    <div class="principio">
+      <div class="num">2</div>
+      <h4>Memória central da Summo</h4>
+      <p>Arquivo <code>MEMORY_SUMMO.md</code> compartilhado com decisões e aprendizados — clientes, padrões, vocabulário "sem consultês", paleta. Cada vez que abrirem o Claude, esse contexto carrega.</p>
+    </div>
+    <div class="principio">
+      <div class="num">3</div>
+      <h4>Templates aplicáveis</h4>
+      <p>Bernardo monta paleta + templates de apresentação. Giulia/Lima/Leo aplicam no Canva ou direto no sistema. Identidade Summo consistente em todos os outputs.</p>
+    </div>
+    <div class="principio">
+      <div class="num">4</div>
+      <h4>Reunião curta semanal de aprendizado</h4>
+      <p>15 min por semana cada um conta uma coisa nova que descobriu da IA — não pra exibir, pra propagar. Bluedot grava, vira insumo do MEMORY_SUMMO.</p>
+    </div>
+    <div class="principio">
+      <div class="num">5</div>
+      <h4>N8N como hub de automação</h4>
+      <p>Alguns já pagam. Compilar ideias e centralizar os fluxos N8N num repositório acessível. Cada automação criada vira ativo compartilhado.</p>
+    </div>
+    <div class="principio">
+      <div class="num">6</div>
+      <h4>Contribuição via GitHub</h4>
+      <p>Cada um clona o repo, propõe melhorias na sua máquina, manda pro Rodrigo via PR. Detalhamento na próxima seção.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ COMO CONTRIBUIR (REPO) ═══════════ -->
+<section id="repo" class="block alt">
+  <h2 class="title"><span class="lead"></span>Como cada sócio cria sua cópia e contribui</h2>
+  <p class="subtitle">Passo-a-passo detalhado · todos já têm GitHub · trabalho local · entrega via PR.</p>
+
+  <div class="callout">
+    <strong>Pré-requisitos (cada sócio precisa ter instalado uma vez)</strong>
+    1. <a href="https://git-scm.com/download/win" target="_blank">Git</a> (Windows ou Mac) ·
+    2. <a href="https://nodejs.org/" target="_blank">Node.js 20+</a> ·
+    3. <a href="https://python.org/" target="_blank">Python 3.11+</a> (ou 3.14, que já está nas suas máquinas) ·
+    4. <a href="https://claude.ai/download" target="_blank">Claude Code</a> instalado ·
+    5. Conta GitHub conectada (você já tem).
+  </div>
+
+  <h3 class="section-h">Fluxo de trabalho — etapas</h3>
+
+  <div class="setup-step">
+    <div class="n">1</div>
+    <div class="body">
+      <h5>Fork no GitHub (apenas 1ª vez)</h5>
+      <p>Cada sócio vai criar uma cópia do repositório principal na sua conta GitHub.</p>
+      <ol style="font-size:12.5px; line-height:1.7; padding-left:18px; color:#374151;">
+        <li>Acessar <code>https://github.com/rodrigombrito02/licenciaminer</code></li>
+        <li>Clicar no botão <strong>Fork</strong> (canto superior direito)</li>
+        <li>Confirmar — o repositório vai aparecer na sua conta como <code>SEU-USUARIO/licenciaminer</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="setup-step">
+    <div class="n">2</div>
+    <div class="body">
+      <h5>Clonar o fork na sua máquina (apenas 1ª vez)</h5>
+      <p>Baixar o repositório pra trabalhar localmente. Escolher uma pasta onde gostam de manter projetos.</p>
+      <pre><span class="c"># abrir terminal (cmd/powershell no Windows ou Terminal no Mac)</span>
+<span class="k">cd</span> C:\Projetos      <span class="c"># Windows — ou ~/Projetos no Mac</span>
+
+<span class="c"># clonar (trocar SEU-USUARIO pelo seu username github)</span>
+git clone https://github.com/SEU-USUARIO/licenciaminer.git
+<span class="k">cd</span> licenciaminer
+
+<span class="c"># adicionar o repositório original como "upstream" (pra puxar atualizações depois)</span>
+git remote add upstream https://github.com/rodrigombrito02/licenciaminer.git</pre>
+    </div>
+  </div>
+
+  <div class="setup-step">
+    <div class="n">3</div>
+    <div class="body">
+      <h5>Instalar dependências (apenas 1ª vez)</h5>
+      <p>O projeto tem duas partes: <strong>backend</strong> (Python) e <strong>frontend</strong> (Next.js).</p>
+      <pre><span class="c"># instalar dependências Python do backend</span>
+pip install -e .
+
+<span class="c"># instalar dependências Node do frontend</span>
+<span class="k">cd</span> web
+npm install
+<span class="k">cd</span> ..</pre>
+    </div>
+  </div>
+
+  <div class="setup-step">
+    <div class="n">4</div>
+    <div class="body">
+      <h5>Rodar o sistema local</h5>
+      <p>Dois terminais abertos ao mesmo tempo — um para o backend, outro para o frontend.</p>
+      <pre><span class="c"># TERMINAL 1 - backend (FastAPI)</span>
+uvicorn api.main:app --reload --port 8000
+
+<span class="c"># TERMINAL 2 - frontend (Next.js)</span>
+<span class="k">cd</span> web
+npm run dev -- --webpack <span class="c"># --webpack importante! Turbopack está com bug</span></pre>
+      <p style="margin-top:10px;">Abrir no navegador: <code>http://localhost:3000</code></p>
+    </div>
+  </div>
+
+  <div class="setup-step">
+    <div class="n">5</div>
+    <div class="body">
+      <h5>Criar uma branch para suas mudanças</h5>
+      <p>Nunca trabalhar direto no <code>main</code>. Sempre criar uma branch com nome descritivo.</p>
+      <pre><span class="c"># garantir que está na branch principal e atualizada</span>
+git checkout main
+git pull upstream main
+
+<span class="c"># criar branch para seu trabalho (exemplo: melhoria no módulo ambiental)</span>
+git checkout -b giulia/melhoria-ambiental
+<span class="c"># OU: maury/dm-parados, leo/fc-financeiro, lima/produto-financeiro-6</span></pre>
+    </div>
+  </div>
+
+  <div class="setup-step">
+    <div class="n">6</div>
+    <div class="body">
+      <h5>Trabalhar com o Claude Code</h5>
+      <p>Dentro da pasta <code>licenciaminer/</code>, abrir o Claude Code e pedir o que quer mudar. Ele entende a estrutura, edita arquivos, testa.</p>
+      <pre><span class="c"># exemplo de prompt para o Claude Code</span>
+"Na página /ambiental, quero adicionar uma seção que mostra
+os 3 últimos editais publicados no Diário Oficial do MG.
+Use o backend Python para buscar e o frontend Next pra exibir."</pre>
+      <p style="margin-top:10px;color:var(--gray);font-size:12px;">Dica do Maury: contexto bem detalhado = saída boa. Quanto mais específico o pedido, melhor o resultado.</p>
+    </div>
+  </div>
+
+  <div class="setup-step">
+    <div class="n">7</div>
+    <div class="body">
+      <h5>Salvar e enviar pro GitHub</h5>
+      <p>Quando achar que está bom, salvar as mudanças e enviar pro seu fork.</p>
+      <pre><span class="c"># ver o que mudou</span>
+git status
+
+<span class="c"># adicionar tudo</span>
+git add .
+
+<span class="c"># criar um commit (descrever o que fez)</span>
+git commit -m "Adiciona seção de editais do DO-MG na página /ambiental"
+
+<span class="c"># enviar para o GitHub</span>
+git push origin giulia/melhoria-ambiental</pre>
+    </div>
+  </div>
+
+  <div class="setup-step">
+    <div class="n">8</div>
+    <div class="body">
+      <h5>Abrir um Pull Request (PR) para o Rodrigo</h5>
+      <p>O PR é uma solicitação para o Rodrigo revisar e mesclar suas mudanças no sistema oficial.</p>
+      <ol style="font-size:12.5px; line-height:1.7; padding-left:18px; color:#374151;">
+        <li>Após o push, o GitHub mostra um link <strong>"Compare & pull request"</strong> — clicar nele</li>
+        <li>Confirmar que vai do seu fork (<code>SEU-USUARIO/licenciaminer:sua-branch</code>) para o repo do Rodrigo (<code>rodrigombrito02/licenciaminer:main</code>)</li>
+        <li>Escrever o título do PR e uma descrição do que mudou + por que</li>
+        <li>Clicar em <strong>Create pull request</strong></li>
+        <li>Avisar o Rodrigo no WhatsApp ou no canal do time</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="setup-step">
+    <div class="n">9</div>
+    <div class="body">
+      <h5>Atualizar seu fork periodicamente (a cada 1-2 semanas)</h5>
+      <p>Conforme o Rodrigo incorpora mudanças de todos, vocês precisam puxar essas atualizações.</p>
+      <pre>git checkout main
+git pull upstream main
+git push origin main      <span class="c"># atualiza o seu fork também</span></pre>
+    </div>
+  </div>
+
+  <h3 class="section-h">Como o Rodrigo recebe e incorpora</h3>
+
+  <div class="setup-step">
+    <div class="n">R</div>
+    <div class="body">
+      <h5>Fluxo do Rodrigo ao receber um PR</h5>
+      <pre><span class="c"># 1. Buscar a branch do sócio na minha máquina</span>
+git fetch origin pull/[NUMERO-DO-PR]/head:revisao-[nome-socio]
+
+<span class="c"># 2. Trocar pra essa branch e testar</span>
+git checkout revisao-[nome-socio]
+npm run dev -- --webpack  <span class="c"># testar visualmente</span>
+uvicorn api.main:app --reload  <span class="c"># testar backend</span>
+
+<span class="c"># 3. Se aprovado, mesclar via GitHub web (botão "Merge pull request")</span>
+
+<span class="c"># 4. Depois, atualizar minha branch principal local + sprint</span>
+git checkout main
+git pull origin main
+git checkout sprint/melhorias
+git merge main
+
+<span class="c"># 5. Push do sprint atualizado</span>
+git push origin sprint/melhorias
+
+<span class="c"># 6. Se virou produção, merge sprint → main e push</span>
+git checkout main
+git merge sprint/melhorias --no-ff
+git push origin main
+<span class="c"># Vercel detecta e faz deploy automático em ~3-5 minutos</span></pre>
+    </div>
+  </div>
+
+  <div class="callout success">
+    <strong>Resumo do fluxo</strong>
+    Sócio faz fork → trabalha em branch → abre PR → Rodrigo testa → Rodrigo merge → Vercel publica. Tudo rastreável no histórico do GitHub. Cada PR vira parte da história do sistema.
+  </div>
+
+  <div class="callout orange">
+    <strong>Erro mais comum (pra evitar)</strong>
+    Trabalhar direto no <code>main</code> sem criar branch. Sempre <code>git checkout -b nome/o-que-vou-fazer</code> antes de mexer. Se der ruim, é só apagar a branch e começar de novo.
+  </div>
+</section>
+
+<!-- ═══════════ CRONOGRAMA ═══════════ -->
+<section id="cronograma" class="block">
+  <h2 class="title"><span class="lead"></span>Cronograma das próximas semanas</h2>
+  <p class="subtitle">O que tem deadline · o que pode esperar · o que vira backlog.</p>
+
+  <div class="stats-grid">
+    <div class="stat-mini orange"><div class="n">1</div><div class="l">Reunião urgente (Jaguar)</div></div>
+    <div class="stat-mini gold"><div class="n">8</div><div class="l">Oportunidades mapeadas</div></div>
+    <div class="stat-mini green"><div class="n">6</div><div class="l">Módulos com plano</div></div>
+    <div class="stat-mini navy"><div class="n">5</div><div class="l">Sócios contribuindo via GitHub</div></div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item urgent">
+      <div class="when">Esta semana</div>
+      <h5>Setup dos sócios no GitHub</h5>
+      <p>Cada sócio cria fork, clona, instala dependências, roda local. Rodrigo dá suporte 1:1 onde travar. <strong>Bernardo + Lima + Giulia + Leo + Maury.</strong></p>
+    </div>
+
+    <div class="tl-item urgent">
+      <div class="when">Esta semana</div>
+      <h5>Rebrand linha ambiental</h5>
+      <p>Decidir SQ Ambiental ou ESP Ambiental + mudar nome em todo o sistema (sidebar, capas, títulos, README, apresentações). Rodrigo.</p>
+    </div>
+
+    <div class="tl-item urgent">
+      <div class="when">19/06/2026 — sexta</div>
+      <h5>Proposta Jaguar Mais pronta</h5>
+      <p>Escopo, custos e valor definidos. Giulia + Maury. Base: SaaS de SQ/ESP Ambiental + acompanhamento de licenças antes e depois do protocolo.</p>
+    </div>
+
+    <div class="tl-item urgent">
+      <div class="when">22/06/2026 — segunda</div>
+      <h5>Apresentação interna do material Jaguar</h5>
+      <p>Time todo revisa antes da apresentação ao cliente. Ajustes finais.</p>
+    </div>
+
+    <div class="tl-item med">
+      <div class="when">Próximas 2 semanas</div>
+      <h5>Bugs técnicos corrigidos</h5>
+      <p>EAP (quebra de texto) + Kanban (atribuição) + Matriz de risco no dashboard. Rodrigo.</p>
+    </div>
+
+    <div class="tl-item med">
+      <div class="when">Próximas 2 semanas</div>
+      <h5>Pilotos paralelos</h5>
+      <p>Maury aplica Mineradora Modelo no caso ouro aluvial · Maury+Gilmar validam DMs parados (meta: 10 DMs) · Leo mapeia parcerias CRU/CRIU + Wood Mackenzie · Lima esboça produto 6 (Opinião SQ) · Conversa com Ana sobre parcela mensal FC.</p>
+    </div>
+
+    <div class="tl-item med">
+      <div class="when">Próximo mês</div>
+      <h5>Integração técnica & marketplace</h5>
+      <p>Bernardo entrega paleta + templates · Rodrigo integra plataforma ao site comercial (rotas, marketplace com login) · Internacionalização EN · Setup dos sócios no GitHub · Implementação upload TR → requisitos · Definir responsável N8N.</p>
+    </div>
+
+    <div class="tl-item">
+      <div class="when">Próximos 2 meses</div>
+      <h5>Matriz de priorização + 3 produtos validados</h5>
+      <p>Aplicar matriz (impacto · viabilidade · tempo · demanda) nos 5 produtos do Lima. Validar 3 iniciais com clientes piloto.</p>
+    </div>
+
+    <div class="tl-item later">
+      <div class="when">Backlog (após Jaguar fechar)</div>
+      <h5>Frente 2 — escalar</h5>
+      <p>RaaS Petrobras · Conceito CUMO produtizado · Mineral Intelligence Premium com CRU/Wood Mackenzie · Mineradora Modelo para múltiplos minérios · Coleta de campo Carajás/Pará · Centralização N8N · Dashboards dinâmicos completos.</p>
+    </div>
+  </div>
+
+  <div class="callout gold" style="margin-top: 36px;">
+    <strong>Decisões pra próxima reunião de sócios</strong>
+    1. Validar oferta Jaguar antes de sexta ·
+    2. Confirmar quem pega cada piloto ·
+    3. Definir cadência das reuniões de aprendizado (15 min semanais) ·
+    4. Quem cuida do MEMORY_SUMMO e do hub N8N ·
+    5. Estratégia comercial pós-Jaguar.
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <p>
+    <strong>Sistema Summo Quartile</strong> · Plano de ação pós-reunião de sócios<br>
+    Documento de trabalho interno · Para revisão e ajustes do time
+  </p>
+</footer>
+
+<script>
+const sections = ['capa','uso','principios','modulos','riscos','oportunidades','time','repo','cronograma'];
+const navLinks = document.querySelectorAll('nav.topnav a');
+window.addEventListener('scroll', () => {
+  let current = sections[0];
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 100) current = id;
+  }
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+navLinks.forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const id = a.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+
+</body>
+</html>
