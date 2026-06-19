@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposta Summo Quartile · Jaguar Mining</title>
+<style>
+  :root{
+    --navy:#0A2540; --navy2:#13283f; --teal:#156082; --teal2:#0E7490;
+    --gold:#FFC000; --orange:#E67E22; --green:#27AE60; --violet:#7B1FA2;
+    --bg:#f6f8fa; --card:#ffffff; --line:#e4e9ef; --muted:#5b6b7b; --text:#11202e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.55;font-size:15px}
+  header{background:linear-gradient(135deg,var(--navy),var(--navy2) 55%,var(--teal2));
+    color:#fff;padding:34px 24px 26px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+  header h1{font-size:26px;font-weight:800;letter-spacing:-.3px}
+  header p{color:#cdd8e3;font-size:14px;margin-top:8px;max-width:820px}
+  .badge{display:inline-block;background:rgba(255,192,0,.18);color:var(--gold);
+    font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:10px;
+    text-transform:uppercase;letter-spacing:.5px}
+  .live{display:inline-flex;align-items:center;gap:6px;background:rgba(39,174,96,.18);color:#7ee2a8;
+    font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;margin-top:14px}
+  .live .dot{width:8px;height:8px;border-radius:50%;background:#27AE60;box-shadow:0 0 0 3px rgba(39,174,96,.25)}
+  .live a{color:#fff;text-decoration:none;font-weight:800}
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}
+  @media(min-width:720px){.stats{grid-template-columns:repeat(4,1fr)}}
+  .stat{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:12px 14px}
+  .stat .n{font-size:22px;font-weight:800;color:#fff}
+  .stat .l{font-size:11px;color:#cdd8e3;margin-top:2px;line-height:1.3}
+  nav{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);
+    box-shadow:0 1px 6px rgba(10,37,64,.05)}
+  nav .wrap{display:flex;gap:4px;overflow-x:auto;padding:8px 18px}
+  .tab{border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:600;
+    padding:9px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;text-decoration:none}
+  .tab:hover{background:#eef3f7;color:var(--text)}
+  main{padding:26px 0 60px}
+  h2{font-size:21px;font-weight:800;margin:30px 0 4px;color:var(--navy);scroll-margin-top:60px}
+  h2:first-of-type{margin-top:6px}
+  .lead{color:var(--muted);font-size:14px;margin-bottom:14px;max-width:840px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+  .card h3{font-size:15px;font-weight:800;color:var(--teal2);margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .grid{display:grid;gap:12px}
+  @media(min-width:720px){.grid.c2{grid-template-columns:1fr 1fr}}
+  @media(min-width:720px){.grid.c3{grid-template-columns:repeat(3,1fr)}}
+  ul{margin:6px 0 2px 18px}li{margin:4px 0}
+  .chip{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:2px;vertical-align:middle}
+  .c-feito{background:#e7f7ee;color:#1c7a45}
+  .c-novo{background:#e9f2fb;color:#1c5f9e}
+  .c-breve{background:#fff3da;color:#9a6b00}
+  .c-falta{background:#fdeaea;color:#b03636}
+  .kbox{background:var(--navy);color:#fff;border-radius:14px;padding:18px 20px;margin:8px 0 18px}
+  .kbox h3{color:var(--gold);margin-bottom:6px;font-size:15px}
+  .kbox p{color:#cdd8e3;font-size:14px}
+  .highlight{background:linear-gradient(135deg,#f0f9f4,#fff);border:1px solid #c9ecd6;border-radius:14px;padding:16px 18px;margin:8px 0 18px}
+  .highlight h3{color:#1c7a45;font-size:15px;margin-bottom:8px}
+  .owner{font-size:11px;font-weight:700;color:var(--muted);background:#eef3f7;padding:2px 8px;border-radius:999px}
+  .foot{color:var(--muted);font-size:12px;text-align:center;padding:26px;line-height:1.7}
+  .cta{display:inline-block;background:var(--orange);color:#fff;font-weight:800;text-decoration:none;
+    padding:11px 20px;border-radius:10px;font-size:14px;margin-top:6px}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  .motor{background:#f0f6fa;border:1px solid #d4e4ee;border-radius:10px;padding:10px 12px;margin:8px 0;font-size:12.5px;color:var(--teal2);font-weight:700}
+  .motor span{color:var(--muted);font-weight:600}
+  .step{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--teal2);width:20px;height:20px;line-height:20px;text-align:center;border-radius:50%;margin-right:6px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <span class="badge">Proposta Summo Quartile · Jaguar Mining</span>
+    <h1>Proposta Summo Quartile · Jaguar Mining</h1>
+    <p>A Summo Quartile é uma <b>casa de inteligência sênior</b> que organiza o ciclo de licenciamento, anuências e fundiário em um único sistema vivo — <b>complementar</b> ao que a Jaguar já tem. Não substituímos o que funciona: cobrimos exatamente as frentes que hoje não têm sistema de apoio, no ritmo do crescimento de vocês.</p>
+  </div>
+</header>
+
+<nav>
+  <div class="wrap">
+    <a class="tab" href="#momento">O momento da Jaguar</a>
+    <a class="tab" href="#ouvimos">O que ouvimos</a>
+    <a class="tab" href="#complementar">Complementaridade</a>
+    <a class="tab" href="#resolve">Como o Summo resolve</a>
+    <a class="tab" href="#comecamos">Por onde começamos</a>
+    <a class="tab" href="#portfolio">Portfólio completo</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- O MOMENTO -->
+  <h2 id="momento">O momento da Jaguar</h2>
+  <p class="lead">A Jaguar entra em um ciclo de crescimento que multiplica frentes de licenciamento. É aí que mora a oportunidade — e o risco.</p>
+  <div class="stats" style="margin-bottom:14px">
+    <div class="stat" style="background:#fff;border:1px solid var(--line)"><div class="n" style="color:var(--navy)">5 anos</div><div class="l" style="color:var(--muted)">plano de exploração</div></div>
+    <div class="stat" style="background:#fff;border:1px solid var(--line)"><div class="n" style="color:var(--navy)">227.200 m</div><div class="l" style="color:var(--muted)">de sondagem previstos</div></div>
+    <div class="stat" style="background:#fff;border:1px solid var(--line)"><div class="n" style="color:var(--navy)">US$ 43 mi</div><div class="l" style="color:var(--muted)">de investimento</div></div>
+    <div class="stat" style="background:#fff;border:1px solid var(--line)"><div class="n" style="color:var(--navy)">&lt; 1 km</div><div class="l" style="color:var(--muted)">alvo Chamé-Bahú do Complexo Paciência</div></div>
+  </div>
+  <div class="card">
+    <h3>⛏️ O que está em movimento</h3>
+    <ul>
+      <li>Plano de exploração de <b>5 anos</b> com <b>227.200 metros de sondagem</b> e <b>US$ 43 milhões</b>, com os parceiros de perfuração <b>Major Drilling</b> e <b>GEOSOL</b>.</li>
+      <li>Alvo <b>Corredor Chamé-Bahú</b> no Quadrilátero Ferrífero, a <b>menos de 1 km do Complexo Paciência</b> (Itabirito-MG).</li>
+      <li>Estudo para <b>reabertura da mina Santa Isabel em 2026</b>.</li>
+      <li>Ativos em operação: <b>Turmalina (MTL)</b>, <b>Caeté</b> (Pilar + Roça Grande) e <b>Paciência</b> (Santa Isabel).</li>
+    </ul>
+  </div>
+  <div class="kbox">
+    <h3>A tese</h3>
+    <p>Esse crescimento não é só mais produção — é a <b>multiplicação de frentes de NOVO licenciamento, anuências e fundiário</b>. Exatamente as frentes onde hoje <b>não existe um sistema de apoio</b>. O risco concreto: um <b>cronograma travado</b> por uma anuência esquecida ou uma matrícula irregular, com US$ 43 milhões e a janela de exploração em jogo.</p>
+  </div>
+
+  <!-- O QUE OUVIMOS -->
+  <h2 id="ouvimos">O que ouvimos de vocês</h2>
+  <p class="lead">Três dores, na linguagem de quem nos contou. O sistema foi desenhado em cima delas.</p>
+  <div class="grid c3">
+    <div class="card"><h3>Novos licenciamentos <span class="chip c-falta">sem sistema</span></h3>
+      <ul>
+        <li>Os <b>novos licenciamentos</b> rodam sem sistema de apoio: faseamento, prazos e informação complementar ficam soltos.</li>
+        <li>O sistema atual (<b>Verde Ghaia / Ambipar</b>) cobre só o <b>PÓS-licença</b> — não o ciclo de obter a licença nova.</li>
+      </ul></div>
+    <div class="card"><h3>Outras anuências <span class="chip c-falta">dispersas</span></h3>
+      <ul>
+        <li>Além do <b>licenciamento estadual</b>, há outras anuências (<b>IPHAN / patrimônio e federais</b>) <b>dispersas</b> e concentradas em poucos especialistas.</li>
+        <li>O <b>faseamento "se perde"</b> — quem não é o especialista não enxerga onde cada anuência está.</li>
+      </ul></div>
+    <div class="card"><h3>Regularização fundiária <span class="chip c-falta">grande problema</span></h3>
+      <ul>
+        <li>O <b>fundiário</b> é descrito como o grande problema: <b>documentos perdidos</b>.</li>
+        <li>Não se sabe, por área, <b>o que se tem, o que falta e o que precisa</b> regularizar.</li>
+      </ul></div>
+  </div>
+
+  <!-- COMPLEMENTARIDADE -->
+  <h2 id="complementar">Complementaridade — não substituímos o que funciona</h2>
+  <p class="lead">Para desarmar a objeção de cara: a Summo não disputa espaço com o Verde Ghaia. Somos a peça que falta antes dele.</p>
+  <div class="card">
+    <table>
+      <tr><th>Etapa do ciclo</th><th>Verde Ghaia / Ambipar (atual)</th><th>Summo Quartile (proposto)</th></tr>
+      <tr><td><b>Pós-licença</b></td><td>Gestão de condicionantes, planos de ação, acompanhamento da licença já emitida.</td><td>—</td></tr>
+      <tr><td><b>Pré-licença</b></td><td>—</td><td>Ciclo do <b>novo licenciamento</b>: faseamento, prazos, informação complementar.</td></tr>
+      <tr><td><b>Anuências</b></td><td>—</td><td>IPHAN/patrimônio, espeleologia e demais anuências federais, com faseamento visível.</td></tr>
+      <tr><td><b>Fundiário</b></td><td>—</td><td>Regularização por matrícula, servidão minerária, polígono ANM × solo.</td></tr>
+    </table>
+    <p class="lead" style="margin:8px 0 0"><b>Verde Ghaia = depois da licença. Summo = chegar até a licença, com as anuências e o fundiário no caminho.</b> As duas coisas convivem.</p>
+  </div>
+
+  <!-- COMO O SUMMO RESOLVE -->
+  <h2 id="resolve">Como o Summo resolve</h2>
+  <p class="lead">Os três blocos rodam sobre o <b>mesmo motor</b>, o que dá consistência e auditabilidade a tudo:</p>
+  <div class="motor">
+    <span class="step">1</span>objeto de conformidade &nbsp;→&nbsp; <span class="step">2</span>inventário documental &nbsp;→&nbsp; <span class="step">3</span>documento &nbsp;→&nbsp; <span class="step">4</span>critérios &nbsp;→&nbsp; <span class="step">5</span>status <span>"tem / falta / precisa"</span> &nbsp;→&nbsp; <span class="step">6</span>plano de ação
+  </div>
+
+  <div class="card"><h3>1 · Novos licenciamentos <span class="chip c-feito">pronto e demonstrável</span></h3>
+    <ul>
+      <li><b>Diligência Summo</b>: o licenciamento estruturado em <b>5 fases</b>, cada fase com seus documentos e critérios.</li>
+      <li><b>Índice de Sucesso</b>: diagnóstico prescritivo (índice + fatores de risco) que já entrega o <b>plano de ação</b> por processo.</li>
+      <li><b>Radar de prazos</b>: cada prazo do faseamento vira alerta antes de virar problema.</li>
+      <li><b>Informação complementar</b>: a lista de <b>critérios pendentes</b> vira o <b>gabarito do ofício de resposta</b> ao órgão — nada se perde no pedido de complementação.</li>
+    </ul>
+  </div>
+
+  <div class="card"><h3>2 · Anuências — IPHAN e espeleologia <span class="chip c-novo">faseamento visível</span></h3>
+    <ul>
+      <li><b>IPHAN é interveniente</b> (IN 01/2015): <b>FCA → TRE → níveis I-IV</b> → diagnóstico / prospecção / resgate / monitoramento / educação patrimonial, tudo amarrado a <b>LP / LI / LO</b>.</li>
+      <li><b>Espeleologia</b> (ICMBio/CECAV + IS SEMAD 08/2017): <b>prospecção de cavidades na ADA + 250 m</b> e <b>classificação de relevância</b>.</li>
+      <li>Cada anuência vira um <b>objeto com faseamento visível para a equipe</b> — não fica mais presa na cabeça de um especialista.</li>
+    </ul>
+  </div>
+
+  <div class="card"><h3>3 · Regularização fundiária <span class="chip c-novo">piloto co-desenhado</span></h3>
+    <ul>
+      <li>Ponto de partida jurídico: <b>direito minerário (ANM) ≠ propriedade do solo</b> → o instrumento é a <b>servidão minerária</b> (Código de Mineração, arts. 59-62 + Dec. 9.406/2018).</li>
+      <li><b>Inventário por matrícula</b>: matrícula, cadeia dominial, CCIR, ITR, georreferenciamento SIGEF, certidão de ônus, acordo/servidão e CAR — cada item com status <b>tem / falta / precisa</b>.</li>
+      <li><b>Diferencial:</b> cruzar o <b>polígono ANM (SIGMINE)</b> com as <b>matrículas no mapa</b> — enxergar onde o direito minerário encosta em qual propriedade.</li>
+    </ul>
+  </div>
+
+  <!-- POR ONDE COMEÇAMOS -->
+  <h2 id="comecamos">Por onde começamos</h2>
+  <p class="lead">Um piloto faseado, de baixo atrito, que prova valor cedo e cria recorrência.</p>
+  <div class="grid c2">
+    <div class="highlight">
+      <h3>Âncora: novos licenciamentos</h3>
+      <p style="font-size:13.5px;color:var(--text)">Começamos pela frente que já está <b>pronta e demonstrável</b>. É a prova de valor imediata — vocês veem o sistema funcionando com casos reais de licenciamento desde a primeira semana.</p>
+    </div>
+    <div class="card">
+      <h3>Piloto co-desenhado: fundiário</h3>
+      <ul>
+        <li>A <b>regularização fundiária</b> entra como piloto <b>desenhado junto com vocês</b> — é onde mais dói, sobretudo para o coordenador fundiário recém-chegado.</li>
+        <li>Um <b>diagnóstico inicial de baixo atrito</b> abre a conversa e gera <b>recorrência</b> natural.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="kbox">
+    <h3>Escopo e investimento</h3>
+    <p><b>[ESCOPO / PREÇO A DEFINIR]</b> — fechamos o recorte do piloto, os marcos e o modelo de investimento na conversa, de acordo com a prioridade de vocês.</p>
+  </div>
+
+  <!-- PORTFÓLIO -->
+  <h2 id="portfolio">O portfólio completo</h2>
+  <p class="lead">Começamos por licenciamento, anuências e fundiário — mas a casa toda está à disposição conforme a Jaguar avança.</p>
+  <div class="grid c3">
+    <div class="card"><h3>🌱 SQ Ambiental</h3><p class="lead" style="margin:0">Ciclo de licenciamento ambiental, diligência e radar de compliance.</p></div>
+    <div class="card"><h3>⛰️ Ativos Minerários</h3><p class="lead" style="margin:0">Conecta diretamente com a frente de exploração: ciclo de vida do ativo, portfólio por titular e prospecção.</p></div>
+    <div class="card"><h3>📊 Mineral Intelligence</h3><p class="lead" style="margin:0">Dados de mercado e inteligência setorial para decisão.</p></div>
+    <div class="card"><h3>🛡️ SQ Soluções (SST)</h3><p class="lead" style="margin:0">Saúde e segurança do trabalho com customer success.</p></div>
+    <div class="card"><h3>💼 SQ Consultoria</h3><p class="lead" style="margin:0">Senioridade ponta a ponta, diagnóstico e escopos multi-frente.</p></div>
+    <div class="card" style="background:#f0f6fa;border-color:#d4e4ee"><h3>🤝 Uma Summo</h3><p class="lead" style="margin:0;color:var(--teal2);font-weight:700">Começamos aqui, mas a casa toda está à disposição.</p></div>
+  </div>
+
+  <!-- CTA -->
+  <div class="kbox" style="text-align:center">
+    <h3>Próximo passo</h3>
+    <p style="margin-bottom:0">Vamos detalhar na <b>reunião do dia 30</b>.</p>
+  </div>
+
+</main>
+<div class="foot">
+  Summo Quartile · Proposta Jaguar Mining · jun/2026
+</div>
+</body>
+</html>

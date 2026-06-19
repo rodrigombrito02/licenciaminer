@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ShieldAlert, GitBranch, Cpu, ShieldCheck, TrendingUp, Map, Briefcase,
-  Target, ListTodo, ArrowRight, Settings2, Check,
+  Target, ListTodo, ArrowRight, Settings2, Check, BookOpen,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ const OPCOES: Opt[] = [
   { key: "consultoria", titulo: "SQ Consultoria", desc: "Carteira de clientes e Régua", href: "/sq-consultoria", icon: Briefcase, cor: "#0A2540" },
   { key: "captacao", titulo: "Captação", desc: "Inbox de demandas e funis", href: "/captacao", icon: Target, cor: "#FFC000" },
   { key: "planos", titulo: "Plano de Ações", desc: "Kanban, EAP e cronograma", href: "/planos-de-acao", icon: ListTodo, cor: "#156082" },
+  { key: "guia_ambiental", titulo: "Novidades & Manual (Ambiental)", desc: "O que mudou, roteiro de teste e proposta Jaguar", href: "/guias/ambiental-diligencia-giulia.html", icon: BookOpen, cor: "#E67E22" },
 ];
 
 const OPT_MAP = Object.fromEntries(OPCOES.map((o) => [o.key, o]));
@@ -36,7 +37,7 @@ const OPT_MAP = Object.fromEntries(OPCOES.map((o) => [o.key, o]));
 const DEFAULT_BY_NAME: Record<string, string[]> = {
   rodrigo: ["musa", "evolucao"],
   bernardo: ["sq_solucoes", "evolucao"],
-  giulia: ["sq_ambiental", "evolucao"],
+  giulia: ["guia_ambiental", "sq_ambiental", "evolucao"],
   lima: ["mineral_intelligence", "evolucao"],
   mateus: ["mineral_intelligence", "evolucao"],
   leo: ["consultoria", "evolucao"],
@@ -92,21 +93,25 @@ export function HomeDestaques({ nome }: { nome: string }) {
           {sel.map((k) => {
             const o = OPT_MAP[k]; if (!o) return null;
             const Icon = o.icon;
-            return (
-              <Link key={k} href={o.href} className="group block">
-                <Card className="border-2 transition-all hover:shadow-md" style={{ borderColor: `${o.cor}33` }}>
-                  <CardContent className="flex items-center gap-4 p-5">
-                    <div className="rounded-xl p-3 shrink-0" style={{ background: `${o.cor}1a` }}>
-                      <Icon className="h-7 w-7" style={{ color: o.cor }} />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="font-heading text-base font-bold group-hover:opacity-80">{o.titulo}</h3>
-                      <p className="text-xs text-muted-foreground">{o.desc}</p>
-                    </div>
-                    <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition-all group-hover:translate-x-0.5" />
-                  </CardContent>
-                </Card>
-              </Link>
+            const externo = o.href.startsWith("http") || o.href.endsWith(".html");
+            const inner = (
+              <Card className="border-2 transition-all hover:shadow-md" style={{ borderColor: `${o.cor}33` }}>
+                <CardContent className="flex items-center gap-4 p-5">
+                  <div className="rounded-xl p-3 shrink-0" style={{ background: `${o.cor}1a` }}>
+                    <Icon className="h-7 w-7" style={{ color: o.cor }} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-heading text-base font-bold group-hover:opacity-80">{o.titulo}</h3>
+                    <p className="text-xs text-muted-foreground">{o.desc}</p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition-all group-hover:translate-x-0.5" />
+                </CardContent>
+              </Card>
+            );
+            return externo ? (
+              <a key={k} href={o.href} target="_blank" rel="noreferrer" className="group block">{inner}</a>
+            ) : (
+              <Link key={k} href={o.href} className="group block">{inner}</Link>
             );
           })}
         </div>

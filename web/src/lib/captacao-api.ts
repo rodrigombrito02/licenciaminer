@@ -29,6 +29,9 @@ export interface CapDemanda {
   processo_anm: string | null;
   responsavel: string | null;
   valor_estimado: number | null;
+  analise: string | null;
+  proposta_url: string | null;
+  links: { label: string; url: string; tipo?: string }[] | null;
   criado_por: string | null;
   criado_em: string;
   atualizado_em: string;

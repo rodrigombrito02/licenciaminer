@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Optional
 
 from sqlalchemy import (
+    JSON,
     DateTime,
     Float,
     ForeignKey,
@@ -91,6 +92,13 @@ class Demanda(Base):
     oportunidade_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     processo_anm: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
 
+    # Dossiê do prospect: análise da oportunidade + proposta + links integrados
+    # (instâncias DD, notícia, ativos por CNPJ). Torna a captação o ponto de
+    # partida com acesso a tudo que produzimos sobre o lead.
+    analise: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    proposta_url: Mapped[Optional[str]] = mapped_column(String(300), nullable=True)
+    links: Mapped[Optional[list]] = mapped_column(JSON, nullable=True)  # [{label,url,tipo}]
+
     responsavel: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)
     valor_estimado: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
 
@@ -130,7 +138,22 @@ def get_session() -> Generator[Session, None, None]:
         db.close()
 
 
+def _ensure_columns() -> None:
+    """Migração leve: adiciona colunas do dossiê a bancos já existentes.
+
+    create_all não altera tabelas pré-existentes; este ADD COLUMN idempotente
+    garante analise/proposta_url/links em captacao.db já em produção.
+    """
+    with engine.begin() as conn:
+        existentes = {r[1] for r in conn.exec_driver_sql("PRAGMA table_info(cap_demandas)")}
+        for nome, ddl in (("analise", "TEXT"), ("proposta_url", "VARCHAR(300)"), ("links", "TEXT")):
+            if nome not in existentes:
+                conn.exec_driver_sql(f"ALTER TABLE cap_demandas ADD COLUMN {nome} {ddl}")
+                logger.info("Captação: coluna %s adicionada a cap_demandas", nome)
+
+
 def init_db() -> None:
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     Base.metadata.create_all(engine)
+    _ensure_columns()
     logger.info(f"Captação: SQLite pronto em {DB_PATH}")

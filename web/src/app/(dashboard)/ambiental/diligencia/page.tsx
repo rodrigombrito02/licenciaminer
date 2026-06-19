@@ -7,6 +7,8 @@ import {
   ShieldCheck,
   Layers,
   FileSearch,
+  Pencil,
+  ClipboardCheck,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +30,42 @@ export default function DiligenciaPage() {
           Summo, aplicada a diferentes objetos de conformidade.
         </p>
       </div>
+
+      {/* Ações do consultor — réguas editáveis + diligências persistidas (novo motor) */}
+      <section className="grid sm:grid-cols-2 gap-4">
+        <Link href="/due-diligence/templates" className="group">
+          <Card className="h-full border-2 border-brand-teal/30 transition-all hover:border-brand-teal/60 hover:shadow-md">
+            <CardContent className="p-5">
+              <div className="mb-1 flex items-center gap-2">
+                <Pencil className="h-5 w-5 text-brand-teal" />
+                <h3 className="font-heading font-bold">Régua-Mestre (editar requisitos)</h3>
+                <Badge variant="secondary" className="text-[9px]">novo</Badge>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Edite documentos e critérios por objeto (licença, anuência IPHAN/espeleologia,
+                regularização fundiária) — peso, obrigatoriedade e proveniência, com trilha de
+                auditoria e versionamento.
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/due-diligence/instancias" className="group">
+          <Card className="h-full border-2 border-brand-orange/30 transition-all hover:border-brand-orange/60 hover:shadow-md">
+            <CardContent className="p-5">
+              <div className="mb-1 flex items-center gap-2">
+                <ClipboardCheck className="h-5 w-5 text-brand-orange" />
+                <h3 className="font-heading font-bold">Minhas diligências</h3>
+                <Badge variant="secondary" className="text-[9px]">novo</Badge>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Avaliações por cliente/escopo (snapshot): a conformidade do documento é
+                derivada dos critérios, mostrando exatamente o que falta — o gabarito do plano
+                de ação e da informação complementar.
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
+      </section>
 
       {/* Objetos de diligência */}
       <section>

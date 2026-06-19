@@ -18,6 +18,7 @@ from api.routers import (
     copam,
     decisions,
     due_diligence,
+    dd_templates,
     empresa,
     explorer,
     geospatial,
@@ -65,6 +66,9 @@ from licenciaminer.consultoria.database import init_db as init_consultoria_db
 from licenciaminer.sqsolucoes.database import init_db as init_sqsolucoes_db
 from licenciaminer.sqsolucoes.seed import seed_sqsolucoes
 from licenciaminer.condicionantes.seed import seed_condicionantes, seed_anm
+from licenciaminer.dd.database import init_db as init_dd_db
+from licenciaminer.dd.seed import seed_dd
+from licenciaminer.captacao.seed import seed_captacao
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -111,6 +115,10 @@ async def _background_init():
         logger.info("[bg] Inicializando SQLite (SQ Soluções)...")
         await asyncio.to_thread(init_sqsolucoes_db)
         await asyncio.to_thread(seed_sqsolucoes)
+        logger.info("[bg] Inicializando SQLite (Due Diligence editável)...")
+        await asyncio.to_thread(init_dd_db)
+        await asyncio.to_thread(seed_dd)
+        await asyncio.to_thread(seed_captacao)
         from api.routers.admin import init_db_admin
         logger.info("[bg] Inicializando SQLite (Admin events)...")
         await asyncio.to_thread(init_db_admin)
@@ -185,6 +193,7 @@ app.include_router(intelligence.router, prefix="/api", tags=["Inteligência Come
 app.include_router(simulator.router, prefix="/api", tags=["Mineradora Modelo"])
 app.include_router(reports.router, prefix="/api", tags=["Relatórios"])
 app.include_router(due_diligence.router, prefix="/api", tags=["Due Diligence"])
+app.include_router(dd_templates.router)  # ja tem prefix /api/dd
 app.include_router(copam.router, prefix="/api", tags=["COPAM"])
 app.include_router(chat.router, prefix="/api", tags=["Chat"])
 app.include_router(viabilidade.router, prefix="/api", tags=["Viabilidade"])
