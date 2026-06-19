@@ -330,6 +330,14 @@ def seed_esqueleto(force: bool = False) -> dict:
              "Diagnóstico prescritivo do processo (índice + fatores + plano de ação)."),
             ("Gestão de contrato RaaS", "SQ Soluções", INTERNO, ["/sq-solutions"],
              "Contratos recorrentes (RaaS/subscription/in loco) com MRR e ARR no cockpit."),
+            ("Diligência editável (requisitos + critérios)", "SQ Ambiental", INTERNO,
+             ["/ambiental/diligencia", "/due-diligence/templates", "/due-diligence/instancias"],
+             "Motor de conformidade editável: Documento→Critérios com conformidade derivada, "
+             "proveniência (normativo/consultor), auditoria, versionamento e instâncias por "
+             "cliente. Multi-objeto: licenciamento, anuências (IPHAN/espeleologia) e fundiário."),
+            ("Prospect Jaguar integrado na Captação", "Captação", INTERNO, ["/captacao"],
+             "Prospect Jaguar (resp. Giulia) com dossiê: análise da oportunidade, proposta HTML "
+             "e as 3 diligências vinculadas. Aparece nas Minhas Ações da Giulia."),
         ]
         for titulo, modulo, vis, telas, desc in ENTREGUES:
             it = db.query(ItemEvolucao).filter(ItemEvolucao.titulo == titulo).first()

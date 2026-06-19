@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQ Ambiental — o que evoluiu, manual de uso e proposta Jaguar</title>
+<style>
+  :root{
+    --navy:#0A2540; --navy2:#13283f; --teal:#156082; --teal2:#0E7490;
+    --gold:#FFC000; --orange:#E67E22; --green:#27AE60; --violet:#7B1FA2;
+    --bg:#f6f8fa; --card:#ffffff; --line:#e4e9ef; --muted:#5b6b7b; --text:#11202e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.55;font-size:15px}
+  header{background:linear-gradient(135deg,var(--navy),var(--navy2) 55%,var(--teal2));
+    color:#fff;padding:30px 24px 22px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+  header h1{font-size:24px;font-weight:800;letter-spacing:-.3px}
+  header p{color:#cdd8e3;font-size:14px;margin-top:6px;max-width:820px}
+  .badge{display:inline-block;background:rgba(255,192,0,.18);color:var(--gold);
+    font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:10px;
+    text-transform:uppercase;letter-spacing:.5px}
+  nav{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);
+    box-shadow:0 1px 6px rgba(10,37,64,.05)}
+  nav .wrap{display:flex;gap:4px;overflow-x:auto;padding:8px 18px}
+  .tab{border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:600;
+    padding:9px 13px;border-radius:8px;cursor:pointer;white-space:nowrap;transition:.15s}
+  .tab:hover{background:#eef3f7;color:var(--text)}
+  .tab.active{background:var(--navy);color:#fff}
+  main{padding:26px 0 60px}
+  .panel{display:none;animation:fade .2s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+  h2{font-size:20px;font-weight:800;margin:4px 0 4px;color:var(--navy)}
+  h3{font-size:15px;font-weight:800;margin:20px 0 8px;color:var(--teal2);
+    display:flex;align-items:center;gap:8px}
+  .lead{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+  .card.accent{border-left:4px solid var(--teal)}
+  .grid{display:grid;gap:12px}
+  @media(min-width:720px){.grid.c2{grid-template-columns:1fr 1fr}}
+  .chip{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin:2px 4px 2px 0}
+  .c-feito{background:#e7f7ee;color:#1c7a45}
+  .c-novo{background:#e9f2fb;color:#1c5f9e}
+  .c-breve{background:#fff3da;color:#9a6b00}
+  .c-int{background:#f2e9fb;color:#6b21a8}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  ul{margin:6px 0 6px 18px}li{margin:3px 0}
+  ol{margin:6px 0 6px 20px}
+  .kbox{background:var(--navy);color:#fff;border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .kbox h3{color:var(--gold);margin-top:0}
+  .kbox .lead{color:#cdd8e3}
+  .two{display:grid;gap:14px}@media(min-width:720px){.two{grid-template-columns:1.25fr 1fr}}
+  .awaits{background:#fffaf0;border:1px solid #f0e0bd;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+  .awaits h3{color:#9a6b00;margin-top:0}
+  .value{background:#f0f9f4;border:1px solid #c9ecd6;border-radius:12px;padding:14px 16px}
+  .value h3{color:#1c7a45;margin-top:0}
+  .vs{background:#f7f9fc;border:1px dashed #c4d2e0;border-radius:12px;padding:12px 16px;margin-bottom:12px}
+  .vs .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .vs .a{color:var(--muted);font-size:13px}.vs .b{color:var(--text);font-size:13px;font-weight:600}
+  .vs .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+  .vs .la{color:#b06a00}.vs .lb{color:#1c7a45}
+  .crit{background:linear-gradient(135deg,#fff8e6,#fffdf7);border:1px solid var(--gold);
+    border-radius:12px;padding:13px 16px;margin-top:14px;font-size:13px}
+  .crit b{color:#9a6b00}
+  .foot{color:var(--muted);font-size:12px;text-align:center;padding:24px}
+  .tag{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .person-h{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .avatar{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;font-size:18px;flex-shrink:0}
+  .step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px 14px 54px;
+    margin-bottom:10px;position:relative}
+  .step .n{position:absolute;left:14px;top:14px;width:28px;height:28px;border-radius:8px;
+    background:var(--teal);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .step b{color:var(--navy)}
+  .path{display:inline-block;background:#eef3f7;color:var(--teal2);font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:12px;font-weight:600;padding:1px 7px;border-radius:6px;margin:0 1px}
+  .hier{background:#f7f9fc;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:6px 0 12px}
+  .hier .doc{font-weight:800;color:var(--navy);font-size:14px}
+  .hier .crt{margin-left:18px;color:var(--muted);font-size:13px;border-left:2px solid var(--teal);padding-left:10px;margin-top:4px}
+  .pill{display:inline-block;background:var(--navy);color:#fff;font-size:12px;font-weight:700;
+    padding:4px 11px;border-radius:999px;margin:2px 4px 2px 0}
+  .facts{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+  @media(min-width:720px){.facts{grid-template-columns:repeat(3,1fr)}}
+  .fact{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .fact .num{font-size:19px;font-weight:800;color:var(--teal2)}
+  .fact .lab{font-size:12px;color:var(--muted);margin-top:2px}
+  .pain{border-left:4px solid var(--orange);background:#fffaf5}
+  .cta{display:inline-block;background:var(--gold);color:var(--navy);font-weight:800;
+    text-decoration:none;padding:11px 18px;border-radius:10px;font-size:14px;margin-top:6px}
+  .cta:hover{filter:brightness(.96)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <span class="badge">SQ Ambiental · Para a sócia da frente</span>
+    <h1>SQ Ambiental — o que evoluiu, manual de uso e proposta Jaguar</h1>
+    <p>Para a Giulia avaliar e testar antes da reunião de amanhã, 15h. Três abas: o que construímos e as ideias por trás, um passo a passo para você testar e validar, e o resumo da proposta Jaguar para você liderar.</p>
+  </div>
+</header>
+
+<nav>
+  <div class="wrap" id="tabs">
+    <button class="tab active" data-t="ideias">💡 O que fizemos &amp; as ideias</button>
+    <button class="tab" data-t="manual">📘 Manual de uso (SQ Ambiental)</button>
+    <button class="tab" data-t="jaguar">🐆 Proposta Jaguar</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ===================== ABA 1 — IDEIAS ===================== -->
+<section class="panel active" id="ideias">
+  <h2>O que fizemos &amp; as ideias por trás</h2>
+  <p class="lead">Tudo aqui em linguagem de negócio, sem jargão de TI. A grande mudança: a Diligência deixou de ser um checklist fixo e virou um <b>motor editável</b> que você, consultora, controla.</p>
+
+  <div class="kbox">
+    <h3>A virada central</h3>
+    <p class="lead">Antes a Diligência era um <b>checklist estático</b> — uma lista pronta de "tem / não tem". Agora é um <b>motor editável</b>, organizado em duas camadas: <b>Documento → Critérios</b>. O EIA, por exemplo, não é um item único: ele é composto por um conjunto de informações (os critérios). A <b>conformidade do documento é derivada</b> do atendimento desses critérios — não é mais um "ok" no escuro.</p>
+  </div>
+
+  <h3>🧱 Como o motor se organiza <span class="chip c-feito">no ar</span></h3>
+  <div class="card">
+    <p style="margin-bottom:8px">A hierarquia é simples e espelha como você já pensa na vida real:</p>
+    <div class="hier">
+      <div class="doc">📄 Documento — ex.: EIA (Estudo de Impacto Ambiental)</div>
+      <div class="crt">↳ Critério: caracterização do empreendimento</div>
+      <div class="crt">↳ Critério: diagnóstico do meio físico/biótico/socioeconômico</div>
+      <div class="crt">↳ Critério: avaliação de impactos e medidas mitigadoras</div>
+      <div class="crt">↳ Critério: programa de monitoramento</div>
+    </div>
+    <p>O documento só fica "conforme" na medida em que seus critérios são atendidos. A nota do documento <b>nasce dos critérios</b>, e a nota global da diligência nasce dos documentos.</p>
+  </div>
+
+  <h3>✍️ O consultor agora edita os requisitos <span class="chip c-feito">no ar</span></h3>
+  <div class="card">
+    <ul>
+      <li><b>Edição dos critérios</b>: dá para mudar o texto, ajustar o <b>peso</b> de cada critério e marcar se ele é <b>obrigatório</b> ou apenas <b>desejável</b>.</li>
+      <li><b>Proveniência</b> (de onde o critério vem): um critério <b>"normativo"</b> — que vem da lei/norma — fica <b>travado (cadeado)</b> para não se mexer no que é exigência legal; um critério <b>"consultor"</b> é livre para editar. Assim a sua expertise entra sem atropelar a norma.</li>
+      <li><b>Trilha de auditoria</b>: toda mudança registra <b>quem mudou, quando e por quê</b> (a justificativa é pedida na hora de salvar). Nada se altera no escuro.</li>
+      <li><b>Versionamento</b>: existe a <b>Régua-Mestre</b> (o modelo padrão) e a <b>Instância por cliente</b> (a diligência de fato). Editar a régua <b>não altera</b> diligências já feitas — cada cliente fica congelado na versão em que foi avaliado.</li>
+    </ul>
+  </div>
+
+  <h3>🔁 O motor é genérico — serve a vários objetos <span class="chip c-feito">no ar</span></h3>
+  <div class="card accent">
+    <p style="margin-bottom:8px">O mesmo mecanismo funciona para qualquer <b>"objeto de conformidade"</b>. Já vem semeado para três:</p>
+    <span class="pill">🌱 Licenciamento ambiental</span>
+    <span class="pill">🏛️ Anuências — IPHAN / arqueologia e espeleologia / cavidades</span>
+    <span class="pill">📑 Regularização fundiária</span>
+    <ul style="margin-top:10px">
+      <li><b>Anuências</b>: organiza as exigências de IPHAN (patrimônio/arqueologia) e de cavidades (espeleologia) que hoje vivem espalhadas.</li>
+      <li><b>Regularização fundiária</b>: vira um <b>inventário por matrícula</b> — o que se tem, o que falta e o que precisa providenciar, documento a documento.</li>
+    </ul>
+  </div>
+
+  <h3>🤖 Próximo passo (ainda é só ideia) <span class="chip c-breve">em breve</span></h3>
+  <div class="card">
+    <p>A <b>IA lê o PDF do EIA</b> (ou de outro documento) e <b>pré-marca os critérios já atendidos</b>; o consultor apenas <b>valida</b> em vez de avaliar do zero. Reduz horas de leitura e padroniza o crivo. <b>Ainda não foi feito</b> — é a direção para a qual o motor já está preparado.</p>
+  </div>
+
+  <h3>🔗 Por que isso nasceu agora</h3>
+  <div class="card">
+    Tudo isto foi desenhado para <b>atender a Jaguar</b>: novos licenciamentos, anuências (IPHAN/espeleologia) e regularização fundiária. O motor é a fundação técnica da proposta que está na 3ª aba.
+  </div>
+
+  <div class="crit"><b>Giulia:</b> esta aba é o "porquê". Se algum conceito (proveniência, versionamento, derivação da nota) não estiver claro ou não bater com a sua prática ambiental, é exatamente o que queremos ajustar antes de levar para a Jaguar.</div>
+</section>
+
+<!-- ===================== ABA 2 — MANUAL ===================== -->
+<section class="panel" id="manual">
+  <h2>Manual de uso (SQ Ambiental)</h2>
+  <p class="lead">Passo a passo com os caminhos reais para você <b>testar e validar</b>. Pode abrir o sistema ao lado e ir seguindo.</p>
+
+  <h3>🚪 Como chegar lá</h3>
+  <div class="step"><div class="n">1</div><b>Login</b> → no <b>menu lateral</b> clique em <span class="path">SQ Ambiental</span> <span class="path">/ambiental</span>.</div>
+  <div class="step"><div class="n">2</div>Abra o card <b>Diligência Summo</b> <span class="path">/ambiental/diligencia</span>.</div>
+  <div class="step"><div class="n">3</div>Na Diligência há <b>2 botões novos</b>: <span class="chip c-novo">novo</span> <b>Régua-Mestre (editar requisitos)</b> <span class="path">/due-diligence/templates</span> e <b>Minhas diligências</b> <span class="path">/due-diligence/instancias</span>.</div>
+
+  <h3>📐 Régua-Mestre — editar os requisitos <span class="chip c-novo">novo</span></h3>
+  <div class="card">
+    <ol>
+      <li><b>Filtre por objeto</b> (licença ambiental / anuência / regularização fundiária) e por licença.</li>
+      <li><b>Abra um template</b> e <b>expanda Documento → Critérios</b>.</li>
+      <li><b>Edite um critério inline</b>: o texto, o <b>peso</b> e se é <b>obrigatório / desejável</b>.</li>
+      <li>Ao <b>salvar</b>, o sistema pede a <b>justificativa</b> — ela vai direto para a auditoria.</li>
+      <li>Use <b>"Nova versão"</b> quando quiser congelar um conjunto de regras.</li>
+      <li>Na aba <b>"Auditoria"</b> veja o histórico: quem mudou o quê, quando e por quê.</li>
+      <li>Critério <b>"normativo"</b> aparece <b>travado (cadeado)</b>; critério <b>"consultor"</b> é editável.</li>
+    </ol>
+  </div>
+
+  <h3>🗂️ Minhas diligências — avaliar de verdade <span class="chip c-novo">novo</span></h3>
+  <div class="card">
+    <p style="margin-bottom:8px">Já existem <b>3 diligências de teste da JAGUAR MINING</b> pré-carregadas para você brincar:</p>
+    <span class="pill">Novo licenciamento — Santa Isabel</span>
+    <span class="pill">Anuência IPHAN</span>
+    <span class="pill">Regularização fundiária</span>
+    <ol style="margin-top:10px">
+      <li><b>Abra uma diligência</b> → cada <b>documento expande</b> nos seus critérios.</li>
+      <li><b>Avalie cada critério</b>: <b>Atende</b> / <b>Atende Parcialmente</b> / <b>Não Atende</b> / <b>Não Aplica</b>.</li>
+      <li>Veja a <b>% do documento</b> e o <b>SCORE GLOBAL</b> se atualizarem <b>ao vivo</b>. O <b>"Não Aplica" sai do cálculo</b> (não pune o score).</li>
+      <li><b>"Nova diligência"</b> cria uma do zero: escolhe template + cliente + escopo.</li>
+      <li><b>"Adicionar critério (consultor)"</b> insere um critério seu naquela diligência.</li>
+    </ol>
+  </div>
+
+  <h3>🧰 Outras ferramentas da frente para validar</h3>
+  <div class="card">
+    <ul>
+      <li><b>Índice de Sucesso / diagnóstico</b> <span class="path">/viabilidade</span> <span class="chip c-feito">no ar</span>: índice + fatores de risco + plano de ação.</li>
+      <li><b>Radar de Condicionantes</b> <span class="path">/condicionantes</span> <span class="chip c-feito">no ar</span>.</li>
+      <li><b>Diligência clássica de 5 fases</b> <span class="path">/due-diligence</span> — continua <b>intacta</b>, nada foi perdido.</li>
+    </ul>
+  </div>
+
+  <h3>⏱️ Roteiro de teste sugerido (10 min)</h3>
+  <div class="card accent">
+    <ol>
+      <li><b>Abra a diligência fundiária da Jaguar</b> em <span class="path">/due-diligence/instancias</span> e <b>avalie 2-3 critérios</b> — veja o score subir ao vivo.</li>
+      <li>Na <b>Régua-Mestre</b> <span class="path">/due-diligence/templates</span>, <b>edite o peso de um critério de consultor</b>, salve com justificativa e confira na <b>aba Auditoria</b>.</li>
+      <li>Abra o <b>Índice de Sucesso</b> <span class="path">/viabilidade</span> e veja o diagnóstico prescritivo.</li>
+    </ol>
+  </div>
+
+  <div class="awaits"><h3>🔍 O que queremos que você valide / critique</h3>
+    <ul>
+      <li>Os <b>critérios semeados</b> do EIA/anuências/fundiário fazem sentido para a prática ambiental? Falta algo essencial?</li>
+      <li>A distinção <b>normativo (travado) × consultor (editável)</b> está no lugar certo?</li>
+      <li>Os <b>pesos</b> e o que é <b>obrigatório vs desejável</b> refletem o peso real de cada exigência?</li>
+      <li>O <b>score global</b> e a regra do <b>"Não Aplica"</b> traduzem bem o "quão pronto está" um processo?</li>
+      <li>A <b>linguagem</b> está adequada para mostrar a um cliente como a Jaguar?</li>
+    </ul>
+  </div>
+
+  <div class="crit"><b>Giulia:</b> a ideia é que você teste com a cabeça da Jaguar amanhã. Qualquer ajuste de critério, peso ou texto que você apontar, a gente aplica antes/depois da reunião.</div>
+</section>
+
+<!-- ===================== ABA 3 — JAGUAR ===================== -->
+<section class="panel" id="jaguar">
+  <div class="person-h"><div class="avatar" style="background:var(--orange)">🐆</div>
+    <div><h2 style="margin:0">Proposta Jaguar</h2><span class="tag">Oportunidade para a Giulia liderar</span></div></div>
+  <p class="lead">Resumo da oportunidade para você conduzir. A Jaguar está em forte ciclo de crescimento — e há três frentes ambientais sem sistema que o motor da Diligência cobre.</p>
+
+  <h3>📈 Contexto de crescimento (fatos)</h3>
+  <div class="facts">
+    <div class="fact"><div class="num">5 anos</div><div class="lab">plano de exploração</div></div>
+    <div class="fact"><div class="num">227.200 m</div><div class="lab">de sondagem</div></div>
+    <div class="fact"><div class="num">US$ 43 mi</div><div class="lab">de investimento</div></div>
+    <div class="fact"><div class="num">Major Drilling + GEOSOL</div><div class="lab">parceiros de sondagem</div></div>
+    <div class="fact"><div class="num">Corredor Chamé-Bahú</div><div class="lab">Quadrilátero Ferrífero</div></div>
+    <div class="fact"><div class="num">2026</div><div class="lab">reabertura da Mina Santa Isabel</div></div>
+  </div>
+
+  <h3>🩹 As 3 dores</h3>
+  <div class="card pain"><b>1. Novos licenciamentos sem sistema</b><br>O Verde Ghaia / Ambipar cobre só o <b>pós-licença</b>. Não há ferramenta para conduzir os <b>novos licenciamentos</b> que o plano de 5 anos exige.</div>
+  <div class="card pain"><b>2. Anuências dispersas</b><br>IPHAN (arqueologia) e espeleologia (cavidades) ficam <b>espalhadas</b>, sem um lugar único de acompanhamento.</div>
+  <div class="card pain"><b>3. Regularização fundiária</b><br><b>Documentos perdidos</b> — sem inventário por matrícula do que se tem, falta e precisa.</div>
+
+  <h3>🧭 Posicionamento</h3>
+  <div class="card accent">
+    Somos <b>complementares</b> ao Verde Ghaia, não concorrentes: <b>eles = pós-licença</b>; <b>nós = pré-licença + anuências + fundiário</b>. E tudo roda sobre o <b>mesmo motor da Diligência</b> que você testou na aba 2.
+    <div class="vs" style="margin-top:12px"><div class="row">
+      <div><div class="lbl la">Verde Ghaia / Ambipar</div><div class="a">Gestão do <b>pós-licença</b> — condicionantes e obrigações de licenças já emitidas.</div></div>
+      <div><div class="lbl lb">SQ Ambiental</div><div class="b">Pré-licença (novos licenciamentos) + anuências (IPHAN/espeleo) + regularização fundiária.</div></div>
+    </div></div>
+  </div>
+
+  <h3>🗣️ Abordagem na reunião do dia 30</h3>
+  <div class="card">
+    <ul>
+      <li><b>Âncora nos novos licenciamentos</b>: é o que está <b>pronto e demonstrável</b> hoje — começa por força.</li>
+      <li><b>Fundiária como piloto co-desenhado</b>: oferecer construir junto, com o conhecimento deles.</li>
+      <li><b>Mostrar o portfólio completo</b> (licença + anuências + fundiário) como <b>rede de segurança</b> — mesmo que comecem por uma frente, veem o todo.</li>
+    </ul>
+  </div>
+
+  <h3>🎯 Estratégia de output (a saída que queremos da reunião)</h3>
+  <div class="value">
+    <ul>
+      <li>Pedir <b>UM caso real</b>: 1 processo de licenciamento <b>OU</b> 1 matrícula fundiária.</li>
+      <li>Pedir o <b>checklist do que precisamos</b> para rodar esse caso.</li>
+      <li>Tratar <b>confidencialidade</b> (NDA / escopo de dados).</li>
+      <li>Já <b>marcar a data do retorno com o piloto</b> — garantir o próximo touchpoint.</li>
+    </ul>
+  </div>
+
+  <a class="cta" href="/propostas/proposta-jaguar.html">📄 Abrir a proposta completa →</a>
+
+  <div class="crit"><b>Giulia:</b> esta é a sua frente para liderar. Diga se a leitura das dores e o posicionamento contra o Verde Ghaia estão certos, e o que ajustar no discurso antes do dia 30.</div>
+</section>
+
+</main>
+<div class="foot">Summo Quartile · jun/2026 · no ar em <b>summoquartile.vercel.app</b></div>
+
+<script>
+  const tabs=document.querySelectorAll('.tab');
+  const panels=document.querySelectorAll('.panel');
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    panels.forEach(p=>p.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.t).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }));
+</script>
+</body>
+</html>
