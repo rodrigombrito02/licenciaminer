@@ -83,6 +83,9 @@ class DemandaPatch(BaseModel):
     contato_telefone: Optional[str] = None
     empresa: Optional[str] = None
     cnpj: Optional[str] = None
+    analise: Optional[str] = None
+    proposta_url: Optional[str] = None
+    links: Optional[list] = None
 
 
 class InteracaoIn(BaseModel):
@@ -118,6 +121,9 @@ class DemandaOut(BaseModel):
     processo_anm: Optional[str]
     responsavel: Optional[str]
     valor_estimado: Optional[float]
+    analise: Optional[str] = None
+    proposta_url: Optional[str] = None
+    links: Optional[list] = None
     criado_por: Optional[str]
     criado_em: datetime
     atualizado_em: datetime

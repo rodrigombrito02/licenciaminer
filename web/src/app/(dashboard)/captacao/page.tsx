@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   TrendingUp, Loader2, Plus, Trash2, MessageSquarePlus, ArrowRight,
-  Building2, Mail, Phone, Target,
+  Building2, Mail, Phone, Target, FileText, ExternalLink,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -239,6 +239,42 @@ function DemandaDialog({
           <div className="flex items-center gap-2 flex-wrap text-xs">
             {demanda.origem && <Badge variant="outline">{meta.origem_labels[demanda.origem] ?? demanda.origem}</Badge>}
           </div>
+
+          {/* Dossiê do prospect — análise + proposta + links integrados (diligências) */}
+          {(demanda.analise || demanda.proposta_url || (demanda.links && demanda.links.length > 0)) && (
+            <div className="space-y-2 rounded-lg border border-brand-navy/15 bg-brand-navy/[0.03] p-3">
+              <p className="flex items-center gap-1.5 text-xs font-semibold">
+                <FileText className="h-3.5 w-3.5 text-brand-navy" /> Dossiê da oportunidade
+              </p>
+              {demanda.proposta_url && (
+                <a href={demanda.proposta_url} target="_blank" rel="noreferrer"
+                   className="flex items-center gap-2 rounded-md border border-brand-orange/40 bg-brand-orange/5 px-3 py-2 text-xs font-medium text-brand-orange hover:bg-brand-orange/10">
+                  <ExternalLink className="h-3.5 w-3.5" /> Abrir proposta comercial
+                </a>
+              )}
+              {demanda.links && demanda.links.filter((l) => l.tipo !== "proposta").length > 0 && (
+                <div className="space-y-1">
+                  {demanda.links.filter((l) => l.tipo !== "proposta").map((l, idx) =>
+                    l.url.startsWith("/") ? (
+                      <Link key={idx} href={l.url} className="flex items-center gap-2 text-xs text-brand-teal hover:underline">
+                        <ArrowRight className="h-3 w-3 shrink-0" /> {l.label}
+                      </Link>
+                    ) : (
+                      <a key={idx} href={l.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xs text-brand-teal hover:underline">
+                        <ExternalLink className="h-3 w-3 shrink-0" /> {l.label}
+                      </a>
+                    ),
+                  )}
+                </div>
+              )}
+              {demanda.analise && (
+                <details className="text-xs">
+                  <summary className="cursor-pointer font-medium text-muted-foreground">Análise da oportunidade</summary>
+                  <pre className="mt-2 whitespace-pre-wrap font-sans text-[11px] leading-relaxed text-muted-foreground">{demanda.analise}</pre>
+                </details>
+              )}
+            </div>
+          )}
 
           {/* Status + frente */}
           <div className="grid grid-cols-2 gap-3">
