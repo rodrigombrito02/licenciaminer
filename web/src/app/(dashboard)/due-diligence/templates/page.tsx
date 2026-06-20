@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   Loader2, ChevronDown, ChevronRight, FileText, Plus, Save, Lock, History,
   Layers, GitBranch, Trash2,
@@ -24,10 +25,27 @@ import {
 } from "@/lib/dd-api";
 
 export default function TemplatesPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center p-8">
+          <Loader2 className="h-6 w-6 animate-spin text-brand-orange" />
+        </div>
+      }
+    >
+      <TemplatesInner />
+    </Suspense>
+  );
+}
+
+function TemplatesInner() {
+  const searchParams = useSearchParams();
   const [templates, setTemplates] = useState<DDTemplate[]>([]);
   const [loading, setLoading] = useState(true);
-  const [fObjeto, setFObjeto] = useState<string>("todos");
-  const [fLicenca, setFLicenca] = useState("");
+  const [fObjeto, setFObjeto] = useState<string>(
+    () => searchParams.get("objeto") || "todos",
+  );
+  const [fLicenca, setFLicenca] = useState(() => searchParams.get("codigo") || "");
   const [abertoId, setAbertoId] = useState<number | null>(null);
 
   const carregar = useCallback(async () => {
