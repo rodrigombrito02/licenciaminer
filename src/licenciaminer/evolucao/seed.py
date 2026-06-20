@@ -353,6 +353,44 @@ def seed_esqueleto(force: bool = False) -> dict:
                 it.descricao = desc
                 migrados += 1
 
+        # 5) Sprint de refinamento da Diligência (feedback da reunião Rodrigo×Giulia)
+        #    status: no_ar = entregue · em_sprint = antes do dia 30 · em_breve = depois
+        SPRINT_DD = [
+            ("DD: ajustes rápidos (não se aplica, nome do projeto, combos de licença, múltiplas atividades)",
+             "no_ar", "Status 'Não se aplica' no documento, campo nome do empreendimento, "
+             "combinações de licença (LP+LI+LO etc.) e múltiplas atividades por processo."),
+            ("DD: caracterização espelhando o órgão + recebimento (aderência quantitativa)",
+             "em_sprint", "Configuração da diligência captando os mesmos inputs do formulário do "
+             "órgão; etapa de recebimento de documentos com % de aderência quantitativa (docs entregues)."),
+            ("DD: relatório PDF aprofundado",
+             "em_sprint", "Relatório com introdução, objetivo, diagnóstico do processo e dos documentos, "
+             "o que falta/melhorar e plano de ação em tabela (vitrine do entregável)."),
+            ("DD: hierarquia 3 níveis (Tema → Requisito → Critério)",
+             "em_breve", "EIA como tema com ~50 requisitos e ~150 critérios de aderência — nível "
+             "intermediário de Requisito entre Documento e Critério."),
+            ("DD: códigos completos da DN COPAM 217",
+             "em_breve", "Lista completa de atividades (ex.: A-05-02-0) com seleção múltipla."),
+            ("DD: camada de engajamento (cronograma + medição + checkpoints)",
+             "em_breve", "Cada etapa vira entregável validado pelo cliente (medição/desembolso) — "
+             "base da proposta comercial."),
+            ("DD: delinear processo de licenciamento × dados públicos (UX)",
+             "em_breve", "Separar com clareza no site o que é a diligência do cliente do que é "
+             "inteligência/dado público."),
+            ("DD IA: pré-preenchimento de critérios via PDF + matching de arquivos",
+             "em_breve", "API lê o documento, pré-marca critérios com página/confiança; reconhece o "
+             "mesmo doc com nomes diferentes e lê dentro de documentos combinados (consultor valida)."),
+        ]
+        for titulo, status, desc in SPRINT_DD:
+            it = db.query(ItemEvolucao).filter(ItemEvolucao.titulo == titulo).first()
+            if it is None:
+                db.add(ItemEvolucao(
+                    tipo="funcionalidade", titulo=titulo, descricao=desc,
+                    modulo="SQ Ambiental", status=status, visibilidade=INTERNO,
+                    telas=["/ambiental/diligencia"], origem="interno",
+                    origem_detalhe="Sprint DD — reunião Giulia",
+                ))
+                migrados += 1
+
         db.commit()
         logger.info(f"Evolucao: esqueleto v2 ({migrados} migrados, {criados} futuras)")
         return {"migrados": migrados, "futuras": criados}

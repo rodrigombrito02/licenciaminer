@@ -16,7 +16,8 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  ddApi, OBJETO_TIPO_LABEL, OBRIGATORIEDADE_LABEL, AVALIACAO_OPTIONS, fmtDataHora,
+  ddApi, OBJETO_TIPO_LABEL, OBRIGATORIEDADE_LABEL, AVALIACAO_OPTIONS,
+  STATUS_DOC_OPTIONS, fmtDataHora,
   type DDInstanciaArvore, type DDInstanciaDocumento, type DDInstanciaCriterio,
   type DDScore, type DDScoreDoc,
 } from "@/lib/dd-api";
@@ -71,10 +72,17 @@ export default function InstanciaPage({ params }: { params: Promise<{ id: string
           <Badge variant="secondary" className="text-[9px]">{inst.licenca_codigo}</Badge>
           <Badge variant="outline" className="text-[9px]">{OBJETO_TIPO_LABEL[inst.objeto_tipo] ?? inst.objeto_tipo}</Badge>
           <Badge variant="outline" className="text-[9px]">template v{inst.template_versao}</Badge>
-          {inst.atividade && <Badge variant="outline" className="text-[9px]">{inst.atividade}</Badge>}
+          {inst.atividades && inst.atividades.length > 0
+            ? inst.atividades.map((a) => (
+                <Badge key={a} variant="outline" className="text-[9px]">{a}</Badge>
+              ))
+            : inst.atividade && <Badge variant="outline" className="text-[9px]">{inst.atividade}</Badge>}
           {inst.classe != null && <Badge variant="outline" className="text-[9px]">Classe {inst.classe}</Badge>}
           <span className="text-[10px] text-muted-foreground">criada {fmtDataHora(inst.criado_em)}</span>
         </div>
+        {inst.projeto && (
+          <p className="mt-1 text-sm font-medium text-foreground">{inst.projeto}</p>
+        )}
         {inst.escopo && <p className="mt-1 text-sm text-muted-foreground">{inst.escopo}</p>}
       </div>
 
@@ -138,8 +146,21 @@ function DocumentoCard({
   onCriterioAdicionado: () => void;
 }) {
   const [aberto, setAberto] = useState(false);
+  const [statusDoc, setStatusDoc] = useState(doc.status_doc ?? "");
+  const [salvandoStatus, setSalvandoStatus] = useState(false);
   const criterios = doc.criterios ?? [];
   const pct = scoreDoc ? Math.round(scoreDoc.pct) : null;
+
+  const mudarStatusDoc = useCallback(async (valor: string) => {
+    setStatusDoc(valor);
+    setSalvandoStatus(true);
+    try {
+      await ddApi.statusDocumento(instId, doc.id, { status_doc: valor, autor: "consultor" });
+      onAvaliado();
+    } finally {
+      setSalvandoStatus(false);
+    }
+  }, [instId, doc.id, onAvaliado]);
 
   return (
     <Card>
@@ -169,6 +190,20 @@ function DocumentoCard({
 
         {aberto && (
           <div className="space-y-2 border-t p-3">
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-medium">Status do documento</label>
+              <Select value={statusDoc} onValueChange={mudarStatusDoc}>
+                <SelectTrigger className="h-8 w-[200px] text-xs">
+                  <SelectValue placeholder="Selecionar status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {STATUS_DOC_OPTIONS.map((s) => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {salvandoStatus && <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />}
+            </div>
             {criterios.map((c) => (
               <CriterioAvaliacao key={c.id} instId={instId} criterio={c} onAvaliado={onAvaliado} />
             ))}

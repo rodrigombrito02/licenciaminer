@@ -23,6 +23,7 @@ from licenciaminer.dd.database import (
     DDTemplate,
     DDAuditoria,
     OBJETO_TIPO,
+    STATUS_DOC,
     criar_instancia_snapshot,
     get_session,
     registrar_auditoria,
@@ -87,7 +88,8 @@ def _inst_out(i: DDInstancia) -> dict:
     return {
         "id": i.id, "template_id": i.template_id, "template_versao": i.template_versao,
         "objeto_tipo": i.objeto_tipo, "licenca_codigo": i.licenca_codigo, "cliente": i.cliente,
-        "escopo": i.escopo, "atividade": i.atividade, "classe": i.classe, "status": i.status,
+        "projeto": i.projeto, "escopo": i.escopo, "atividade": i.atividade,
+        "atividades": i.atividades, "classe": i.classe, "status": i.status,
         "responsavel": i.responsavel, "criado_por": i.criado_por,
         "criado_em": i.criado_em.isoformat() if i.criado_em else None,
     }
@@ -117,7 +119,7 @@ def _score_criterios(criterios: list[DDInstanciaCriterio]) -> dict:
 # ════════════════════════════════════════════════════════════════════
 @router.get("/meta")
 def meta() -> dict:
-    return {"objeto_tipos": OBJETO_TIPO}
+    return {"objeto_tipos": OBJETO_TIPO, "status_doc": STATUS_DOC}
 
 
 @router.get("/templates")
@@ -381,8 +383,10 @@ def auditoria(entidade: str = Query(...), entidade_id: int = Query(...),
 class InstanciaIn(BaseModel):
     template_id: int
     cliente: str
+    projeto: Optional[str] = None
     escopo: Optional[str] = None
     atividade: Optional[str] = None
+    atividades: Optional[list] = None
     classe: Optional[int] = None
     responsavel: Optional[str] = None
     criado_por: Optional[str] = None
@@ -394,8 +398,9 @@ def criar_instancia(body: InstanciaIn, db: Session = Depends(get_session)) -> di
     if not tpl:
         raise HTTPException(404, "Template não encontrado")
     inst = criar_instancia_snapshot(
-        db, tpl, cliente=body.cliente, escopo=body.escopo, atividade=body.atividade,
-        classe=body.classe, responsavel=body.responsavel, criado_por=body.criado_por,
+        db, tpl, cliente=body.cliente, projeto=body.projeto, escopo=body.escopo,
+        atividade=body.atividade, atividades=body.atividades, classe=body.classe,
+        responsavel=body.responsavel, criado_por=body.criado_por,
         status="em_avaliacao",
     )
     db.commit()
@@ -445,6 +450,26 @@ def editar_instancia(inst_id: int, body: InstanciaPatch, db: Session = Depends(g
             setattr(i, campo, val)
     db.commit()
     return _inst_out(i)
+
+
+class DocStatusIn(BaseModel):
+    status_doc: Optional[str] = None
+    arquivo_ref: Optional[str] = None
+    autor: Optional[str] = None
+
+
+@router.patch("/instancias/{inst_id}/documentos/{doc_id}")
+def status_documento(inst_id: int, doc_id: int, body: DocStatusIn,
+                     db: Session = Depends(get_session)) -> dict:
+    d = db.get(DDInstanciaDocumento, doc_id)
+    if not d or d.instancia_id != inst_id:
+        raise HTTPException(404, "Documento da instância não encontrado")
+    if body.status_doc is not None:
+        d.status_doc = body.status_doc
+    if body.arquivo_ref is not None:
+        d.arquivo_ref = body.arquivo_ref
+    db.commit()
+    return _inst_doc_out(d)
 
 
 class AvaliarIn(BaseModel):
