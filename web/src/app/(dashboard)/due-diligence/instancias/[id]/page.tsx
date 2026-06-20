@@ -86,8 +86,24 @@ export default function InstanciaPage({ params }: { params: Promise<{ id: string
         {inst.escopo && <p className="mt-1 text-sm text-muted-foreground">{inst.escopo}</p>}
       </div>
 
-      {/* Score global */}
-      {score && <ScoreGlobalCard score={score} />}
+      {/* Score global + relatório */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+        {score && (
+          <div className="flex-1">
+            <ScoreGlobalCard score={score} />
+          </div>
+        )}
+        <div className="flex sm:items-start">
+          <Button
+            variant="outline"
+            className="w-full sm:w-auto"
+            onClick={() => window.open(ddApi.relatorioUrl(id), "_blank")}
+          >
+            <FileText className="mr-2 h-4 w-4" />
+            Gerar relatório (PDF)
+          </Button>
+        </div>
+      </div>
 
       {/* Documentos */}
       <div className="space-y-2">

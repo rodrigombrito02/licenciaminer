@@ -223,6 +223,7 @@ export const ddApi = {
       body,
     ),
   score: (instId: number) => jget<DDScore>(`/instancias/${instId}/score`),
+  relatorioUrl: (instId: number) => `${BASE}/instancias/${instId}/relatorio`,
 };
 
 /* ── Labels e helpers de UI ── */
