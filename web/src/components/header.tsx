@@ -8,18 +8,34 @@ import { ChevronDown, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { NAV_SECTIONS } from "@/lib/nav-config";
+import { NAV_GROUPS, NAV_SECTIONS, type NavSection } from "@/lib/nav-config";
+import { useEffectiveRole } from "@/hooks/use-effective-role";
+import { hasMinRole, type Role } from "@/lib/roles";
 import { UserMenu } from "@/components/user-menu";
 import { ViewAsSwitcher } from "@/components/view-as-switcher";
 
+// Papel mínimo por grupo de navegação (mesmo gating do sidebar-nav)
+const GROUP_MIN_ROLE: Record<string, Role> = {
+  "ferramentas-internas": "consultor",
+  "gestao": "admin",
+};
+
 export function Header() {
   const pathname = usePathname();
+  const roleState = useEffectiveRole();
+  const role = roleState.status === "authenticated" ? roleState.role : undefined;
   const [open, setOpen] = useState(false);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
   function toggleSection(label: string) {
     setCollapsed((prev) => ({ ...prev, [label]: !prev[label] }));
   }
+
+  // Filtra seções pelo papel: grupos internos/admin só para consultor/admin
+  const visibleSections = NAV_SECTIONS.filter((s) => {
+    const min = s.group ? GROUP_MIN_ROLE[s.group] : undefined;
+    return !min || hasMinRole(role, min);
+  });
 
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 lg:px-8">
@@ -40,14 +56,26 @@ export function Header() {
             </span>
           </div>
           <nav className="px-3 py-4 space-y-1 overflow-y-auto max-h-[calc(100vh-64px)]">
-            {NAV_SECTIONS.map((section, idx) => {
+            {visibleSections.map((section, idx) => {
               const active = section.items.some((item) =>
                 item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)
               );
               const isOpen = section.standalone || (section.label in collapsed ? !collapsed[section.label] : active);
 
+              // Cabeçalho de grupo (renderizado uma vez por grupo)
+              const prevSection: NavSection | null = idx > 0 ? visibleSections[idx - 1] : null;
+              const groupChanged = section.group && section.group !== prevSection?.group;
+              const groupMeta = groupChanged
+                ? NAV_GROUPS.find((g) => g.key === section.group)
+                : null;
+
               return (
                 <div key={idx}>
+                  {groupMeta && (
+                    <div className="mt-5 mb-1 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-sidebar-foreground/50 border-t border-sidebar-border pt-3">
+                      {groupMeta.label}
+                    </div>
+                  )}
                   {section.standalone ? (
                     <ul>
                       {section.items.map((item) => {

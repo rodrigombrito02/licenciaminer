@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Loader2, Plus, ClipboardCheck, ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,8 +27,27 @@ const STATUS_COR: Record<string, string> = {
 };
 
 export default function InstanciasPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center p-8">
+          <Loader2 className="h-6 w-6 animate-spin text-brand-orange" />
+        </div>
+      }
+    >
+      <InstanciasInner />
+    </Suspense>
+  );
+}
+
+function InstanciasInner() {
+  const searchParams = useSearchParams();
   const [instancias, setInstancias] = useState<DDInstancia[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Filtros iniciais a partir da URL (?objeto=...&codigo=...)
+  const [fObjeto] = useState<string>(() => searchParams.get("objeto") || "");
+  const [fLicenca] = useState<string>(() => searchParams.get("codigo") || "");
 
   const carregar = useCallback(async () => {
     setLoading(true);
@@ -37,6 +56,16 @@ export default function InstanciasPage() {
   }, []);
 
   useEffect(() => { carregar(); }, [carregar]);
+
+  const instanciasFiltradas = useMemo(
+    () =>
+      instancias.filter((i) => {
+        if (fObjeto && i.objeto_tipo !== fObjeto) return false;
+        if (fLicenca && i.licenca_codigo !== fLicenca) return false;
+        return true;
+      }),
+    [instancias, fObjeto, fLicenca],
+  );
 
   return (
     <div className="space-y-5">
@@ -56,17 +85,21 @@ export default function InstanciasPage() {
         <div className="flex justify-center p-8">
           <Loader2 className="h-6 w-6 animate-spin text-brand-orange" />
         </div>
-      ) : instancias.length === 0 ? (
+      ) : instanciasFiltradas.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center gap-2 py-10 text-center">
             <ClipboardCheck className="h-8 w-8 text-muted-foreground/50" />
-            <p className="text-sm font-medium">Nenhuma diligência criada</p>
-            <p className="text-xs text-muted-foreground">Inicie uma nova diligência a partir de um template.</p>
+            <p className="text-sm font-medium">Nenhuma diligência encontrada</p>
+            <p className="text-xs text-muted-foreground">
+              {fObjeto || fLicenca
+                ? "Nenhuma diligência corresponde ao filtro aplicado."
+                : "Inicie uma nova diligência a partir de um template."}
+            </p>
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-2">
-          {instancias.map((i) => (
+          {instanciasFiltradas.map((i) => (
             <Link key={i.id} href={`/due-diligence/instancias/${i.id}`}>
               <Card className="transition-colors hover:border-brand-teal/40">
                 <CardContent className="flex items-center gap-3 p-4">
