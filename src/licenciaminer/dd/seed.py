@@ -160,6 +160,7 @@ def seed_dd(force: bool = False) -> dict:
     db = SessionLocal()
     try:
         if db.query(DDTemplate).count() > 0 and not force:
+            _seed_combos(db)
             _seed_jaguar(db)
             return {"seeded": False}
 
@@ -255,10 +256,91 @@ def seed_dd(force: bool = False) -> dict:
             n_templates, n_docs, n_crit,
         )
 
+        _seed_combos(db)
         _seed_jaguar(db)
         return {"seeded": True, "templates": n_templates, "documentos": n_docs, "criterios": n_crit}
     finally:
         db.close()
+
+
+COMBOS = {
+    "LP+LI+LO": ("LP+LI+LO — concomitante (trifásico unificado)", ["LP", "LI", "LO"]),
+    "LP+LI": ("LP+LI — prévia + instalação", ["LP", "LI"]),
+    "LI+LO": ("LI+LO — instalação + operação", ["LI", "LO"]),
+}
+
+
+def _seed_combos(db) -> None:
+    """Templates de combinações de licença (feedback Giulia). Idempotente."""
+    existentes = {
+        t.licenca_codigo for t in db.query(DDTemplate)
+        .filter(DDTemplate.objeto_tipo == "licenca_ambiental").all()
+    }
+    faltam = [c for c in COMBOS if c not in existentes]
+    if not faltam:
+        return
+
+    inv = load_inventario()
+    reqs_all = load_requisitos()
+    name_by_key: dict[str, str] = {}
+    norma_by_key: dict[str, str] = {}
+    for d in inv:
+        did = (d.get("doc_id") or "").strip()
+        nome = (d.get("documento") or "").strip()
+        norma = (d.get("norma_referencia") or "").strip()
+        for k in filter(None, [did if did and did != "-" else None, nome]):
+            nk = _nk(k)
+            name_by_key.setdefault(nk, nome or k)
+            if norma:
+                norma_by_key.setdefault(nk, norma)
+
+    for cod in faltam:
+        nome_combo, comps = COMBOS[cod]
+        tpl = DDTemplate(
+            objeto_tipo="licenca_ambiental", licenca_codigo=cod, nome=nome_combo,
+            versao=1, ativo=True, norma_origem="DN COPAM 217/2017", criado_por="seed",
+        )
+        db.add(tpl)
+        db.flush()
+        chaves: list[str] = []
+        for comp in comps:
+            chaves.extend(LICENCA_REQ_KEYS.get(comp, []))
+            for d in filtrar_documentos(comp):
+                did = (d.get("doc_id") or "").strip()
+                if did and did != "-":
+                    chaves.append(did)
+        ordenadas, vistos = [], set()
+        for k in chaves:
+            nk = _nk(k)
+            if nk not in vistos:
+                vistos.add(nk)
+                ordenadas.append(k)
+        for oi, key in enumerate(ordenadas):
+            rows = filtrar_requisitos(key, reqs_all)
+            nk = _nk(key)
+            doc = DDDocumento(
+                template_id=tpl.id, doc_id=key[:80], nome=name_by_key.get(nk, key),
+                norma_referencia=norma_by_key.get(nk), obrigatorio=True, ordem=oi,
+            )
+            db.add(doc)
+            db.flush()
+            ci = 0
+            for r in rows:
+                ev = (r.get("evidencia_esperada") or "").strip() or (r.get("teste_aderencia") or "").strip()
+                if not ev:
+                    continue
+                db.add(DDCriterio(
+                    documento_id=doc.id, requisito_id=(r.get("requisito_id") or None),
+                    topico=(r.get("topico") or None), teste_aderencia=(r.get("teste_aderencia") or None),
+                    evidencia_esperada=ev, proveniencia="normativo", obrigatoriedade="obrigatorio",
+                    peso=_peso(r.get("peso")), norma_origem=(r.get("norma_origem") or None),
+                    artigo_referencia=(r.get("artigo_referencia") or None), ordem=ci,
+                ))
+                ci += 1
+        registrar_auditoria(db, "template", tpl.id, "snapshot", autor="seed",
+                            justificativa=f"seed combo {cod}")
+    db.commit()
+    logger.info("DD: %d combos de licença criados", len(faltam))
 
 
 def _seed_jaguar(db) -> None:

@@ -62,6 +62,8 @@ export interface DDInstancia {
   cliente: string;
   escopo?: string | null;
   atividade?: string | null;
+  projeto?: string | null;
+  atividades?: string[] | null;
   classe?: number | null;
   status: string;
   criado_por?: string | null;
@@ -210,6 +212,16 @@ export const ddApi = {
     jsend<{ ok: boolean }>(`/instancias/${instId}/criterios`, "PATCH", body),
   addCriterioInstancia: (instId: number, body: Record<string, unknown>) =>
     jsend<DDInstanciaCriterio>(`/instancias/${instId}/criterios`, "POST", body),
+  statusDocumento: (
+    instId: number,
+    docId: number,
+    body: { status_doc?: string; arquivo_ref?: string; autor?: string },
+  ) =>
+    jsend<DDInstanciaDocumento>(
+      `/instancias/${instId}/documentos/${docId}`,
+      "PATCH",
+      body,
+    ),
   score: (instId: number) => jget<DDScore>(`/instancias/${instId}/score`),
 };
 
@@ -237,6 +249,13 @@ export const AVALIACAO_OPTIONS: { value: string; label: string; classe: string }
   { value: "Atende Parcialmente", label: "Parcial", classe: "bg-warning hover:bg-warning/90" },
   { value: "Não Atende", label: "Não Atende", classe: "bg-danger hover:bg-danger/90" },
   { value: "Não Aplica", label: "N/A", classe: "" },
+];
+
+export const STATUS_DOC_OPTIONS = [
+  "Apresentado",
+  "Parcial",
+  "Não Apresentado",
+  "Não se aplica",
 ];
 
 export function fmtData(s?: string | null): string {

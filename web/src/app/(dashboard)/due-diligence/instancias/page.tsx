@@ -3,7 +3,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Loader2, Plus, ClipboardCheck, ChevronRight } from "lucide-react";
+import { Loader2, Plus, ClipboardCheck, ChevronRight, X } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -134,16 +134,26 @@ function NovaInstanciaDialog({ onCriada }: { onCriada: () => void }) {
   const [templates, setTemplates] = useState<DDTemplate[]>([]);
   const [templateId, setTemplateId] = useState("");
   const [cliente, setCliente] = useState("");
+  const [projeto, setProjeto] = useState("");
   const [escopo, setEscopo] = useState("");
-  const [atividade, setAtividade] = useState("");
+  const [atividades, setAtividades] = useState<string[]>([]);
+  const [atividadeInput, setAtividadeInput] = useState("");
   const [classe, setClasse] = useState("");
   const [salvando, setSalvando] = useState(false);
 
   useEffect(() => {
     if (!open) return;
-    setTemplateId(""); setCliente(""); setEscopo(""); setAtividade(""); setClasse("");
+    setTemplateId(""); setCliente(""); setProjeto(""); setEscopo("");
+    setAtividades([]); setAtividadeInput(""); setClasse("");
     ddApi.templates().then((ts) => setTemplates(ts.filter((t) => t.ativo)));
   }, [open]);
+
+  const addAtividade = () => {
+    const v = atividadeInput.trim();
+    if (!v || atividades.includes(v)) { setAtividadeInput(""); return; }
+    setAtividades((prev) => [...prev, v]);
+    setAtividadeInput("");
+  };
 
   return (
     <>
@@ -177,18 +187,49 @@ function NovaInstanciaDialog({ onCriada }: { onCriada: () => void }) {
               <Input value={cliente} onChange={(e) => setCliente(e.target.value)} placeholder="Nome do cliente / empreendedor" />
             </div>
             <div>
+              <label className="mb-1 block text-xs font-medium">Nome do projeto/empreendimento</label>
+              <Input value={projeto} onChange={(e) => setProjeto(e.target.value)} placeholder="Ex.: Mina Conceição" />
+            </div>
+            <div>
               <label className="mb-1 block text-xs font-medium">Escopo</label>
               <Input value={escopo} onChange={(e) => setEscopo(e.target.value)} placeholder="Ex.: Ampliação da cava norte" />
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="mb-1 block text-xs font-medium">Atividade</label>
-                <Input value={atividade} onChange={(e) => setAtividade(e.target.value)} placeholder="A-02" />
+            <div>
+              <label className="mb-1 block text-xs font-medium">Atividades (DN 217)</label>
+              <div className="flex gap-2">
+                <Input
+                  value={atividadeInput}
+                  onChange={(e) => setAtividadeInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") { e.preventDefault(); addAtividade(); }
+                  }}
+                  placeholder="Ex.: A-02"
+                />
+                <Button type="button" variant="outline" size="icon" onClick={addAtividade} aria-label="Adicionar atividade">
+                  <Plus className="h-4 w-4" />
+                </Button>
               </div>
-              <div>
-                <label className="mb-1 block text-xs font-medium">Classe</label>
-                <Input type="number" value={classe} onChange={(e) => setClasse(e.target.value)} placeholder="4" />
-              </div>
+              {atividades.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {atividades.map((a) => (
+                    <Badge key={a} variant="secondary" className="gap-1 text-[10px]">
+                      {a}
+                      <button
+                        type="button"
+                        onClick={() => setAtividades((prev) => prev.filter((x) => x !== a))}
+                        className="ml-0.5 rounded-full hover:text-danger"
+                        aria-label={`Remover ${a}`}
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium">Classe</label>
+              <Input type="number" value={classe} onChange={(e) => setClasse(e.target.value)} placeholder="4" />
             </div>
           </div>
           <DialogFooter>
@@ -201,8 +242,10 @@ function NovaInstanciaDialog({ onCriada }: { onCriada: () => void }) {
                   const inst = await ddApi.criarInstancia({
                     template_id: Number(templateId),
                     cliente: cliente.trim(),
+                    projeto: projeto.trim() || null,
                     escopo: escopo.trim() || null,
-                    atividade: atividade.trim() || null,
+                    atividade: atividades[0] || null,
+                    atividades: atividades.length ? atividades : null,
                     classe: classe.trim() ? Number(classe) : null,
                   });
                   setOpen(false);

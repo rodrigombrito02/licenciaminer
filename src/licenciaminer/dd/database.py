@@ -53,6 +53,8 @@ PROVENIENCIA = ["normativo", "consultor"]
 OBRIGATORIEDADE = ["obrigatorio", "desejavel"]
 OBJETO_TIPO = ["licenca_ambiental", "anuencia", "regularizacao_fundiaria"]
 INSTANCIA_STATUS = ["rascunho", "em_avaliacao", "concluida", "arquivada"]
+# Status do documento na instância (feedback Giulia: incluir "Não se aplica")
+STATUS_DOC = ["Apresentado", "Parcial", "Não Apresentado", "Não se aplica"]
 # Mesma escala de app/components/dd_scoring.AVALIACOES (Não Aplica = fora do cálculo)
 AVALIACAO_VALORES = {
     "Atende": 1.0,
@@ -136,8 +138,10 @@ class DDInstancia(Base):
     objeto_tipo: Mapped[str] = mapped_column(String(40))
     licenca_codigo: Mapped[str] = mapped_column(String(40))
     cliente: Mapped[str] = mapped_column(String(200))
+    projeto: Mapped[Optional[str]] = mapped_column(String(250), nullable=True)
     escopo: Mapped[Optional[str]] = mapped_column(String(250), nullable=True)
     atividade: Mapped[Optional[str]] = mapped_column(String(60), nullable=True)
+    atividades: Mapped[Optional[list]] = mapped_column(JSON, nullable=True)
     classe: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     status: Mapped[str] = mapped_column(String(20), default="rascunho")
     responsavel: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)
@@ -237,6 +241,8 @@ def criar_instancia_snapshot(
     cliente: str,
     escopo: str | None = None,
     atividade: str | None = None,
+    atividades: list | None = None,
+    projeto: str | None = None,
     classe: int | None = None,
     responsavel: str | None = None,
     criado_por: str | None = None,
@@ -252,8 +258,10 @@ def criar_instancia_snapshot(
         objeto_tipo=template.objeto_tipo,
         licenca_codigo=template.licenca_codigo,
         cliente=cliente,
+        projeto=projeto,
         escopo=escopo,
         atividade=atividade,
+        atividades=atividades,
         classe=classe,
         responsavel=responsavel,
         criado_por=criado_por,
@@ -308,7 +316,18 @@ def get_session() -> Generator[Session, None, None]:
         db.close()
 
 
+def _ensure_columns() -> None:
+    """Migração leve: adiciona colunas novas a dd.db já existentes (prod/local)."""
+    with engine.begin() as conn:
+        cols = {r[1] for r in conn.exec_driver_sql("PRAGMA table_info(dd_instancias)")}
+        for nome, ddl in (("projeto", "VARCHAR(250)"), ("atividades", "JSON")):
+            if nome not in cols:
+                conn.exec_driver_sql(f"ALTER TABLE dd_instancias ADD COLUMN {nome} {ddl}")
+                logger.info("DD: coluna %s adicionada a dd_instancias", nome)
+
+
 def init_db() -> None:
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     Base.metadata.create_all(engine)
+    _ensure_columns()
     logger.info(f"Due Diligence (editável): SQLite pronto em {DB_PATH}")
