@@ -1143,7 +1143,7 @@ export function fetchSimSetor(setor: string) {
 
 /* ── Report Generation ── */
 
-export async function generateDDReportFase1(data: { licenca_tipo: string; atividade: string; classe: number; cnpj?: string }): Promise<void> {
+export async function generateDDReportFase1(data: { licenca_tipo: string; atividade: string; atividades?: string[]; classe: number; cnpj?: string }): Promise<void> {
   const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
   const res = await fetch(`${API}/due-diligence/report/fase1`, {
     method: "POST",
@@ -1172,28 +1172,28 @@ async function _postReport(endpoint: string, body: unknown): Promise<void> {
 }
 
 export function generateDDReportFase2(data: {
-  licenca_tipo: string; atividade: string; classe: number;
+  licenca_tipo: string; atividade: string; atividades?: string[]; classe: number;
   doc_status: Record<string, { status: string }>;
 }): Promise<void> {
   return _postReport("/due-diligence/report/fase2", data);
 }
 
 export function generateDDReportFase3(data: {
-  licenca_tipo: string; atividade: string; classe: number;
+  licenca_tipo: string; atividade: string; atividades?: string[]; classe: number;
   evaluations: Record<string, string>; criticality: Record<string, string>;
 }): Promise<void> {
   return _postReport("/due-diligence/report/fase3", data);
 }
 
 export function generateDDReportFase4(data: {
-  licenca_tipo: string; atividade: string; classe: number;
+  licenca_tipo: string; atividade: string; atividades?: string[]; classe: number;
   action_items: Array<{ documento: string; requisito: string; criticidade: string; acao: string; prazo: string }>;
 }): Promise<void> {
   return _postReport("/due-diligence/report/fase4", data);
 }
 
 export function generateDDReportFase5(data: {
-  licenca_tipo: string; atividade: string; classe: number;
+  licenca_tipo: string; atividade: string; atividades?: string[]; classe: number;
   result: Record<string, unknown>; n_documentos: number;
 }): Promise<void> {
   return _postReport("/due-diligence/report/fase5", data);

@@ -31,11 +31,16 @@ router = APIRouter()
 
 @router.get("/due-diligence/license-types")
 def list_license_types():
-    """Lista tipos de licença disponíveis com descrições."""
-    return [
+    """Lista tipos de licença disponíveis com descrições (inclui combinações)."""
+    base = [
         {"code": code, "description": LICENCA_DESC.get(code, code)}
         for code in LICENCA_TIPOS
     ]
+    base += [
+        {"code": c, "description": LICENCA_COMBO_DESC[c]}
+        for c in LICENCA_COMBOS
+    ]
+    return base
 
 
 @router.get("/due-diligence/scale")
@@ -48,8 +53,8 @@ def get_conformidade_scale():
 def get_documents(
     licenca_tipo: str = Query(..., description="Tipo de licença (LAS, LAS-RAS, LAC1, etc.)"),
 ):
-    """Retorna documentos aplicáveis para um tipo de licença."""
-    docs = filtrar_documentos(licenca_tipo)
+    """Retorna documentos aplicáveis para um tipo de licença (ou combinação)."""
+    docs = _docs_union(licenca_tipo)
     return {
         "licenca_tipo": licenca_tipo,
         "total": len(docs),
@@ -85,6 +90,36 @@ LICENCA_REQ_KEYS: dict[str, list[str]] = {
     "LOC": ["RCA_LOC", "PCA_LOC"],
 }
 
+# Combinações de licença (feedback Giulia): cada combo une as fases componentes.
+LICENCA_COMBOS: dict[str, list[str]] = {
+    "LP+LI+LO": ["LP", "LI", "LO"],
+    "LP+LI": ["LP", "LI"],
+    "LI+LO": ["LI", "LO"],
+}
+LICENCA_COMBO_DESC: dict[str, str] = {
+    "LP+LI+LO": "LP+LI+LO — concomitante (trifásico unificado)",
+    "LP+LI": "LP+LI — prévia + instalação",
+    "LI+LO": "LI+LO — instalação + operação",
+}
+
+
+def _componentes(licenca_tipo: str) -> list[str]:
+    """Expande um combo nas fases componentes; licença simples retorna ela mesma."""
+    return LICENCA_COMBOS.get(licenca_tipo, [licenca_tipo])
+
+
+def _docs_union(licenca_tipo: str) -> list[dict]:
+    """Documentos aplicáveis, unindo as fases quando é combo (sem duplicar)."""
+    seen, out = set(), []
+    for comp in _componentes(licenca_tipo):
+        for d in filtrar_documentos(comp):
+            chave = (d.get("documento", ""), d.get("licenca", ""), d.get("doc_id", ""))
+            if chave in seen:
+                continue
+            seen.add(chave)
+            out.append(d)
+    return out
+
 
 @router.get("/due-diligence/all-requirements")
 def get_all_requirements(
@@ -94,11 +129,13 @@ def get_all_requirements(
 
     Mapeamento explícito: licença → chaves de documento nos requisitos.
     """
-    docs = filtrar_documentos(licenca_tipo)
+    docs = _docs_union(licenca_tipo)
     all_reqs_data = load_requisitos()
 
-    # Collect applicable req-doc keys
-    req_doc_keys = set(LICENCA_REQ_KEYS.get(licenca_tipo, []))
+    # Collect applicable req-doc keys (unindo as fases quando é combo)
+    req_doc_keys = set()
+    for comp in _componentes(licenca_tipo):
+        req_doc_keys.update(LICENCA_REQ_KEYS.get(comp, []))
 
     # Also add any doc_ids from inventory that aren't "-" or empty
     for d in docs:

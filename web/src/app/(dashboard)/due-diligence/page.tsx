@@ -12,6 +12,7 @@ import {
   AlertTriangle,
   Download,
   Loader2,
+  X,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -202,7 +203,8 @@ const SESSION_KEY = "dd-wizard-state";
 interface WizardState {
   step: number;
   selectedLicense: string;
-  selectedAtividade: string;
+  selectedAtividade?: string; // legacy single-value (retrocompat)
+  selectedAtividades: string[];
   selectedClasse: string;
   cnpj: string;
   docStatus: Record<string, string>;
@@ -232,7 +234,13 @@ export default function DueDiligencePage() {
   // Step 1
   const [licenseTypes, setLicenseTypes] = useState<LicenseType[] | null>(null);
   const [selectedLicense, setSelectedLicense] = useState(saved.selectedLicense ?? "");
-  const [selectedAtividade, setSelectedAtividade] = useState(saved.selectedAtividade ?? "A-02");
+  const [selectedAtividades, setSelectedAtividades] = useState<string[]>(
+    saved.selectedAtividades && saved.selectedAtividades.length > 0
+      ? saved.selectedAtividades
+      : saved.selectedAtividade
+      ? [saved.selectedAtividade]
+      : ["A-02"]
+  );
   const [selectedClasse, setSelectedClasse] = useState(saved.selectedClasse ?? "4");
   const [cnpj, setCnpj] = useState(saved.cnpj ?? "");
 
@@ -309,8 +317,8 @@ export default function DueDiligencePage() {
 
   // Auto-save wizard state to sessionStorage
   useEffect(() => {
-    saveWizardState({ step, selectedLicense, selectedAtividade, selectedClasse, cnpj, docStatus, evaluations });
-  }, [step, selectedLicense, selectedAtividade, selectedClasse, cnpj, docStatus, evaluations]);
+    saveWizardState({ step, selectedLicense, selectedAtividades, selectedClasse, cnpj, docStatus, evaluations });
+  }, [step, selectedLicense, selectedAtividades, selectedClasse, cnpj, docStatus, evaluations]);
 
   // Load license types
   useEffect(() => {
@@ -534,14 +542,21 @@ export default function DueDiligencePage() {
 
                 <div>
                   <label className="mb-1 block text-sm font-medium">
-                    Atividade
+                    Atividades
                   </label>
-                  <Select value={selectedAtividade} onValueChange={setSelectedAtividade}>
+                  <Select
+                    value=""
+                    onValueChange={(code) =>
+                      setSelectedAtividades((prev) =>
+                        prev.includes(code) ? prev : [...prev, code]
+                      )
+                    }
+                  >
                     <SelectTrigger>
-                      <SelectValue />
+                      <SelectValue placeholder="Adicionar atividade" />
                     </SelectTrigger>
                     <SelectContent>
-                      {ATIVIDADES.map((a) => (
+                      {ATIVIDADES.filter((a) => !selectedAtividades.includes(a.code)).map((a) => (
                         <SelectItem key={a.code} value={a.code}>
                           <span className="font-medium">{a.code}</span>
                           <span className="ml-2 text-muted-foreground">
@@ -551,6 +566,33 @@ export default function DueDiligencePage() {
                       ))}
                     </SelectContent>
                   </Select>
+                  {selectedAtividades.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {selectedAtividades.map((code) => {
+                        const ativ = ATIVIDADES.find((a) => a.code === code);
+                        return (
+                          <Badge key={code} variant="secondary" className="gap-1 pr-1">
+                            <span className="font-medium">{code}</span>
+                            {ativ && (
+                              <span className="text-muted-foreground">— {ativ.label}</span>
+                            )}
+                            <button
+                              type="button"
+                              aria-label={`Remover ${code}`}
+                              className="ml-0.5 rounded-sm hover:bg-muted-foreground/20"
+                              onClick={() =>
+                                setSelectedAtividades((prev) =>
+                                  prev.filter((c) => c !== code)
+                                )
+                              }
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </Badge>
+                        );
+                      })}
+                    </div>
+                  )}
                   <p className="mt-1 text-xs text-muted-foreground">
                     Código de atividade minerária (DN COPAM 217/2017)
                   </p>
@@ -663,7 +705,8 @@ export default function DueDiligencePage() {
                 size="sm"
                 onClick={() => generateDDReportFase1({
                   licenca_tipo: selectedLicense,
-                  atividade: selectedAtividade,
+                  atividade: selectedAtividades[0],
+                  atividades: selectedAtividades,
                   classe: Number(selectedClasse),
                   cnpj: cnpj || undefined,
                 })}
@@ -919,6 +962,9 @@ export default function DueDiligencePage() {
                         <SelectItem value="Não Apresentado">
                           <span className="text-muted-foreground">Não Apresentado</span>
                         </SelectItem>
+                        <SelectItem value="Não se aplica">
+                          <span className="text-muted-foreground">Não se aplica</span>
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -950,7 +996,8 @@ export default function DueDiligencePage() {
         <div className="flex justify-end">
           <Button variant="outline" size="sm" onClick={() => generateDDReportFase2({
             licenca_tipo: selectedLicense,
-            atividade: selectedAtividade,
+            atividade: selectedAtividades[0],
+            atividades: selectedAtividades,
             classe: Number(selectedClasse),
             doc_status: Object.fromEntries(Object.entries(docStatus).map(([k, v]) => [k, { status: (v || "").toLowerCase() }])),
           })}>
@@ -1098,7 +1145,8 @@ export default function DueDiligencePage() {
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={() => generateDDReportFase3({
                   licenca_tipo: selectedLicense,
-                  atividade: selectedAtividade,
+                  atividade: selectedAtividades[0],
+                  atividades: selectedAtividades,
                   classe: Number(selectedClasse),
                   evaluations,
                   criticality: {},
@@ -1276,7 +1324,8 @@ export default function DueDiligencePage() {
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={() => generateDDReportFase4({
                 licenca_tipo: selectedLicense,
-                atividade: selectedAtividade,
+                atividade: selectedAtividades[0],
+                atividades: selectedAtividades,
                 classe: Number(selectedClasse),
                 action_items: (result?.recomendacoes || []).map((r: Record<string, string>) => ({
                   documento: r.documento || "",
@@ -1305,7 +1354,10 @@ export default function DueDiligencePage() {
           {/* Config summary */}
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
             <span><strong>Licença:</strong> {selectedLicense}</span>
-            <span><strong>Atividade:</strong> {selectedAtividade} — {ATIVIDADES.find((a) => a.code === selectedAtividade)?.label}</span>
+            <span><strong>Atividades:</strong> {selectedAtividades.map((code) => {
+              const ativ = ATIVIDADES.find((a) => a.code === code);
+              return ativ ? `${code} — ${ativ.label}` : code;
+            }).join(", ")}</span>
             <span><strong>Classe:</strong> {selectedClasse}</span>
           </div>
 
@@ -1337,7 +1389,8 @@ export default function DueDiligencePage() {
                     size="sm"
                     onClick={() => generateDDReportFase5({
                       licenca_tipo: selectedLicense,
-                      atividade: selectedAtividade,
+                      atividade: selectedAtividades[0],
+                      atividades: selectedAtividades,
                       classe: Number(selectedClasse),
                       result: result as unknown as Record<string, unknown>,
                       n_documentos: documents?.length ?? 0,
@@ -1538,7 +1591,7 @@ export default function DueDiligencePage() {
               onClick={() => {
                 setStep(1);
                 setSelectedLicense("");
-                setSelectedAtividade("A-02");
+                setSelectedAtividades(["A-02"]);
                 setSelectedClasse("4");
                 setCnpj("");
                 setDocuments(null);
