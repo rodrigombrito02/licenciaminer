@@ -23,7 +23,7 @@ const OPCOES: Opt[] = [
   { key: "evolucao", titulo: "Evolução do Sistema", desc: "Plano, sprints e sugestões", href: "/evolucao", icon: GitBranch, cor: "#0A2540" },
   { key: "sq_solucoes", titulo: "SQ Soluções", desc: "Pipeline, implantações e frota", href: "/sq-solutions", icon: Cpu, cor: "#E67E22" },
   { key: "sq_ambiental", titulo: "SQ Ambiental", desc: "Radar de condicionantes e diligência", href: "/condicionantes", icon: ShieldCheck, cor: "#156082" },
-  { key: "mineral_intelligence", titulo: "Mineral Intelligence", desc: "Produtos e dados de mercado", href: "/inteligencia-comercial", icon: TrendingUp, cor: "#FFC000" },
+  { key: "mineral_intelligence", titulo: "Inteligência de Mercado", desc: "Produtos e dados de mercado", href: "/inteligencia-comercial", icon: TrendingUp, cor: "#FFC000" },
   { key: "ativos", titulo: "Ativos Minerários", desc: "Mapa, trilha e prospecção", href: "/direitos", icon: Map, cor: "#0E7490" },
   { key: "consultoria", titulo: "SQ Consultoria", desc: "Carteira de clientes e Régua", href: "/sq-consultoria", icon: Briefcase, cor: "#0A2540" },
   { key: "captacao", titulo: "Captação", desc: "Inbox de demandas e funis", href: "/captacao", icon: Target, cor: "#FFC000" },

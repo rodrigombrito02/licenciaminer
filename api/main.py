@@ -19,6 +19,7 @@ from api.routers import (
     decisions,
     due_diligence,
     dd_templates,
+    mi_lima,
     empresa,
     explorer,
     geospatial,
@@ -187,6 +188,7 @@ app.include_router(explorer.router, prefix="/api", tags=["Explorador"])
 app.include_router(concessoes.router, prefix="/api", tags=["Concessões"])
 app.include_router(ativos.router, prefix="/api", tags=["Ativos Minerários"])
 app.include_router(mineral_intelligence.router, tags=["Mineral Intelligence"])  # ja tem prefix /api/mi
+app.include_router(mi_lima.router)  # ja tem prefix /api/mi (Inteligência de Mercado — Lima)
 app.include_router(geospatial.router, prefix="/api", tags=["Geoespacial"])
 app.include_router(prospeccao.router, prefix="/api", tags=["Prospecção"])
 app.include_router(intelligence.router, prefix="/api", tags=["Inteligência Comercial"])

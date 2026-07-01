@@ -115,7 +115,7 @@ export const NAV_SECTIONS: NavSection[] = [
     label: "",
     standalone: true,
     group: "produtos",
-    items: [{ href: "/inteligencia-comercial", label: "Mineral Intelligence", icon: TrendingUp }],
+    items: [{ href: "/inteligencia-comercial", label: "Inteligência de Mercado", icon: TrendingUp }],
   },
   {
     label: "",
@@ -186,7 +186,7 @@ export const BUSINESS_UNITS = [
     iconColor: "text-brand-teal",
   },
   {
-    title: "Mineral Intelligence",
+    title: "Inteligência de Mercado",
     description: "Inteligência de mercado mineral: preços, comércio exterior, royalties, produção.",
     icon: TrendingUp,
     href: "/inteligencia-comercial",
