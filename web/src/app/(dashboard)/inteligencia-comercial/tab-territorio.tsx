@@ -1,97 +1,122 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { MapPin } from "lucide-react";
-import { StatCard } from "@/components/stat-card";
-import {
-  fetchAnmByFase,
-  fetchAnmBySubstancia,
-  fetchAnmStats,
-  fetchStrategicMinerals,
-} from "@/lib/api";
-import { fmtBR } from "@/lib/format";
-import { MetricChart } from "./metric-chart";
-import { TERRITORIO_PRESETS } from "./chart-helpers";
+import { useState } from "react";
+import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Anchor, Map as MapIcon, BarChart3, ZoomIn } from "lucide-react";
+
+const IMAGES = {
+  mapa: {
+    src: "/mi/pellet-map-2024.jpeg",
+    label: "Mapa",
+    alt: "Mapa do mercado seaborne de pelotas de minério de ferro — 2024",
+  },
+  stats: {
+    src: "/mi/pellet-stats-2024.jpeg",
+    label: "Key Statistics",
+    alt: "Principais estatísticas do mercado seaborne de pelotas de minério de ferro — 2024",
+  },
+} as const;
+
+type ViewKey = keyof typeof IMAGES;
 
 interface TerritorioTabProps {
   activeMetric: string;
   onMetricChange: (id: string) => void;
 }
 
-export function TerritorioTab({ activeMetric, onMetricChange }: TerritorioTabProps) {
-  const [byFase, setByFase] = useState<Record<string, unknown>[] | null>(null);
-  const [bySubs, setBySubs] = useState<Record<string, unknown>[] | null>(null);
-  const [stats, setStats] = useState<{ total_records: number } | null>(null);
-  const [strategic, setStrategic] = useState<Record<string, unknown>[] | null>(null);
-  const [byCategory, setByCategory] = useState<Record<string, unknown>[] | null>(null);
-  const [loading, setLoading] = useState(true);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function TerritorioTab(_props: TerritorioTabProps) {
+  const [view, setView] = useState<ViewKey>("mapa");
+  const [zoomOpen, setZoomOpen] = useState(false);
 
-  useEffect(() => {
-    Promise.all([
-      fetchAnmByFase().then((r) => setByFase(r.rows)),
-      fetchAnmBySubstancia().then((r) => setBySubs(r.rows)),
-      fetchAnmStats().then(setStats),
-      fetchStrategicMinerals().then((r) => {
-        // Build strategic minerals view (cross-ref ANM substance data)
-        setStrategic(
-          r.rows
-            .filter((row) => row.estrategico === "true" || row.estrategico === "1")
-            .map((row) => ({ substancia: row.substancia, categoria: row.categoria }))
-        );
-
-        // Group by category
-        const catCount: Record<string, number> = {};
-        for (const row of r.rows) {
-          catCount[row.categoria] = (catCount[row.categoria] ?? 0) + 1;
-        }
-        setByCategory(
-          Object.entries(catCount)
-            .map(([categoria, n]) => ({ categoria, n }))
-            .sort((a, b) => b.n - a.n)
-        );
-      }),
-    ])
-      .catch((e) => console.error("territorio:", e))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const chartData = useCallback((): Record<string, unknown>[] | null => {
-    switch (activeMetric) {
-      case "anm-fase":
-        return byFase;
-      case "anm-substancia":
-        return bySubs;
-      case "minerais-estrategicos": {
-        if (!bySubs || !strategic) return null;
-        // Filter ANM substances to only strategic ones
-        const stratSet = new Set(strategic.map((s) => String(s.substancia).toUpperCase()));
-        return bySubs.filter((row) => stratSet.has(String(row.substancia).toUpperCase()));
-      }
-      case "categorias":
-        return byCategory;
-      default:
-        return null;
-    }
-  }, [activeMetric, byFase, bySubs, strategic, byCategory]);
+  const active = IMAGES[view];
 
   return (
     <div className="space-y-4">
-      {stats && (
-        <StatCard
-          label="Processos ANM"
-          value={fmtBR(stats.total_records)}
-          subtitle="total de processos minerários em MG"
-          icon={MapPin}
-          accentClass="bg-brand-teal"
-        />
-      )}
-      <MetricChart
-        presets={TERRITORIO_PRESETS}
-        activePreset={activeMetric}
-        onPresetChange={onMetricChange}
-        data={chartData()}
-        loading={loading}
-      />
+      {/* Cabeçalho */}
+      <div className="rounded-xl bg-gradient-to-r from-[#0A2540]/8 to-brand-teal/10 border border-brand-teal/30 p-5">
+        <div className="flex items-start gap-3">
+          <Anchor className="h-5 w-5 text-brand-teal flex-shrink-0 mt-0.5" />
+          <div>
+            <h3 className="font-bold text-sm mb-1">Iron Ore Pellets — Seaborne Market 2024</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Visualização do mercado transoceânico de pelotas de minério de ferro:
+              rotas, principais destinos e estatísticas-chave. Clique na imagem para ampliar.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Toggle Mapa / Key Statistics */}
+      <div className="flex gap-2">
+        <Button
+          variant={view === "mapa" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setView("mapa")}
+          className="gap-1.5"
+        >
+          <MapIcon className="h-4 w-4" />
+          Mapa
+        </Button>
+        <Button
+          variant={view === "stats" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setView("stats")}
+          className="gap-1.5"
+        >
+          <BarChart3 className="h-4 w-4" />
+          Key Statistics
+        </Button>
+      </div>
+
+      {/* Imagem */}
+      <Card>
+        <CardContent className="p-3">
+          <button
+            type="button"
+            onClick={() => setZoomOpen(true)}
+            className="group relative block w-full overflow-hidden rounded-lg cursor-zoom-in"
+            aria-label="Ampliar imagem"
+          >
+            <Image
+              src={active.src}
+              alt={active.alt}
+              width={1600}
+              height={1000}
+              priority
+              className="w-full h-auto object-contain"
+            />
+            <span className="absolute right-3 top-3 flex items-center gap-1 rounded-md bg-black/60 px-2 py-1 text-[11px] font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
+              <ZoomIn className="h-3.5 w-3.5" /> Ampliar
+            </span>
+          </button>
+          <p className="mt-2 text-[10px] text-muted-foreground/70">
+            Fonte: comexstat / trademap · edição 2024. {active.label}.
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Lightbox */}
+      <Dialog open={zoomOpen} onOpenChange={setZoomOpen}>
+        <DialogContent
+          className="max-w-[95vw] w-fit border-none bg-transparent p-0 shadow-none sm:max-w-[95vw]"
+          showCloseButton
+        >
+          <DialogTitle className="sr-only">{active.alt}</DialogTitle>
+          <div className="max-h-[90vh] overflow-auto rounded-lg bg-background">
+            <Image
+              src={active.src}
+              alt={active.alt}
+              width={2400}
+              height={1500}
+              className="h-auto w-auto max-w-none object-contain"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

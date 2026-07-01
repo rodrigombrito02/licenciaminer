@@ -77,3 +77,13 @@ data,mineral,preco_usd,unidade,fonte
 2025-12-01,Manganes (44% Mn),4.60,USD/dmtu,Asian Metal
 2026-01-01,Manganes (44% Mn),4.75,USD/dmtu,Asian Metal
 2026-03-01,Manganes (44% Mn),4.65,USD/dmtu,Asian Metal
+2024-01-02,Niquel (LME),16400.00,USD/t,LME
+2024-06-01,Niquel (LME),17900.00,USD/t,LME
+2024-09-01,Niquel (LME),16100.00,USD/t,LME
+2024-12-01,Niquel (LME),15400.00,USD/t,LME
+2025-03-01,Niquel (LME),16200.00,USD/t,LME
+2025-06-01,Niquel (LME),15300.00,USD/t,LME
+2025-09-01,Niquel (LME),15100.00,USD/t,LME
+2025-12-01,Niquel (LME),15450.00,USD/t,LME
+2026-01-01,Niquel (LME),15600.00,USD/t,LME
+2026-03-01,Niquel (LME),15400.00,USD/t,LME

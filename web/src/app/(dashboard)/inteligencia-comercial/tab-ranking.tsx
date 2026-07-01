@@ -1,182 +1,309 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, Trophy, TrendingUp } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Factory, MapPin, FlaskConical, type LucideIcon } from "lucide-react";
+import { fmtBR } from "@/lib/format";
+import { CHART_TOOLTIP_STYLE, COLORS } from "./chart-helpers";
 
-interface RankingRow {
-  nome: string;
-  valor: number;
-  meta?: string;
+const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+const TODOS = "__todos__";
+
+interface RalMeta {
+  anos: string[];
+  substancias: string[];
+  ufs: string[];
+}
+
+interface EstadoRow {
+  estado: string;
+  qtd_t: number;
+}
+interface SubstanciaRow {
+  substancia: string;
+  qtd_t: number;
+}
+
+interface ProducaoResponse {
+  ano: number;
+  por_estado: EstadoRow[];
+  por_substancia: SubstanciaRow[];
+  total_t: number;
+}
+
+/** Formata toneladas: usa Mt quando grande, senão milhares de t. */
+function fmtTon(v: number): string {
+  if (v >= 1_000_000) return `${fmtBR(v / 1_000_000, 2)} Mt`;
+  if (v >= 1_000) return `${fmtBR(v / 1_000, 1)} mil t`;
+  return `${fmtBR(v, 0)} t`;
 }
 
 export function RankingTab() {
-  const [municipios, setMunicipios] = useState<RankingRow[] | null>(null);
-  const [substancias, setSubstancias] = useState<RankingRow[] | null>(null);
+  const [meta, setMeta] = useState<RalMeta | null>(null);
+  const [ano, setAno] = useState("2024");
+  const [substancia, setSubstancia] = useState<string>(TODOS);
+  const [uf, setUf] = useState<string>(TODOS);
+  const [data, setData] = useState<ProducaoResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Carrega metadados (anos / substâncias / ufs)
+  useEffect(() => {
+    fetch(`${API}/mi/ral/meta`)
+      .then((r) => r.json())
+      .then((m: RalMeta) => {
+        setMeta(m);
+        if (m.anos?.length && !m.anos.includes("2024")) {
+          setAno(m.anos[m.anos.length - 1]);
+        }
+      })
+      .catch(() => setMeta({ anos: ["2024"], substancias: [], ufs: [] }));
+  }, []);
+
+  const load = useCallback(() => {
+    setLoading(true);
+    const qs = new URLSearchParams({ ano });
+    if (substancia !== TODOS) qs.set("substancia", substancia);
+    if (uf !== TODOS) qs.set("uf", uf);
+    fetch(`${API}/mi/ral/producao?${qs}`)
+      .then((r) => r.json())
+      .then((d: ProducaoResponse) => setData(d))
+      .catch(() => setData(null))
+      .finally(() => setLoading(false));
+  }, [ano, substancia, uf]);
 
   useEffect(() => {
-    const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
-    fetch(`${API}/intelligence/cfem/top-municipios`)
-      .then((r) => r.json())
-      .then((d) => {
-        const rows = (d.rows || []).map((r: { municipio: string; total: number }) => ({
-          nome: r.municipio,
-          valor: r.total,
-        }));
-        setMunicipios(rows);
-      })
-      .catch(() => setMunicipios([]));
-
-    fetch(`${API}/intelligence/cfem/top-substancias`)
-      .then((r) => r.json())
-      .then((d) => {
-        const rows = (d.rows || []).map((r: { substancia: string; total: number }) => ({
-          nome: r.substancia,
-          valor: r.total,
-        }));
-        setSubstancias(rows);
-      })
-      .catch(() => setSubstancias([]));
-  }, []);
+    load();
+  }, [load]);
 
   return (
     <div className="space-y-5">
       {/* Intro */}
-      <div className="rounded-xl bg-gradient-to-r from-brand-gold/10 to-brand-orange/10 border border-brand-gold/30 p-5">
+      <div className="rounded-xl bg-gradient-to-r from-brand-teal/10 to-brand-gold/10 border border-brand-teal/30 p-5">
         <div className="flex items-start gap-3">
-          <Trophy className="h-5 w-5 text-brand-gold flex-shrink-0 mt-0.5" />
+          <Factory className="h-5 w-5 text-brand-teal flex-shrink-0 mt-0.5" />
           <div>
-            <h3 className="font-bold text-sm mb-1">Ranking da Mineração Brasileira</h3>
+            <h3 className="font-bold text-sm mb-1">Produção Mineral Beneficiada</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Top municípios e substâncias por arrecadação de CFEM
-              (Compensação Financeira pela Exploração de Recursos Minerais).
-              Indicador transparente da concentração de receita mineral no país.
+              Volume de produção beneficiada declarado no Relatório Anual de Lavra (RAL)
+              da ANM, por estado e por substância. Filtre por ano, substância e UF
+              para explorar a distribuição da produção mineral brasileira.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-4">
-        <RankingCard
-          title="Top 15 Municípios por CFEM"
-          subtitle="Receita acumulada — todas as substâncias"
-          icon={MapPin}
-          data={municipios}
-          colorClass="text-brand-teal"
+      {/* Filtros */}
+      <div className="flex flex-wrap gap-3">
+        <FilterSelect
+          label="Ano"
+          value={ano}
+          onChange={setAno}
+          options={meta?.anos ?? ["2024"]}
         />
-        <RankingCard
-          title="Top 15 Substâncias por CFEM"
-          subtitle="Receita acumulada — todos os municípios"
-          icon={TrendingUp}
-          data={substancias}
-          colorClass="text-brand-orange"
+        <FilterSelect
+          label="Substância"
+          value={substancia}
+          onChange={setSubstancia}
+          options={meta?.substancias ?? []}
+          allLabel="Todas as substâncias"
+        />
+        <FilterSelect
+          label="UF"
+          value={uf}
+          onChange={setUf}
+          options={meta?.ufs ?? []}
+          allLabel="Todas as UFs"
+        />
+        {data && !loading && (
+          <div className="ml-auto flex items-end">
+            <div className="rounded-lg border bg-muted/30 px-4 py-2">
+              <p className="text-[10px] uppercase tracking-wide text-muted-foreground font-semibold">
+                Total beneficiado ({data.ano})
+              </p>
+              <p className="text-lg font-bold font-tabular text-brand-teal leading-tight">
+                {fmtTon(data.total_t)}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Gráficos */}
+      <div className="grid lg:grid-cols-2 gap-4">
+        <RankingBarCard
+          title="Produção por Estado"
+          subtitle="Toneladas beneficiadas"
+          icon={MapPin}
+          rows={data?.por_estado.map((r) => ({ nome: r.estado, valor: r.qtd_t })) ?? null}
+          color={COLORS.teal}
+          loading={loading}
+        />
+        <RankingBarCard
+          title="Produção por Substância"
+          subtitle="Toneladas beneficiadas"
+          icon={FlaskConical}
+          rows={data?.por_substancia.map((r) => ({ nome: r.substancia, valor: r.qtd_t })) ?? null}
+          color={COLORS.orange}
+          loading={loading}
         />
       </div>
 
-      {/* Insight institucional */}
-      <Card className="border-brand-navy/20 bg-gradient-to-br from-brand-navy/5 to-transparent">
-        <CardContent className="p-5">
-          <h3 className="font-bold text-sm mb-2">Por que isso importa</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            A CFEM é a principal fonte de transparência sobre quanto cada município
-            recebe da atividade mineral. Para a Summo, esses dados são input para
-            avaliação de oportunidades, due diligence e análises ESG dos clientes.
-            <strong className="text-foreground"> Quer cruzar esses dados com sua estratégia?
-            Fale conosco.</strong>
-          </p>
-        </CardContent>
-      </Card>
+      <p className="text-[10px] text-muted-foreground/60">
+        Fonte: ANM RAL — produção beneficiada. Valores em toneladas.
+      </p>
     </div>
   );
 }
 
-function RankingCard({
+/* ── Filtro ── */
+
+function FilterSelect({
+  label,
+  value,
+  onChange,
+  options,
+  allLabel,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: string[];
+  allLabel?: string;
+}) {
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="text-[10px] uppercase tracking-wide text-muted-foreground font-semibold">
+        {label}
+      </span>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="w-[180px] h-9 text-xs">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {allLabel && (
+            <SelectItem value={TODOS} className="text-xs">
+              {allLabel}
+            </SelectItem>
+          )}
+          {options.map((o) => (
+            <SelectItem key={o} value={o} className="text-xs">
+              {o}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+/* ── Bar Card ── */
+
+function RankingBarCard({
   title,
   subtitle,
   icon: Icon,
-  data,
-  colorClass,
+  rows,
+  color,
+  loading,
 }: {
   title: string;
   subtitle: string;
-  icon: React.ComponentType<{ className?: string }>;
-  data: RankingRow[] | null;
-  colorClass: string;
+  icon: LucideIcon;
+  rows: { nome: string; valor: number }[] | null;
+  color: string;
+  loading: boolean;
 }) {
-  if (!data) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm font-heading flex items-center gap-2">
-            <Icon className={`h-4 w-4 ${colorClass}`} />
-            {title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="h-7 w-full" />
-          ))}
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const top15 = data.slice(0, 15);
-  const max = Math.max(...top15.map((r) => r.valor));
+  const top = (rows ?? []).slice(0, 15);
+  const max = top.length ? Math.max(...top.map((r) => r.valor)) : 0;
 
   return (
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-heading flex items-center gap-2">
-          <Icon className={`h-4 w-4 ${colorClass}`} />
+          <Icon className="h-4 w-4" style={{ color }} />
           {title}
         </CardTitle>
         <p className="text-[11px] text-muted-foreground">{subtitle}</p>
       </CardHeader>
-      <CardContent className="space-y-1.5">
-        {top15.map((row, i) => {
-          const pct = (row.valor / max) * 100;
-          return (
-            <div key={row.nome} className="text-xs">
-              <div className="flex items-center justify-between gap-2 mb-1">
-                <span className="flex items-center gap-2 min-w-0">
-                  <Badge variant={i < 3 ? "default" : "secondary"} className={`text-[9px] font-bold tabular-nums w-6 justify-center ${i === 0 ? "bg-brand-gold" : i === 1 ? "bg-brand-teal" : i === 2 ? "bg-brand-orange" : ""}`}>
-                    {i + 1}
-                  </Badge>
-                  <span className="truncate font-medium">
-                    {capitalize(row.nome)}
-                  </span>
-                </span>
-                <span className="tabular-nums text-muted-foreground flex-shrink-0">
-                  R$ {fmtMilhoes(row.valor)}
-                </span>
-              </div>
-              <div className="h-1 bg-muted rounded overflow-hidden">
-                <div
-                  className={`h-full rounded ${i < 3 ? "bg-brand-gold" : "bg-brand-teal/40"}`}
-                  style={{ width: `${pct}%` }}
+      <CardContent>
+        {loading ? (
+          <div className="space-y-2">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Skeleton key={i} className="h-7 w-full" />
+            ))}
+          </div>
+        ) : top.length === 0 ? (
+          <p className="py-10 text-center text-sm text-muted-foreground">
+            Sem dados para os filtros selecionados.
+          </p>
+        ) : (
+          <>
+            <ResponsiveContainer width="100%" height={Math.max(280, top.length * 26 + 30)}>
+              <BarChart
+                data={top}
+                layout="vertical"
+                margin={{ top: 5, right: 30, left: 10, bottom: 0 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border} />
+                <XAxis
+                  type="number"
+                  tick={{ fontSize: 10 }}
+                  stroke={COLORS.muted}
+                  tickFormatter={(v: number) => fmtTon(v)}
                 />
-              </div>
+                <YAxis
+                  type="category"
+                  dataKey="nome"
+                  tick={{ fontSize: 10 }}
+                  stroke={COLORS.muted}
+                  width={110}
+                />
+                <Tooltip
+                  contentStyle={CHART_TOOLTIP_STYLE}
+                  formatter={(v) => [fmtTon(Number(v)), "Produção"]}
+                />
+                <Bar dataKey="valor" fill={color} radius={[0, 4, 4, 0]} name="Produção" />
+              </BarChart>
+            </ResponsiveContainer>
+            {/* Tabela compacta */}
+            <div className="mt-3 space-y-1">
+              {top.map((r) => (
+                <div
+                  key={r.nome}
+                  className="flex items-center justify-between text-xs border-b border-border/40 py-1 last:border-0"
+                >
+                  <span className="truncate font-medium">{r.nome}</span>
+                  <span className="tabular-nums text-muted-foreground flex-shrink-0">
+                    {fmtTon(r.valor)}
+                    {max > 0 && (
+                      <span className="ml-2 text-[10px] text-muted-foreground/60">
+                        {fmtBR((r.valor / max) * 100, 0)}%
+                      </span>
+                    )}
+                  </span>
+                </div>
+              ))}
             </div>
-          );
-        })}
+          </>
+        )}
       </CardContent>
     </Card>
   );
-}
-
-function fmtMilhoes(v: number): string {
-  if (v >= 1e9) return `${(v / 1e9).toFixed(1)} bi`;
-  if (v >= 1e6) return `${(v / 1e6).toFixed(0)} mi`;
-  return `${(v / 1000).toFixed(0)} mil`;
-}
-
-function capitalize(s: string): string {
-  return s
-    .toLowerCase()
-    .split(" ")
-    .map((w) => (w.length > 2 ? w.charAt(0).toUpperCase() + w.slice(1) : w))
-    .join(" ");
 }

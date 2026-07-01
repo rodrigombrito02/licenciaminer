@@ -7,6 +7,8 @@ data/processed/mg_semad_licencas.parquet
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/processed/*.parquet
+# Base proprietária do Lima (mercado de pelotas) — NÃO versionar (repo público)
+data/processed/seaborne_pellets.parquet
 !data/processed/collection_metadata.json
 !data/reference/*.parquet
 

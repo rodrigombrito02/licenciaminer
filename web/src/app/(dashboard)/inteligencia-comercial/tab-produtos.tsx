@@ -47,7 +47,7 @@ export function ProdutosTab() {
     <div className="space-y-6">
       <div className="rounded-xl border border-brand-gold/30 bg-gradient-to-r from-brand-gold/10 to-transparent p-4">
         <p className="text-sm">
-          <strong>Inteligência que ninguém entrega no grão brasileiro.</strong> Abaixo, o que você
+          <strong>Inteligência que converte custo em valor para seu negócio.</strong> Abaixo, o que você
           receberia — com amostras geradas de bases públicas oficiais. Cada produto responde a uma
           pergunta concreta da sua mesa.
         </p>
